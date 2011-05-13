@@ -38,8 +38,8 @@ class userprofile(models.Model):
     key_expires = models.DateTimeField()
     is_core=models.BooleanField(default=False,blank=True)
     is_coord=models.BooleanField(default=False,blank=True)
-   #i Havent written the methods as yet, do we use them as methods in a class or in views?
-  def __str__(self):
+    #i Havent written the methods as yet, do we use them as methods in a class or in views?
+    def __str__(self):
 
         return self.user.username
 
