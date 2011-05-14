@@ -8,7 +8,7 @@ GENDER_CHOICES = (
     ('F','Female'),
 )
 #List of Department Choices
-DEP_CHOICES = (
+DEP_CHOICES    = (
 	("Events", "Events"),
 	("QMS", "Quality Management"),
 	("Finance", "Finance"),
@@ -24,20 +24,20 @@ DEP_CHOICES = (
 #This is the initial users model
 #Author-Krishna Shrinivas
 class userprofile(models.Model):
-    user= models.ForeignKey(User, unique=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    gender = models.CharField(max_length=1,choices=GENDER_CHOICES,default='M')
-    age = models.IntegerField(default=18,)
-    department_belong = models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
+    user               = models.ForeignKey(User, unique=True)
+    first_name         = models.CharField(max_length=30)
+    last_name          = models.CharField(max_length=30)
+    gender             = models.CharField(max_length=1,choices=GENDER_CHOICES,default='M')
+    age                = models.IntegerField(default=18,)
+    department_belong  = models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
     #This is for QMS co-ords as they will monitor a different department,for others it is the same department
-    department_monitor=models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
-    mobile_number = models.CharField(max_length=15)
-    college_roll = models.CharField(max_length=40,default='Enter College Id/Roll No.')
-    activation_key = models.CharField(max_length=40)
-    key_expires = models.DateTimeField()
-    is_core=models.BooleanField(default=False,blank=True)
-    is_coord=models.BooleanField(default=False,blank=True)
+    department_monitor = models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
+    mobile_number      = models.CharField(max_length=15)
+    college_roll       = models.CharField(max_length=40,default='Enter College Id/Roll No.')
+    activation_key     = models.CharField(max_length=40)
+    key_expires        = models.DateTimeField()
+    is_core            = models.BooleanField(default=False,blank=True)
+    is_coord           = models.BooleanField(default=False,blank=True)
     #i Havent written the methods as yet, do we use them as methods in a class or in views?
     def __str__(self):
 
