@@ -19,7 +19,7 @@ class Task(models.Model):
 class Comment (models.Model):
     """Model to store a comment.
 
-    Timestamp helps to order comments.
+    Timestamp helps to order comments
     Author can be used to select particular comments based on the author.
     """
 
