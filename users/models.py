@@ -20,6 +20,11 @@ DEP_CHOICES = (
 	("Publicity", "Publicity"),
 	("Design", "Design"),
 )
+SUB_DEP_CHOICES = (
+	("Aerobotics","Aerobotics")
+	#We have to fill up with list of events
+	("Webops","Web Operations")
+)
 
 #This is the initial users model
 #Author-Krishna Shrinivas
@@ -29,7 +34,7 @@ class userprofile(models.Model):
     last_name = models.CharField(max_length=30)
     gender = models.CharField(max_length=1,choices=GENDER_CHOICES,default='M')
     age = models.IntegerField(default=18,)
-    department_belong = models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
+    department_belong = models.CharField(max_length=50,choices=DEP_CHOICES,default='Webops')
     #This is for QMS co-ords as they will monitor a different department,for others it is the same department
     department_monitor=models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
     mobile_number = models.CharField(max_length=15)
@@ -38,6 +43,8 @@ class userprofile(models.Model):
     key_expires = models.DateTimeField()
     is_core=models.BooleanField(default=False,blank=True)
     is_coord=models.BooleanField(default=False,blank=True)
+    #This is for the sub-department, eg.Chemical-X, SMQ etc within Events
+    sub_department=models.CharField(max_length=50,choices=SUB_DEP_CHOICES,default='Webops')
     #i Havent written the methods as yet, do we use them as methods in a class or in views?
     def __str__(self):
 
