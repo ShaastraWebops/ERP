@@ -23,7 +23,7 @@ DEP_CHOICES    = (
 
 #This is the initial users model
 #Author-Krishna Shrinivas
-class userprofile(models.Model):
+class UserProfile(models.Model):
     user               = models.ForeignKey(User, unique=True)
     first_name         = models.CharField(max_length=30)
     last_name          = models.CharField(max_length=30)

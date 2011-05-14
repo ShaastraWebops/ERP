@@ -7,6 +7,7 @@ class Task(models.Model):
     subject        = models.CharField(max_length=100 , null=True , blank=True)
     description    = models.TextField(null=True , blank=True)
     creator        = models.ForeignKey(User , related_name = "tasks_assigned")
+    creation_date  = models.DateTimeField (auto_now = True, editable = False)
     assigned_to    = models.ManyToManyField(User, related_name = "tasks")
     #Task can be assigned to multiple people, say all webops coords etc. Think about how we can implement this by grouping coords etc
     deadline       = models.DateTimeField(null=True , blank=True)
@@ -19,10 +20,10 @@ class Task(models.Model):
 class Comment (models.Model):
     """Model to store a comment.
 
-    Timestamp helps to order comments
+    Timestamp helps to order comments.
     Author can be used to select particular comments based on the author.
     """
 
     author = models.ForeignKey (User)
-    time_stamp = models.DateTimeField (auto_now = True)
     comment_string = models.TextField ()
+    time_stamp = models.DateTimeField (auto_now = True, editable = False)
