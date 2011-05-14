@@ -8,7 +8,7 @@ GENDER_CHOICES = (
     ('F','Female'),
 )
 #List of Department Choices
-DEP_CHOICES = (
+DEP_CHOICES    = (
 	("Events", "Events"),
 	("QMS", "Quality Management"),
 	("Finance", "Finance"),
@@ -28,6 +28,7 @@ SUB_DEP_CHOICES = (
 
 #This is the initial users model
 #Author-Krishna Shrinivas
+<<<<<<< HEAD
 class userprofile(models.Model):
     user= models.ForeignKey(User, unique=True)
     first_name = models.CharField(max_length=30)
@@ -45,6 +46,23 @@ class userprofile(models.Model):
     is_coord=models.BooleanField(default=False,blank=True)
     #This is for the sub-department, eg.Chemical-X, SMQ etc within Events
     sub_department=models.CharField(max_length=50,choices=SUB_DEP_CHOICES,default='Webops')
+=======
+class UserProfile(models.Model):
+    user               = models.ForeignKey(User, unique=True)
+    first_name         = models.CharField(max_length=30)
+    last_name          = models.CharField(max_length=30)
+    gender             = models.CharField(max_length=1,choices=GENDER_CHOICES,default='M')
+    age                = models.IntegerField(default=18,)
+    department_belong  = models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
+    #This is for QMS co-ords as they will monitor a different department,for others it is the same department
+    department_monitor = models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
+    mobile_number      = models.CharField(max_length=15)
+    college_roll       = models.CharField(max_length=40,default='Enter College Id/Roll No.')
+    activation_key     = models.CharField(max_length=40)
+    key_expires        = models.DateTimeField()
+    is_core            = models.BooleanField(default=False,blank=True)
+    is_coord           = models.BooleanField(default=False,blank=True)
+>>>>>>> 23ae8940fc128705cb41a58cc188e0c2659e60f5
     #i Havent written the methods as yet, do we use them as methods in a class or in views?
     def __str__(self):
 
