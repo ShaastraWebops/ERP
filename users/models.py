@@ -59,18 +59,17 @@ class userprofile(models.Model):
 
 #author : vivek kumar bagaria
 class Materials(models.Model):
-	user		=models.ForeignKey(UserProfile , unique=True)#name of the  person who asked or gave
+    user	  = models.ForeignKey(User, unique=True)#name of the  person who asked or gave
 #					   ^^^^^^^^^^^	-----shouldnt that be a foreign key to User?	
-	item		=models.CharField(max_length=50)# the material which has been asked for
-	item_no		=models.IntergerField(default=1)#no. of items borrowed
-	borrowed_time   =models.DateTimeField(null=True ,blank=True)#time of borrow
-	return_time 	=models.DateTimeField(null=True ,blank=True)#time of return
-	item_got	=models.BooleanField(default=False)#if the person got/given the item this will be true
-	item_returned	=models.BooleanField(default=False)#if the person returns/takes the item this will be true
-	user_2	=models.CharField(max_length=40)#name of the person/hostel/deptartment borrowed/lent from
-  #Isn't this also a foreign key to User?  
-	def __str__(self):
-
+    item	  = models.CharField(max_length=50)# the material which has been asked for
+    item_no	  = models.IntegerField(default=1)#no. of items borrowed
+    borrowed_time = models.DateTimeField(null=True ,blank=True)#time of borrow
+    return_time   = models.DateTimeField(null=True ,blank=True)#time of return
+    item_got      = models.BooleanField(default=False)#if the person got/given the item this will be true
+    item_returned = models.BooleanField(default=False)#if the person returns/takes the item this will be true
+    user_2        = models.CharField(max_length=40)#name of the person/hostel/deptartment borrowed/lent from
+    #Isn't this also a foreign key to User?  
+    def __str__(self):
         return self.item
 
     class Admin:

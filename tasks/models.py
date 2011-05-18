@@ -3,10 +3,10 @@ from django.db import models
 # Create your models here.
 #The choices may be cup level but if any thing better pls do change.
 STAT_CHOICES= (
-	('O','Open')
-	('C','Completed')
-	('L','Overdue')
-	('N','Almost')
+	('O','Open'),
+	('C','Completed'),
+	('L','Overdue'),
+	('N','Almost'),
 )
 class Task(models.Model):
 
