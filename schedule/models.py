@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -22,8 +23,10 @@ class Comment (models.Model):
 
     Timestamp helps to order comments.
     Author can be used to select particular comments based on the author.
+    Task tells you which task this comment is meant for.
     """
 
-    author = models.ForeignKey (User)
+    author         = models.ForeignKey (User)
+    task           = models.ForeignKey (Task)
     comment_string = models.TextField ()
-    time_stamp = models.DateTimeField (auto_now = True, editable = False)
+    time_stamp     = models.DateTimeField (auto_now = True, editable = False)

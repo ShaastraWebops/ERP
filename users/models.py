@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.contrib import admin
 
 # Create your models here.
@@ -21,7 +22,7 @@ DEP_CHOICES    = (
 	("Design", "Design"),
 )
 SUB_DEP_CHOICES = (
-	("Aerobotics","Aerobotics")
+	("Aerobotics","Aerobotics"),
 	#We have to fill up with list of events
 	("Webops","Web Operations")
 )
@@ -56,18 +57,17 @@ class userprofile(models.Model):
         pass
 #There was a duplication, i removed it.
 
-#author : vivek kumar bagaria
-class Materials(model.Model):
-	user		=models.ForeignKey(UserProfile , unique=True)#name of the  person who asked or gave
-	item		=models.CharField(max_length=50)# the material which has been asked for
-	item_no		=models.IntergerField(default=1)#no. of items borrowed
-	borrowed_time   =models.DateTimeField(null=True ,blank=True)#time of borrow
-	return_time 	=models.DateTimeField(null=True ,blank=True)#time of return
-	item_got	=models.BooleanField(default=False)#if the person got/given the item this will be true
-	item_returned	=models.BooleanField(default=False)#if the person returns/takes the item this will be true
-	user_2	=models.CharField(max_length=40)#name of the person/hostel/deptartment borrowed/lent from
+# author : vivek kumar bagaria
+class Materials(models.Model):
+    user	  = models.ForeignKey(User, unique=True) # name of the  person who asked or gave
+    item	  = models.CharField(max_length=50)              # the material which has been asked for
+    item_no	  = models.IntegerField(default=1)              # no. of items borrowed
+    borrowed_time = models.DateTimeField(null=True ,blank=True)  # time of borrow
+    return_time   = models.DateTimeField(null=True ,blank=True)  # time of return
+    item_got      = models.BooleanField(default=False)           # if the person got/given the item this will be true
+    item_returned = models.BooleanField(default=False)           # if the person returns/takes the item this will be true
+    user_2        = models.CharField(max_length=40)              # name of the person/hostel/deptartment borrowed/lent from
     def __str__(self):
-
         return self.item
 
     class Admin:
