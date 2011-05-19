@@ -30,17 +30,9 @@ class userprofile(models.Model):
     user= models.ForeignKey(User, unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    gender = models.CharField(max_length=1,choices=GENDER_CHOICES,default='M')
-    age = models.IntegerField(default=18,)
-    department_belong = models.ManyToManyField(Department,related_name="dept_belong")
-   
-   #department_monitor=models.CharField(max_length=50,choices=DEP_CHOICES,default='Events') I feel this is unneccessary now.
-    
+    department= models.ForeignKey(Department,related_name="dept_belong")
     mobile_number = models.CharField(max_length=15)
-    college_roll = models.CharField(max_length=40,default='Enter College Id/Roll No.')
-    activation_key = models.CharField(max_length=40)
-    key_expires = models.DateTimeField()
-    
+    department_monitor=models.ForeignKey(Department,related_name="dept_monitor")   
 #We are changing to groups right? so, i removed the flags.
  
     #i Havent written the methods as yet, do we use them as methods in a class or in views?
