@@ -8,7 +8,7 @@ from django.template.context import Context, RequestContext
 import datetime
 from forms import UserProfileForm
 from models import *
-from django.newforms import form_for_model
+#from django.NewForms import form_for_model
 
 
 #author :vivek kumar bagaria

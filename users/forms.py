@@ -4,4 +4,4 @@ from models import *
 
 class UserProfileForm (ModelForm):
     class Meta:
-        model = UserProfile
+        model = userprofile

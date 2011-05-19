@@ -8,20 +8,22 @@ from django.template.context import Context, RequestContext
 import datetime
 from forms import TaskForm
 from models import *
-from django.newforms import form_for_model
+
+
+#from django.newforms import form_for_model
 
 
 
 import forms , models
 
 #author : vivek kumar bagaria
-def assigned_task(request):
+def assign_task(request):
     # below one  is to be used
     #creator = request.user
     #using this until the login stuff is made
-    creator="me" 
+    #creator="me" 
     #this will accept the new task and upload in the database
-    if requets.method=='POST':
+    if request.method=='POST':
         form = TaskForm(request.POST)
         if form.is_valid():
             status      ="Not started"
@@ -51,9 +53,9 @@ def assigned_task(request):
 
 
 
-    context     = Context(request ,{ 'user':creator ,})
+    context     = Context(request ,{ 'user':"me" ,})
     #here the tasks which are assigned by the creator r selected and passed to the templates which will display them
-    tasks_details=Task.object.filter(creator=creator)
+    tasks_details=models.Task.objects.all()
     display_form=TaskForm()
     
 
