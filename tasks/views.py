@@ -22,7 +22,7 @@ def assigned_task(request):
     creator="me" 
     #this will accept the new task and upload in the database
     if requets.method=='POST':
-        form = new_task(request.POST)
+        form = TaskForm(request.POST)
         if form.is_valid():
             status      ="Not started"
             #initial status 
@@ -59,4 +59,5 @@ def assigned_task(request):
 
     return render_to_response('tasks/assigned_task.html ' , locals() ,context_instance=context)
         
-    
+
+                
