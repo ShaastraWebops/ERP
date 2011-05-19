@@ -36,4 +36,5 @@ class Comment (models.Model):
     comment_string = models.TextField ()
     time_stamp = models.DateTimeField (auto_now = True, editable = False)
 
-
+class label(models.Model):
+    labelname=models.ForeignKey(Task, related_name="task_label")
