@@ -9,6 +9,7 @@ from erp.users.views import *
 
 urlpatterns = patterns('',
     (r'^assign_task/$', assign_task,),
+    (r'^create_core/$', create_core,),
     
     #	(r'^now/sign.html$', sign_in, ),
     # Examples:

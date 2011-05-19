@@ -9,6 +9,7 @@ import datetime
 from forms import UserProfileForm
 from models import *
 #from django.NewForms import form_for_model
+from django import forms
 
 
 #author :vivek kumar bagaria
@@ -24,7 +25,7 @@ def create_core(request):
     success_message="you have not been registered"
     if request.method=='POST':
         data=request.POST.copy()
-        form=forms.UserProfileForm(data)
+        form=UserProfileForm(data)
         if form.is_valid():
             if form.cleaned_data["password"] == form.cleaned_data["password_again"]:
                 user = models.User.objects.create_user(username = form.cleaned_data['username'],email = form.cleaned_data['email'],password = form.cleaned_data['password'])
@@ -47,10 +48,12 @@ def create_core(request):
                     user_profile.delete()
 
     else:
-        form=forms.UserProfile()
+
+        
+        form = UserProfileForm()
 
     
-    context     = Context(request ,{ 'user':user,})
-    return render_to_response('users/signin_core.html ' , locals() ,context_instance=context)
+    context     = Context(request ,locals())
+    return render_to_response('users/signin_core.html' , locals() ,context_instance=context)
 
 

@@ -9,7 +9,7 @@ import datetime
 from forms import TaskForm
 from models import *
 
-
+from django import forms
 #from django.newforms import form_for_model
 
 
@@ -59,7 +59,7 @@ def assign_task(request):
     display_form=TaskForm()
     
 
-    return render_to_response('tasks/assigned_task.html ' , locals() ,context_instance=context)
+    return render_to_response('tasks/assigned_task.html' , locals() ,context_instance=context)
         
 
                 
