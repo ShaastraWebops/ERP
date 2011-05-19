@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 DEP_CHOICES    = (
 	("Events", "Events"),
@@ -15,7 +15,7 @@ DEP_CHOICES    = (
 )
 # Create your models here.
 #This is the initial department model
-class Department(models.Model)
+class Department(models.Model):
 
 	Dept_Name= models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
 	Dept_Cores=models.ManyToManyField(User, related_name = "department")
