@@ -5,6 +5,7 @@ from django.conf.urls.defaults import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^assign_tasks$', 'assign_task'),
     # Examples:
     # url(r'^$', 'erp.views.home', name='home'),
     # url(r'^erp/', include('erp.foo.urls')),
