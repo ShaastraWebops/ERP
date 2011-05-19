@@ -9,7 +9,7 @@ GENDER_CHOICES = (
     ('F','Female'),
 )
 #List of Department Choices
-<<<<<<< HEAD
+
 #DEP_CHOICES    = (
 #	("Events", "Events"),
 #	("QMS", "Quality Management"),
@@ -22,26 +22,6 @@ GENDER_CHOICES = (
 #	("Publicity", "Publicity"),
 #	("Design", "Design"),
 #)
-
-=======
-DEP_CHOICES    = (
-	("Events", "Events"),
-	("QMS", "Quality Management"),
-	("Finance", "Finance"),
-	("Sponsorship", "Sponsorship"),
-	("Evolve", "Evolve"),
-	("Facilities", "Facilities"),
-	("Webops", "Web Operations"),
-	("Hospitality", "Hospitality"),
-	("Publicity", "Publicity"),
-	("Design", "Design"),
-)
-SUB_DEP_CHOICES = (
-	("Aerobotics","Aerobotics"),
-	#We have to fill up with list of events
-	("Webops","Web Operations")
-)
->>>>>>> f701031dcda3cf86da9c115ecb3a0e3e462ad2d4
 
 #This is the initial users model
 #Author-Krishna Shrinivas
@@ -72,7 +52,7 @@ class userprofile(models.Model):
         pass
 
 #author : vivek kumar bagaria
-<<<<<<< HEAD
+
 class Materials(model.Model):
 	user		=models.ForeignKey(User, unique=True)#name of the  person who asked or gave
 	item		=models.CharField(max_length=50)# the material which has been asked for
@@ -84,22 +64,7 @@ class Materials(model.Model):
 	user_2		=models.ForeignKey(User , unique=True)#name of the person/hostel/deptartment borrowed/lent from
     
 	def __str__(self):
-
-=======
-class Materials(models.Model):
-    user	  = models.ForeignKey(User, unique=True)#name of the  person who asked or gave
-#					   ^^^^^^^^^^^	-----shouldnt that be a foreign key to User?	
-    item	  = models.CharField(max_length=50)# the material which has been asked for
-    item_no	  = models.IntegerField(default=1)#no. of items borrowed
-    borrowed_time = models.DateTimeField(null=True ,blank=True)#time of borrow
-    return_time   = models.DateTimeField(null=True ,blank=True)#time of return
-    item_got      = models.BooleanField(default=False)#if the person got/given the item this will be true
-    item_returned = models.BooleanField(default=False)#if the person returns/takes the item this will be true
-    user_2        = models.CharField(max_length=40)#name of the person/hostel/deptartment borrowed/lent from
-    #Isn't this also a foreign key to User?  
-    def __str__(self):
->>>>>>> f701031dcda3cf86da9c115ecb3a0e3e462ad2d4
-        return self.item
+	       return self.item
 
     class Admin:
         pass
