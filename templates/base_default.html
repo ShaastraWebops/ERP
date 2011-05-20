@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block topbar %}
+<!---<h1 id="logo" style="color:#fff;">Shaastra<span class="black">2010</span></h1>--->
+<!---topbar--->
+<div id="topbar">
+ <div id="topbar-left">
+  <div id="top-link">
+   <a class="toplinks" href="{{SITE_URL}}/home/">
+    Home&nbsp;
+   </a>
+   {% if user.is_anonymous %}
+   <a class="toplinks" href="{{SITE_URL}}/register/user/">
+    Register&nbsp;
+   </a>
+   {% endif %}
+            {% if user.is_authenticated and not activated %}
+   <a class="toplinks" href="{{SITE_URL}}/profile/">
+    Profile&nbsp;
+   </a>
+   <a class="toplinks" href="{{UNB_URL}}/forum.php?req=setuser">
+    Helpdesk&nbsp;</a>
+   <a class="toplinks" href="{{SITE_URL}}/home/logout/">
+    Logout [{{ user }}]
+   </a>
+   {% else %}
+   <a class="toplinks" href="{{SITE_URL}}/home/login/">
+    Login
+   </a>
+   {% endif %}
+    <a class="toplinks" href="http://www.shaastra.org/">
+      Main Site
+    </a>
+  </div>
+  <div id="topbar-right">
+  </div>
+ </div>
+</div>
+<div id="topsection">
+ <div class="innertube">
+  <h1>
+  </h1>
+ </div>
+</div>
+<!---<a href="{{SITE_URL}}/home"<h2 id="slogan">Userportal</h2></a>--->
+<!---<img style="border:none;" src="{{MEDIA_URL}}/images/dice1.png"></img>-->
+{% endblock %}
+
+{% block sidebar-navigation %}
+<div id="leftcolumn">
+ <div class="innertube">
+  <h1>
+   Navigation
+  </h1>
+  <ul class="sidemenu">
+   <li>
+    <a href="{{SITE_URL}}/home/">
+     Home
+    </a>
+   </li>
+   {% if user.is_anonymous %}
+   <li>
+    <a href="{{SITE_URL}}/register/user/" id="register_link">
+     Register
+    </a>
+   </li>
+   {% endif %}
+   <!-- <li><a href="{{SITE_URL}}/qms/sid">View Shaastra ID</a></li>-->
+   <!-- <li><a href="{{UNB_URL}}/">Helpdesk</a></li>-->
+   {% if user.is_authenticated %}
+   <li>
+    <a href="{{SITE_URL}}/profile/">
+     Profile
+    </a>
+   </li>
+   <li>
+    <a href="{{SITE_URL}}/home/logout/">
+     Logout
+    </a>
+   </li>
+   {% else %}
+   <li>
+    <a href="{{SITE_URL}}/home/login/">
+     Login
+    </a>
+   </li>
+   {% endif %}
+  </ul>
+  {% if not is_coord%}
+  <h1>
+   Events
+  </h1>
+  <ul class="sidemenu">
+    <li>
+   <a href="{{SITE_URL}}/events/register/" id="solo_link"> 
+     Solo Event Registration
+    </a>
+   </li>
+   <li>
+    <a href="{{SITE_URL}}/teams/" id="team_link">
+     Team Event Registration
+    </a>
+   </li>
+   <li>
+    <a href="{{SITE_URL}}/teams/manage" id='manage_link'>
+     Manage Teams
+    </a>
+   </li>
+  </ul>
+  {% endif%}
+  {% if is_coord%}
+  <h1>
+   Manage Event
+  </h1>
+  <ul class="sidemenu">
+   <li>
+    <a href="{{SITE_URL}}/events/view/answers/users/">
+     View Answers
+    </a>
+   </li>
+   <li>
+    <a href="{{SITE_URL}}/events/view/answers/teams/">
+     View Team Answers
+    </a>
+   </li>
+   <li>
+    <a href="{{SITE_URL}}/admin/">
+     Admin Portal
+    </a>
+   </li>
+   <!--NOT WORKING!!!! CHECK IT!!<li><a href="{{SITE_URL}}/mail/all">Bulk Mail - All </a></li>-->
+   <li>
+    <a href="{{SITE_URL}}/mail/selected/">
+     Bulk Mail - Selected
+    </a>
+   </li>
+   {% if user.is_superuser %}
+   <li>
+    <a href="{{SITE_URL}}/register/coord/">
+     Register Coords
+    </a>
+   </li>
+   {% endif %}
+  </ul>
+  {% endif %}
+  <h1>
+   Help
+  </h1>
+  <ul class="sidemenu">
+   <li>
+    <a href="{{SITE_URL}}/register/instructions/user">
+     User Registration
+    </a>
+   </li>
+   <li>
+    <a href="{{SITE_URL}}/register/instructions/event">
+     Event Registration
+    </a>
+   </li>
+   <!--
+        <li><a href="{{SITE_URL}}/register/instructions/coord">Coordinator Specific</a> </li>
+        -->
+   {% if is_coord %}
+   <li>
+    <a href="{{SITE_URL}}/register/instructions/coord">
+     Coordinator Specific
+    </a>
+   </li>
+   {% endif %}
+  </ul>
+   {% if user.is_authenticated %}
+  <h1>
+   Travel
+  </h1>
+  <ul class="sidemenu">
+   <li>
+    <a href="{{SITE_URL}}/hospitality/travel">
+     Discounted Tickets
+    </a>
+   </li>
+  </ul>
+   {% endif %}
+   {% if hospi_coord %}
+  <h1>
+   Hospitality
+  </h1>
+  <ul class="sidemenu">
+   <li>
+    <a href="{{SITE_URL}}/hospitality/view/selected">
+     Select Participants
+    </a>
+   </li>
+   <li>
+    <a href="{{SITE_URL}}/hospitality/view/selectedTeams">
+     Select Teams
+    </a>
+   </li>
+   <li>
+    <a href="{{SITE_URL}}/hospitality/view/registered">
+     View Registered people
+    </a>
+   </li>
+   {%else%}
+  <!-- <li>
+    <a href="{{SITE_URL}}/hospitality/accomodation/details">
+     Hospitality Details
+    </a>
+   </li>-->
+   {% endif %}
+  </ul>
+ </div>
+</div>
+<!--SIdeBar-Right-->
+<!-- <div id="rightcolumn">
+ <div class="innertube">
+    <ul class="sidemenu">
+        
+        <li><a href="{{SITE_URL}}/profile/"> Individual Accomodation</a> </li>
+        <li><a href="{{SITE_URL}}/hospitality/register/"> Team Accomodation</a> </li>
+        <li><a href="{{SITE_URL}}/hospitality/profile/">Travel Information</a></li>
+     </ul>
+ </div>
+</div> -->
+{% endblock %}
+
+{% block profile %}
+	{% if user.get_profile.profile_not_set %}
+<div class="errors">
+ <p>
+  Certain
+  <i>
+   New
+  </i>
+  fields which are required in you profile have not been updated.To stop seeing this message please update your
+  <a href="{{SITE_URL}}/profile/">
+   Profile
+  </a>
+  .Check all your profile details and presss submit.
+ </p>
+ <p>
+  The new details are Gender,Age,Branch and College Id/RollNumber.Also note that in case you do not possess a mobile phone,please provide a suitable contact number
+ </p>
+ <p>
+  The inconvenience is regretted
+ </p>
+</div>
+	{% endif %}
+{% endblock %}

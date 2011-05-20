@@ -1,0 +1,47 @@
+{% extends "base_default.html" %}
+
+{% block body %}
+    
+    {% if success %}
+    <div class="info">
+        Password reset request has been successfully sent. Please check your inbox
+    </div>
+    {%endif%}
+
+    {% if reset %}
+    <div class="info">
+        Password has been successfully reset for {{u_name}}. New password : {{new_pass}}. Please <a href="{{SITE_URL}}/home/login/">login</a> and change your preferred password.
+    </div>
+    {%endif%}
+
+    
+
+    <div class="register">
+    <h1>Forgot Password?</h1>
+
+    {% if invalid_email %}
+        <div class="errors">
+            <b>{{invalid_email}}</b>: No such email-address has been registered. Would you like to <a href="{{SITE_URL}}/register/user/">create a new user</a>?
+        </div>
+    {%endif%}
+
+    {% if reset_fail %}
+        <div class="errors">
+             <b>Invalid reset attempt. Please make sure that the url typed was correct.</b>
+        </div>
+    {%endif%}
+
+    <div class="info">
+    <p>Please fill in your email address </p>
+    <form action="{{SITE_URL}}/home/login/forgot/" method="POST">
+        <table name="register">
+            {{ form.as_table }}
+        </table>
+		<input type="submit" value="Submit" />
+    </form>
+</div>
+
+    <br \>
+    </div>
+
+{% endblock %}

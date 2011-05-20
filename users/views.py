@@ -56,4 +56,84 @@ def create_core(request):
     context     = Context(request ,locals())
     return render_to_response('users/signin_core.html' , locals() ,context_instance=context)
 
+#This is the login,logout, already logged in , home views.
+def home (request):
+    redirected=session_get(request,"from_url")
+    access_denied = session_get (request, "access_denied")
+    logged_in = session_get (request, "logged_in")
+    already_logged = session_get (request, "already_logged")
+    key = request.session.session_key
+    return render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
+
+def edited (request):
+
+    print dir(request.session)
+    print request.session.keys()
+    response = render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
+    return response
+
+def registered (request):
+
+    redirected=session_get(request,"from_url")
+    access_denied = session_get (request, "access_denied")
+    logged_in = session_get (request, "logged_in")
+    already_logged = session_get (request, "already_logged")
+    return render_to_response('home/registered.html', locals(), context_instance= global_context(request)) 
+
+def deadlines(request):
+    return render_to_response('home/deadlines.html', locals(), context_instance= global_context(request))
+
+@no_login
+def login (request):
+
+    redirected = request.session.get ("from_url", False)
+    registered = session_get (request, "registered")
+    form = forms.UserLoginForm ()
+
+    if request.method == 'POST':
+        data = request.POST.copy()
+
+        form = forms.UserLoginForm (data)
+	if form.is_valid():
+            form = forms.UserLoginForm (data)
+            if form.is_valid():
+                user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data["password"])
+                if user is not None and user.is_active == True:
+                    auth.login (request, user)
+
+                    url = session_get(request, "from_url")
+                    # Handle redirection
+                    if not url:
+                        url = "%s/home/"%settings.SITE_URL
+
+                    request.session['logged_in'] = True
+                    response= HttpResponseRedirect (url)
+                    try:
+                        response.set_cookie('logged_out', 0)
+                    except:
+                        pass
+                    return response
+            else:
+                request.session['invalid_login'] = True
+                return HttpResponseRedirect (request.path)
+        else: 
+            invalid_login = session_get(request, "invalid_login")
+            form = forms.UserLoginForm ()
+    else:
+        pass
+    return render_to_response('home/login.html', locals(), context_instance= global_context(request)) 
+
+
+def logout (request):
+    if request.user.is_authenticated():
+        auth.logout (request)
+        url = "%s/home/"%settings.SITE_URL
+        response= HttpResponseRedirect (url)
+        try:
+            response.set_cookie('logged_out', 1)
+        except:
+            pass
+        return response
+
+    return render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
 
