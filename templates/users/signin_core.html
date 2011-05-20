@@ -10,14 +10,12 @@ PLEASE ENTER YOUR DETAILS
 <form action="/create_core/" method="POST">
 <h5>{{enter}}</h5>
 
-<table>
-</table>
-<br>
-ENTER YOUR NAME:<input type="text" name="user">
-<br>
 ENTER YOUR PASSWORD:<input type="password" name="password">
 <br>
 RE-ENTER YOUR PASSWORD:<input type="password" name="password_again">
+
+<br>
+   {{ form.as_table }}
 <br>
 <!-- yet to include other form details -->
 

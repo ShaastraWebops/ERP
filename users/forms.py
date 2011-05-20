@@ -3,9 +3,19 @@ from django.forms import ModelForm
 from models import *
 from django import forms
 
-class UserProfileForm(ModelForm):
-    class Meta:
-        model = userprofile
+#author :vivek kumar bagaria
+#i changed it cause it was not working in the templates
+class UserProfileForm(forms.Form):
+    user=forms.CharField()
+    
+    first_name=forms.CharField()
+    
+    last_name=forms.CharField()
+    department=forms.CharField()
+    mobile_number=forms.IntegerField()
+    department_monitor=forms.CharField()
+    
+	
 
 class UserLoginForm(forms.Form):
     username=forms.CharField(help_text='Your username as registered with the ERP')

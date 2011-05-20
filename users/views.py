@@ -46,6 +46,9 @@ def create_core(request):
                 except:
                     user.delete();
                     user_profile.delete()
+        context     = Context(request ,locals())
+        return render_to_response('tasks/main.html' , locals() ,context_instance=context)
+   
 
     else:
 
@@ -64,7 +67,7 @@ def home (request):
     logged_in = request.session.get(request, "logged_in")
     already_logged = request.session.get(request, "already_logged")
     key = request.session.session_key
-    
+    form = UserProfileForm()
     return render_to_response('home/home.html', locals(), context_instance= Context(request)) 
 
 def edited (request):
@@ -137,5 +140,5 @@ def logout (request):
             pass
         return response
 
-    return render_to_response('home/home.html', locals(), context_instance= Context(request)) 
+    return HttpResponseRedirect ('/home/')
 

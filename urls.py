@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     (r'^create_core/$', create_core,),
     (r'^home/$', home,),
     (r'^login/$', login,),
+    (r'^logout/$', logout,),
     
     #	(r'^now/sign.html$', sign_in, ),
     # Examples:
