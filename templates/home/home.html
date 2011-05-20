@@ -1,36 +1,16 @@
-{% extends "base_default.html" %}
 
-{% block body %}
+
+
 
 <!--PHP SESS_ID : {{ session_keys }} </br>--->
 <!--DJANGO SESS ID : {{ key }} </br>-->
 <!---{{variables}} </br>--->
-{% if lst %}
-  {% for k in lst %}
-    {{ k }}:
-  {% endfor %}
-{% endif %}
 
-{% if not_started %}
-<div class = "errors">
-Sorry, event registrations have not started yet. Please check back soon.
-</div>
-{% endif %}
 
-{% if user.is_authenticated %}
-<span style="font-size:200%;">* </span>
-To register for accommodation, go to your <a href="{{SITE_URL}}/profile">'profile page'</a> and check 'Would you like to register for accomodation?'
-{% endif %}
-
-{% if logged_in %}
+<!--{% if logged_in %}
 
 <div class="info">
  You have successfully logged in.
-</div>
-{%endif%}
-    {% if access_denied %}
-<div class="errors">
- Participants who have been selected for accommodation will be allowed to enter their travel details after the <span class="deadline">6th of September</span>
 </div>
 {%endif%}
     {% if already_logged %}
@@ -38,152 +18,36 @@ To register for accommodation, go to your <a href="{{SITE_URL}}/profile">'profil
  You have already logged in.
 </div>
 {%endif%}
-    
-    {% if hospi_success %}
-<div class="info">
- <h2>
-  Hospitality Preferences: Success
- </h2>
- <p>
-  Your preferences have been saved successfully
- </p>
-</div>
-{% endif %}
+    -->
+   
 <div class="register">
 
  <h1 align="center">
-  Shaastra 2010 User Portal
+  Shaastra 2011 erp
  </h1>
  <p align="center">
-  Welcome to the Shaastra 2010 UserPortal. Here, you can 
-    register for events, hospitality accommodation, and access the <a href="{{UNB_URL}}/forum.php?req=setuser">Helpdesk</a>.
-    Helpdesk can be accessed only after login.
+  Welcome  
  </p>
  <br />
  <br />
 
-<table cellspacing="30" rules="cols" cellpadding="10">
-<tr>
-<td>
+<body>
+<form action="/login/" method="POST">
+<h5>{{enter}}</h5>
 
- {% if not user.is_authenticated %}
- <div class="success">
-
-  
-   If you are a new user, please register
-   <a href="{{SITE_URL}}/register/user/">
-    here.
-   </a>
-  
-
- </div>
-
-  <div class="info">
-  If you have registered already, login
-  <a href="{{SITE_URL}}/home/login/">
-   here.</a>
- </div>
- {% else %}
-{% if hospi_coord %}
-<div class="success">
-  <h3>Hospitality</h3>
-  Click on the following links to give/reject<br /> accomodation to selected participants.<br />
-  <a href="{{SITE_URL}}/hospitality/view/girls/0/">
-   Girl participants
-  </a><br />
-  <a href="{{SITE_URL}}/hospitality/view/selected">
-   Individual Events
-  </a><br />
-  <a href="{{SITE_URL}}/hospitality/view/selectedTeams">
-   Team Events
-  </a>
- </div>
-
-{% endif %}
-{% if is_core %}
-<div class="answer">
-  <h3>Events Cores specific</h3>
-    <a href="{{SITE_URL}}/events/stats/all">Click here</a> to see all events and no. of registered participants for them.<br/>
-    <a href="{{SITE_URL}}/events/stats/reg_only">Or here</a> to see events which are marked as "registerable" and no. of registered participants for them.<br/>
- </div>
-
-{% endif %}
-{% if is_coord %}
-<div class="errors">
-  <h3>Attention coords!</h3>Do not use your coord account for registering for other events or creating a team etc. Create a personal account by registering as a normal user and then use it.
- </div>
-
-{% endif %}
-    Use the links on the left to register for events.
-
-<div class="info">
-  To change your password,
-<a href="{{ SITE_URL }}/profile/">
-  click here.</a>
-</div>
-
- {% if user.is_authenticated %}
-    {% if not user.get_profile.want_newsletter %}
- <div class="success">
-  Never miss a beat.
-  Get Shaastra Updates mailed directly to you!<br />
-  <a href="{{SITE_URL}}/profile/">
-   Click here
-  </a>
-  .
- </div>
- {% endif %} 
-    {% endif %}
-
- {% endif %}
-<div class="warning">
-  Get travel discounts to and from IITM
-  <a href="{{SITE_URL}}/hospitality/travel">
-   here.
-  </a>
-</div>
-
-</td>
-<td valign="top" width="40%">
-
- <h3>
-  Notices :
- </h3>
- {% if is_coord %}
- <div class="success">
-  Page to mail selected participants now up:
-  <a href="{{SITE_URL}}/mail/selected/">
-   Click Here
-  </a>
- </div>
- {% endif %}
- <div class="warning">
-  Please note your Shaastra PIN from your
-  <a href="{{SITE_URL}}/profile/">
-   profile</a>
-  page. Provide this PIN along with your college ID Card to get your Shaastra ID.
- </div>
-<div class = "success">
-  Event and Hospitality registrations are now open!
-</div>
-<div class = "warning">
-Login to access the HelpDesk
-</div>
-
- <!--
-    <div class="success">
-    Registration for Hospitality Accommodation <b>has been extended till the 10th of September</b>.
-    </div>
-    <div class="success">
-    Registration for events will begin on 23rd August. You can still create user accounts before that.
-    </div>
--->
-
-</td>
-</tr>
+<table>
 </table>
+<br>
+ENTER YOUR NAME:<input type="text" name="user">
+<br>
+ENTER YOUR PASSWORD:<input type="password" name="password">
+<br>
+RE-ENTER YOUR PASSWORD:<input type="password" name="password_again">
+<br>
+<!-- yet to include other form details -->
 
- <p>
- </p>
-</div>
-{% endblock %}
+<input type =  "submit" value="sign">
+</form>
+
+
+

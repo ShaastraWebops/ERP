@@ -6,7 +6,7 @@ from django.contrib import auth
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 import datetime
-from forms import UserProfileForm
+from forms import UserProfileForm ,UserLoginForm
 from models import *
 #from django.NewForms import form_for_model
 from django import forms
@@ -58,42 +58,44 @@ def create_core(request):
 
 #This is the login,logout, already logged in , home views.
 def home (request):
-    redirected=session_get(request,"from_url")
-    access_denied = session_get (request, "access_denied")
-    logged_in = session_get (request, "logged_in")
-    already_logged = session_get (request, "already_logged")
+    #we do not need these variable now
+    redirected=request.session.get(request,"from_url")
+    access_denied = request.session.get (request, "access_denied")
+    logged_in = request.session.get(request, "logged_in")
+    already_logged = request.session.get(request, "already_logged")
     key = request.session.session_key
-    return render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
+    
+    return render_to_response('home/home.html', locals(), context_instance= Context(request)) 
 
 def edited (request):
 
     print dir(request.session)
     print request.session.keys()
-    response = render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
+    response = render_to_response('home/home.html', locals(), context_instance= Context(request)) 
     return response
 
 def registered (request):
 
-    redirected=session_get(request,"from_url")
-    access_denied = session_get (request, "access_denied")
-    logged_in = session_get (request, "logged_in")
-    already_logged = session_get (request, "already_logged")
-    return render_to_response('home/registered.html', locals(), context_instance= global_context(request)) 
+    redirected=request.session.get(request,"from_url")
+    access_denied = request.session.get(request, "access_denied")
+    logged_in = request.session.get (request, "logged_in")
+    already_logged = request.session.get(request, "already_logged")
+    return render_to_response('home/registered.html', locals(), context_instance= Context(request)) 
 
-def deadlines(request):
-    return render_to_response('home/deadlines.html', locals(), context_instance= global_context(request))
 
-@no_login
+
+
+#@no_login
 def login (request):
 
     redirected = request.session.get ("from_url", False)
-    registered = session_get (request, "registered")
-    form = forms.UserLoginForm ()
+    registered = request.session.get(request, "registered")
+    #form = forms.UserLoginForm ()
 
     if request.method == 'POST':
         data = request.POST.copy()
 
-        form = forms.UserLoginForm (data)
+        form = UserLoginForm (data)
 	if form.is_valid():
             form = forms.UserLoginForm (data)
             if form.is_valid():
@@ -101,7 +103,7 @@ def login (request):
                 if user is not None and user.is_active == True:
                     auth.login (request, user)
 
-                    url = session_get(request, "from_url")
+                    url = request.session.get(request, "from_url")
                     # Handle redirection
                     if not url:
                         url = "%s/home/"%settings.SITE_URL
@@ -117,11 +119,11 @@ def login (request):
                 request.session['invalid_login'] = True
                 return HttpResponseRedirect (request.path)
         else: 
-            invalid_login = session_get(request, "invalid_login")
-            form = forms.UserLoginForm ()
+            invalid_login =request.session.get(request, "invalid_login")
+            form = UserLoginForm ()
     else:
         pass
-    return render_to_response('home/login.html', locals(), context_instance= global_context(request)) 
+    return render_to_response('home/login_2.html', locals(), context_instance= Context(request)) 
 
 
 def logout (request):
@@ -135,5 +137,5 @@ def logout (request):
             pass
         return response
 
-    return render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
+    return render_to_response('home/home.html', locals(), context_instance= Context(request)) 
 
