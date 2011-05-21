@@ -3,26 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
  <head>
   <title>
-   Shaastra 2010 User Portal
+   Shaastra ERP
   </title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>
    {{ title }}
   </title>
-  <link rel="stylesheet" href="{{MEDIA_URL}}/css/style.css" type="text/css" />
-  <link rel="icon" href="{{MEDIA_URL}}/images/favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="{{MEDIA_URL}}/js/Calendar/calendar.css" />
-  <script language="javascript" type="text/javascript" src="{{MEDIA_URL}}/js/actb.js">
-  </script>
-  <script language="javascript" type="text/javascript" src="{{MEDIA_URL}}/js/sorttable.js">
-  </script>
-  <script language="javascript" type="text/javascript" src="{{MEDIA_URL}}/js/actb2.js">
-  </script>
-  <script language="javascript" type="text/javascript" src="{{MEDIA_URL}}/js/ajax.js">
-  </script>
-  <script language="javascript" type="text/javascript" src="{{MEDIA_URL}}/js/common.js">
-  </script>
-  <link rel="top" title="Shaastra 2010 User Portal" href="{{SITE_URL}}" />
+ 
+  <link rel="top" title="Shaastra ERP" href="{{SITE_URL}}" />
 
  </head>
 
@@ -40,18 +28,7 @@
         {% block profile %}
              {% endblock %}
 	    <div class="errors">
-         <span class="deadline">
-           <!--<b>10th September is the final deadline for events and accommodation registrations.<br/>Only 
-               <script type="text/javascript">
-                today=new Date()
-                var deadline=new Date(today.getFullYear(), 8, 10) //3rd September (Month is 0-11 in JavaScript)
-                var one_day=1000*60*60*24//Set 1 day in milliseconds
-                document.write(Math.ceil((deadline.getTime()-today.getTime())/(one_day)))//Calculate difference btw the two dates, and convert to days
-               </script>
-            days left. Hurry!!
-           </b>-->
-           <b><a href="{{SITE_URL}}/home/deadlines/">Click here</a> to view the event registration deadline details of pre-registered events. Second Phase registrations are now over. Check the respective event pages on the Main site for updates.</b>
-         </span>
+         
         </div>
              {% block body %}
              {% endblock %}
@@ -78,13 +55,13 @@
        <a class="bottomlinks" href="{{SITE_URL}}/home/">
         Home&nbsp;|
        </a>
-       <a class="bottomlinks" href="{{SITE_URL}}/register/user/">
+       <a class="bottomlinks" href="{{SITE_URL}}/users/register/">
         Register&nbsp;|
        </a>
        <a class="bottomlinks" href="{{SITE_URL}}/profile/">
         Profile&nbsp;|
        </a>
-       <a class="bottomlinks" href="{{UNB_URL}}/forum.php?req=setuser">Helpdesk</a> 
+
       </div>
       <div id="footer-center">
        <a href="http://www.shaastra.org/" title="">

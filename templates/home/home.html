@@ -1,6 +1,6 @@
+{% extends "base_default.html" %}
 
-
-
+{% block body %}
 
 <!--PHP SESS_ID : {{ session_keys }} </br>--->
 <!--DJANGO SESS ID : {{ key }} </br>-->
@@ -26,33 +26,21 @@
   Shaastra 2011 erp
  </h1>
  <p align="center">
-  Welcome  
+  Welcome to the site  
  </p>
  <br />
  <br />
-
-<body>
-<form action="/login/" method="POST">
-<!--
+<p align="Center">
+Not registered yet?
+<a href="{{SITE_URL}}/users/register/">Register Now</a>
 <br>
-ENTER YOUR NAME:<input type="text" name="user">
-<br>
-ENTER YOUR PASSWORD:<input type="password" name="password" value="password">
-<br>
- yet to include other form details -->
-{{form.as_table}}
-<input type =  "submit" value="signin ">
-</form>
 
 
-
-<h4>wanna become a core just click<h4>
-<form action ="/create_core/" method="GET">
-
-<br>
-<input type = "submit" value="i_am_core">
-</form>
-<table>
+<p align="Center">
+Already Registered, then Click Here to Log in.
+<a href="{{SITE_URL}}/home/login/">Login Now</a>
 
 
+</div>
 
+{% endblock %}

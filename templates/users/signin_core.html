@@ -1,3 +1,6 @@
+{% extends "base_default.html" %}
+
+{% block body %}
 <html>
 <head>
 <title>
@@ -7,12 +10,10 @@ PLEASE ENTER YOUR DETAILS
 </head>
 
 <body>
-<form action="/create_core/" method="POST">
-<h5>{{enter}}</h5>
+<form action="/register_user/" method="POST">
 
-{{form.as_table}}
 <br>
-
+   {{ form.as_table }}
 <br>
 <!-- yet to include other form details -->
 
@@ -20,6 +21,4 @@ PLEASE ENTER YOUR DETAILS
 </form>
 
 
-
-</body>
-</html>
+{% endblock %}

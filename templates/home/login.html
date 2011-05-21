@@ -26,11 +26,7 @@
   Login
  </h1>
  <p align="center">
-  Creating an account at the Shaastra User Portal allows you to interact
-    with other particpants, and the coordinators of the Shaastra Events. You
-    can also pre-register for certain events, and for hospitality service at a
-    later date.
- </p>
+  </p>
 </div>
 
 <table cellspacing="30" rules="cols" cellpadding="10">
@@ -42,8 +38,8 @@
   Create an account
  </h2>
  <p>
-  To register with the userportal,
-  <a href="{{SITE_URL}}/register/user">
+  To register with the ERP,
+  <a href="{{SITE_URL}}/users/register">
    click here
   </a>
  </p>
@@ -56,7 +52,7 @@
  <h2>
   Already have an account?
  </h2>
- <form action="{{SITE_URL}}/home/login/" method="POST">
+ <form action="{{SITE_URL}}/home/login/" method="POST">{% csrf_token %}
   <table name="login">
 
 <tr>
@@ -122,9 +118,7 @@
   </a>
  </p>
 </div>
-<div class = "warning">
-Login to access the HelpDesk
-</div>
+
 
 </td>
 </tr>

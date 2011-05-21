@@ -28,7 +28,7 @@ GENDER_CHOICES = (
 #Author-Krishna Shrinivas
 
 class userprofile(models.Model):
-    user_name= models.ForeignKey(User, unique=True)
+    user= models.ForeignKey(User, unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     department= models.ForeignKey(Department,related_name="dept_user_belong")
