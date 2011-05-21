@@ -33,20 +33,15 @@
 
 <body>
 <form action="/login/" method="POST">
-<h5>{{enter}}</h5>
-
+<!--
 <br>
 ENTER YOUR NAME:<input type="text" name="user">
 <br>
 ENTER YOUR PASSWORD:<input type="password" name="password" value="password">
 <br>
-RE-ENTER YOUR PASSWORD:<input type="password" name="password_again">
-<br>
-<!-- yet to include other form details -->
-
-
-
-<input type =  "submit" value="sign">
+ yet to include other form details -->
+{{form.as_table}}
+<input type =  "submit" value="signin ">
 </form>
 
 

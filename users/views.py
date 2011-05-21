@@ -7,11 +7,12 @@ from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 import datetime
 from forms import UserProfileForm ,UserLoginForm
-from models import *
+from models import userprofile
 #from django.NewForms import form_for_model
 from django import forms
-
-
+import forms
+from erp.department import models
+from django.contrib.auth.models import User
 #author :vivek kumar bagaria
 #description in short
 #we take the details from the user
@@ -27,16 +28,21 @@ def create_core(request):
         data=request.POST.copy()
         form=UserProfileForm(data)
         if form.is_valid():
-            if form.cleaned_data["password"] == form.cleaned_data["password_again"]:
-                user = models.User.objects.create_user(username = form.cleaned_data['username'],email = form.cleaned_data['email'],password = form.cleaned_data['password'])
+            print "form valid"
+            if form.cleaned_data["password_again"] == form.cleaned_data["password"]:
+                print "password right"
+                username = form.cleaned_data['user_name']
+                user = User.objects.create_user(username,email = form.cleaned_data['email'],password = form.cleaned_data['password'])
                 user.is_staff=True #took from userportal
                 user.save()
-                user_profile=models.Userprofile(user = user,
+                department=models.Department(Dept_Name=form.cleaned_data['department'])
+                department_monitor=models.Department(Dept_Name=form.cleaned_data['department_monitor'])
+                user_profile=userprofile(user_name  = user,
                                                 first_name = form.cleaned_data['first_name'],
                                                 last_name  = form.cleaned_data['last_name'],
-                                                department = form.cleaned_data['department'],
+                                                department = department,
                                                 mobile_number= form.cleaned_data['mobile_number'],
-                                                department_monitor = form.cleaned_data['department_monitor']
+                                                department_monitor = department_monitor
                                                 )
                 try:
                     user_profile.save()
@@ -44,10 +50,14 @@ def create_core(request):
                     success_message="you have not been registered"
                     
                 except:
+                    print "some problem"
                     user.delete();
-                    user_profile.delete()
+                    #check this below comment is it neccessary
+                    #user_profile.delete()
+            return render_to_response('tasks/main.html' , locals() ,context_instance=Context(request ,locals()))
+
         context     = Context(request ,locals())
-        return render_to_response('tasks/main.html' , locals() ,context_instance=context)
+        return render_to_response('sorry.html' , locals() ,context_instance=context)
    
 
     else:
@@ -94,39 +104,42 @@ def login (request):
     redirected = request.session.get ("from_url", False)
     registered = request.session.get(request, "registered")
     #form = forms.UserLoginForm ()
-
+    print "in function"
     if request.method == 'POST':
         data = request.POST.copy()
-
+        print "POSTED"
         form = UserLoginForm (data)
 	if form.is_valid():
+            print "valid form"
             form = forms.UserLoginForm (data)
             if form.is_valid():
                 user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data["password"])
                 if user is not None and user.is_active == True:
                     auth.login (request, user)
-
+                    print "logged"
                     url = request.session.get(request, "from_url")
                     # Handle redirection
                     if not url:
                         url = "%s/home/"%settings.SITE_URL
 
                     request.session['logged_in'] = True
-                    response= HttpResponseRedirect (url)
+                    #response= HttpResponseRedirect (url)
                     try:
                         response.set_cookie('logged_out', 0)
                     except:
                         pass
-                    return response
+                    return render_to_response('home/login_2.html', locals(), context_instance= Context(request)) 
             else:
                 request.session['invalid_login'] = True
                 return HttpResponseRedirect (request.path)
+
         else: 
+            print "invalid form"
             invalid_login =request.session.get(request, "invalid_login")
             form = UserLoginForm ()
     else:
         pass
-    return render_to_response('home/login_2.html', locals(), context_instance= Context(request)) 
+    return render_to_response('home/home.html', locals(), context_instance= Context(request)) 
 
 
 def logout (request):
