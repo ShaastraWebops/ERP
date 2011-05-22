@@ -11,7 +11,7 @@ from django.contrib.sessions.models import Session
 import models,forms
 from erp.misc.util import *
 # Take care of session variable
-from erp.home import *
+from erp.home import models
 
 def home(request):
    redirected=session_get (request,"from_url")

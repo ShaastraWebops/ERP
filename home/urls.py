@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from django.contrib import admin
 
-urlpatterns = patterns('home.views',
+urlpatterns = patterns('erp.home.views',
       (r'^$', 'home'),
       (r'^login/$', 'login'),
       #(r'^login/forgot/$', 'forgot_password'),
