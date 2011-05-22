@@ -20,8 +20,12 @@
 {%endif%}
     -->
 
-    
+{% if user.is_authenticated %}
+You are logged in Click <a href="{{SITE_URL}}/home/login/"> Here</a> to visit your Dashboard.     
+{% endif %}
+
 <div class="register">
+
 
  <h1 align="center">
   Shaastra 2011 erp

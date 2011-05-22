@@ -23,7 +23,7 @@ def home(request):
 def login(request):
 
     redirected = request.session.get ("from_url", False)
-    registered = request.session.get(request, "registered")
+    registered = session_get(request, "registered")
     form = forms.UserLoginForm ()
 
     if request.method == 'POST':
@@ -36,13 +36,13 @@ def login(request):
                 user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data["password"])
                 if user is not None and user.is_active == True:
                     auth.login (request, user)
-                  #  url = session_get(request, "from_url")
+                    url = session_get(request, "from_url")
                 # Handle redirection
-                   # if not url:
-                    #    url = "%s/home/"%settings.SITE_URL
-                #
+                    if not url:
+                        url = "%s/home/"%settings.SITE_URL
+                
                     request.session['logged_in'] = True
-		     #   response= HttpResponseRedirect (url)
+		      #  response= HttpResponseRedirect (url)
 
                    
                     try:
@@ -56,7 +56,7 @@ def login(request):
                 return HttpResponseRedirect (request.path)
         else: 
             invalid_login =session_get(request, "invalid_login")
-            form = UserLoginForm ()
+            form = forms.UserLoginForm ()
     else:
         pass
     return render_to_response('home/login.html', locals(), context_instance= global_context(request)) 
