@@ -6,7 +6,9 @@
 <!--DJANGO SESS ID : {{ key }} </br>-->
 <!---{{variables}} </br>--->
 {% if user.is_anonymous %}
-Please Register before logging in.
+Please Login <a href="{{SITE_URL}}/home/login/">here</a>
+<br />
+Register before logging in.
 Register <a href="{{SITE_URL}}/users/register/">here</a>
 {% endif %}
 
