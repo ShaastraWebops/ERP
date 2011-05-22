@@ -39,7 +39,7 @@
  </h2>
  <p>
   To register with the ERP,
-  <a href="{{SITE_URL}}/users/register">
+  <a href="{{SITE_URL}}/erp/users/register">
    click here
   </a>
  </p>
@@ -52,7 +52,7 @@
  <h2>
   Already have an account?
  </h2>
- <form action="{{SITE_URL}}/home/login/" method="POST">{% csrf_token %}
+ <form action="{{SITE_URL}}/erp/dashboard/home/" method="POST">{% csrf_token %}
   <table name="login">
 
 <tr>
@@ -103,7 +103,7 @@
 <tr />
 
   </table>
-  <input type="submit" value="Login" />
+  <input type="submit" value="Loginnow" />
   {% if invalid_login %}
   <br />
 <div style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">

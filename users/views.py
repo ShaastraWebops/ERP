@@ -57,9 +57,9 @@ def register_user(request):
                     return render_to_response('home/registered.html' , locals() ,context_instance= global_context(request))
 
                 except:
-                    user.delete();
-                    user_profile.delete()
-		    raise	
+		    user.save()
+                    print "not successful" #just for debugging purpose
+                    raise	
         
            
 
