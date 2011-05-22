@@ -11,7 +11,7 @@ STAT_CHOICES= (
 	('N','Almost'),
 )
 
-class AbstractBaseTask(models.Models):
+class AbstractBaseTask(models.Model):
     """ Abstract Base Class for Task, SubTask.
 
     TODO:
@@ -21,7 +21,7 @@ class AbstractBaseTask(models.Models):
     """
     subject       = models.CharField(max_length=100 , null=True , blank=True)
     description   = models.TextField(null=True , blank=True)
-    creator       = models.ForeignKey(User)
+    creator       = models.ForeignKey(User, related_name = '%(app_label)s_%(class)s_creator')
     creation_date = models.DateTimeField (auto_now = True, editable = False)
     deadline      = models.DateTimeField(null=True , blank=True)
     status        = models.TextField(max_length=50,choices=STAT_CHOICES,default='OPEN')	
@@ -68,7 +68,7 @@ class AbstractComment (models.Model):
     Timestamp helps to order comments. It is generated automatically.
     Author can be used to select particular comments based on the author.
     """
-    author = models.ForeignKey (User)
+    author = models.ForeignKey (User, related_name = '%(app_label)s_%(class)s_author')
     comment_string = models.TextField ()
     time_stamp = models.DateTimeField (auto_now = True, editable = False)
 
