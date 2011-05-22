@@ -2,6 +2,9 @@ from django.db import models
 from django.forms import ModelForm
 from models import *
 from django import forms
+import re
+alnum_re = re.compile(r'^[\w.-]+$') # regexp. from jamesodo in #django  [a-zA-Z0-9_.]
+alphanumric = re.compile(r"[a-zA-Z0-9]+$")
 
 #author :vivek kumar bagaria
 #i changed it cause it was not working in the templates

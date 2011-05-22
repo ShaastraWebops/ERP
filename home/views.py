@@ -35,20 +35,21 @@ def login(request):
                 user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data["password"])
                 if user is not None and user.is_active == True:
                     auth.login (request, user)
-                    url = session_get(request, "from_url")
+                  #  url = session_get(request, "from_url")
                 # Handle redirection
-                    if not url:
-                        url = "%s/home/"%settings.SITE_URL
-                
-                       request.session['logged_in'] = True
-		       response= HttpResponseRedirect (url)
+                   # if not url:
+                    #    url = "%s/home/"%settings.SITE_URL
+                #
+                    request.session['logged_in'] = True
+		     #   response= HttpResponseRedirect (url)
 
                    
                     try:
                         response.set_cookie('logged_out', 0)
                     except:
                         pass
-                    return response
+                    return HttpResponseRedirect("%s/home/"%settings.SITE_URL)
+
             else:
                 request.session['invalid_login'] = True
                 return HttpResponseRedirect ("{{SITE_URL)}}/users/register")

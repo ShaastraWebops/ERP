@@ -7,11 +7,16 @@ from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 import datetime
 from forms import * 
-from models import *
-#from django.NewForms import form_for_model
 from django import forms
 from erp.users import *
 from erp.misc.util import *
+import MySQLdb
+from erp.department import *
+from erp.users import models
+
+
+
+
 #author :vivek kumar bagaria
 #description in short
 #we take the details from the user
@@ -41,106 +46,26 @@ def register_user(request):
                         first_name = form.cleaned_data['first_name'].lower(),
                         last_name = form.cleaned_data['last_name'].lower(),
                         mobile_number = form.cleaned_data['mobile_number'],
-                        department=form.cleaned_data['department'].lower(),
+                        department=Department.objects.get(Dept_Name=form.cleaned_data['department']),                        
+			department_monitor=Department.objects.get(Dept_Name=form.cleaned_data['department']),
 		     )
                 user.save()
 
                 try:
                     user_profile.save()
                     #other thing required to be wriiten
-                    
+                    return render_to_response('home/registered.html' , locals() ,context_instance= global_context(request))
+
                 except:
                     user.delete();
                     user_profile.delete()
+		    raise	
         
-        return render_to_response('{{SITE_URL}}/home/registered.html' , locals() ,context_instance= global_context(request))
-   
+           
 
     else:
         form = forms.AddUserForm ()
         
     return render_to_response('users/register.html' , locals() ,context_instance= global_context(request))
 
-#This is the login,logout, already logged in , home views.
-def home (request):
-    #we do not need these variable now
-    redirected=request.session.get(request,"from_url")
-    access_denied = request.session.get (request, "access_denied")
-    logged_in = request.session.get(request, "logged_in")
-    already_logged = request.session.get(request, "already_logged")
-    key = request.session.session_key
-    form = UserProfileForm()
-    return render_to_response('home/home.html', locals(), context_instance= Context(request)) 
-
-def edited (request):
-
-    print dir(request.session)
-    print request.session.keys()
-    response = render_to_response('home/home.html', locals(), context_instance= Context(request)) 
-    return response
-
-def registered (request):
-
-    redirected=request.session.get(request,"from_url")
-    access_denied = request.session.get(request, "access_denied")
-    logged_in = request.session.get (request, "logged_in")
-    already_logged = request.session.get(request, "already_logged")
-    return render_to_response('home/registered.html', locals(), context_instance= Context(request)) 
-
-
-
-
-@no_login
-def login (request):
-
-    redirected = request.session.get ("from_url", False)
-    registered = request.session.get(request, "registered")
-    #form = forms.UserLoginForm ()
-
-    if request.method == 'POST':
-        data = request.POST.copy()
-
-        form = UserLoginForm (data)
-	if form.is_valid():
-            form = forms.UserLoginForm (data)
-            if form.is_valid():
-                user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data["password"])
-                if user is not None and user.is_active == True:
-                    auth.login (request, user)
-
-                    url = request.session.get(request, "from_url")
-                    # Handle redirection
-                    if not url:
-                        url = "%s/home/"%settings.SITE_URL
-
-                    request.session['logged_in'] = True
-                    response= HttpResponseRedirect (url)
-                    try:
-                        response.set_cookie('logged_out', 0)
-                    except:
-                        pass
-                    return response
-            else:
-                request.session['invalid_login'] = True
-                return HttpResponseRedirect (request.path)
-        else: 
-            invalid_login =request.session.get(request, "invalid_login")
-            form = UserLoginForm ()
-    else:
-        pass
-    return render_to_response('home/login_2.html', locals(), context_instance= Context(request)) 
-
-
-def logout (request):
-    if request.user.is_authenticated():
-        auth.logout (request)
-        url = "%s/home/"%settings.SITE_URL
-        response= HttpResponseRedirect (url)
-        try:
-            response.set_cookie('logged_out', 1)
-        except:
-            pass
-        return response
-
-    return HttpResponseRedirect ('/home/')
 

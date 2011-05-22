@@ -1,0 +1,56 @@
+{% extends "base_default.html" %}
+
+{% block body %}
+<div class="register">
+ <h1 align = "center">
+  User Registration
+ </h1>
+{% if user.is_authenticated %}
+<div class="errors">
+  You have already registered, and are logged in.
+</div>
+{% endif %}
+<div class = "warning">
+ <p>
+  If you have already registered, click
+  <a href="{{SITE_URL}}/home/login/">
+   here
+  </a>
+  to login. Otherwise, please fill in the following details to register:
+ </p>
+</div>
+
+
+<div class="info">
+
+ 
+<form id="reg_form" action="{{SITE_URL}}/users/register/" method="POST">{% csrf_token %}
+
+<table name="register" >
+  {% for field in  form  %}
+<tr>
+	<td id="{{ field.label }}_img">{% if field.errors %}
+	<img height=20 width=20 src="{{ MEDIA_URL }}/images/error.png">
+	    {% endif %}
+	</td>
+	<th>{{ field.label_tag }}</th>
+	<td>{{ field }}
+	<div style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top" id="{{ field.label }}_div">
+	{% if field.errors %}{% for error in field.errors %} {{ error|escape }} </br> {% endfor %}{% endif %}
+	</div>
+	</td>
+	<td><a onmouseover="Tip('{{ field.help_text }}')" onmouseout="UnTip()"><img height=20 width=20 src="{{ MEDIA_URL }}/images/help_icon.png"></a></td>
+</tr><tr></tr><tr></tr><tr></tr><tr></tr>
+  {% endfor %}
+</table>
+
+
+   <br />
+    <input type="button" value="Register Me">
+</form>
+
+</div>
+
+
+
+{% endblock %}
