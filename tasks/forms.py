@@ -6,6 +6,6 @@ from models import *
 #     class Meta:
 #         model = Comment
 
-class TaskForm (ModelForm):
-    class Meta:
-        model = Task
+# class TaskForm (ModelForm):
+#     class Meta:
+#         model = Task
