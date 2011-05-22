@@ -1,0 +1,29 @@
+{% extends "base_default.html" %}
+
+{% block body %}
+
+<!--PHP SESS_ID : {{ session_keys }} </br>--->
+<!--DJANGO SESS ID : {{ key }} </br>-->
+<!---{{variables}} </br>--->
+
+
+{% if user.is_authenticated %}
+<span style="font-size:200%;">* </span>
+Welcome {{ user.username }}, to Erp. 
+{% endif %}
+
+{% if logged_in %}
+
+<div class="info">
+ You have successfully logged in.
+</div>
+{%endif%}
+
+{% if already_logged %}
+<div class="errors">
+ You have already logged in.
+</div>
+{%endif%}
+    
+
+{% endblock %}

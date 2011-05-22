@@ -47,7 +47,7 @@ def register_user(request):
                         last_name = form.cleaned_data['last_name'].lower(),
                         mobile_number = form.cleaned_data['mobile_number'],
                         department=Department.objects.get(Dept_Name=form.cleaned_data['department']),                        
-			department_monitor=Department.objects.get(Dept_Name=form.cleaned_data['department']),
+			
 		     )
                 user.save()
 

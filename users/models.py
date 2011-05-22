@@ -33,8 +33,7 @@ class userprofile(models.Model):
     last_name = models.CharField(max_length=30)
     department= models.ForeignKey(Department,related_name="dept_user_belong")
     mobile_number = models.CharField(max_length=15)
-    department_monitor=models.ForeignKey(Department,related_name="dept_user_monitor")   
-#We are changing to groups right? so, i removed the flags.
+    #We are changing to groups right? so, i removed the flags.
  
     #i Havent written the methods as yet, do we use them as methods in a class or in views?
     def __str__(self):

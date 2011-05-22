@@ -6,6 +6,18 @@ import re
 alnum_re = re.compile(r'^[\w.-]+$') # regexp. from jamesodo in #django  [a-zA-Z0-9_.]
 alphanumric = re.compile(r"[a-zA-Z0-9]+$")
 
+DEPT_CHOICES    = (
+	("Events", "Events"),
+	("QMS", "Quality Management"),
+	("Finance", "Finance"),
+	("Sponsorship", "Sponsorship"),
+	("Evolve", "Evolve"),
+	("Facilities", "Facilities"),
+	("Webops", "Web Operations"),
+	("Hospitality", "Hospitality"),
+	("Publicity", "Publicity"),
+	("Design", "Design"),
+)
 #author :vivek kumar bagaria
 #i changed it cause it was not working in the templates
 class AddUserForm (forms.Form):
@@ -16,7 +28,7 @@ class AddUserForm (forms.Form):
     password=forms.CharField(min_length=6, max_length=30, widget=forms.PasswordInput,help_text='Enter a password that you can remember')
     password_again=forms.CharField(max_length=30, widget=forms.PasswordInput,help_text='Enter the same password that you entered above')
     mobile_number=forms.CharField(max_length=15,help_text='Enter your mobile number. eg, 9884098840')
-    department=forms.CharField(max_length=15)    
+    department=forms.ChoiceField(choices=DEPT_CHOICES)    
     
     def clean_username(self):
         if not alnum_re.search(self.cleaned_data['username']):

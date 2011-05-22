@@ -48,15 +48,28 @@ def login(request):
                         response.set_cookie('logged_out', 0)
                     except:
                         pass
-                    return HttpResponseRedirect("%s/home/"%settings.SITE_URL)
+                    return HttpResponseRedirect("%s/dashboard/home"%settings.SITE_URL)
 
             else:
                 request.session['invalid_login'] = True
-                return HttpResponseRedirect ("{{SITE_URL)}}/users/register")
+                return HttpResponseRedirect (request.path)
         else: 
             invalid_login =session_get(request, "invalid_login")
             form = UserLoginForm ()
     else:
         pass
     return render_to_response('home/login.html', locals(), context_instance= global_context(request)) 
+
+def logout (request):
+    if request.user.is_authenticated():
+        auth.logout (request)
+        url = "%s/home/"%settings.SITE_URL
+        response= HttpResponseRedirect (url)
+        try:
+          #  response.set_cookie('unb_User',"")
+            response.set_cookie('logged_out', 1)
+        except:
+            pass
+        return response
+    return render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
 
