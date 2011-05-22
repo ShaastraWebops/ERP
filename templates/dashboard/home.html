@@ -5,7 +5,10 @@
 <!--PHP SESS_ID : {{ session_keys }} </br>--->
 <!--DJANGO SESS ID : {{ key }} </br>-->
 <!---{{variables}} </br>--->
-
+{% if user.is_anonymous %}
+Please Register before logging in.
+Register <a href="{{SITE_URL}}/users/register/">here</a>
+{% endif %}
 
 {% if user.is_authenticated %}
 <span style="font-size:200%;">* </span>
