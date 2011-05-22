@@ -13,8 +13,8 @@ from erp.misc.util import *
 import MySQLdb
 from erp.department import *
 from erp.users import models
-
-
+import sha, random
+from django.core.mail import send_mail
 
 
 #author :vivek kumar bagaria
@@ -30,9 +30,11 @@ def register_user(request):
     if request.method=='POST':
         data=request.POST.copy()
         form = forms.AddUserForm (data)
-        
+        print "posrted"
         if form.is_valid():
+            print "valid"
             if form.cleaned_data["password"] == form.cleaned_data["password_again"]:
+		print "passowrd right"
                 user = models.User.objects.create_user(
                     username = form.cleaned_data['username'],
                     email = form.cleaned_data['email'],
@@ -41,16 +43,27 @@ def register_user(request):
                     )        
                 user.is_active=True #took from userportal
                 user.save()
-		user_profile = models.userprofile(
+                
+		salt = sha.new(str(random.random())).hexdigest()[:5]
+                activation_key = sha.new(salt+user.username).hexdigest()
+                key_expires=datetime.datetime.today() + datetime.timedelta(2)
+    		user_profile = models.userprofile(
                         user = user,
                         first_name = form.cleaned_data['first_name'].lower(),
                         last_name = form.cleaned_data['last_name'].lower(),
                         mobile_number = form.cleaned_data['mobile_number'],
                         department=Department.objects.get(Dept_Name=form.cleaned_data['department']),                        
 			department_monitor=Department.objects.get(Dept_Name=form.cleaned_data['department']),
+                        #activation_key=activation_key,
+                        #key_expires=key_expires ,
 		     )
                 user.save()
-
+		print "send email"
+                mail_template=get_template('email/activate.html')
+                body = mail_template.render(Context({'username':user.username,
+							 'SITE_URL':settings.SITE_URL,
+							 'activationkey':activation_key }))
+                send_mail('you have been invited as to join the erp groups ', body,'noreply@shaastra.org', [user.email,], fail_silently=False)
                 try:
                     user_profile.save()
                     #other thing required to be wriiten

@@ -12,6 +12,7 @@ import models,forms
 from erp.misc.util import *
 # Take care of session variable
 from erp.home import *
+
 def home(request):
    redirected=session_get (request,"from_url")
    access_denied = (request, "access_denied")
