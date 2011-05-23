@@ -10,7 +10,7 @@ STAT_CHOICES= (
 	('L','Overdue'),
 	('N','Almost'),
 )
-
+    
 class AbstractBaseTask(models.Model):
     """ Abstract Base Class for Task, SubTask.
 
@@ -29,6 +29,7 @@ class AbstractBaseTask(models.Model):
         abstract = True
         
 class Task(AbstractBaseTask):
+
     """ Task Model
 
     Note : The department where the Task originated is understood from

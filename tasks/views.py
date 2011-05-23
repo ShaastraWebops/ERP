@@ -65,3 +65,66 @@ def assign_task(request):
         
 
                 
+# author: Vijay Karthik
+def core_portal(request):
+    display_completed_tasks = False
+    display_created_tasks = False
+    display = False
+    return render_to_response('tasks/core_portal.html', locals())
+
+def listoftasks(request):
+    objects =  Task.objects.filter(creator = 1)      # NEEDS to be changed  
+    tasks = {}
+    d = []
+    for row in objects:
+        ds = []
+        sub_task = SubTask.objects.filter(task = row)
+        for subrow in sub_task:
+            cs = []
+            cs.append(subrow.subject)
+            cs.append(subrow.description)
+            cs.append(subrow.creator)
+            cs.append(subrow.creation_date)
+            cs.append(subrow.deadline)
+            cs.append(subrow.status)            
+            cs.append(subrow.coords) # NEEDS proper representation.
+            try:
+                cs.append(Department.objects.get(Dept_Name = subrow.department.Dept_Name).Dept_Name)
+            except:
+                cs.append("unknown")
+            ds.append(cs)
+        c = []
+        c.append(row.subject)
+        c.append(row.description)
+        c.append(row.creator)
+        c.append(row.creation_date)
+        c.append(row.deadline)
+        c.append(row.status)
+        c.append(ds)
+        d.append(c)
+    task_dict = {'tasks' : d}
+    task_dict['display_created_tasks'] = True
+    task_dict['display_completed_tasks'] = False
+    return render_to_response("tasks/core_portal.html", task_dict)
+
+def completedsubtasks(request):
+    ds = []
+    objects = SubTask.objects.filter(creator = 1, status = "Completed")      # Creator NEEDS to be changed  
+    for subrow in objects:
+        cs = []
+        cs.append(subrow.subject)
+        cs.append(subrow.description)
+        cs.append(subrow.creator)
+        cs.append(subrow.creation_date)
+        cs.append(subrow.deadline)
+        cs.append(subrow.status)            
+        cs.append(subrow.coords) # NEEDS proper representation.
+        try:
+            cs.append(Department.objects.get(Dept_Name = subrow.department.Dept_Name).Dept_Name)
+        except:
+            cs.append("unknown")
+        ds.append(cs)
+    task_dict = {'subtasks' : ds}
+    task_dict['display_created_tasks'] = False
+    task_dict['display_completed_tasks'] = True
+    return render_to_response("tasks/core_portal.html", task_dict)
