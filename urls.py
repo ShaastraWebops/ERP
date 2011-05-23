@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     (r'^erp/users/', include('erp.users.urls')),
     (r'^erp/home/',include('erp.home.urls')),
     (r'^erp/dashboard/',include('erp.dashboard.urls')),	
+    (r'^erp/tasks/',include('erp.tasks.urls')),	
     #(r'^now/sign.html$', sign_in, ),
     # Examples:
     # url(r'^$', 'erp.views.home', name='home'),
