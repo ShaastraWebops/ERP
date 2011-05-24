@@ -13,11 +13,15 @@ DEP_CHOICES    = (
 	("Publicity", "Publicity"),
 	("Design", "Design"),
 )
+
 # Create your models here.
 #This is the initial department model
 class Department(models.Model):
+    Dept_Name= models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
+    Event_Manager=models.ForeignKey(User, related_name = "department_monitor")
+    #This is done assuming that cores are just users with relevant permissions
+    
 
-	Dept_Name= models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
-	Event_Manager=models.ForeignKey(User, related_name = "department_monitor")
-#This is done assuming that cores are just users with relevant permissions
+    def __str__(self):
+        return self.Dept_Name
 

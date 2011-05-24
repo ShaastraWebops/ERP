@@ -1,0 +1,29 @@
+{% extends "base_default.html" %}
+
+{% block body %}
+
+{% block timeline %}
+<h2>Timeline</h2>
+<table>
+  <tr>
+    <th>Subject</th>
+    <th>Creator</th>
+    <th>Deadline</th>
+  </tr>
+  {% for task in all_Tasks %}
+  <tr>
+    <td> {{ task.subject }} </td>
+    <td> {{ task.creator }} </td>
+    <td> {{ task.deadline }} </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}
+
+{% block completed %}
+
+{% endblock %}
+
+
+{% endblock %}

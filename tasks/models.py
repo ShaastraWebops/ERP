@@ -23,7 +23,7 @@ class AbstractBaseTask(models.Model):
     description   = models.TextField(null=True , blank=True)
     creator       = models.ForeignKey(User, related_name = '%(app_label)s_%(class)s_creator')
     creation_date = models.DateTimeField (auto_now = True, editable = False)
-    deadline      = models.DateTimeField(null=True , blank=True)
+    deadline      = models.DateField(null=True , blank=True)
     status        = models.TextField(max_length=50,choices=STAT_CHOICES,default='OPEN')	
     class Meta:
         abstract = True
@@ -37,6 +37,10 @@ class Task(AbstractBaseTask):
 
     A Task mainly consists of SubTasks which are created and assigned by the respective Cores of each department.
     """
+
+    def __str__(self):
+        return self.subject
+
     class Admin:
         pass
 
@@ -60,6 +64,9 @@ class SubTask(AbstractBaseTask):
     department = models.ForeignKey (Department)
     task = models.ForeignKey (Task)
 
+    def __str__(self):
+        return self.subject
+
     class Admin:
         pass
 
@@ -80,11 +87,21 @@ class TaskComment(AbstractComment):
     """ Comment written for a Task.
     """
     task = models.ForeignKey (Task)
+
+    def __str__(self):
+        return '%s %s' %(self.task.subject, self.id)
+    class Admin:
+        pass
         
 class SubTaskComment(AbstractComment):
     """ Comment written for a SubTask
     """
     subtask = models.ForeignKey (SubTask)
+
+    def __str__(self):
+        return '%s %s' %(self.task.subject, self.id)
+    class Admin:
+        pass
         
 class Label(models.Model):
     labelname = models.ForeignKey(Task, related_name="task_label")

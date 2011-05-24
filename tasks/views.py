@@ -16,7 +16,19 @@ def create_task(request):
     
     """
     form = TaskForm ()
+    user = request.user
+    print user.is_authenticated()
     return render_to_response('tasks/create_task.html' , locals())
+
+def timeline (request):
+    """ List all Tasks created by this user
+
+    (assumed to be Core as of now)
+    """
+    user = request.user
+    all_Tasks = Task.objects.filter ()
+    # all_Tasks = Task.objects.filter (creator = user)
+    return render_to_response('tasks/core_portal2.html' , locals())
 
 #author : vivek kumar bagaria
 def assign_task(request):
