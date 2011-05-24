@@ -1,7 +1,31 @@
 {% extends "base_default.html" %}
 
 {% block body %}
-<table>
-  {{ form.as_table }}
-</table>
+<h2>Create a New Task</h2>
+<form action="" method="post">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+  </table>
+  <h3>Finance</h3>
+  <table>
+    {{ finance_formset }}
+  </table>
+  <h3>Facilities</h3>
+  <table>
+    {{ facilities_formset }}
+  </table>
+  <table>
+    <tr>
+      <td>
+	<input type="submit" name = "Create" value="Create" />
+      </td>
+      <td>
+	<input type="hidden" name="next" value="../../home" />
+      </td>
+    </tr>
+  </table>
+  </table>
+</form>
 {% endblock %}
+

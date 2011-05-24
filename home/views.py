@@ -18,7 +18,7 @@ def home(request):
    access_denied = (request, "access_denied")
    logged_in = session_get (request, "logged_in")
    already_logged = session_get (request, "already_logged")
-   return render_to_response('home/home.html', locals()) 
+   return render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
 
 def login(request):
 
