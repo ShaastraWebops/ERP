@@ -36,6 +36,13 @@ class userprofile(models.Model):
     #We are changing to groups right? so, i removed the flags.
  
     #i Havent written the methods as yet, do we use them as methods in a class or in views?
+    class Meta:
+	
+        permissions=(
+            ("is_core",("Can give Task to coords")),
+            ("is_coord",("Can give tasks to vols")),
+            ("is_vol",("Can view the page")),
+            )
     def __str__(self):
 
         return self.user.username

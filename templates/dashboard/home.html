@@ -31,4 +31,11 @@ Welcome {{ user.username }}, to Erp.
 {%endif%}
     
 
+
+<form action="{{SITE_URL}}/erp/dashboard/documents/" method="POST">
+
+<input type = "submit" name="documents" value="My Documents">
+</form>
+
+
 {% endblock %}
