@@ -1,0 +1,26 @@
+README for the Scripts:
+
+Run the Scripts in this order:
+
+1.) create_groups()
+
+2.) create_depts ()
+
+3.) create_users ('users.txt')
+
+4.) create_tasks (n = 5, partial_subtask = False)
+
+This will create 5 Tasks for each Department's Core
+One SubTask is for the Core's Department.
+The other is for a random Department.
+
+
+5.) create_tasks (n = 3, partial_subtask = True)
+
+This will create 3 Tasks which have 2 SubTasks each assigned to. Mark
+both SubTasks for other Departments (at random), but don't assign to
+their Coords.
+
+6.) finish_some_subtasks ()
+
+Mark one complete SubTask in each Department as Done.

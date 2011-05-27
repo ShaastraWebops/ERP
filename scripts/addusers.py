@@ -71,11 +71,12 @@ def create_users (users_file_name):
 
 def create_tasks (n = 5, partial_subtask = False):
     """
-    Create n (= 5) Tasks (with 2 SubTasks each) for each Department's Core, with Deadline as 15 June, 2011.
-    One SubTask is for the Core's Department.
-    The other is for a random Department.
+    Create n (= 5) Tasks (with 2 SubTasks each) for each Department's
+    Core, with Deadline as 15 June, 2011. One SubTask is for the
+    Core's Department. The other is for a random Department.
 
-    If partial_subtask = True, mark both SubTasks for other Departments (at random), but don't assign to their Coords.
+    If partial_subtask = True, mark both SubTasks for other
+    Departments (at random), but don't assign to their Coords.
     """
     
     dept_names = [tup[0] for tup in DEP_CHOICES]
