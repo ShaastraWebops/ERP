@@ -13,7 +13,9 @@ class SubTaskCommentForm (ModelForm):
 class TaskForm (ModelForm):
     class Meta:
         model = Task
+        exclude = ('creator', )
 
 class SubTaskForm (ModelForm):
     class Meta:
         model = SubTask
+        exclude = ('creator', 'status', 'description', 'department', 'task')

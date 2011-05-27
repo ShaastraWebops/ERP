@@ -11,6 +11,7 @@ from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^erp/$', include('erp.home.urls')),
     (r'^erp/users/', include('erp.users.urls')),
     (r'^erp/home/',include('erp.home.urls')),
     (r'^erp/dashboard/',include('erp.dashboard.urls')),	

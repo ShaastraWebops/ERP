@@ -10,6 +10,8 @@ STAT_CHOICES= (
 	('L','Overdue'),
 	('N','Almost'),
 )
+
+DEFAULT_STATUS = 'O'
     
 class AbstractBaseTask(models.Model):
     """ Abstract Base Class for Task, SubTask.
@@ -19,12 +21,12 @@ class AbstractBaseTask(models.Model):
     * Draft saving
     * QMS Manager for the Task
     """
-    subject       = models.CharField(max_length=100 , null=True , blank=True)
+    subject       = models.CharField(max_length=100 , null=True)
     description   = models.TextField(null=True , blank=True)
     creator       = models.ForeignKey(User, related_name = '%(app_label)s_%(class)s_creator')
     creation_date = models.DateTimeField (auto_now = True, editable = False)
     deadline      = models.DateField(null=True , blank=True)
-    status        = models.TextField(max_length=50,choices=STAT_CHOICES,default='OPEN')	
+    status        = models.TextField(max_length=50,choices=STAT_CHOICES,default = DEFAULT_STATUS)	
     class Meta:
         abstract = True
         
@@ -60,7 +62,7 @@ class SubTask(AbstractBaseTask):
       handled differently from SubTasks that have been assigned to him
       by Cores)
     """
-    coords = models.ManyToManyField(User)
+    coords = models.ManyToManyField (User, blank = True)
     department = models.ForeignKey (Department)
     task = models.ForeignKey (Task)
 

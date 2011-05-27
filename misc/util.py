@@ -7,6 +7,7 @@ from django.template.context import Context, RequestContext
 
 from erp import settings
 from erp.users import models
+from erp.department.models import Department
 
 import MySQLdb
 import re, md5, time
@@ -19,11 +20,23 @@ MESSAGE = 4
 
 # Generates a context with the most used variables
 def global_context(request):
-    
+    try:
+        user_dept_name = request.user.userprofile_set.all()[0].department.Dept_Name
+    except:
+        user_dept_name = False
+    try:
+        core_group = request.user.groups.filter (name = 'Cores')
+        coord_group = request.user.groups.filter (name = 'Coords')
+    except:
+        coord_group = False
+        core_group = False
+
     context =  RequestContext (request,
             {'user':request.user,
             'SITE_URL':settings.SITE_URL,
-           
+             'user_dept_name': user_dept_name,
+             'is_core' : core_group,
+             'is_coord' : coord_group,
             })
     return context
 

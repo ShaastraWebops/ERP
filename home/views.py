@@ -14,11 +14,11 @@ from erp.misc.util import *
 from erp.home import models
 
 def home(request):
-   redirected=session_get (request,"from_url")
-   access_denied = (request, "access_denied")
-   logged_in = session_get (request, "logged_in")
-   already_logged = session_get (request, "already_logged")
-   return render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
+    redirected=session_get (request,"from_url")
+    access_denied = (request, "access_denied")
+    logged_in = session_get (request, "logged_in")
+    already_logged = session_get (request, "already_logged")
+    return render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
 
 def login(request):
 
@@ -49,7 +49,11 @@ def login(request):
                         response.set_cookie('logged_out', 0)
                     except:
                         pass
-                    return HttpResponseRedirect("%s/dashboard/home"%settings.SITE_URL)
+                    
+                    if redirected:
+                        return HttpResponseRedirect (redirected)
+                    else:
+                        return HttpResponseRedirect("%s/tasks/portal"%settings.SITE_URL)
 
             else:
                 request.session['invalid_login'] = True

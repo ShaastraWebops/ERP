@@ -29,7 +29,14 @@ Welcome {{ user.username }}, to Erp.
  You have already logged in.
 </div>
 {%endif%}
-    
+
+{% if user.is_authenticated %}
+
+{% block portal_stuff %}
+
+{% endblock %}
+
+{% endif %}
 
 
 <form action="{{SITE_URL}}/erp/dashboard/documents/" method="POST">

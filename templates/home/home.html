@@ -21,7 +21,7 @@
     -->
 
 {% if user.is_authenticated %}
-You are logged in Click <a href="{{SITE_URL}}/home/login/"> Here</a> to visit your Dashboard.     
+You are logged in Click <a href="{% url tasks.views.display_portal %}"> Here</a> to visit your Dashboard.     
 {% endif %}
 
 <div class="register">
@@ -37,12 +37,12 @@ You are logged in Click <a href="{{SITE_URL}}/home/login/"> Here</a> to visit yo
  <br />
 <p align="Center">
 Not registered yet?
-<a href="{{SITE_URL}}/users/register/">Register Now</a>
+<a href="{% url users.views.register_user %}">Register Now</a>
 <br>
 
 <p align="Center">
 Already Registered, then Click Here to Log in.
-<a href="{{SITE_URL}}/home/login/">Login Now</a>
+<a href="{% url home.views.login %}">Login Now</a>
 
 
 </div>

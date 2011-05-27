@@ -29,8 +29,7 @@ from django.contrib.auth.models import Group
 def register_user(request):
     
     # groups are created here
-    if Group.objects.count()=0:
-                 
+    if Group.objects.count() == 0:
         
         #for cores
         is_core =Group(name='core')

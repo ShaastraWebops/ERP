@@ -5,30 +5,147 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
+from django.forms.models import modelformset_factory
+from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 import datetime
 from forms import TaskForm
 from models import *
+# This seems necessary to avoid CSRF errors
+from erp.misc.util import *
+from erp.department.models import *
+from erp.settings import SITE_URL
 
 from django import forms
 
+# TODO :
+@needs_authentication
 def create_task(request):
     """Handle Creation of Task using TaskForm.
     
+    TODO:
+    Display the creator on the Task Create / Edit page
+    Is it okay if no SubTask forms are filled out?
     """
-    form = TaskForm ()
+    task_form = TaskForm ()
     user = request.user
-    print user.is_authenticated()
-    return render_to_response('tasks/create_task.html' , locals())
 
-def timeline (request):
-    """ List all Tasks created by this user
+    if user.groups.filter (name = 'Cores'):
+        print 'Core'
+    elif user.groups.filter (name = 'Coords'):
+        print 'Coords'
 
-    (assumed to be Core as of now)
+    dept_names = [name for name, description in DEP_CHOICES]
+    subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
+
+    # As of now, just display one form for each department
+    SubTaskFormSet = modelformset_factory (SubTask, exclude = subtask_exclusion_tuple, extra = 1)
+    all_depts_subtaskfs = SubTaskFormSet (prefix = 'all', queryset = SubTask.objects.none ())
+    # print all_depts_subtaskfs.forms
+    print all_depts_subtaskfs.total_form_count ()
+    if request.method == 'POST':
+        all_depts_subtaskfs = SubTaskFormSet (request.POST, prefix = 'all')
+        task_form = TaskForm (request.POST)
+        if task_form.is_valid ():
+            # commit = False creates an object from the ModelForm,
+            # instead of saving it
+            new_task = task_form.save (commit = False)
+            # Now, populate all model fields excluded from Task ModelForm
+            new_task.creator = user
+            subtask_ctr = 0
+            filled_forms_valid = True
+            for form in all_depts_subtaskfs.forms:
+                print form.has_changed (), form.is_valid ()
+                if form.has_changed () and not form.is_valid ():
+                    filled_forms_valid = False
+                    break
+            if filled_forms_valid:
+                # Save the Task object
+                new_task.save ()
+                for form in all_depts_subtaskfs.forms:
+                    if form.has_changed () and form.is_valid ():
+                        subtask_ctr += 1
+                        new_subtask = form.save (commit = False)
+                        # Populate all model fields excluded from SubTask ModelForm
+                        # NOTE : As per ERPver_2.PDF, creator of
+                        # subtask is same as creator of Task
+                        new_subtask.creator = user
+                        new_subtask.status = DEFAULT_STATUS
+                        new_subtask.task = new_task
+                        new_subtask.save ()
+                        # Save the many-to-many data for the FORM, not
+                        # the instance. Necessary, since we used commit = False
+                        form.save_m2m ()
+                return HttpResponseRedirect ('%s/tasks/timeline' % settings.SITE_URL)
+
+    return render_to_response('tasks/create_task.html' , locals(), context_instance = global_context (request))
+
+def get_timeline (user):
+    """
+    If user is a Core, return all Tasks created by user.
+    Else, return all Tasks for user's Department
+
+    Should it be based on Department instead of Core?
+    """
+    # Get user's department name
+    user_dept = user.userprofile_set.all()[0].department
+    if user.groups.filter (name = 'Cores'):
+        return Task.objects.filter (creator = user)
+    else:
+        return Task.objects.filter (creator__userprofile__department = user_dept)
+
+def get_subtasks (user):
+    """
+    Return all SubTasks assigned to user (assumed to be a Coord).
+    """
+    # Return list of SubTasks for which at least one of the coords is user
+    return SubTask.objects.filter (coords = user)
+    
+def get_unassigned_received_subtasks (user):
+    """
+    Return all SubTasks assigned to user's Department which have not been assigned to any Coord.
+    user is assumed to be a Core.
+    """
+    user_dept = user.userprofile_set.all()[0].department
+    return SubTask.objects.filter (department = user_dept).filter (coords = None)
+
+def get_requested_subtasks (user):
+    """
+    Return all SubTasks (created by user) requested from other Departments. 
+
+    user is assumed to be a Core.
+    """
+    user_dept = user.userprofile_set.all()[0].department
+    # Q object used here to negate the search
+    return SubTask.objects.filter (~Q (department = user_dept), creator = user)
+
+def get_completed_subtasks (user):
+    """
+    Return all SubTasks completed by coords in user's Department
+    """
+    user_dept = user.userprofile_set.all()[0].department
+    return SubTask.objects.filter (department = user_dept, status = 'C')
+    
+
+@needs_authentication    
+def display_portal (request):
+    """
+    List all Tasks created by this user
+
+    Check whether user is authenticated.
     """
     user = request.user
-    all_Tasks = Task.objects.filter ()
-    # all_Tasks = Task.objects.filter (creator = user)
-    return render_to_response('tasks/core_portal2.html' , locals())
+    if user.groups.filter (name = 'Cores'):
+        all_Tasks = get_timeline (user)
+        all_unassigned_received_SubTasks = get_unassigned_received_subtasks (user)
+        all_requested_SubTasks = get_requested_subtasks (user)
+        all_completed_SubTasks = get_completed_subtasks (user)
+        print user.username, all_unassigned_received_SubTasks, all_requested_SubTasks
+        return render_to_response('tasks/core_portal2.html' , locals(), context_instance = global_context (request))
+    else:
+        all_Tasks = get_timeline (user)
+        all_SubTasks = get_subtasks (user)
+        return render_to_response('tasks/coord_portal.html' , locals(), context_instance = global_context (request))
 
 #author : vivek kumar bagaria
 def assign_task(request):
@@ -73,7 +190,7 @@ def assign_task(request):
     display_form=TaskForm()
     
 
-    return render_to_response('tasks/assigned_task.html' , locals() ,context_instance=context)
+    return render_to_response('tasks/assigned_task.html' , locals(), context_instance = global_context (request))
         
 
                 
@@ -82,7 +199,7 @@ def core_portal(request):
     display_completed_tasks = False
     display_created_tasks = False
     display = False
-    return render_to_response('tasks/core_portal.html', locals())
+    return render_to_response('tasks/core_portal.html', locals(), context_instance = global_context (request))
 
 def listoftasks(request):
     objects =  Task.objects.filter(creator = 1)      # NEEDS to be changed  
@@ -139,4 +256,5 @@ def completedsubtasks(request):
     task_dict = {'subtasks' : ds}
     task_dict['display_created_tasks'] = False
     task_dict['display_completed_tasks'] = True
-    return render_to_response("tasks/core_portal.html", task_dict)
+    return render_to_response("tasks/core_portal.html", task_dict, context_instance = global_context (request))
+

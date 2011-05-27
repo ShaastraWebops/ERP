@@ -1,28 +1,93 @@
-{% extends "base_default.html" %}
+{% extends "tasks/portal_common.html" %}
 
-{% block body %}
+{% block portal_stuff %}
+
+<h1>Dashboard</h1>
+
+{% block received_requests %}
+<h2> Requests from other Departments </h2>
+<table>
+  <tr>
+    <th>Subject</th>
+    <th>Proposer</th>
+    <th>Deadline</th>
+    <th>Status</th>
+  </tr>
+  {% for subtask in all_unassigned_received_SubTasks %}
+  <tr>
+    <td> {{ subtask.subject }} </td>
+    <td> {{ subtask.creator }} </td>
+    <td> {{ subtask.deadline }} </td>
+    <td> {{ subtask.status }} </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
+
+{% block sent_requests %}
+<h2> Requests sent to other Departments </h2>
+<table>
+  <tr>
+    <th>Task Subject</th>
+    <th>SubTask Subject</th>
+    <th>Deadline</th>
+    <th>Status</th>
+  </tr>
+  {% for subtask in all_requested_SubTasks %}
+  <tr>
+    <td> {{ subtask.task.subject }} </td>
+    <td> {{ subtask.subject }} </td>
+    <td> {{ subtask.deadline }} </td>
+    <td> {{ subtask.status }} </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
 
 {% block timeline %}
-<h2>Timeline</h2>
+<h2>Timeline for {{ user_dept_name }} Department</h2>
 <table>
   <tr>
     <th>Subject</th>
     <th>Creator</th>
     <th>Deadline</th>
+    <th>Status</th>
   </tr>
   {% for task in all_Tasks %}
   <tr>
     <td> {{ task.subject }} </td>
     <td> {{ task.creator }} </td>
     <td> {{ task.deadline }} </td>
+    <td> {{ task.status }} </td>
   </tr>
   {% endfor %}
 </table>
 
 {% endblock %}
 
-{% block completed %}
+<a href="{% url tasks.views.create_task %}"><h2>Create a New Task</h2></a>
 
+{% block completed %}
+<h2> Completed SubTasks</h2>
+<table>
+  <tr>
+    <th>Subject</th>
+    <th>Finisher</th>
+    <!-- <th>Deadline</th> -->
+    <!-- <th>Status</th> -->
+  </tr>
+  {% for subtask in all_completed_SubTasks %}
+  <tr>
+    <td> {{ subtask.subject }} </td>
+    <td>
+      {% for coord in subtask.coords.all %}
+      {{ coord.username }} 
+      {% endfor %}
+    </td>
+    <!-- <td> {{ subtask.status }} </td> -->
+  </tr>
+  {% endfor %}
+</table>
 {% endblock %}
 
 

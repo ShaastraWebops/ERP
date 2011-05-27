@@ -5,15 +5,14 @@
 <form action="" method="post">
   {% csrf_token %}
   <table>
-    {{ form.as_table }}
+    {{ task_form.as_table }}
   </table>
-  <h3>Finance</h3>
+  <hr>
   <table>
-    {{ finance_formset }}
-  </table>
-  <h3>Facilities</h3>
-  <table>
-    {{ facilities_formset }}
+    {{ all_depts_subtaskfs.management_form }}
+    {% for form in all_depts_subtaskfs.forms %}
+    {{ form }}
+    {% endfor %}
   </table>
   <table>
     <tr>
