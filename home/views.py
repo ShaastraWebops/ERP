@@ -53,7 +53,7 @@ def login(request):
                     if redirected:
                         return HttpResponseRedirect (redirected)
                     else:
-                        return HttpResponseRedirect("%s/tasks/portal"%settings.SITE_URL)
+                        return HttpResponseRedirect("%s/tasks/core_portal"%settings.SITE_URL)
 
             else:
                 request.session['invalid_login'] = True

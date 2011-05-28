@@ -15,6 +15,11 @@
 <h1>Completed Subtasks</h1>
 <input type="submit" name = "Login">
 </form>
+
+<form method="post" action="{{SITE_URL}}/dashboard/documents/">
+<h1>View documents</h1>
+<input type="submit" name = "document" value="Documemts">
+</form>
 {% if display_created_tasks %}
 <table>
    {% for task in tasks %}

@@ -21,3 +21,7 @@ def home (request):
     already_logged = session_get (request, "already_logged")
     return render_to_response('dashboard/home.html', locals(), context_instance= global_context(request)) 
 
+
+def documents (request):
+
+    return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
