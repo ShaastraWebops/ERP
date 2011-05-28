@@ -8,7 +8,7 @@ from django.template.context import Context, RequestContext
 from django.utils.translation import ugettext as _
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.contrib.sessions.models import Session
-
+from erp.dashboard import forms
 from erp.misc.util import *
 from erp.settings import *
 import sha,random,datetime
@@ -23,5 +23,6 @@ def home (request):
 
 
 def documents (request):
-
+    
+    memberform=forms.add_team_member()
     return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
