@@ -12,6 +12,7 @@ import models,forms
 from erp.misc.util import *
 # Take care of session variable
 from erp.home import models
+from erp.users.models import *
 
 def home(request):
     redirected=session_get (request,"from_url")
@@ -42,11 +43,15 @@ def login(request):
                         url = "%s/home/"%settings.SITE_URL
                 
                     request.session['logged_in'] = True
+		    # wanted to get the name of the department
+		    m=userprofile.objects.get(user =user)
+		  
+		    request.session['department']=m.department.Dept_Name
 		      #  response= HttpResponseRedirect (url)
 
                    
                     try:
-                        response.set_cookie('logged_out', 0)
+                        response.set_cookie('logged_out', 0)					
                     except:
                         pass
                     

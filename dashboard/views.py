@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.contrib.sessions.models import Session
 from erp.dashboard import forms
+from erp.dashboard.models import teamdetails
 from erp.misc.util import *
 from erp.settings import *
 import sha,random,datetime
@@ -26,3 +27,30 @@ def documents (request):
     
     memberform=forms.add_team_member()
     return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
+
+def addteammember(request):
+    message="team member could not be added"
+    memberform=forms.add_team_member()
+    if request.method=='POST':
+        data=request.POST.copy()
+        form=forms.add_team_member(data)
+        if form.is_valid():
+            addmember=teamdetails(
+            name=models.User.objects.get(username=form.cleaned_data['name']) ,
+            email_id=form.cleaned_data['email_id'],
+            mobile_number=form.cleaned_data['mobile_number'],
+            department=Department.objects.get(Dept_Name=request.session['department']),
+            )
+        try:
+            addmember.save()
+            message="team member added"
+            print "peace"
+
+        except:
+            print "problem"
+            pass
+
+
+        return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
+
+

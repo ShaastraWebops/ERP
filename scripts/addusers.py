@@ -48,7 +48,7 @@ def create_users (users_file_name):
         if group == 'Cores':
             user.is_staff = True
             if user.groups.filter (name = 'Coords'):
-                user.groups.remove (Group.objects.get (name = 'Coords'))
+
         else:
             user.is_staff = False
         user.groups.add (Group.objects.get (name = group))
