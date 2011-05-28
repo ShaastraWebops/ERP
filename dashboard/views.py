@@ -24,13 +24,15 @@ def home (request):
 
 
 def documents (request):
-    
+    details=teamdetails.objects.all()#still to be filtered according to dept
     memberform=forms.add_team_member()
     return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
 
 def addteammember(request):
-    message="team member could not be added"
     memberform=forms.add_team_member()
+    message="team member could not be added"
+    details=teamdetails.objects.all()#still to be filtered according to dept
+    print details
     if request.method=='POST':
         data=request.POST.copy()
         form=forms.add_team_member(data)
