@@ -9,7 +9,7 @@ from forms import *
 from django import forms
 from erp.users import *
 from erp.misc.util import *
-from erp.department import *
+from erp.department.models import *
 from erp.users import models
 from django.contrib.auth.models import Group
 import sha,random,datetime
@@ -51,24 +51,24 @@ def register_user(request):
         
     if request.method=='POST':
         data=request.POST.copy()
-        form = forms.AddUserForm (data)
+        form = AddUserForm (data)
         
         if form.is_valid():
             if form.cleaned_data["password"] == form.cleaned_data["password_again"]:
-                user = models.User.objects.create_user(
+                user = User.objects.create_user(
                     username = form.cleaned_data['username'],
                     email = form.cleaned_data['email'],
                     password = form.cleaned_data['password']
 
                     )        
+		department=Department(Dept_Name="Webops")
                 user.is_active=True #took from userportal
                 user.save()
-		user_profile = models.userprofile(
+		user_profile = userprofile(
                         user = user,
                         first_name = form.cleaned_data['first_name'].lower(),
                         last_name = form.cleaned_data['last_name'].lower(),
-                        mobile_number = form.cleaned_data['mobile_number'],
-                        department=Department.objects.get(Dept_Name=form.cleaned_data['department']),                        
+                        chennai_number = form.cleaned_data['mobile_number'],                  
 			
 		     )
                 user.save()
@@ -79,6 +79,7 @@ def register_user(request):
 
                 try:
                     user_profile.save()
+		    print "done da.."
                     #other thing required to be wriiten
                     return render_to_response('home/registered.html' , locals() ,context_instance= global_context(request))
 
@@ -90,7 +91,7 @@ def register_user(request):
            
 
     else:
-        form = forms.AddUserForm ()
+        form = AddUserForm ()
         
     return render_to_response('users/register.html' , locals() ,context_instance= global_context(request))
 
@@ -138,7 +139,6 @@ def invite(request):
                                                    'SITE_URL':settings.SITE_URL,
                                                    'activationkey':activation_key
                                                    }))
-                print "came"
                 send_mail('Invitaiton from the core to join ERP',body,'noreplay@shaastra.org',emailid,fail_silently=False)
                 message="mail sent"
                 print "peace"
@@ -146,10 +146,14 @@ def invite(request):
                 message="mail could not be sent "
                 print "problem da.."
 
-    return render_to_response('users/invite_coord.html',locals(),context_instance = global_context(request))
+    return render_to_response('tasks/create_task.html',locals(),context_instance = global_context(request))
 
                                           
                     
             
-            
+def contact_details(request):
+    print "here "
+    profileform=personal_details()
+    return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
+    
   

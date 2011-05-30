@@ -18,16 +18,35 @@ DEPT_CHOICES    = (
 	("Publicity", "Publicity"),
 	("Design", "Design"),
 )
+
+
+HOSTEL_CHOICES  =(
+        ("Ganga","Ganga"),
+        ("Mandak","Mandak"),
+        ("Jamuna","Jamuna"),
+        ("Alak","Alak"),
+        ("Sarawati","Saraswati"),
+        ("Narmada","Narmada"),
+        ("Godav","Godav"),
+        ("Pampa","Pampa"),
+        ("Tambi","Tambi"),
+        ("Sindhu","Sindhu"),
+        ("Mahanadi","Mahanadi"),
+        ("Sharavati","Sharavati"),
+        ("Krishna","Krishna"),
+        ("Cauvery","Cauvery"),
+        ("Tapti","Tapti"),
+        ("Bhramhaputra","Bhramhaputra"),
+        ("Sarayu","Sarayu"),
+   
+        )
 #author :vivek kumar bagaria
 #i changed it cause it was not working in the templates
 class AddUserForm (forms.Form):
     username=forms.CharField(max_length=30,help_text='Enter a username. eg, siddharth_s')
-    first_name=forms.CharField(max_length=30,help_text='Enter your first name. eg, Siddharth')
-    last_name=forms.CharField(max_length=30,help_text='Enter your last name. eg, Swaminathan')
     email=forms.EmailField(help_text='Enter your e-mail address. eg, someone@gmail.com')
     password=forms.CharField(min_length=6, max_length=30, widget=forms.PasswordInput,help_text='Enter a password that you can remember')
     password_again=forms.CharField(max_length=30, widget=forms.PasswordInput,help_text='Enter the same password that you entered above')
-    mobile_number=forms.CharField(max_length=15,help_text='Enter your mobile number. eg, 9884098840')
     department=forms.ChoiceField(choices=DEPT_CHOICES)    
     
     def clean_username(self):
@@ -94,3 +113,20 @@ class ForgotPasswordForm(forms.Form):
 class invite_coord(forms.Form):
     name=forms.CharField(max_length=50)
     email_id=forms.CharField(help_text="coords email")
+
+
+
+
+class personal_details(forms.Form):
+    name=forms.CharField(max_length=50)
+    nick=forms.CharField(max_length=50)
+    rollno=forms.CharField(max_length=10)
+    chennai_number=forms.IntegerField()
+    emailid=forms.EmailField()
+    roomnumber=forms.IntegerField()
+    hostel= forms.ChoiceField(choices=HOSTEL_CHOICES)
+    summerstay=forms.CharField(max_length=30)
+    summer_number=forms.CharField(max_length=10)
+    department=forms.ChoiceField(choices=DEPT_CHOICES)    
+
+

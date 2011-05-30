@@ -29,10 +29,14 @@ GENDER_CHOICES = (
 
 class userprofile(models.Model):
     user = models.ForeignKey(User, unique=True)
+    nickname=models.CharField(max_length=30)
     first_name = models.CharField(max_length=30)
+    emailid     =models.EmailField()
     last_name = models.CharField(max_length=30)
     department= models.ForeignKey(Department,related_name="dept_user_belong")
-    mobile_number = models.CharField(max_length=15)
+    chennai_number = models.CharField(max_length=15)
+    summer_number = models.CharField(max_length=15)
+    summerstay  =models.CharField(max_length=30)
     #We are changing to groups right? so, i removed the flags.
  
     #i Havent written the methods as yet, do we use them as methods in a class or in views?

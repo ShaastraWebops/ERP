@@ -30,10 +30,11 @@ def documents (request):
 
 def addteammember(request):
     memberform=forms.add_team_member()
-    message="team member could not be added"
+    message="Hello"
     details=teamdetails.objects.all()#still to be filtered according to dept
     print details
     if request.method=='POST':
+        print "here"
         data=request.POST.copy()
         form=forms.add_team_member(data)
         if form.is_valid():
@@ -49,10 +50,46 @@ def addteammember(request):
             print "peace"
 
         except:
+            #message="team member could not be added"
             print "problem"
             pass
 
+    else:
+        message="team member could not be added"
+    return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
 
-        return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
+
+def deleteteammember(request):
+    memberform=forms.add_team_member()
+    message = "could not delete the team member "
+    details=teamdetails.objects.all()
+    if "d" in request.GET:
+        number=request.GET['d']
+        delete=teamdetails.objects.filter(id=number)
+        print delete
+
+        delete.delete();
+        details=teamdetails.objects.all()
+        message = "Team member deleted "
+        print number
+        print "yahoo"
+        print delete
 
 
+
+    return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
+
+"""
+def editteammember(request):
+    memberform=forms.add_team_member()
+    message = "could not delete the team member "
+    details=teamdetails.objects.all()
+    button="Save"
+        if "e" in request.GET:
+            number=request.GET['e']
+            edit=teamdetails.objects.filter(id=number)
+    return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
+            
+                
+"""    
+      

@@ -83,3 +83,6 @@ def logout (request):
         return response
     return render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
 
+
+def test (request):
+    return render_to_response('home.html', locals(), context_instance= global_context(request)) 
