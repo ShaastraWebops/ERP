@@ -20,6 +20,12 @@
 <h1>View documents</h1>
 <input type="submit" name = "document" value="Documemts">
 </form>
+
+
+<form method="post" action="{{SITE_URL}}/users/invite_page/">
+<h1>View documents</h1>
+<input type="submit" name = "invite" value="Invite a coord">
+</form>
 {% if display_created_tasks %}
 <table>
    {% for task in tasks %}

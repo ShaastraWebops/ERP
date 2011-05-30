@@ -71,6 +71,7 @@ class AddUserForm (forms.Form):
         raise forms.ValidationError('This email address is already taken. Please choose another.')
 
     def clean_password(self):
+
         if self.prefix:
             field_name1 = '%s-password'%self.prefix
             field_name2 = '%s-password_again'%self.prefix
@@ -87,3 +88,9 @@ class AddUserForm (forms.Form):
 
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField()   
+
+
+
+class invite_coord(forms.Form):
+    name=forms.CharField(max_length=50)
+    email_id=forms.CharField(help_text="coords email")

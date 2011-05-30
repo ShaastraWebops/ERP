@@ -5,16 +5,16 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
-import datetime
 from forms import * 
 from django import forms
 from erp.users import *
 from erp.misc.util import *
-import MySQLdb
 from erp.department import *
 from erp.users import models
 from django.contrib.auth.models import Group
-
+import sha,random,datetime
+from erp.users.forms import *
+from django.core.mail import send_mail,EmailMessage,SMTPConnection
 
 
 #author :vivek kumar bagaria
@@ -95,3 +95,61 @@ def register_user(request):
     return render_to_response('users/register.html' , locals() ,context_instance= global_context(request))
 
 
+
+
+#author: vivek
+def invite_page(request):
+    inviteform=invite_coord()
+
+    return render_to_response('users/invite_coord.html',locals(),context_instance = global_context(request))
+
+
+
+
+
+
+# author: vivek
+def invite(request):
+    inviteform=invite_coord()
+    message=""
+    if request.method=="POST":
+        data=request.POST.copy()
+        form=invite_coord(data)
+        if form.is_valid():
+            name=form.cleaned_data['name']
+            emailid=form.cleaned_data['email_id']
+            #please change this
+            invite_details=invitation(
+            core=User.objects.get(username="me"),# obviously needs a change
+            invitee=name,
+            emailid=emailid,
+            time=datetime.datetime.now(),
+            )
+            try:
+                invite_details.save()
+                message ="coord invited "
+                #activation key#
+                salt = sha.new(str(random.random())).hexdigest()[:5]
+                activation_key = sha.new(salt+name).hexdigest()
+                coordname=name
+                #sending mail here
+                mail_template=get_template('users/emailcoords.html')
+                body=mail_template.render(Context({coordname:coordname,
+                                                   'SITE_URL':settings.SITE_URL,
+                                                   'activationkey':activation_key
+                                                   }))
+                print "came"
+                send_mail('Invitaiton from the core to join ERP',body,'noreplay@shaastra.org',emailid,fail_silently=False)
+                message="mail sent"
+                print "peace"
+            except :
+                message="mail could not be sent "
+                print "problem da.."
+
+    return render_to_response('users/invite_coord.html',locals(),context_instance = global_context(request))
+
+                                          
+                    
+            
+            
+  

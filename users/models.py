@@ -69,3 +69,10 @@ class Materials(models.Model):
 
     class Admin:
         pass
+
+
+class invitation(models.Model):
+    core            =models.ForeignKey(User , related_name="the core who has invited the user")
+    invitee         =models.CharField(max_length=50)
+    emailid         =models.EmailField()
+    time            =models.DateField()
