@@ -47,6 +47,7 @@ def login(request):
 		    m=userprofile.objects.get(user =user)
 		  
 		    request.session['department']=m.department.Dept_Name
+		    request.session['username']=form.cleaned_data['username']
 		      #  response= HttpResponseRedirect (url)
 
                    

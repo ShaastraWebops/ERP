@@ -118,7 +118,6 @@ class invite_coord(forms.Form):
 
 
 class personal_details(forms.Form):
-    name=forms.CharField(max_length=50)
     nick=forms.CharField(max_length=50)
     rollno=forms.CharField(max_length=10)
     chennai_number=forms.IntegerField()
@@ -127,6 +126,5 @@ class personal_details(forms.Form):
     hostel= forms.ChoiceField(choices=HOSTEL_CHOICES)
     summerstay=forms.CharField(max_length=30)
     summer_number=forms.CharField(max_length=10)
-    department=forms.ChoiceField(choices=DEPT_CHOICES)    
 
 

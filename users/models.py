@@ -49,7 +49,7 @@ class userprofile(models.Model):
             )
     def __str__(self):
 
-        return self.user.username
+        return self.user.email
 
     class Admin:
         pass

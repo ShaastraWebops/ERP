@@ -66,7 +66,8 @@ def register_user(request):
                 user.save()
 		user_profile = userprofile(
                         user = user,
-			department_id=2,               
+			department_id=2,
+                        emailid=form.cleaned_data['email'],
 			
 		     )
                 user.save()
@@ -151,7 +152,51 @@ def invite(request):
             
 def contact_details(request):
     print "here "
-    profileform=personal_details()
+    profile=userprofile.objects.get(user=request.user)
+    profileform=personal_details(initial={'emailid':profile.emailid,'rollno':"problem",})
     return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
     
   
+def update(request):
+    print "came in the function"
+    name=request.session.get('username','nobody')
+    print name
+    if request.method=="POST":
+        print "here also"
+        data=request.POST.copy()
+        form=personal_details(data)
+        if form.is_valid():
+            print "hurray"
+            profile=userprofile.objects.get(user=request.user)
+            profile.nickname=form.cleaned_data['nick']
+            # yet to done
+            #profile.rollno=form.cleaned_data['rollno']
+            profile.roomnumber=form.cleaned_data['roomnumber']
+            profile.hostel=form.cleaned_data['hostel']
+            profile.summerstay=form.cleaned_data['summerstay']
+            profile.chennai_number=form.cleaned_data['chennai_number']
+            profile.summer_number=form.cleaned_data['summer_number']
+                        
+            
+            
+            profile.save()
+            print "this"
+            print profile
+            
+            
+            print profile
+    profileform=personal_details(initial={'nick':profile.nickname,
+                                          'roomnumber' :profile.roomnumber ,
+                                          'hostel':profile.hostel,
+                                          'summerstay':profile.summerstay,
+                                          'chennai_number':profile.chennai_number,
+                                          'summer_number':profile.summer_number,
+                                          'emailid':profile.emailid,
+                                          'rollno':"problem",})
+
+
+    return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
+            
+        
+        
+    
