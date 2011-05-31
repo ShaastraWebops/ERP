@@ -9,6 +9,29 @@ GENDER_CHOICES = (
     ('M','Male'),
     ('F','Female'),
 )
+
+
+
+HOSTEL_CHOICES  =(
+        ("Ganga","Ganga"),
+        ("Mandak","Mandak"),
+        ("Jamuna","Jamuna"),
+        ("Alak","Alak"),
+        ("Sarawati","Saraswati"),
+        ("Narmada","Narmada"),
+        ("Godav","Godav"),
+        ("Pampa","Pampa"),
+        ("Tambi","Tambi"),
+        ("Sindhu","Sindhu"),
+        ("Mahanadi","Mahanadi"),
+        ("Sharavati","Sharavati"),
+        ("Krishna","Krishna"),
+        ("Cauvery","Cauvery"),
+        ("Tapti","Tapti"),
+        ("Bhramhaputra","Bhramhaputra"),
+        ("Sarayu","Sarayu"),
+   
+        )
 #List of Department Choices
 
 #DEP_CHOICES    = (
@@ -29,6 +52,7 @@ GENDER_CHOICES = (
 
 class userprofile(models.Model):
     user = models.ForeignKey(User, unique=True )
+    rollno=models.CharField(max_length=10,blank=True)
     nickname=models.CharField(max_length=30 ,blank=True)
     first_name = models.CharField(max_length=30, blank=True)
     emailid     =models.EmailField(blank=True)
@@ -37,6 +61,8 @@ class userprofile(models.Model):
     chennai_number = models.CharField(max_length=15,blank=True)
     summer_number = models.CharField(max_length=15,blank=True)
     summerstay  =models.CharField(max_length=30,blank=True)
+    hostel	=models.CharField(max_length=15)
+    roomnumber	=models.IntegerField(default=0,blank=True)
     #We are changing to groups right? so, i removed the flags.
  
     #i Havent written the methods as yet, do we use them as methods in a class or in views?

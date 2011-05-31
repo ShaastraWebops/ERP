@@ -44,6 +44,7 @@ HOSTEL_CHOICES  =(
 #i changed it cause it was not working in the templates
 class AddUserForm (forms.Form):
     username=forms.CharField(max_length=30,help_text='Enter a username. eg, siddharth_s')
+    rollno=forms.CharField(max_length=10)
     email=forms.EmailField(help_text='Enter your e-mail address. eg, someone@gmail.com')
     password=forms.CharField(min_length=6, max_length=30, widget=forms.PasswordInput,help_text='Enter a password that you can remember')
     password_again=forms.CharField(max_length=30, widget=forms.PasswordInput,help_text='Enter the same password that you entered above')
@@ -118,6 +119,7 @@ class invite_coord(forms.Form):
 
 
 class personal_details(forms.Form):
+    name=forms.CharField(max_length=50)
     nick=forms.CharField(max_length=50)
     rollno=forms.CharField(max_length=10)
     chennai_number=forms.IntegerField()

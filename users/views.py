@@ -68,6 +68,7 @@ def register_user(request):
                         user = user,
 			department_id=2,
                         emailid=form.cleaned_data['email'],
+                        rollno=form.cleaned_data['rollno'],
 			
 		     )
                 user.save()
@@ -83,7 +84,6 @@ def register_user(request):
                     return render_to_response('home/registered.html' , locals() ,context_instance= global_context(request))
 
                 except:
-		    user.save()
                     print "not successful" #just for debugging purpose
                     raise	
         
@@ -153,7 +153,16 @@ def invite(request):
 def contact_details(request):
     print "here "
     profile=userprofile.objects.get(user=request.user)
-    profileform=personal_details(initial={'emailid':profile.emailid,'rollno':"problem",})
+    
+    profileform=personal_details(initial={'nick':profile.nickname,
+                                          'roomnumber' :profile.roomnumber ,
+                                          'hostel':profile.hostel,
+                                          'summerstay':profile.summerstay,
+                                          'chennai_number':profile.chennai_number,
+                                          'summer_number':profile.summer_number,
+                                          'emailid':profile.emailid,
+                                          'rollno':profile.rollno,})
+
     return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
     
   
@@ -180,20 +189,18 @@ def update(request):
             
             
             profile.save()
-            print "this"
-            print profile
             
-            
-            print profile
-    profileform=personal_details(initial={'nick':profile.nickname,
+            profileform=personal_details(initial={'name':profile.user.username,
+                                          'nick':profile.nickname,
                                           'roomnumber' :profile.roomnumber ,
                                           'hostel':profile.hostel,
                                           'summerstay':profile.summerstay,
                                           'chennai_number':profile.chennai_number,
                                           'summer_number':profile.summer_number,
                                           'emailid':profile.emailid,
-                                          'rollno':"problem",})
-
+                                          'rollno':profile.rollno,})
+        else:
+            profileform=personal_details()
 
     return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
             
