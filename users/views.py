@@ -23,7 +23,7 @@ from django.core.mail import send_mail,EmailMessage,SMTPConnection
 #store it in user profile
 #please check if i have used the "user class" properly
                           
-                                                                         
+#here it needs small changes with department id                                                                          
 # ***to do****                 
 #create groups for user coord and cores and add them into the groups
 def register_user(request):
@@ -66,9 +66,7 @@ def register_user(request):
                 user.save()
 		user_profile = userprofile(
                         user = user,
-                        first_name = form.cleaned_data['first_name'].lower(),
-                        last_name = form.cleaned_data['last_name'].lower(),
-                        chennai_number = form.cleaned_data['mobile_number'],                  
+			department_id=2,               
 			
 		     )
                 user.save()
