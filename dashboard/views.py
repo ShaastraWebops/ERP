@@ -27,21 +27,22 @@ def home (request):
 def documents (request):
     events_dept=Department.objects.get(id=1)
     try:
-        events_profile=userprofile.objects.get(department=events_dept)
+        events_profile=userprofile.objects.filter(department=events_dept)
+        print "done"
     except:
         print "events"#debugging
 
         
     qms_dept=Department.objects.get(id=2)
     try:
-        qms_profile=userprofile.objects.get(department=qms_dept)
+        qms_profile=userprofile.objects.filter(department=qms_dept)
     except:
         print "QMS"#debugging
 
         
     finance_dept=Department.objects.get(id=3)
     try:
-        finance_profile=userprofile.objects.get(department=finance_dept)
+        finance_profile=userprofile.objects.filter(department=finance_dept)
     except:
         print "finance"#debugging
 
@@ -49,7 +50,7 @@ def documents (request):
         
     sponsorship_dept=Department.objects.get(id=4)
     try:
-        sponsorship_profile=userprofile.objects.get(department=sponsorship_dept)
+        sponsorship_profile=userprofile.objects.filter(department=sponsorship_dept)
     except:
         print "spons"#debugging
 
@@ -57,7 +58,7 @@ def documents (request):
         
     evolve_dept=Department.objects.get(id=5)
     try:
-        evolve_profile=userprofile.objects.get(department=evolve_dept)
+        evolve_profile=userprofile.objects.filter(department=evolve_dept)
     except:
         print "evolve"#debugging
 
@@ -65,7 +66,7 @@ def documents (request):
         
     facilities_dept=Department.objects.get(id=6)
     try:
-        facilities_profile=userprofile.objects.get(department=facilities_dept)
+        facilities_profile=userprofile.objects.filter(department=facilities_dept)
     except:
         print "facilities"#debugging
 
@@ -73,15 +74,14 @@ def documents (request):
         
     webops_dept=Department.objects.get(id=7)
     try:
-        webops_profile=userprofile.objects.get(department=webops_dept)
+        webops_profile=userprofile.objects.filter(department=webops_dept)
     except:
         print "webops awesome"#debugging
-
 
         
     hospilatity_dept=Department.objects.get(id=8)
     try:
-        events_profile=userprofile.objects.get(department=hospitality_dept)
+        hospitality_profile=userprofile.objects.filter(department=hospitality_dept)
     except:
         print "hospi"#debugging
 
@@ -89,14 +89,14 @@ def documents (request):
         
     publicity_dept=Department.objects.get(id=9)
     try:
-        events_profile=userprofile.objects.get(department=publicity_dept)
+        publicity_profile=userprofile.objects.filter(department=publicity_dept)
     except:
         print "publicity"#debugging
     
 
     design_dept=Department.objects.get(id=10)
     try:
-        design_profile=userprofile.objects.get(department=design_dept)
+        design_profile=userprofile.objects.filter(department=design_dept)
     except:
         print "design"#debugging
     

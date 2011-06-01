@@ -199,8 +199,7 @@ def update(request):
                                           'summer_number':profile.summer_number,
                                           'emailid':profile.emailid,
                                           'rollno':profile.user,})
-            print "dude"
-            print profile.roomnumber
+            
         else:
             profileform=personal_details()
 
