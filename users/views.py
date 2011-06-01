@@ -11,7 +11,7 @@ from erp.users import *
 from erp.misc.util import *
 from erp.department.models import *
 from erp.users import models
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group,Permission
 import sha,random,datetime
 from erp.users.forms import *
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
