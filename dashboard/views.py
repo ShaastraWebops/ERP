@@ -10,6 +10,7 @@ from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.contrib.sessions.models import Session
 from erp.dashboard import forms
 from erp.dashboard.models import teamdetails
+from erp.users.models import *
 from erp.misc.util import *
 from erp.settings import *
 import sha,random,datetime
@@ -24,11 +25,90 @@ def home (request):
 
 
 def documents (request):
+    events_dept=Department.objects.get(id=1)
+    try:
+        events_profile=userprofile.objects.get(department=events_dept)
+    except:
+        print "events"#debugging
+
+        
+    qms_dept=Department.objects.get(id=2)
+    try:
+        qms_profile=userprofile.objects.get(department=qms_dept)
+    except:
+        print "QMS"#debugging
+
+        
+    finance_dept=Department.objects.get(id=3)
+    try:
+        finance_profile=userprofile.objects.get(department=finance_dept)
+    except:
+        print "finance"#debugging
+
+
+        
+    sponsorship_dept=Department.objects.get(id=4)
+    try:
+        sponsorship_profile=userprofile.objects.get(department=sponsorship_dept)
+    except:
+        print "spons"#debugging
+
+
+        
+    evolve_dept=Department.objects.get(id=5)
+    try:
+        evolve_profile=userprofile.objects.get(department=evolve_dept)
+    except:
+        print "evolve"#debugging
+
+
+        
+    facilities_dept=Department.objects.get(id=6)
+    try:
+        facilities_profile=userprofile.objects.get(department=facilities_dept)
+    except:
+        print "facilities"#debugging
+
+
+        
+    webops_dept=Department.objects.get(id=7)
+    try:
+        webops_profile=userprofile.objects.get(department=webops_dept)
+    except:
+        print "webops awesome"#debugging
+
+
+        
+    hospilatity_dept=Department.objects.get(id=8)
+    try:
+        events_profile=userprofile.objects.get(department=hospitality_dept)
+    except:
+        print "hospi"#debugging
+
+
+        
+    publicity_dept=Department.objects.get(id=9)
+    try:
+        events_profile=userprofile.objects.get(department=publicity_dept)
+    except:
+        print "publicity"#debugging
+    
+
+    design_dept=Department.objects.get(id=10)
+    try:
+        design_profile=userprofile.objects.get(department=design_dept)
+    except:
+        print "design"#debugging
+    
+        
     details=teamdetails.objects.all()#still to be filtered according to dept
     memberform=forms.add_team_member()
     return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
 
 def addteammember(request):
+    events_profile=userprofile.objects.all(department_id=7)
+    print "events"
+    print events_profile
     memberform=forms.add_team_member()
     message="Hello"
     details=teamdetails.objects.all()#still to be filtered according to dept
@@ -65,7 +145,7 @@ def deleteteammember(request):
     details=teamdetails.objects.all()
     if "d" in request.GET:
         number=request.GET['d']
-        delete=teamdetails.objects.filter(id=number)
+        delete=teamdetails.objects.get(id=number)
         print delete
 
         delete.delete();
@@ -92,4 +172,8 @@ def editteammember(request):
             
                 
 """    
-      
+
+
+def contacts(request):
+    profile=userprofile.objects.all()
+    

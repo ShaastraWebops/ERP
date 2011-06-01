@@ -43,14 +43,29 @@ HOSTEL_CHOICES  =(
 #author :vivek kumar bagaria
 #i changed it cause it was not working in the templates
 class AddUserForm (forms.Form):
-    username=forms.CharField(max_length=30,help_text='Enter a username. eg, siddharth_s')
-    rollno=forms.CharField(max_length=10)
+    username=forms.CharField(max_length=30,help_text='your roll no number is your username')
     email=forms.EmailField(help_text='Enter your e-mail address. eg, someone@gmail.com')
     password=forms.CharField(min_length=6, max_length=30, widget=forms.PasswordInput,help_text='Enter a password that you can remember')
     password_again=forms.CharField(max_length=30, widget=forms.PasswordInput,help_text='Enter the same password that you entered above')
     department=forms.ChoiceField(choices=DEPT_CHOICES)    
     
     def clean_username(self):
+	if(len(self.cleaned_data['username'])!=8):
+	    raise forms.ValidationError('please enter a valid roll number')
+	else:
+	    rollno=self.cleaned_data['username']
+	    first=rollno[0:2]
+	    second =rollno[2:4]
+	    third  =rollno[4:5]
+	    fourth =rollno[5:8]
+	    if not re.match("^[A-Za-z]*$",first):
+	        raise forms.ValidationError('please enter a valid roll number')
+	    if not re.match("^[A-Za-z]*$",third):
+	        raise forms.ValidationError('please enter a valid roll number')
+	    if not re.match("^[0-9]*$",second):
+	        raise forms.ValidationError('please enter a valid roll number')
+	    if not re.match("^[0-9]*$",fourth):
+	        raise forms.ValidationError('please enter a valid roll number')
         if not alnum_re.search(self.cleaned_data['username']):
            raise forms.ValidationError(u'Usernames can only contain letters, numbers and underscores')
         if User.objects.filter(username=self.cleaned_data['username']):
@@ -59,29 +74,8 @@ class AddUserForm (forms.Form):
             return self.cleaned_data['username']
         raise forms.ValidationError('This username is already taken. Please choose another.')
 
-    def clean_age(self):
-	if (self.cleaned_data['age']>80 or self.cleaned_data['age']<12):
-	    raise forms.ValidationError(u'Please enter an acceptable age (12 to 80)')
-	else:
-	    return self.cleaned_data['age']
-	    
-    def clean_mobile_number(self):
-	if (len(self.cleaned_data['mobile_number'])!=10 or (self.cleaned_data['mobile_number'][0]!='7' and self.cleaned_data['mobile_number'][0]!='8' and self.cleaned_data['mobile_number'][0]!='9') or (not self.cleaned_data['mobile_number'].isdigit())):
-	    raise forms.ValidationError(u'Enter a valid mobile number')
-	else:
-	  return self.cleaned_data['mobile_number']
-	  
-    def clean_first_name(self):
-	if not self.cleaned_data['first_name'].replace(' ','').isalpha():
-	    raise forms.ValidationError(u'Names cannot contain anything other than alphabets.')
-	else:
-	    return self.cleaned_data['first_name']
-	  
-    def clean_last_name(self):
-	if not self.cleaned_data['last_name'].replace(' ','').isalpha():
-	    raise forms.ValidationError(u'Names cannot contain anything other than alphabets.')
-	else:
-	    return self.cleaned_data['last_name']
+
+
 
     def clean_email(self):
         if User.objects.filter(email=self.cleaned_data['email']):

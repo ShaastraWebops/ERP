@@ -58,17 +58,18 @@ def register_user(request):
                 user = User.objects.create_user(
                     username = form.cleaned_data['username'],
                     email = form.cleaned_data['email'],
-                    password = form.cleaned_data['password']
+                    password = form.cleaned_data['password'],
+		    
 
                     )        
-		department=Department(Dept_Name="Webops")
+		department=form.cleaned_data['department']
+		Dept=Department.objects.get(Dept_Name=department)
                 user.is_active=True #took from userportal
                 user.save()
 		user_profile = userprofile(
                         user = user,
-			department_id=2,
+			department_id=Dept.id,
                         emailid=form.cleaned_data['email'],
-                        rollno=form.cleaned_data['rollno'],
 			
 		     )
                 user.save()
@@ -154,14 +155,15 @@ def contact_details(request):
     print "here "
     profile=userprofile.objects.get(user=request.user)
     
-    profileform=personal_details(initial={'nick':profile.nickname,
+    profileform=personal_details(initial={'name':profile.name,
+                                          'nick':profile.nickname,
                                           'roomnumber' :profile.roomnumber ,
                                           'hostel':profile.hostel,
                                           'summerstay':profile.summerstay,
                                           'chennai_number':profile.chennai_number,
                                           'summer_number':profile.summer_number,
                                           'emailid':profile.emailid,
-                                          'rollno':profile.rollno,})
+                                          'rollno':profile.user,})
 
     return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
     
@@ -171,15 +173,13 @@ def update(request):
     name=request.session.get('username','nobody')
     print name
     if request.method=="POST":
-        print "here also"
         data=request.POST.copy()
         form=personal_details(data)
         if form.is_valid():
             print "hurray"
             profile=userprofile.objects.get(user=request.user)
             profile.nickname=form.cleaned_data['nick']
-            # yet to done
-            #profile.rollno=form.cleaned_data['rollno']
+            profile.name=form.cleaned_data['name']
             profile.roomnumber=form.cleaned_data['roomnumber']
             profile.hostel=form.cleaned_data['hostel']
             profile.summerstay=form.cleaned_data['summerstay']
@@ -190,7 +190,7 @@ def update(request):
             
             profile.save()
             
-            profileform=personal_details(initial={'name':profile.user.username,
+            profileform=personal_details(initial={'name':profile.name,
                                           'nick':profile.nickname,
                                           'roomnumber' :profile.roomnumber ,
                                           'hostel':profile.hostel,
@@ -198,7 +198,9 @@ def update(request):
                                           'chennai_number':profile.chennai_number,
                                           'summer_number':profile.summer_number,
                                           'emailid':profile.emailid,
-                                          'rollno':profile.rollno,})
+                                          'rollno':profile.user,})
+            print "dude"
+            print profile.roomnumber
         else:
             profileform=personal_details()
 

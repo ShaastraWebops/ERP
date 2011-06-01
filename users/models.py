@@ -51,12 +51,10 @@ HOSTEL_CHOICES  =(
 #Author-Krishna Shrinivas
 
 class userprofile(models.Model):
-    user = models.ForeignKey(User, unique=True )
-    rollno=models.CharField(max_length=10,blank=True)
+    user = models.ForeignKey(User, unique=True )#this is suppose to be rollno
     nickname=models.CharField(max_length=30 ,blank=True)
-    first_name = models.CharField(max_length=30, blank=True)
+    name = models.CharField(max_length=30, blank=True)
     emailid     =models.EmailField(blank=True)
-    last_name = models.CharField(max_length=30,blank=True )
     department= models.ForeignKey(Department,related_name="dept_user_belong")
     chennai_number = models.CharField(max_length=15,blank=True)
     summer_number = models.CharField(max_length=15,blank=True)
@@ -75,7 +73,7 @@ class userprofile(models.Model):
             )
     def __str__(self):
 
-        return self.user.email
+        return '%s %s' %(self.user.username,self.hostel)
 
     class Admin:
         pass
