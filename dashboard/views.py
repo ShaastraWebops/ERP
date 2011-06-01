@@ -8,7 +8,7 @@ from django.template.context import Context, RequestContext
 from django.utils.translation import ugettext as _
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.contrib.sessions.models import Session
-from erp.dashboard import forms
+#from erp.dashboard import forms
 from erp.dashboard.models import teamdetails
 from erp.users.models import *
 from erp.misc.util import *
