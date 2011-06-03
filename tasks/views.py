@@ -281,7 +281,7 @@ def task_comment(request):
             filled_forms_valid = True        
             task_comment = TaskCommentForm (request.POST)
             new_comment = task_comment.save (commit = False)
-            new_task.creator = user
+            new_comment.creator = user
             filled_forms_valid = True
             new_comment.save ()
             return render_to_response("tasks/comments.html", {
