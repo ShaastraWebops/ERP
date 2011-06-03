@@ -5,6 +5,7 @@ from models import *
 class TaskCommentForm (ModelForm):
     class Meta:
         model = TaskComment
+        exclude = ('author')
 
 class SubTaskCommentForm (ModelForm):
     class Meta:

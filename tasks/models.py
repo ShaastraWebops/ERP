@@ -84,6 +84,7 @@ class AbstractComment (models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['time_stamp']
 
 class TaskComment(AbstractComment):
     """ Comment written for a Task.

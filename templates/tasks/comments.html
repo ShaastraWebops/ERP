@@ -1,0 +1,13 @@
+<html>
+
+<body>
+{% if success %}
+<h2> Comment Successfully Added </h2>
+{% endif %}
+<form method="POST" action="./">
+    {{ formset }}
+<input type =  "submit" value="Submit">
+</form>
+</body>
+
+</html>

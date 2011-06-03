@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import datetime
 from forms import TaskForm
+from forms import TaskCommentForm
 from models import *
 # This seems necessary to avoid CSRF errors
 from erp.misc.util import *
@@ -202,7 +203,11 @@ def core_portal(request):
     return render_to_response('tasks/core_portal.html', locals(), context_instance = global_context (request))
 
 def listoftasks(request):
-    objects =  Task.objects.filter(creator = 1)      # NEEDS to be changed  
+    """
+    TODO: Fix Department
+    """
+    user = request.user
+    objects =  Task.objects.filter(creator = user) 
     tasks = {}
     d = []
     for row in objects:
@@ -217,6 +222,7 @@ def listoftasks(request):
             cs.append(subrow.deadline)
             cs.append(subrow.status)            
             cs.append(subrow.coords) # NEEDS proper representation.
+            
             try:
                 cs.append(Department.objects.get(Dept_Name = subrow.department.Dept_Name).Dept_Name)
             except:
@@ -238,7 +244,8 @@ def listoftasks(request):
 
 def completedsubtasks(request):
     ds = []
-    objects = SubTask.objects.filter(creator = 1, status = "Completed")      # Creator NEEDS to be changed  
+    user = request.user
+    objects = SubTask.objects.filter(creator = user, status = "Completed")      
     for subrow in objects:
         cs = []
         cs.append(subrow.subject)
@@ -255,6 +262,32 @@ def completedsubtasks(request):
         ds.append(cs)
     task_dict = {'subtasks' : ds}
     task_dict['display_created_tasks'] = False
-    task_dict['display_completed_tasks'] = True
+    task_dict['display_completed _tasks'] = True
     return render_to_response("tasks/core_portal.html", task_dict, context_instance = global_context (request))
 
+
+@needs_authentication    
+def task_comment(request):
+    """
+    Creates a comment. Needs to be integrated with edit Task.
+    A similar method can be used for subtask_comment. Will do once i get an idea
+    how edit task is being implemented.
+    """
+    task_comment = TaskCommentForm()
+    user = request.user
+    if request.method == 'POST':
+        task_comment = TaskCommentForm(request.POST)
+        if task_comment.is_valid():
+            filled_forms_valid = True        
+            task_comment = TaskCommentForm (request.POST)
+            new_comment = task_comment.save (commit = False)
+            new_task.creator = user
+            filled_forms_valid = True
+            new_comment.save ()
+            return render_to_response("tasks/comments.html", {
+                    "formset": task_comment, "success" : True
+                    })
+
+    return render_to_response("tasks/comments.html", {
+            "formset": task_comment, "success" : False
+            })
