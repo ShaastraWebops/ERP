@@ -7,6 +7,5 @@ urlpatterns = patterns('',
       (r'^home/$', 'erp.tasks.views.display_portal'),
       (r'^documents/$', 'erp.dashboard.views.documents'),
       (r'^addteammember/$', 'erp.dashboard.views.addteammember'),
-
 )
 

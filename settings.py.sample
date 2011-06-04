@@ -102,6 +102,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
+AUTH_PROFILE_MODULE = 'users.userprofile'
+
 ROOT_URLCONF = 'erp.urls'
 
 TEMPLATE_DIRS = (

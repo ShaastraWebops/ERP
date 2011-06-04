@@ -14,58 +14,73 @@ from erp.tasks.models import Task, SubTask, DEFAULT_STATUS
 import random
 
 def create_groups ():
-    cores = Group (name = 'Cores')
-    cores.save ()
-    coords = Group (name = 'Coords')
-    coords.save ()
-    vols = Group (name = 'Vols')
-    vols.save ()
+    try:
+        if not Group.objects.get (name = 'Cores'):
+            cores = Group (name = 'Cores')
+            cores.save ()
+        if not Group.objects.get (name = 'Coords'):
+            coords = Group (name = 'Coords')
+            coords.save ()
+        if not Group.objects.get (name = 'Vols'):
+            vols = Group (name = 'Vols')
+            vols.save ()
+    except:
+        pass
 
 def create_depts ():
+    """ By default, this assigns 'Event_Manager' as root.
+    """
     for name, description in DEP_CHOICES:
         try:
-            new_dept = Department.objects.create (Dept_Name = name, Event_Manager = User.objects.get (username = 'root'))
+            if not Department.objects.get (Dept_Name = name):
+                new_dept = Department.objects.create (Dept_Name = name, Event_Manager = User.objects.get (username = 'root'))
         except:
             pass
-    
 
-def create_users (users_file_name):
+def create_users (users_file_name = 'users.txt'):
     """
     Get user details from users_file_name. Create user if it doesn't exist, update  user if it already exists.
     Record Format:
-    department username email password first_name last_name mobile_number group
+    department username email_id password nickname name chennai_number summer_number summer_stay hostel room_no group
     """
     users_file = open (users_file_name, 'r')
     for line in users_file:
         # user_fields = line.split ()
-        department, username, email, password, first_name, last_name, mobile_number, group = line.split ()
-        print department, username, email, password, first_name, last_name, mobile_number, group  
+        department, username, email_id, password, nickname, name, chennai_number, summer_number, summer_stay, hostel, room_no, group = line.split ()
+        print department, username, email_id, password, nickname, name, chennai_number, summer_number, summer_stay, hostel, room_no, group 
         try:
             # In case, user already exists
             user = User.objects.get (username = username)
         except:
-            user = User.objects.create_user(username = username, password = password, email = '')
+            # If it's a new user
+            # Note : create_user creates an instance and saves it in the database
+            user = User.objects.create_user(username = username, password = password, email = email_id)
+            user.save ()
+
+        try:
+            curr_userprofile = user.get_profile ()
+        # If userprofile doesn't exist (whether or now user is a new
+        # one or old one), create it
+        except:
+            curr_userprofile = models.userprofile ()
+            curr_userprofile.user = user
+
+        curr_userprofile.email_id = email_id
+        curr_userprofile.nickname = nickname
+        curr_userprofile.name = name
+        curr_userprofile.chennai_number = chennai_number
+        curr_userprofile.summer_number = summer_number
+        curr_userprofile.summer_stay = summer_stay
+        curr_userprofile.hostel = hostel
+        curr_userprofile.room_no = room_no
+        curr_userprofile.department = Department.objects.get (Dept_Name = department)
+        curr_userprofile.save ()
+        # Allow access to admin interface
         if group == 'Cores':
             user.is_staff = True
-            if user.groups.filter (name = 'Coords'):
-
         else:
             user.is_staff = False
         user.groups.add (Group.objects.get (name = group))
-
-        try:
-            # See if a userprofile exists
-            curr_userprofile = user.userprofile_set.all ()[0]
-            curr_userprofile.first_name, curr_userprofile.last_name, curr_userprofile.mobile_number = first_name, last_name, mobile_number
-            curr_userprofile.department = Department.objects.get (Dept_Name = department)
-            curr_userprofile.save ()
-        except:
-            # If no userprofile exists for this User
-            new_userprofile = models.userprofile ()
-            new_userprofile.user = user
-            new_userprofile.first_name, new_userprofile.last_name, new_userprofile.mobile_number = first_name, last_name, mobile_number
-            new_userprofile.department = Department.objects.get (Dept_Name = department)
-            new_userprofile.save ()
         user.save ()
     users_file.close ()
 
@@ -155,5 +170,10 @@ def finish_some_subtasks ():
             curr_subtask.save ()
         except:
             pass
-    
 
+def do_it_all ():
+    create_groups ()
+    create_depts ()
+    create_users (users_file_name = 'users.txt')
+    create_tasks (n = 5, partial_subtask = False)
+    finish_some_subtasks ()

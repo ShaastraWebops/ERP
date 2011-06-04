@@ -28,26 +28,26 @@ from django.core.mail import send_mail,EmailMessage,SMTPConnection
 #create groups for user coord and cores and add them into the groups
 def register_user(request):
     
-    # groups are created here
-    if Group.objects.count() == 0:
+    # # groups are created here
+    # if Group.objects.count() == 0:
         
-        #for cores
-        is_core =Group(name='core')
-        is_core.save()
-        user_core=Permission.objects.get(name='is_core')
-        is_core.permissions.add(user_core)
+    #     #for cores
+    #     is_core =Group(name='core')
+    #     is_core.save()
+    #     user_core=Permission.objects.get(name='is_core')
+    #     is_core.permissions.add(user_core)
 
-        #for coords
-        is_coord=Group(name='coord')
-        is_coord.save()
-        user_coord=Permission.objects.get(name='is_coord')
-        is_coord.permissions.add(user_coord)
+    #     #for coords
+    #     is_coord=Group(name='coord')
+    #     is_coord.save()
+    #     user_coord=Permission.objects.get(name='is_coord')
+    #     is_coord.permissions.add(user_coord)
         
-        #for vols
-        is_vol  =Group(name='vol')
-        is_vol.save()
-        user_vol=Permission.objects.get(name='is_vol')
-        is_vol.permissions.add(user_vol)
+    #     #for vols
+    #     is_vol  =Group(name='vol')
+    #     is_vol.save()
+    #     user_vol=Permission.objects.get(name='is_vol')
+    #     is_vol.permissions.add(user_vol)
         
     if request.method=='POST':
         data=request.POST.copy()

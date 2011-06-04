@@ -19,7 +19,7 @@ def home(request):
     access_denied = (request, "access_denied")
     logged_in = session_get (request, "logged_in")
     already_logged = session_get (request, "already_logged")
-    return render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
+    return render_to_response('home/home.html', locals(), context_instance= global_context(request))
 
 def login(request):
 
@@ -41,35 +41,33 @@ def login(request):
                 # Handle redirection
                     if not url:
                         url = "%s/home/"%settings.SITE_URL
-                
+
                     request.session['logged_in'] = True
-		    # wanted to get the name of the department
-		    m=userprofile.objects.get(user =user)
-		  
-		    request.session['department']=m.department.Dept_Name
-		    request.session['username']=form.cleaned_data['username']
+		    # # wanted to get the name of the department
+		    # m = userprofile.objects.get(user =user)
+		    # request.session['department']=m.department.Dept_Name
+		    # request.session['username']=form.cleaned_data['username']
 		      #  response= HttpResponseRedirect (url)
 
-                   
                     try:
-                        response.set_cookie('logged_out', 0)					
+                        response.set_cookie('logged_out', 0)
                     except:
                         pass
-                    
+
                     if redirected:
                         return HttpResponseRedirect (redirected)
                     else:
-                        return HttpResponseRedirect("%s/tasks/core_portal"%settings.SITE_URL)
+                        return HttpResponseRedirect("%s/dashboard/home" %settings.SITE_URL)
 
             else:
                 request.session['invalid_login'] = True
                 return HttpResponseRedirect (request.path)
-        else: 
+        else:
             invalid_login =session_get(request, "invalid_login")
             form = forms.UserLoginForm ()
     else:
         pass
-    return render_to_response('home/login.html', locals(), context_instance= global_context(request)) 
+    return render_to_response('home/login.html', locals(), context_instance= global_context(request))
 
 def logout (request):
     if request.user.is_authenticated():
@@ -82,8 +80,8 @@ def logout (request):
         except:
             pass
         return response
-    return render_to_response('home/home.html', locals(), context_instance= global_context(request)) 
+    return render_to_response('home/home.html', locals(), context_instance= global_context(request))
 
 
 def test (request):
-    return render_to_response('home.html', locals(), context_instance= global_context(request)) 
+    return render_to_response('home.html', locals(), context_instance= global_context(request))
