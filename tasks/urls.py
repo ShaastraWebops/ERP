@@ -4,6 +4,8 @@ from django.contrib import admin
 
 urlpatterns = patterns('erp.tasks.views',
       (r'^create/', 'create_task'),
+      (r'^edit/([0-9]+)?', 'edit_task'),
+      (r'^display/([0-9]+)?', 'display_subtask'),
       # (r'^portal/$', 'display_portal'),
       (r'^core_portal/$', 'core_portal'),
       (r'^core_portal/listoftasks/', 'listoftasks'),

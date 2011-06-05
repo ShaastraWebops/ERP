@@ -1,3 +1,4 @@
+
 # Create your views here.
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
@@ -27,25 +28,23 @@ def create_task(request):
     TODO:
     Display the creator on the Task Create / Edit page
     Is it okay if no SubTask forms are filled out?
+    Cancel Create
+    Save Draft
     """
-    task_form = TaskForm ()
     user = request.user
+    dept_names = [name for name, description in DEP_CHOICES]
+    subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
 
     if user.groups.filter (name = 'Cores'):
         print 'Core'
     elif user.groups.filter (name = 'Coords'):
-        print 'Coords'
+        print 'Coord'
 
-    dept_names = [name for name, description in DEP_CHOICES]
-    subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
-
-    # As of now, just display one form for each department
     SubTaskFormSet = modelformset_factory (SubTask, exclude = subtask_exclusion_tuple, extra = 1)
-    all_depts_subtaskfs = SubTaskFormSet (prefix = 'all', queryset = SubTask.objects.none ())
-    # print all_depts_subtaskfs.forms
-    print all_depts_subtaskfs.total_form_count ()
+
     if request.method == 'POST':
-        all_depts_subtaskfs = SubTaskFormSet (request.POST, prefix = 'all')
+        # Get the submitted formset
+        subtaskfs = SubTaskFormSet (request.POST, prefix = 'all')
         task_form = TaskForm (request.POST)
         if task_form.is_valid ():
             # commit = False creates an object from the ModelForm,
@@ -53,32 +52,34 @@ def create_task(request):
             new_task = task_form.save (commit = False)
             # Now, populate all model fields excluded from Task ModelForm
             new_task.creator = user
-            subtask_ctr = 0
-            filled_forms_valid = True
-            for form in all_depts_subtaskfs.forms:
-                print form.has_changed (), form.is_valid ()
-                if form.has_changed () and not form.is_valid ():
-                    filled_forms_valid = False
-                    break
-            if filled_forms_valid:
+            # If the filled forms (if any) are valid
+            if subtaskfs.is_valid ():
                 # Save the Task object
                 new_task.save ()
-                for form in all_depts_subtaskfs.forms:
-                    if form.has_changed () and form.is_valid ():
-                        subtask_ctr += 1
-                        new_subtask = form.save (commit = False)
-                        # Populate all model fields excluded from SubTask ModelForm
-                        # NOTE : As per ERPver_2.PDF, creator of
-                        # subtask is same as creator of Task
-                        new_subtask.creator = user
-                        new_subtask.status = DEFAULT_STATUS
-                        new_subtask.task = new_task
-                        new_subtask.save ()
-                        # Save the many-to-many data for the FORM, not
-                        # the instance. Necessary, since we used commit = False
-                        form.save_m2m ()
-                return HttpResponseRedirect ('%s/tasks/timeline' % settings.SITE_URL)
+                # Get list of the instances
+                subtasks = subtaskfs.save (commit = False)
+                for subtask in subtasks:
+                    # Populate all model fields excluded from SubTask ModelForm
+                    # NOTE : As per ERPver_2.PDF, creator of
+                    # subtask is same as creator of Task
+                    subtask.creator = user
+                    subtask.status = DEFAULT_STATUS
+                    subtask.task = new_task
+                    subtask.save ()
+                # Save the many-to-many data for the formset, NOT the
+                # instance. Necessary, since we used commit = False
+                subtaskfs.save_m2m ()
+                return HttpResponseRedirect ('%s/dashboard/home' % settings.SITE_URL)
+            else:
+                # One or more Forms are invalid
+                pass
+    else:
+        # Create a blank form
+        task_form = TaskForm ()
+        # Create an empty Formset
+        subtaskfs = SubTaskFormSet (prefix = 'all', queryset = SubTask.objects.none ())
 
+    print 'No. of forms : ', subtaskfs.total_form_count ()
     return render_to_response('tasks/create_task.html' , locals(), context_instance = global_context (request))
 
 def get_timeline (user):
@@ -128,12 +129,13 @@ def get_completed_subtasks (user):
     return SubTask.objects.filter (department = user_dept, status = 'C')
     
 
-@needs_authentication    
+@needs_authentication
 def display_portal (request):
     """
     List all Tasks created by this user
 
     Check whether user is authenticated.
+    Assumes that the user is either a Coord or a Core.
     """
     user = request.user
     if user.groups.filter (name = 'Cores'):
@@ -141,12 +143,86 @@ def display_portal (request):
         all_unassigned_received_SubTasks = get_unassigned_received_subtasks (user)
         all_requested_SubTasks = get_requested_subtasks (user)
         all_completed_SubTasks = get_completed_subtasks (user)
-        print user.username, all_unassigned_received_SubTasks, all_requested_SubTasks
+        print user.username
+        # print all_unassigned_received_SubTasks, all_requested_SubTasks
         return render_to_response('tasks/core_portal2.html' , locals(), context_instance = global_context (request))
     else:
         all_Tasks = get_timeline (user)
         all_SubTasks = get_subtasks (user)
         return render_to_response('tasks/coord_portal.html' , locals(), context_instance = global_context (request))
+
+@needs_authentication
+def edit_task (request, task_id):
+    """
+    Edit existing Task.
+    TODO :
+    Do user validation (should have permission)
+    Allow delete SubTask facility
+    Allow delete Task facility (?)
+    Cancel Edit
+    Save Draft
+    """
+
+    user = request.user
+    dept_names = [name for name, description in DEP_CHOICES]
+    subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
+    curr_task = Task.objects.get (id = task_id)
+
+    if user.groups.filter (name = 'Cores'):
+        print 'Core'
+    elif user.groups.filter (name = 'Coords'):
+        print 'Coord'
+
+    SubTaskFormSet = modelformset_factory (SubTask, exclude = subtask_exclusion_tuple, extra = 1)
+
+    if request.method == 'POST':
+        # Get the submitted formset - filled with the existing
+        # SubTasks of the current Task
+        subtaskfs = SubTaskFormSet (request.POST, prefix = 'all', queryset = SubTask.objects.filter (task__id = int (task_id)))
+        task_form = TaskForm (request.POST, instance = curr_task)
+        if task_form.is_valid ():
+            # If the filled forms (if any) are valid
+            if subtaskfs.is_valid ():
+                # Save the Task object
+                task_form.save ()
+                # Get list of the changed instances (including brand
+                # new SubTasks instances)
+                subtasks = subtaskfs.save (commit = False)
+                print 'SubTasks'
+                for subtask in subtasks:
+                    # Populate all model fields excluded from SubTask ModelForm
+                    # NOTE : As per ERPver_2.PDF, creator of
+                    # subtask is same as creator of Task
+                    subtask.creator = user
+                    subtask.status = DEFAULT_STATUS
+                    subtask.task = curr_task
+                    subtask.save ()
+                # Save the many-to-many data for the formset, NOT the
+                # instance. Necessary, since we used commit = False
+                subtaskfs.save_m2m ()
+                return HttpResponseRedirect ('%s/dashboard/home' % settings.SITE_URL)
+            else:
+                # One or more Forms are invalid
+                pass
+    else:
+        # Create Task form with existing values filled in
+        task_form = TaskForm (instance = Task.objects.get (id = task_id))
+        # Create Formset with existing values filled in
+        subtaskfs = SubTaskFormSet (prefix = 'all', queryset = SubTask.objects.filter (task__id = int (task_id)))
+
+    print 'No. of forms : ', subtaskfs.total_form_count ()
+    return render_to_response('tasks/edit_task.html' , locals(), context_instance = global_context (request))
+
+def display_subtask (request, subtask_id):
+    """
+    Display full details of a SubTask.
+    TODO :
+    Validation
+    """
+    curr_subtask = SubTask.objects.get (id = subtask_id)
+    return render_to_response('tasks/display_subtask.html', locals(), context_instance = global_context (request))
+    
+
 
 #author : vivek kumar bagaria
 def assign_task(request):

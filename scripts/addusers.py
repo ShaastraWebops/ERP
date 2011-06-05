@@ -14,28 +14,38 @@ from erp.tasks.models import Task, SubTask, DEFAULT_STATUS
 import random
 
 def create_groups ():
-    try:
-        if not Group.objects.get (name = 'Cores'):
-            cores = Group (name = 'Cores')
-            cores.save ()
-        if not Group.objects.get (name = 'Coords'):
-            coords = Group (name = 'Coords')
-            coords.save ()
-        if not Group.objects.get (name = 'Vols'):
-            vols = Group (name = 'Vols')
-            vols.save ()
-    except:
-        pass
+    """
+    Create groups Cores, Coords, and Vols (if they don't already exist).
+    """
 
-def create_depts ():
-    """ By default, this assigns 'Event_Manager' as root.
+    try:
+        gp = Group.objects.get (name = 'Cores')
+    except:
+        cores = Group (name = 'Cores')
+        cores.save ()
+
+    try:
+        gp = Group.objects.get (name = 'Coords')
+    except:
+        coords = Group (name = 'Coords')
+        coords.save ()
+
+    try:
+        gp = Group.objects.get (name = 'Vols')
+    except:
+        vols = Group (name = 'Vols')
+        vols.save ()
+
+def create_depts (dummy_qms_user = 'root'):
+    """
+    By default, this assigns Event_Manager as 'root' (ie. my admin
+    username).
     """
     for name, description in DEP_CHOICES:
         try:
-            if not Department.objects.get (Dept_Name = name):
-                new_dept = Department.objects.create (Dept_Name = name, Event_Manager = User.objects.get (username = 'root'))
+            dept = Department.objects.get (Dept_Name = name)
         except:
-            pass
+            new_dept = Department.objects.create (Dept_Name = name, Event_Manager = User.objects.get (username = 'root'))
 
 def create_users (users_file_name = 'users.txt'):
     """
@@ -176,4 +186,5 @@ def do_it_all ():
     create_depts ()
     create_users (users_file_name = 'users.txt')
     create_tasks (n = 5, partial_subtask = False)
+    create_tasks (n = 3, partial_subtask = True)
     finish_some_subtasks ()

@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<h2>Create a New Task</h2>
+<h2>Edit Task</h2>
 
 <form action="" method="post">
   {% csrf_token %}
@@ -19,7 +19,7 @@
   <table>
     <tr>
       <td>
-	<input type="submit" name = "Create" value="Create" />
+	<input type="submit" name = "Edit" value="Submit" />
       </td>
       <td>
 	<input type="hidden" name="next" value="../../home" />

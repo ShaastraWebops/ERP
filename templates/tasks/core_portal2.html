@@ -4,6 +4,8 @@
 
 <h1>Dashboard</h1>
 
+<a href="{% url tasks.views.create_task %}"><h2>Create a New Task</h2></a>
+
 {% block received_requests %}
 <h2> Requests from other Departments </h2>
 <table>
@@ -52,6 +54,7 @@
     <th>Creator</th>
     <th>Deadline</th>
     <th>Status</th>
+    <th>Action</th>
   </tr>
   {% for task in all_Tasks %}
   <tr>
@@ -59,13 +62,13 @@
     <td> {{ task.creator }} </td>
     <td> {{ task.deadline }} </td>
     <td> {{ task.status }} </td>
+    <td><a href="{% url tasks.views.edit_task task.id %}">Edit</a></td>
   </tr>
   {% endfor %}
 </table>
 
 {% endblock %}
 
-<a href="{% url tasks.views.create_task %}"><h2>Create a New Task</h2></a>
 
 {% block completed %}
 <h2> Completed SubTasks</h2>

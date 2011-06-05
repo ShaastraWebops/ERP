@@ -15,7 +15,7 @@
   </tr>
   {% for subtask in all_SubTasks %}
   <tr>
-    <td> {{ subtask.subject }} </td>
+    <td><a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }} </a></td>
     <td> {{ subtask.creator }} </td>
     <td> {{ subtask.deadline }} </td>
     <td> {{ subtask.status }} </td>

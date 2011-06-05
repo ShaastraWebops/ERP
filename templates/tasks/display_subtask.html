@@ -1,0 +1,37 @@
+{% extends "tasks/portal_common.html" %}
+
+{% block display_stuff %}
+<h1>SubTask</h1>
+
+<table>
+  <tr>
+    <th>Subject</th>
+    <td> {{ curr_subtask.subject }} </td>
+  </tr>
+  <tr>
+    <th>Department</th>
+    <td> {{ curr_subtask.department}} </td>
+  </tr>
+  <tr>
+    <th>Description</th>
+    <td> {{ curr_subtask.description }} </td>
+  </tr>
+  <tr>
+    <th>Proposer</th>
+    <td> {{ curr_subtask.creator }} </td>
+  </tr>
+  <tr>
+    <th>Creation Date</th>
+    <td> {{ curr_subtask.creation_date }} </td>
+  </tr>
+  <tr>
+    <th>Deadline</th>
+    <td> {{ curr_subtask.deadline }} </td>
+  </tr>
+  <tr>
+    <th>Status</th>
+    <td> {{ curr_subtask.status }} </td>
+  </tr>
+</table>
+
+{% endblock %}

@@ -1,6 +1,12 @@
 README for the Scripts:
 
-Run the Scripts in this order:
+Simply run :
+
+do_it_all ()
+
+to get everything done.
+
+Else, run the Scripts in this order:
 
 1.) create_groups()
 
