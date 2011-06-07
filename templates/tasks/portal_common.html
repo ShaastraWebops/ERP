@@ -1,4 +1,4 @@
-{% extends "base_default.html" %}
+{% extends "home.html" %}
 
 {% block body %}
 
@@ -15,22 +15,6 @@ Register <a href="{{SITE_URL}}/users/register/">here</a>
 {% if user.is_authenticated %}
 <span style="font-size:200%;">* </span>
 Welcome {{ user.username }}, to Erp. 
-{% endif %}
-
-{% if logged_in %}
-
-<div class="info">
- You have successfully logged in.
-</div>
-{%endif%}
-
-{% if already_logged %}
-<div class="errors">
- You have already logged in.
-</div>
-{%endif%}
-
-{% if user.is_authenticated %}
 
 {% block portal_stuff %}
 
@@ -39,11 +23,16 @@ Welcome {{ user.username }}, to Erp.
 {% block display_stuff %}
 
 {% endblock %}
+
 {% endif %}
 
+{% block form_stuff %}
 
-<form action="{{SITE_URL}}/erp/dashboard/documents/" method="POST">
+{% endblock %}
 
+
+<form action="{{SITE_URL}}/dashboard/documents/" method="POST">
+  {% csrf_token %}
 <input type = "submit" name="documents" value="My Documents">
 </form>
 

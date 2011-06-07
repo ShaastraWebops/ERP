@@ -1,0 +1,276 @@
+{% extends "home.html" %}
+
+{% block body %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+<title>Simple Slide Panel</title> 
+ 
+<script type="text/javascript" src="{{MEDIA_URL}}js/jquery.js"></script> 
+ 
+<script type="text/javascript"> 
+$(document).ready(function(){
+ 
+	$(".btn-slide").click(function(){
+		$("#panel").slideToggle("slow");
+		$(this).toggleClass("active"); return false;
+	});
+	
+	 
+});
+
+
+$(document).ready(function(){
+ 
+	$(".btn-slide1").click(function(){
+		$("#panel1").slideToggle("slow");
+		$(this).toggleClass("active1"); return false;
+	});
+	
+	 
+});
+$(document).ready(function(){
+ 
+	$(".btn-slide2").click(function(){
+		$("#panel2").slideToggle("slow");
+		$(this).toggleClass("active2"); return false;
+	});
+	
+	 
+});
+
+
+
+$(document).ready(function(){
+ 
+	$(".btn-slide3").click(function(){
+		$("#panel3").slideToggle("slow");
+		$(this).toggleClass("active3"); return false;
+	});
+	
+	 
+});
+
+
+$(document).ready(function(){
+ 
+	$(".btn-slide4").click(function(){
+		$("#panel4").slideToggle("slow");
+		$(this).toggleClass("active4"); return false;
+	});
+	
+	 
+});
+
+
+$(document).ready(function(){
+ 
+	$(".btn-slide5").click(function(){
+		$("#panel5").slideToggle("slow");
+		$(this).toggleClass("active5"); return false;
+	});
+	
+	 
+});
+</script> 
+ 
+<style type="text/css"> 
+body {
+	margin: 0 auto;
+	padding: 0;
+	width: 570px;
+	font: 75%/120% Arial, Helvetica, sans-serif;
+}
+a:focus {
+	outline: none;
+}
+#panel {
+	background: #754c24;
+	height: 200px;
+	display: none;
+}
+.slide {
+	margin: 0;
+	padding: 0;
+	border-top: solid 4px #422410;
+	background: url({{MEDIA_URL}}images/b.png) no-repeat center top;
+}
+.btn-slide {
+	background: url({{MEDIA_URL}}images/b.png) no-repeat right -50px;
+	text-align: center;
+	width: 144px;
+	height: 31px;
+	padding: x0;
+	margin: 0 auto;
+	display: block;
+	font: bold 120%/100% Arial, Helvetica, sans-serif;
+	color: #fff;
+	text-decoration: none;
+}
+.active {
+	background-position: right 12px;
+}
+
+#panel1 {
+	background: #754c24;
+	height: 200px;
+	display: none;
+}
+
+.slide1 {
+	margin: 0;
+	padding: 0;
+	border-top: solid 4px #422410;
+	background: url(images/collapse.png) no-repeat center top;
+}
+
+.btn-slide1 {
+	background: url(images/expaqnd.png) no-repeat right -50px;
+	text-align: center;
+	width: 144px;
+	height: 31px;
+	padding: 10px 10px 0 0;
+	margin: 0 auto;
+	display: block;
+	font: bold 120%/100% Arial, Helvetica, sans-serif;
+	color: #fff;
+	text-decoration: none;
+}
+.active1 {
+	background-position: right 12px;
+}
+
+
+
+#panel2 {
+	background: #754c24;
+	height: 200px;
+	display: none;
+}
+.slide2 {
+	margin: 0;
+	padding: 0;
+	border-top: solid 4px #422410;
+	background: url(images/collapse.png) no-repeat center top;
+}
+.btn-slide2 {
+	background: url(images/expand.png) no-repeat right -50px;
+	text-align: center;
+	width: 144px;
+	height: 31px;
+	padding: x0;
+	margin: 0 auto;
+	display: block;
+	font: bold 120%/100% Arial, Helvetica, sans-serif;
+	color: #fff;
+	text-decoration: none;
+}
+.active2 {
+	background-position: right 12px;
+}
+
+
+#panel3 {
+	background: #754c24;
+	height: 300px;
+	display: none;
+}
+.slide3 {
+	margin: 0;
+	padding: 0;
+	border-top: solid 4px #422410;
+	background: url({{MEDIA_URL}}images/collapse.png) no-repeat center top;
+}
+.btn-slide3 {
+	background: url({{MEDIA_URL}}images/expand.png) no-repeat right -50px;
+	text-align: center;
+	width: 144px;
+	height: 31px;
+	padding: x0;
+	margin: 0 auto;
+	display: block;
+	font: bold 120%/100% Arial, Helvetica, sans-serif;
+	color: #fff;
+	text-decoration: none;
+}
+.active3 {
+	background-position: right 12px;
+}
+
+</style> 
+</head> 
+ 
+<body> 
+ 
+<div id="panel"> 
+	these are ur teams details
+
+.
+<!-- check required -->
+<form id="teamdetails" action = "{{SITE_URLS}}/erp/dashboard/addteammember/" method ="POST">
+{{message}}
+Add team member 
+<br>
+{% for field in memberform %}
+<tr>
+<br>
+<th>{{ field.label_tag }}</th>
+<td>{{field}}</td>
+
+
+{% endfor %}
+
+
+<br>
+<input type="submit" value="Add">
+<h4> YOUR TEAM DETAILS</h4>
+</form>
+
+	{% for field in details %}
+	
+
+	{{field.name}}    {{field.mobile_number}}    {{field.email_id}}
+	
+         <form action="{{SITE_URLS}}/erp/dashboard/deleteteammember/" method="GET">
+
+		<input type="submit"  name={{field.id}} value="Delete" >
+		<input type="hidden" name="d" value = {{field.id}}>
+	</form>
+
+<!--
+	<form action="{{SITE_URLS}}/erp/dashboard/editteammember/" method="POST">
+
+		<input type="submit"  name={{field.id}} value="Edit">
+		<input type="hidden" name="e" value = {{field.id}}>
+	</form>
+
+-->
+{% endfor %}
+
+</div> 
+ 
+<p class="slide"><a href="#" class="btn-slide">Slide Panel</a></p> 
+
+
+
+<div id="panel1"> 
+department manual
+<img src="{{MEDIA_URL}}images/collapse.png">
+</div> 
+ 
+<p class="slide1"><a href="#" class="btn-slide1">Slide Panel</a></p> 
+ 
+
+
+<div id="panel2"> 
+minutes of meeting
+</div> 
+ 
+<p class="slide2"><a href="#" class="btn-slide2">Slide Panel</a></p> 
+ 
+
+</body> 
+</html> 
+
+{% endblock %}

@@ -1,8 +1,12 @@
-{% extends "base_default.html" %}
+{% extends "tasks/portal_common.html" %}
 
-{% block body %}
+{% block form_stuff %}
 
+{% if is_new_task %}
+<h2>Create a New Task</h2>
+{% else %}
 <h2>Edit Task</h2>
+{% endif %}
 
 <form action="" method="post">
   {% csrf_token %}
@@ -19,7 +23,11 @@
   <table>
     <tr>
       <td>
-	<input type="submit" name = "Edit" value="Submit" />
+	{% if is_new_task %}
+	<input type="submit" name = "Create" value="Create" />
+	{% else %}
+	<input type="submit" name = "Edit" value= "Submit" />
+	{% endif %}
       </td>
       <td>
 	<input type="hidden" name="next" value="../../home" />
