@@ -61,7 +61,8 @@ def register_user(request):
                     password = form.cleaned_data['password'],
 		    
 
-                    )        
+                    )    
+	    	print form.cleaned_data['email']    
 		department=form.cleaned_data['department']
 		Dept=Department.objects.get(Dept_Name=department)
                 user.is_active=True #took from userportal
@@ -72,6 +73,7 @@ def register_user(request):
                         email_id=form.cleaned_data['email'],
 			
 		     )
+		print "hi"
                 user.save()
 
 
@@ -157,12 +159,12 @@ def contact_details(request):
     
     profileform=personal_details(initial={'name':profile.name,
                                           'nick':profile.nickname,
-                                          'roomnumber' :profile.roomnumber ,
+                                          'roomnumber' :profile.room_no ,
                                           'hostel':profile.hostel,
-                                          'summerstay':profile.summerstay,
+                                          'summerstay':profile.summer_stay,
                                           'chennai_number':profile.chennai_number,
                                           'summer_number':profile.summer_number,
-                                          'emailid':profile.emailid,
+                                          'emailid':profile.email_id,
                                           'rollno':profile.user,})
 
     return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
@@ -180,9 +182,9 @@ def update(request):
             profile=userprofile.objects.get(user=request.user)
             profile.nickname=form.cleaned_data['nick']
             profile.name=form.cleaned_data['name']
-            profile.roomnumber=form.cleaned_data['roomnumber']
+            profile.room_no=form.cleaned_data['roomnumber']
             profile.hostel=form.cleaned_data['hostel']
-            profile.summerstay=form.cleaned_data['summerstay']
+            profile.summer_stay=form.cleaned_data['summerstay']
             profile.chennai_number=form.cleaned_data['chennai_number']
             profile.summer_number=form.cleaned_data['summer_number']
                         

@@ -1,0 +1,76 @@
+{% extends "home.html" %}
+
+
+{% block body %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+
+  <title></title>
+ </head>
+ <body id="page">
+
+
+
+
+
+
+<div id="mainform" >
+  <div id="main">
+   Coordinator Details
+   <form id="" name="" action="{{SITE_URL}}/users/update/" method="POST">
+    <table>
+
+{% for field in profileform %}
+     <tr>
+      <td style="text-align:right;">
+       {{ field.label_tag }}
+      </td>
+
+<td>
+
+{{field}}
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<!--problem here
+
+{% ifequal "{{field.label_tag}}" "Name"  %}
+
+<input  id="" name="" type="checkbox" value="0" />
+
+{% endifequal %}
+-->
+      </td>
+     </tr>
+     <tr><td></td><td></td></tr>
+     <tr><td></td><td></td></tr>
+
+
+{% endfor %}
+
+
+    </table>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Update" name="googeal">
+   </form>
+  </div>
+
+<p class="defaultP" style="visibility:hidden;">
+	<input type="radio" name="month" value="6" id="month6" /> <label for="month6">6</label> <br />
+	<input type="radio" name="month" value="3" id="month3" /> <label for="month3">3</label> <br />	
+	<input type="radio" name="month" value="12" id="month12" /> <label for="month12">12</label> <br />
+</p>
+
+  <script type="text/javascript">
+   $(function() {
+   	$('.defaultP input').ezMark();
+	$('.checkbox input[type="checkbox"]').ezMark({checkboxCls: 'ez-checkbox-green', checkedCls: 'ez-checked-green'})
+   });	
+  </script>
+</div>
+
+
+</body>
+</html>
+
+{% endblock %}
