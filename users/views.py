@@ -69,7 +69,7 @@ def register_user(request):
 		user_profile = userprofile(
                         user = user,
 			department_id=Dept.id,
-                        emailid=form.cleaned_data['email'],
+                        email_id=form.cleaned_data['email'],
 			
 		     )
                 user.save()
