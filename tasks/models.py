@@ -103,7 +103,7 @@ class SubTaskComment(AbstractComment):
     subtask = models.ForeignKey (SubTask)
 
     def __str__(self):
-        return '%s %s' %(self.task.subject, self.id)
+        return '%s %s' %(self.subtask.subject, self.id)
     class Admin:
         pass
         

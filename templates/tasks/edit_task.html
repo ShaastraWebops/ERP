@@ -14,10 +14,15 @@
     {{ task_form.as_table }}
   </table>
   <hr>
+  <h3>Subtasks</h3>
+  <p>Fill as many Subtasks as you want</p>
   <table>
     {{ subtaskfs.management_form }}
     {% for form in subtaskfs.forms %}
-    {{ form }}
+    <h4>Subtask {{ forloop.counter }}</h4>
+    <table>
+      {{ form.as_table }}
+    </table>
     {% endfor %}
   </table>
   <table>
@@ -33,7 +38,6 @@
 	<input type="hidden" name="next" value="../../home" />
       </td>
     </tr>
-  </table>
   </table>
 </form>
 {% endblock %}

@@ -1,19 +1,53 @@
-<html>
+{% extends "tasks/portal_common.html" %}
 
-<body>
-{% if success %}
-<h2> Comment Successfully Added </h2>
+{% block display_stuff %}
+
+{% if is_task_comment %}
+<h2>Task - {{ curr_object.subject }}</h2>
+{% else %}
+<h2>Subtask - {{ curr_object.subject }}</h2>
 {% endif %}
-{% if no_such_task %}
+
+{% if comments %}
+<h2>Comments</h2>
+<table>
+ <tr>
+   <th>Author</th>
+   <th>Comment</th>
+   <th>Time</th>
+ </tr>
+ {% for comment in comments %}
+ <tr>
+   <td>{{ comment.author.username }}</td>
+   <td>{{ comment.comment_string }}</td>
+   <td>{{ comment.time_stamp }}</td>
+ </tr>
+ {% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}
+
+{% block form_stuff %}
+
+{% if status == 'Success' %}
+<h3> Comment Successfully Added </h3>
+{% endif %}
+
+{% if status == 'Not Found' %}
+{% if is_task_comment %}
 <h2> No Such Task Exists </h2>
+{% else %}
+<h2> No Such Subtask Exists </h2>
 {% endif %}
-{% if no_such_subtask %}
-<h2> No Such Sub-Task Exists </h2>
 {% endif %}
-<form method="POST" action="./">
-    {{ formset }}
-<input type =  "submit" value="Submit">
-</form>
-</body>
 
-</html>
+<h2>Add a comment</h2>
+<form method="POST" action="./">
+  {% csrf_token %}
+  <table>
+    {{ comment_form }}
+  </table>
+  <input type = "submit" value="Submit">
+</form>
+{% endblock %}

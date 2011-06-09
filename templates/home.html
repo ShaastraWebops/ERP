@@ -8,6 +8,9 @@
   <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/style.css" />
   <script type="text/javascript" src="{{MEDIA_URL}}js/jquery-1.5.2-min.js"></script>
   <script type="text/javascript" src="{{MEDIA_URL}}js/script.js"></script>
+  {% block javascript_stuff %}
+  
+  {% endblock %}
   <title></title>
  </head>
  <body id="page">
@@ -15,19 +18,15 @@
 
   <div id="top">
    <div id="header">
-    <a href="{% url tasks.views.core_portal %}"><div class="button">Home</div></a>
+    <a href="{% url tasks.views.display_portal %}"><div class="button">Home</div></a>
     <a href="{% url users.views.invite_page %}"><div class="button">Invite</div></a>
     <a href="#"><div class="button">Policies</div></a>
     <a href="#"><div class="button">Website</div></a>
     <a href="{% url users.views.contact_details %}"><div class="button">Profile</div></a>
     <a href="{% url dashboard.views.documents %}"><div class="button">Contacts</div></a>
-    <a href="#"><div class="button">Logout</div> </a>
+    <a href="{% url home.views.logout %}"><div class="button">Logout</div> </a>
    </div>
   </div>
-
-hello
-boy
-
 {% block body %}
 {% endblock %}
 </body>

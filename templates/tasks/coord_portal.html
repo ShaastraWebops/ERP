@@ -12,6 +12,7 @@
     <th>Proposer</th>
     <th>Deadline</th>
     <th>Status</th>
+    <th>Comments</th>
   </tr>
   {% for subtask in all_SubTasks %}
   <tr>
@@ -19,6 +20,7 @@
     <td> {{ subtask.creator }} </td>
     <td> {{ subtask.deadline }} </td>
     <td> {{ subtask.status }} </td>
+    <td>  <a href="{% url tasks.views.handle_subtask_comments subtask.id %}">Comments</a> </td>
   </tr>
   {% endfor %}
 </table>

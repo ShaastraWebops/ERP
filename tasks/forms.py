@@ -6,7 +6,6 @@ class TaskCommentForm (ModelForm):
     class Meta:
         model = TaskComment
         exclude = ('author', 'task')
-        exclude = ('task')        
 
 class SubTaskCommentForm (ModelForm):
     class Meta:
@@ -21,4 +20,4 @@ class TaskForm (ModelForm):
 class SubTaskForm (ModelForm):
     class Meta:
         model = SubTask
-        exclude = ('creator', 'status', 'description', 'department', 'task')
+        exclude = ('creator', 'description', 'department', 'task')

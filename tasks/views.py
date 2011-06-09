@@ -10,9 +10,7 @@ from django.forms.models import modelformset_factory
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import datetime
-from forms import TaskForm
-from forms import TaskCommentForm
-from forms import SubTaskCommentForm
+from forms import TaskForm, SubTaskForm, TaskCommentForm, SubTaskCommentForm
 from models import *
 # This seems necessary to avoid CSRF errors
 from erp.misc.util import *
@@ -45,7 +43,7 @@ def create_task(request):
 
     SubTaskFormSet = modelformset_factory (SubTask,
                                            exclude = subtask_exclusion_tuple,
-                                           extra = 1)
+                                           extra = 3)
     if request.method == 'POST':
         subtaskfs = SubTaskFormSet (request.POST, prefix = 'all')
         task_form = TaskForm (request.POST)
@@ -209,6 +207,7 @@ def edit_task (request, task_id):
                               locals(),
                               context_instance = global_context (request))
 
+@needs_authentication
 def display_subtask (request, subtask_id):
     """
     Display full details of a SubTask.
@@ -216,192 +215,120 @@ def display_subtask (request, subtask_id):
     Validation
     """
     curr_subtask = SubTask.objects.get (id = subtask_id)
+    curr_subtask_form = SubTaskForm (instance = curr_subtask)
+    has_updated = False
+    if request.method == 'POST':
+        # Hack to get the status
+        if request.POST.get ('status', 'O') != '':
+            curr_subtask.status = request.POST.get ('status', 'O') 
+            curr_subtask.save ()
+            has_updated = True
+            # Reinstantiate the form
+            curr_subtask_form = SubTaskForm (instance = curr_subtask)
+            print 'SubTask updated'
     return render_to_response('tasks/display_subtask.html',
                               locals(),
                               context_instance = global_context (request))
     
-#author : vivek kumar bagaria
-def assign_task(request):
-    # below one  is to be used
-    #creator = request.user
-    #using this until the login stuff is made
-    #creator="me" 
-    #this will accept the new task and upload in the database
-    if request.method=='POST':
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            status      ="Not started"
-            #initial status 
-            subject     =form.cleaned_data['subject']
-            description =form.cleaned_data['description']
-            
-
-            creation_date= datetime.datetime.now()
-            # please check the above line , this will even give time till second accuracy
-            assignee     =form.cleaned_data['assignee']
-            deadline     =form.cleaned_data['deadline']
-            #the above field can be obtained in a better fashion
-
-            department   =form.cleaned_data['department']
-            #please check
-            #department can be taken from assignee or explicitly wrriten
-            #i have taken it explicitly for time being ,we can change it
-            manager      =form.cleaned_data['manager']
-
-            data=Task(subject = subject , description = description , creator=creator, assignee =assignee ,
-                      deadline=deadline , status = status , department =department ,manager=manager)
-            data.save()
-            # the below context is just wriiten for namesake . i know we have to use it the way
-            #it is used in userportal , change it later
-
-
-
-
-    context     = Context(request ,{ 'user':"me" ,})
-    #here the tasks which are assigned by the creator r selected and passed to the templates which will display them
-    tasks_details=models.Task.objects.all()
-    display_form=TaskForm()
-    
-
-    return render_to_response('tasks/assigned_task.html' , locals(), context_instance = global_context (request))
-        
-
+@needs_authentication
+def display_task (request, task_id):
+    """
+    Display full details of a Task.
+    TODO :
+    Validation
+    Back Button to go back
+    """
+    curr_task = Task.objects.get (id = task_id)
+    return render_to_response('tasks/display_task.html',
+                              locals(),
+                              context_instance = global_context (request))
                 
-# author: Vijay Karthik
-def core_portal(request):
-    display_completed_tasks = False
-    display_created_tasks = False
-    display = False
-    return render_to_response('tasks/core_portal.html', locals(), context_instance = global_context (request))
-
-def listoftasks(request):
-    """
-    TODO: Fix Department
-    """
-    user = request.user
-    objects =  Task.objects.filter(creator = user) 
-    tasks = {}
-    d = []
-    for row in objects:
-        ds = []
-        sub_task = SubTask.objects.filter(task = row)
-        for subrow in sub_task:
-            cs = []
-            cs.append(subrow.subject)
-            cs.append(subrow.description)
-            cs.append(subrow.creator)
-            cs.append(subrow.creation_date)
-            cs.append(subrow.deadline)
-            cs.append(subrow.status)            
-            cs.append(subrow.coords) # NEEDS proper representation.
-            
-            try:
-                cs.append(Department.objects.get(Dept_Name = subrow.department.Dept_Name).Dept_Name)
-            except:
-                cs.append("unknown")
-            ds.append(cs)
-        c = []
-        c.append(row.subject)
-        c.append(row.description)
-        c.append(row.creator)
-        c.append(row.creation_date)
-        c.append(row.deadline)
-        c.append(row.status)
-        c.append(ds)
-        d.append(c)
-    task_dict = {'tasks' : d}
-    task_dict['display_created_tasks'] = True
-    task_dict['display_completed_tasks'] = False
-    return render_to_response("tasks/core_portal.html", task_dict)
-
-def completedsubtasks(request):
-    ds = []
-    user = request.user
-    objects = SubTask.objects.filter(creator = user, status = "Completed")      
-    for subrow in objects:
-        cs = []
-        cs.append(subrow.subject)
-        cs.append(subrow.description)
-        cs.append(subrow.creator)
-        cs.append(subrow.creation_date)
-        cs.append(subrow.deadline)
-        cs.append(subrow.status)            
-        cs.append(subrow.coords) # NEEDS proper representation.
-        try:
-            cs.append(Department.objects.get(Dept_Name = subrow.department.Dept_Name).Dept_Name)
-        except:
-            cs.append("unknown")
-        ds.append(cs)
-    task_dict = {'subtasks' : ds}
-    task_dict['display_created_tasks'] = False
-    task_dict['display_completed _tasks'] = True
-    return render_to_response("tasks/core_portal.html", task_dict, context_instance = global_context (request))
-
-
-
 
 # Comments Part:
 # Comments for Tasks and subtasks are very similar. So they call the same function.
 
-#@needs_authentication    
-def task_comment(request, task_id):
+@needs_authentication    
+def handle_task_comments (request, task_id):
     """
-    Creates a comment For a Task
-    """
-    return add_comments(request,"task",task_id)
+    Displays all comments for Task of task_id and allows addition of a
+    comment.
 
-#@needs_authentication    
-def sub_task_comment(request, task_id):
+    TODO :
+    Make sure that user is a Core. (Necessary?)
     """
-    Creates a comment for a SubTask
+    comment_form, status = handle_comment (request = request, is_task_comment = True, object_id = task_id)
+    comments = TaskComment.objects.filter (task__id = task_id)
+    curr_object = Task.objects.get (id = task_id)
+    is_task_comment = True
+    return render_to_response('tasks/comments.html',
+                              locals(),
+                              context_instance = global_context (request))
+
+@needs_authentication    
+def handle_subtask_comments (request, subtask_id):
     """
-    return add_comments(request,"subtask",task_id)
+    Displays all comments for SubTask of subtask_id and allows
+    addition of a comment.
+    """
+    comment_form, status = handle_comment (request = request, is_task_comment = False, object_id = subtask_id)
+    comments = SubTaskComment.objects.filter (subtask__id = subtask_id)
+    curr_object = SubTask.objects.get (id = subtask_id)
+    is_task_comment = False
+    return render_to_response('tasks/comments.html',
+                              locals(),
+                              context_instance = global_context (request))
+
 
 
 # Adds comments to task / subtasks
-def add_comments(request,task_or_subtask,task_id):
+def handle_comment (request, is_task_comment, object_id):
     """
-    Creates a comment depending on whether it is a task or subtask
+    Return a tuple : (comment form, status).
+
+    If the form was POSTed, then save the comment and return empty form, status =
+    'Success'.
+    If the form data is invalid, then return form and status = 'Invalid Form'
+    If the object of given id was not found, status = 'Not Found'
+    Else, return blank form and status = 'Blank'
+
+    If is_task_comment is True, treat it as a TaskComment. Else, treat
+    it as a SubTaskComment.
     """    
     success = False
-    no_such_task = False
-    no_such_subtask = False
-    if (task_or_subtask == "task"):
-        task_comment = TaskCommentForm()
-    else:
-        task_comment = SubTaskCommentForm()        
+    not_found = True
     user = request.user
-    formset = task_comment
-    if request.method == 'POST':
-        if (task_or_subtask == "task"):
-            task_comment = TaskCommentForm(request.POST)
-        else:
-            task_comment = SubTaskCommentForm(request.POST)            
-        if task_comment.is_valid():
-            filled_forms_valid = True
 
-            new_comment = task_comment.save (commit = False)
-            if(task_or_subtask == "task"):
-                try:
-                    task_to_comment = Task.objects.get (id = task_id)
-                except:
-                    no_such_task = True
-                    return render_to_response("tasks/comments.html", locals())
-            if(task_or_subtask == "subtask"):
-                try:
-                    task_to_comment = SubTask.objects.get (id = task_id)
-                except:
-                    no_such_subtask = True
-                    return render_to_response("tasks/comments.html", locals())
-            formset = task_comment
+    if is_task_comment:
+        curr_modelform = TaskCommentForm
+        curr_model = Task
+    else:
+        curr_modelform = SubTaskCommentForm
+        curr_model = SubTask
+
+    if request.method == 'POST':
+        comment_form = curr_modelform(request.POST)            
+        if comment_form.is_valid():
+            new_comment = comment_form.save (commit = False)
+            try:
+                curr_object = curr_model.objects.get (id = object_id)
+            except:
+                not_found = True
+                return (comment_form, 'Not Found')
             success = True
             new_comment.author = user
-            if(task_or_subtask == "task"):
-                new_comment.task = task_to_comment
+            if is_task_comment:
+                new_comment.task = curr_object
+                print 'New Comment : ', new_comment.author, new_comment.comment_string, new_comment.time_stamp, new_comment.task.subject
             else:
-                new_comment.subtask = task_to_comment
-            filled_forms_valid = True
+                new_comment.subtask = curr_object
+                print 'New Comment : ', new_comment.author, new_comment.comment_string, new_comment.time_stamp, new_comment.subtask.subject
             new_comment.save ()
-            return render_to_response("tasks/comments.html", locals())
-    formset = task_comment
-    return render_to_response("tasks/comments.html", locals())
+            # Blank the form
+            comment_form = curr_modelform ()
+            return (comment_form, 'Success')
+        else:
+            return (comment_form, 'Invalid Form')
+    else:
+        # Blank form
+        comment_form = curr_modelform ()
+    return (comment_form, 'Blank')
