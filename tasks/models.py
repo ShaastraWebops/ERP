@@ -96,6 +96,7 @@ class TaskComment(AbstractComment):
     class Admin:
         pass
         
+        
 class SubTaskComment(AbstractComment):
     """ Comment written for a SubTask
     """

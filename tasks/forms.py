@@ -5,11 +5,13 @@ from models import *
 class TaskCommentForm (ModelForm):
     class Meta:
         model = TaskComment
-        exclude = ('author')
+        exclude = ('author', 'task')
+        exclude = ('task')        
 
 class SubTaskCommentForm (ModelForm):
     class Meta:
         model = SubTaskComment
+        exclude = ('author', 'subtask')                
 
 class TaskForm (ModelForm):
     class Meta:

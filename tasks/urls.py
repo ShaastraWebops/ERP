@@ -10,7 +10,8 @@ urlpatterns = patterns('erp.tasks.views',
       (r'^core_portal/$', 'core_portal'),
       (r'^core_portal/listoftasks/', 'listoftasks'),
       (r'^core_portal/completed_subtasks/', 'completedsubtasks'),
-      (r'^task_comments/', 'task_comment'),
+      (r'^task_comments/([0-9]+)?/', 'task_comment'),
+      (r'^sub_task_comments/([0-9]+)?/', 'sub_task_comment'),
 
 )
 

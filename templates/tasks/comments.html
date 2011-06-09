@@ -4,6 +4,12 @@
 {% if success %}
 <h2> Comment Successfully Added </h2>
 {% endif %}
+{% if no_such_task %}
+<h2> No Such Task Exists </h2>
+{% endif %}
+{% if no_such_subtask %}
+<h2> No Such Sub-Task Exists </h2>
+{% endif %}
 <form method="POST" action="./">
     {{ formset }}
 <input type =  "submit" value="Submit">

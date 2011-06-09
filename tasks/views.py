@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 import datetime
 from forms import TaskForm
 from forms import TaskCommentForm
+from forms import SubTaskCommentForm
 from models import *
 # This seems necessary to avoid CSRF errors
 from erp.misc.util import *
@@ -337,28 +338,70 @@ def completedsubtasks(request):
     return render_to_response("tasks/core_portal.html", task_dict, context_instance = global_context (request))
 
 
-@needs_authentication    
-def task_comment(request):
+
+
+# Comments Part:
+# Comments for Tasks and subtasks are very similar. So they call the same function.
+
+#@needs_authentication    
+def task_comment(request, task_id):
     """
-    Creates a comment. Needs to be integrated with edit Task.
-    A similar method can be used for subtask_comment. Will do once i get an idea
-    how edit task is being implemented.
+    Creates a comment For a Task
     """
-    task_comment = TaskCommentForm()
+    return add_comments(request,"task",task_id)
+
+#@needs_authentication    
+def sub_task_comment(request, task_id):
+    """
+    Creates a comment for a SubTask
+    """
+    return add_comments(request,"subtask",task_id)
+
+
+# Adds comments to task / subtasks
+def add_comments(request,task_or_subtask,task_id):
+    """
+    Creates a comment depending on whether it is a task or subtask
+    """    
+    success = False
+    no_such_task = False
+    no_such_subtask = False
+    if (task_or_subtask == "task"):
+        task_comment = TaskCommentForm()
+    else:
+        task_comment = SubTaskCommentForm()        
     user = request.user
+    formset = task_comment
     if request.method == 'POST':
-        task_comment = TaskCommentForm(request.POST)
+        if (task_or_subtask == "task"):
+            task_comment = TaskCommentForm(request.POST)
+        else:
+            task_comment = SubTaskCommentForm(request.POST)            
         if task_comment.is_valid():
-            filled_forms_valid = True        
-            task_comment = TaskCommentForm (request.POST)
+            filled_forms_valid = True
+
             new_comment = task_comment.save (commit = False)
-            new_comment.creator = user
+            if(task_or_subtask == "task"):
+                try:
+                    task_to_comment = Task.objects.get (id = task_id)
+                except:
+                    no_such_task = True
+                    return render_to_response("tasks/comments.html", locals())
+            if(task_or_subtask == "subtask"):
+                try:
+                    task_to_comment = SubTask.objects.get (id = task_id)
+                except:
+                    no_such_subtask = True
+                    return render_to_response("tasks/comments.html", locals())
+            formset = task_comment
+            success = True
+            new_comment.author = user
+            if(task_or_subtask == "task"):
+                new_comment.task = task_to_comment
+            else:
+                new_comment.subtask = task_to_comment
             filled_forms_valid = True
             new_comment.save ()
-            return render_to_response("tasks/comments.html", {
-                    "formset": task_comment, "success" : True
-                    })
-
-    return render_to_response("tasks/comments.html", {
-            "formset": task_comment, "success" : False
-            })
+            return render_to_response("tasks/comments.html", locals())
+    formset = task_comment
+    return render_to_response("tasks/comments.html", locals())
