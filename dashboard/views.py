@@ -15,6 +15,7 @@ from erp.misc.util import *
 from erp.settings import *
 import sha,random,datetime
 from erp.dashboard.forms import *
+import os
 # Create your views here.
 def home (request):
     redirected=session_get(request,"from_url")
@@ -174,26 +175,34 @@ def editteammember(request):
 """    
 
 def upload_file(request):
+
+    users_documents=upload_documents.objects.filter(user=request.user)
     print "one"    
     if request.method=='POST':
         print "post"
         form=UploadFileForm(request.POST,request.FILES)
-        if form.is_valid():
+        if True : #form.is_valid():
             print"valid"
-            file_name=request.FIlES['file'].name
-            user_name=request.user['username']
-            destdir=os.path.join(settings.MEDIA_ROOT,user_name)
+            file_name=request.FILES['file'].name
+            user_name=request.user.username
+            destdir_one=os.path.join(settings.MEDIA_ROOT,"upload_files")
+            destdir=os.path.join(destdir_one,user_name)
             if not os.path.isdir(destdir):
                 os.makedirs(destdir,0775)
             filepath=os.path.join(destdir,os.path.basename(file_name))
+            f=request.FILES['file']
             fout=open(filepath,'wb+')
             for chunk in f.chunks():
                 fout.write(chunk)
             fout.close()
             date=datetime.datetime.now()
-            file_object=upload_documents(user=request.user , file_name=file_name,file_path=filepath,topic=form.cleaned_data['short_description'],date=date)
+            file_object=upload_documents(user=request.user , file_name=file_name,file_path=filepath,topic="hello",date=date)#to change topic
             file_object.save()
             print "SAVED"
+        else:
+            file_name=request.FILES['file'].name
+            print "done"
+
     else:
         print "not post"
         form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
