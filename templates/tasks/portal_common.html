@@ -31,7 +31,7 @@ Welcome {{ user.username }}, to Erp.
 {% endblock %}
 
 
-<form action="{{SITE_URL}}/dashboard/documents/" method="POST">
+<form action="{{SITE_URL}}/dashboard/upload_document/" method="GET">
   {% csrf_token %}
 <input type = "submit" name="documents" value="My Documents">
 </form>

@@ -9,12 +9,12 @@ from django.utils.translation import ugettext as _
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.contrib.sessions.models import Session
 #from erp.dashboard import forms
-from erp.dashboard.models import teamdetails
+from erp.dashboard.models import *
 from erp.users.models import *
 from erp.misc.util import *
 from erp.settings import *
 import sha,random,datetime
-
+from erp.dashboard.forms import *
 # Create your views here.
 def home (request):
     redirected=session_get(request,"from_url")
@@ -173,7 +173,33 @@ def editteammember(request):
                 
 """    
 
+def upload_file(request):
+    print "one"    
+    if request.method=='POST':
+        print "post"
+        form=UploadFileForm(request.POST,request.FILES)
+        if form.is_valid():
+            print"valid"
+            file_name=request.FIlES['file'].name
+            user_name=request.user['username']
+            destdir=os.path.join(settings.MEDIA_ROOT,user_name)
+            if not os.path.isdir(destdir):
+                os.makedirs(destdir,0775)
+            filepath=os.path.join(destdir,os.path.basename(file_name))
+            fout=open(filepath,'wb+')
+            for chunk in f.chunks():
+                fout.write(chunk)
+            fout.close()
+            date=datetime.datetime.now()
+            file_object=upload_documents(user=request.user , file_name=file_name,file_path=filepath,topic=form.cleaned_data['short_description'],date=date)
+            file_object.save()
+            print "SAVED"
+    else:
+        print "not post"
+        form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
 
-def contacts(request):
-    profile=userprofile.objects.all()
+    return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
+            
+    #return render_to_response('/dashboard/upload.html',locals(),context_instance=global_context(request)))
+         
     

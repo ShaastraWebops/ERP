@@ -172,6 +172,10 @@ def edit_task (request, task_id):
     elif user.groups.filter (name = 'Coords'):
         print 'Coord'
 
+
+
+
+
     SubTaskFormSet = modelformset_factory (SubTask,
                                            exclude = subtask_exclusion_tuple,
                                            extra = 1)
