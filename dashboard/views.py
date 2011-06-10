@@ -189,14 +189,26 @@ def upload_file(request):
             destdir=os.path.join(destdir_one,user_name)
             if not os.path.isdir(destdir):
                 os.makedirs(destdir,0775)
-            filepath=os.path.join(destdir,os.path.basename(file_name))
+            save_path=os.path.join(destdir,os.path.basename(file_name))
+
+            
+            destdir_one=os.path.join(settings.MEDIA_URL,"upload_files")
+            destdir=os.path.join(destdir_one,user_name)
+            if not os.path.isdir(destdir):
+                os.makedirs(destdir,0775)
+            file_path=os.path.join(destdir,os.path.basename(file_name))
+
+            
             f=request.FILES['file']
-            fout=open(filepath,'wb+')
+            fout=open(save_path,'wb+')
             for chunk in f.chunks():
                 fout.write(chunk)
             fout.close()
             date=datetime.datetime.now()
-            file_object=upload_documents(user=request.user , file_name=file_name,file_path=filepath,topic="hello",date=date)#to change topic
+            try:
+                file_object=upload_documents(user=request.user , file_name=file_name,file_path=file_path, url=file_path ,topic="hello",date=date)#to change topic
+            except:
+                print "duplicate name "
             file_object.save()
             print "SAVED"
         else:
@@ -208,7 +220,41 @@ def upload_file(request):
         form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
 
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
-            
-    #return render_to_response('/dashboard/upload.html',locals(),context_instance=global_context(request)))
-         
+
+
+
+def delete_file(request):
+
+    users_documents=upload_documents.objects.filter(user=request.user)
+    
+    if "d" in request.GET:
+        number=request.GET['d']
+        print number
+        
+    if "f" in request.GET:
+        file_name=request.GET['f']
+        print file_name
+
+
+        user_name=request.user.username
+        destdir_one=os.path.join(settings.MEDIA_ROOT,"upload_files")
+        destdir=os.path.join(destdir_one,user_name)
+        
+        file_path=os.path.join(destdir,os.path.basename(file_name))
+        print file_path
+        print "harere"
+        if os.path.isfile(file_path):
+            print "cool"
+            os.remove(file_path)
+            message=file_name+" deleted"
+        else:
+            print "file not found"
+    try:
+        delete_file=upload_documents.objects.get(user=request.user , file_name=file_name)
+        delete_file.delete()
+    except:
+        print "no file"
+    form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
+
+    return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
     

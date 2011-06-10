@@ -8,5 +8,6 @@ urlpatterns = patterns('',
       (r'^documents/$', 'erp.dashboard.views.documents'),
       (r'^addteammember/$', 'erp.dashboard.views.addteammember'),
       (r'^upload_document/$', 'erp.dashboard.views.upload_file'),
+      (r'^delete_document/$', 'erp.dashboard.views.delete_file'),
 )
 
