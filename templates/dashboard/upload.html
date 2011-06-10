@@ -1,0 +1,48 @@
+{% extends "home.html" %}
+
+{% block body %}
+{{message}}
+<form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_document/">
+<table>
+{% for field in form %}
+	<tr>
+	 <td>
+	  {{ field.label_tag }}
+	 </td>
+	<td>
+ 	 {{ field}}
+ 	</td>
+	</tr>
+{% endfor %}
+
+
+
+</td></tr>
+</table>
+<table>
+	<tr><td>
+<input type="submit" value="Upload" id="Save"/>
+</td></tr>
+</table>
+</form>
+<table>
+<h4> Your uploaded documents </h4>
+<form method="GET" action="{{SITE_URL}}/dashboard/delete_document/">
+{% for field in users_documents %}
+<tr>
+<td>
+<input type="hidden" value="{{field.id}}" name="d">
+<input type="hidden" value="{{field.file_name}}" name="f">
+<input type="submit" value="Delete" id="delete" name="delete file">
+{{field.file_path|urlize}}
+<a class="bottomlinks" href="{{SITE_URL}}/dashboard/home">
+
+</td>
+<td>
+{{field.date}}
+</td>
+<br>
+{% endfor %}
+
+</form>
+{% endblock %}

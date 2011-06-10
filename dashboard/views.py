@@ -206,11 +206,16 @@ def upload_file(request):
             fout.close()
             date=datetime.datetime.now()
             try:
-                file_object=upload_documents(user=request.user , file_name=file_name,file_path=file_path, url=file_path ,topic="hello",date=date)#to change topic
+                try:
+                    file_present=upload_documents.objects.get(user=request.user,file_name=file_name)
+                    message="File with this name exists.please change name  of the file"
+                except:
+                    file_object=upload_documents(user=request.user , file_name=file_name,file_path=file_path, url=file_path ,topic="hello",date=date)#to change topic
+                    file_object.save()
+                    print "SAVED"
             except:
                 print "duplicate name "
-            file_object.save()
-            print "SAVED"
+            
         else:
             file_name=request.FILES['file'].name
             print "done"
