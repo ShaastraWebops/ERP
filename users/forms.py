@@ -123,4 +123,10 @@ class personal_details(forms.Form):
     summerstay=forms.CharField(max_length=30)
     summer_number=forms.CharField(max_length=10)
 
+#author: vivek
+class InviteForm (ModelForm):
+    class Meta:
+        model = invitation
+        exclude =('core' , 'time')
+
 

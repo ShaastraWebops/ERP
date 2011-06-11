@@ -11,6 +11,7 @@ from erp.users import *
 from erp.misc.util import *
 from erp.department.models import *
 from erp.users import models
+from erp.dashboard.forms import *
 from django.contrib.auth.models import Group,Permission
 import sha,random,datetime
 from erp.users.forms import *
@@ -100,32 +101,25 @@ def register_user(request):
 
 
 
-#author: vivek
-def invite_page(request):
-    inviteform=invite_coord()
-
-    return render_to_response('users/invite_coord.html',locals(),context_instance = global_context(request))
-
-
-
 
 
 
 # author: vivek
 def invite(request):
-    inviteform=invite_coord()
-    message=""
-    if request.method=="POST":
-        data=request.POST.copy()
-        form=invite_coord(data)
+    CsvForm=UploadFileForm(initial={'title':"Enter the name" , 'short_description':"you may write anything here"})
+    message="maama"
+
+    
+    if request.method=='POST':
+        form=InviteForm(request.POST)
         if form.is_valid():
-            name=form.cleaned_data['name']
+            name=form.cleaned_data['invitee']
             emailid=form.cleaned_data['email_id']
             #please change this
             invite_details=invitation(
-            core=User.objects.get(username="me"),# obviously needs a change
+            core=User.objects.get(username=request.user.username),# obviously needs a change
             invitee=name,
-            emailid=emailid,
+            email_id=emailid,
             time=datetime.datetime.now(),
             )
             try:
@@ -148,10 +142,17 @@ def invite(request):
                 message="mail could not be sent "
                 print "problem da.."
 
-    return render_to_response('tasks/create_task.html',locals(),context_instance = global_context(request))
+    else:
+        form=InviteForm()
+    return render_to_response('dashboard/invite.html',locals(),context_instance = global_context(request))
 
-                                          
-                    
+def invite_inbulk(self):
+    CsvForm=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
+    form=InviteForm()
+    if request.method=='POST':
+        pass
+       
+    
             
 def contact_details(request):
     print "here "
@@ -169,7 +170,8 @@ def contact_details(request):
 
     return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
     
-  
+
+    
 def update(request):
     print "came in the function"
     name=request.session.get('username','nobody')

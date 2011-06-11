@@ -8,14 +8,16 @@ from django.template.context import Context, RequestContext
 from django.utils.translation import ugettext as _
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.contrib.sessions.models import Session
-#from erp.dashboard import forms
 from erp.dashboard.models import *
 from erp.users.models import *
 from erp.misc.util import *
 from erp.settings import *
 import sha,random,datetime
 from erp.dashboard.forms import *
-import os
+from erp.users.forms import *
+import os # upload files
+import csv # invite coords
+#import stringlib
 # Create your views here.
 def home (request):
     redirected=session_get(request,"from_url")
@@ -103,7 +105,7 @@ def documents (request):
     
         
     details=teamdetails.objects.all()#still to be filtered according to dept
-    memberform=forms.add_team_member()
+    #memberform=forms.add_team_member() was causing somw probs
     return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
 
 def addteammember(request):
@@ -173,9 +175,11 @@ def editteammember(request):
             
                 
 """    
-
+# this function is used for uploading csv files also(for inviting coords)
 def upload_file(request):
-
+    s="1,2,3"
+    s1=s.split(',')
+    print s1
     users_documents=upload_documents.objects.filter(user=request.user)
     print "one"    
     if request.method=='POST':
@@ -223,6 +227,34 @@ def upload_file(request):
     else:
         print "not post"
         form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
+
+  # this part is used for invitingcoords 
+
+    if "i" in request.POST:
+        print "at last"
+        print save_path
+        message="done"
+        form=InviteForm()
+        CsvForm=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
+        reader=csv.reader(open(save_path,'rb'),delimiter=' ')
+        string=[]
+        for field in reader:
+            string=string+[field]
+        final_string=[]
+        for field in string:
+        
+            splits=field[0].split(';')#; is just temprorary
+            final_string=final_string+[splits]
+        print final_string
+        
+        return render_to_response('dashboard/invite.html',locals() ,context_instance = global_context(request))
+
+
+  
+    else :#debugging
+        print "not done"
+
+    # till here
 
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
 
