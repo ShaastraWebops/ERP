@@ -89,6 +89,7 @@ class Materials(models.Model):
 
 class invitation(models.Model):
     core = models.ForeignKey(User , related_name="the core who has invited the user")
-    invitee = models.CharField(max_length=50)
-    emailid = models.EmailField()
+    invitee = models.CharField(max_length=50)#name of the coord
+    roll_no = models.CharField(max_length=8)
+    email_id = models.EmailField()
     time = models.DateField()

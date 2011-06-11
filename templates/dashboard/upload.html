@@ -31,6 +31,7 @@
 {% for field in users_documents %}
 <tr>
 <td>
+
 <input type="hidden" value="{{field.id}}" name="d">
 <input type="hidden" value="{{field.file_name}}" name="f">
 <input type="submit" value="Delete" id="delete" name="delete file">
