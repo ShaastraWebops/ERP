@@ -19,7 +19,7 @@
 <div id="mainform" >
   <div id="main">
    Coordinator Details
-   <form id="" name="" action="{{SITE_URL}}/users/update/" method="POST">
+   <form id="" name="" action="{{SITE_URL}}/users/update/" method="POST">{% csrf_token %}
     <table>
 
 {% for field in profileform %}
