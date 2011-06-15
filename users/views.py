@@ -196,12 +196,12 @@ def update(request):
             
             profileform=personal_details(initial={'name':profile.name,
                                           'nick':profile.nickname,
-                                          'roomnumber' :profile.roomnumber ,
+                                          'roomnumber' :profile.room_no ,
                                           'hostel':profile.hostel,
-                                          'summerstay':profile.summerstay,
+                                          'summerstay':profile.summer_stay,
                                           'chennai_number':profile.chennai_number,
                                           'summer_number':profile.summer_number,
-                                          'emailid':profile.emailid,
+                                          'emailid':profile.email_id,
                                           'rollno':profile.user,})
             
         else:
