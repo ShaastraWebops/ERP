@@ -21,3 +21,8 @@ class SubTaskForm (ModelForm):
     class Meta:
         model = SubTask
         exclude = ('creator', 'description', 'department', 'task')
+        
+class UpdatesForm (ModelForm):
+    class Meta:
+        model = Updates
+        exclude = ('coord')

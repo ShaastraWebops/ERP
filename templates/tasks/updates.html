@@ -1,0 +1,21 @@
+{% extends "tasks/portal_common.html" %}
+
+{% if status == 'Success' %}
+<h3> The message has been sent to the core </h3>
+{% endif %}
+
+{% if status == 'Failed' %}
+<h2> We are unable to process your request. </h2>
+{% endif %}
+
+{% if status == 'Blank' %}
+<!-- Enter something if required -->
+{% endif %}
+
+<h2>Add an Update to the Core</h2>
+<form method="POST" action="./">
+  <table>
+    {{ update_form }}
+  </table>
+  <input type = "submit" value="Submit">
+</form>

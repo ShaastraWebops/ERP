@@ -10,7 +10,7 @@ from django.forms.models import modelformset_factory
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import datetime
-from forms import TaskForm, SubTaskForm, TaskCommentForm, SubTaskCommentForm
+from forms import TaskForm, SubTaskForm, TaskCommentForm, SubTaskCommentForm, UpdatesForm
 from models import *
 # This seems necessary to avoid CSRF errors
 from erp.misc.util import *
@@ -336,3 +336,34 @@ def handle_comment (request, is_task_comment, object_id):
         # Blank form
         comment_form = curr_modelform ()
     return (comment_form, 'Blank')
+
+
+def Update_add(request):
+    """
+    Used by coords to send updates to Core.
+    """
+    user = request.user    
+    update_modelform = UpdatesForm
+    if request.method == 'POST':
+        update_form = update_modelform(request.POST)            
+        if update_form.is_valid():
+            new_update = update_form.save (commit = False)
+            new_update.coord = user
+            new_update.save ()
+            update_form = update_modelform ()
+            status = "Success"
+            return render_to_response('tasks/updates.html',
+                                      locals(),
+                                      context_instance = global_context (request))            
+        else:
+            status = "Failed"
+            return render_to_response('tasks/updates.html',
+                                      locals(),
+                                      context_instance = global_context (request))            
+
+    update_form = update_modelform ()
+    status = "Blank"
+    return render_to_response('tasks/updates.html',
+                              locals(),
+                              context_instance = global_context (request))           
+
