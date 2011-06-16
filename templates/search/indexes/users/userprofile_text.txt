@@ -1,4 +1,6 @@
 {{ object.title }}
 {{ object.user.get_full_name }}
 {{ object.body }}
-do
+{{ object.name }}
+{{ object.hostel }}
+{{ object.nickname }}

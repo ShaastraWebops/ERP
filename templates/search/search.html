@@ -2,7 +2,7 @@
 dude help
 {% block body %}
     <h2>Search</h2>
-hahahah
+hahahaha
     <form method="get" action=".">
         <table>
             {{ form.as_table }}
@@ -15,9 +15,11 @@ hahahah
         </table>
 
         {% if query %}
+	came in
             <h3>Results</h3>
 
             {% for result in page.object_list %}
+		{{forloop.counter}}
                 <p>
                     <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
                 </p>

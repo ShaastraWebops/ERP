@@ -22,6 +22,7 @@ class userprofileindex(indexes.SearchIndex):
     text=indexes.CharField(document=True,use_template=True)
     nickname    =indexes.CharField(model_attr='nickname')
     name        =indexes.CharField(model_attr='name')
+    hostel 	=indexes.CharField(model_attr='hostel')
     #email_id    =indexes.EmailField(model_attr='email_id')
 
     def index_queryset(self):
