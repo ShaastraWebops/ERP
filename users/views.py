@@ -119,7 +119,7 @@ def invite(request):
             emailid=form.cleaned_data['email_id']
             #please change this
             invite_details=invitation(
-            #core=User.objects.get(username=request.user.username),# obviously needs a change
+            core=request.user,
             invitee=name,
             email_id=emailid,
             time=datetime.datetime.now(),
@@ -133,17 +133,22 @@ def invite(request):
                 #sending mail here
                 mail_template=get_template('users/emailcoords.html')
                 message+=["got the template"]
-                body=mail_template.render(Context({'coordname':coordname,
-                                                   'SITE_URL':settings.SITE_URL,
-                                                   'activationkey':activation_key
-                                                   }))
-                send_mail('Invitaiton from the core to join ERP',body,'noreplay@shaastra.org',emailid,fail_silently=False)
-                message+=["mail sent"]
-                invite_details.save()       
-                print "peace"
+                mail=[emailid,]
+		print mail
             except :
                 message+=["mail could not be sent "]
                 print "problem da.."
+	    finally :
+		body=mail_template.render(Context({'coordname':coordname,
+                                                   'SITE_URL':settings.SITE_URL,
+                                                   'activationkey':activation_key
+                                                   }))
+                send_mail('Invitaiton from the core to join ERP',body,'noreplay@shaastra.org',mail,fail_silently=False)
+                message+=["mail sent"]
+                invite_details.save() 
+		      
+                print "peace"
+		
 
     else:
         message+=["form not valid"]
