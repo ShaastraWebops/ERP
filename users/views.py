@@ -70,7 +70,7 @@ def register_user(request):
                 user.save()
 		user_profile = userprofile(
                         user = user,
-			department_id=Dept.id,
+			department_id="1",
                         email_id=form.cleaned_data['email'],
 			
 		     )
@@ -124,13 +124,11 @@ def invite(request):
             )
             try:
                 invite_details.save()
-                message +="coord invited "
+                message ="coord invited "
                 #activation key#
                 salt = sha.new(str(random.random())).hexdigest()[:5]
                 activation_key = sha.new(salt+name).hexdigest()
-		message+="activation key done"
                 coordname=name
-		message +="to"+coordname
                 #sending mail here
                 mail_template=get_template('users/emailcoords.html')
                 body=mail_template.render(Context({coordname:coordname,
@@ -141,7 +139,7 @@ def invite(request):
                 message="mail sent"
                 print "peace"
             except :
-                message+="mail could not be sent "
+                message="mail could not be sent "
                 print "problem da.."
 
     else:
