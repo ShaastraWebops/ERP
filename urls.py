@@ -3,6 +3,8 @@ from django.contrib import admin
 from erp.tasks.views import *
 from erp.users.views import *
 from erp.home.views import *
+import haystack
+haystack.autodiscover()
 admin.autodiscover()
 
 
@@ -11,6 +13,7 @@ from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^search/', include('haystack.urls')),
     (r'^erp/$', include('erp.home.urls')),
     (r'^erp/users/', include('erp.users.urls')),
     (r'^erp/home/',include('erp.home.urls')),
