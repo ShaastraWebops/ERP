@@ -124,11 +124,13 @@ def invite(request):
             )
             try:
                 invite_details.save()
-                message ="coord invited "
+                message +="coord invited "
                 #activation key#
                 salt = sha.new(str(random.random())).hexdigest()[:5]
                 activation_key = sha.new(salt+name).hexdigest()
+		message+="activation key done"
                 coordname=name
+		message +="to"+coordname
                 #sending mail here
                 mail_template=get_template('users/emailcoords.html')
                 body=mail_template.render(Context({coordname:coordname,
@@ -139,7 +141,7 @@ def invite(request):
                 message="mail sent"
                 print "peace"
             except :
-                message="mail could not be sent "
+                message+="mail could not be sent "
                 print "problem da.."
 
     else:
