@@ -107,42 +107,46 @@ def register_user(request):
 # author: vivek
 def invite(request):
     CsvForm=UploadFileForm(initial={'title':"Enter the name" , 'short_description':"you may write anything here"})
-    message="maama"
+    message=[]
+    message+=["start"]
 
     
     if request.method=='POST':
         form=InviteForm(request.POST)
         if form.is_valid():
+            message+=["form valid "]
             name=form.cleaned_data['invitee']
             emailid=form.cleaned_data['email_id']
             #please change this
             invite_details=invitation(
-            core=User.objects.get(username=request.user.username),# obviously needs a change
+            #core=User.objects.get(username=request.user.username),# obviously needs a change
             invitee=name,
             email_id=emailid,
             time=datetime.datetime.now(),
             )
             try:
-                invite_details.save()
-                message ="coord invited "
+                message+=["invitation tried "]
                 #activation key#
                 salt = sha.new(str(random.random())).hexdigest()[:5]
                 activation_key = sha.new(salt+name).hexdigest()
                 coordname=name
                 #sending mail here
                 mail_template=get_template('users/emailcoords.html')
+                message+=["got the template"]
                 body=mail_template.render(Context({coordname:coordname,
                                                    'SITE_URL':settings.SITE_URL,
                                                    'activationkey':activation_key
                                                    }))
                 send_mail('Invitaiton from the core to join ERP',body,'noreplay@shaastra.org',emailid,fail_silently=False)
-                message="mail sent"
+                message.join("mail sent")
+                invite_details.save()       
                 print "peace"
             except :
-                message="mail could not be sent "
+                message+=["mail could not be sent "]
                 print "problem da.."
 
     else:
+        message+=["form not valid"]
         form=InviteForm()
     return render_to_response('dashboard/invite.html',locals(),context_instance = global_context(request))
 
