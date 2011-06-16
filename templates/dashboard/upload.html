@@ -2,7 +2,7 @@
 
 {% block body %}
 {{message}}
-<form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_document/">
+<form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_document/">{% csrf_token %}
 <table>
 {% for field in form %}
 	<tr>
