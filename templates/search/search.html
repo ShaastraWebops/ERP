@@ -13,7 +13,10 @@ hahahaha
                 </td>
             </tr>
         </table>
-
+	{% for fields in suggestion %}
+	da
+	{{field}}
+	{% endfor %}
         {% if query %}
 	came in
             <h3>Results</h3>
@@ -21,7 +24,8 @@ hahahaha
             {% for result in page.object_list %}
 		{{forloop.counter}}
                 <p>
-                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
+                    <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
+			{{result.object.nickname}}
                 </p>
             {% empty %}
                 <p>No results found.</p>
