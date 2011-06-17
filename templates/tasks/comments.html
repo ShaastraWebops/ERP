@@ -30,11 +30,11 @@
 
 {% block form_stuff %}
 
-{% if status == 'Success' %}
+{% if comment_status == 'Success' %}
 <h3> Comment Successfully Added </h3>
 {% endif %}
 
-{% if status == 'Not Found' %}
+{% if comment_status == 'Not Found' %}
 {% if is_task_comment %}
 <h2> No Such Task Exists </h2>
 {% else %}

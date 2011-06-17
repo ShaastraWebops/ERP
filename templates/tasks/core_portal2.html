@@ -6,6 +6,32 @@
 
 <a href="{% url tasks.views.create_task %}"><h2>Create a New Task</h2></a>
 
+<hr>
+
+{% block timeline %}
+<h2>Timeline for {{ user_dept_name }} Department</h2>
+<table>
+  <tr>
+    <th>Subject</th>
+    <th>Creator</th>
+    <th>Deadline</th>
+    <th>Status</th>
+    <th>Comments</th>
+  </tr>
+  {% for task in all_Tasks %}
+  <tr>
+    <td><a href="{% url tasks.views.edit_task task.id %}">{{ task.subject }}</a></td>
+    <td> {{ task.creator }} </td>
+    <td> {{ task.deadline }} </td>
+    <td> {{ task.status }} </td>
+    <td>  <a href="{% url tasks.views.handle_task_comments task.id %}">Comments</a> </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}
+<hr>
+
 {% block received_requests %}
 <h2> Requests from other Departments </h2>
 <table>
@@ -18,7 +44,7 @@
   </tr>
   {% for subtask in all_unassigned_received_SubTasks %}
   <tr>
-    <td> {{ subtask.subject }} </td>
+    <td> <a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }}</a> </td>
     <td> {{ subtask.creator }} </td>
     <td> {{ subtask.deadline }} </td>
     <td> {{ subtask.status }} </td>
@@ -27,6 +53,7 @@
   {% endfor %}
 </table>
 {% endblock %}
+<hr>
 
 {% block sent_requests %}
 <h2> Requests sent to other Departments </h2>
@@ -41,7 +68,7 @@
   {% for subtask in all_requested_SubTasks %}
   <tr>
     <td> {{ subtask.task.subject }} </td>
-    <td> {{ subtask.subject }} </td>
+    <td> <a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }}</a> </td>
     <td> {{ subtask.deadline }} </td>
     <td> {{ subtask.status }} </td>
     <td>  <a href="{% url tasks.views.handle_subtask_comments subtask.id %}">Comments</a> </td>
@@ -50,31 +77,7 @@
 </table>
 {% endblock %}
 
-{% block timeline %}
-<h2>Timeline for {{ user_dept_name }} Department</h2>
-<table>
-  <tr>
-    <th>Subject</th>
-    <th>Creator</th>
-    <th>Deadline</th>
-    <th>Status</th>
-    <th>Action</th>
-    <th>Comments</th>
-  </tr>
-  {% for task in all_Tasks %}
-  <tr>
-    <td> {{ task.subject }} </td>
-    <td> {{ task.creator }} </td>
-    <td> {{ task.deadline }} </td>
-    <td> {{ task.status }} </td>
-    <td><a href="{% url tasks.views.edit_task task.id %}">Edit</a></td>
-    <td>  <a href="{% url tasks.views.handle_task_comments task.id %}">Comments</a> </td>
-  </tr>
-  {% endfor %}
-</table>
-
-{% endblock %}
-
+<hr>
 
 {% block completed %}
 <h2> Completed SubTasks</h2>
@@ -99,5 +102,11 @@
 </table>
 {% endblock %}
 
+<hr>
 
+{% endblock %}
+
+{% block update_stuff %}
+{% include "tasks/updates.html" %}
+<hr>
 {% endblock %}

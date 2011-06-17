@@ -10,7 +10,7 @@ from django.forms.models import modelformset_factory
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import datetime
-from forms import TaskForm, SubTaskForm, TaskCommentForm, SubTaskCommentForm, UpdatesForm
+from forms import TaskForm, SubTaskForm, TaskCommentForm, SubTaskCommentForm, UpdateForm
 from models import *
 # This seems necessary to avoid CSRF errors
 from erp.misc.util import *
@@ -131,6 +131,8 @@ def display_portal (request):
     Assumes that the user is either a Coord or a Core.
     """
     user = request.user
+    update_dict = handle_updates (request)
+    print update_dict
     if user.groups.filter (name = 'Cores'):
         all_Tasks = get_timeline (user)
         all_unassigned_received_SubTasks = get_unassigned_received_subtasks (user)
@@ -138,14 +140,28 @@ def display_portal (request):
         all_completed_SubTasks = get_completed_subtasks (user)
         print user.username
         # print all_unassigned_received_SubTasks, all_requested_SubTasks
+        display_dict = dict ()
+        display_dict['all_Tasks'] = all_Tasks
+        display_dict['all_unassigned_received_SubTasks'] = all_unassigned_received_SubTasks
+        display_dict['all_requested_SubTasks'] = all_requested_SubTasks
+        display_dict['all_completed_SubTasks'] = all_completed_SubTasks
+        # Include the key-value pairs in update_dict
+        display_dict.update (update_dict)
         return render_to_response('tasks/core_portal2.html',
-                                  locals(),
+                                  # locals(),
+                                  display_dict,
                                   context_instance = global_context (request))
     else:
         all_Tasks = get_timeline (user)
         all_SubTasks = get_subtasks (user)
+        display_dict = dict ()
+        display_dict['all_Tasks'] = all_Tasks
+        display_dict['all_SubTasks'] = all_SubTasks
+        # Include the key-value pairs in update_dict
+        display_dict.update (update_dict)
         return render_to_response('tasks/coord_portal.html',
-                                  locals(),
+                                  # locals(),
+                                  display_dict,
                                   context_instance = global_context (request))
 
 @needs_authentication
@@ -171,10 +187,6 @@ def edit_task (request, task_id):
         print 'Core'
     elif user.groups.filter (name = 'Coords'):
         print 'Coord'
-
-
-
-
 
     SubTaskFormSet = modelformset_factory (SubTask,
                                            exclude = subtask_exclusion_tuple,
@@ -260,7 +272,7 @@ def handle_task_comments (request, task_id):
     TODO :
     Make sure that user is a Core. (Necessary?)
     """
-    comment_form, status = handle_comment (request = request, is_task_comment = True, object_id = task_id)
+    comment_form, comment_status = handle_comment (request = request, is_task_comment = True, object_id = task_id)
     comments = TaskComment.objects.filter (task__id = task_id)
     curr_object = Task.objects.get (id = task_id)
     is_task_comment = True
@@ -274,7 +286,7 @@ def handle_subtask_comments (request, subtask_id):
     Displays all comments for SubTask of subtask_id and allows
     addition of a comment.
     """
-    comment_form, status = handle_comment (request = request, is_task_comment = False, object_id = subtask_id)
+    comment_form, comment_status = handle_comment (request = request, is_task_comment = False, object_id = subtask_id)
     comments = SubTaskComment.objects.filter (subtask__id = subtask_id)
     curr_object = SubTask.objects.get (id = subtask_id)
     is_task_comment = False
@@ -338,32 +350,40 @@ def handle_comment (request, is_task_comment, object_id):
     return (comment_form, 'Blank')
 
 
-def Update_add(request):
+@needs_authentication
+def handle_updates (request):
     """
     Used by coords to send updates to Core.
+    Cores will just see the updates they have received.
+
+    Return a dict containing update variables.
     """
     user = request.user    
-    update_modelform = UpdatesForm
+    update_dict = dict ()
+    if user.groups.filter (name = 'Coords'):
+        update_form = UpdateForm ()
+        update_status = "Blank"
+        update_dict['updates'] = Update.objects.filter (coord = user)
+        update_dict['update_form'] = update_form
+        update_dict['update_status'] = update_status
+    else:
+        update_dict['updates'] = Update.objects.filter (
+            coord__userprofile__department = user.get_profile ().department
+            )
     if request.method == 'POST':
-        update_form = update_modelform(request.POST)            
+        update_form = UpdateForm (request.POST)            
         if update_form.is_valid():
             new_update = update_form.save (commit = False)
             new_update.coord = user
             new_update.save ()
-            update_form = update_modelform ()
-            status = "Success"
-            return render_to_response('tasks/updates.html',
-                                      locals(),
-                                      context_instance = global_context (request))            
+            update_form = UpdateForm ()
+            update_status = "Success"
+            update_dict['update_status'] = update_status
+            return update_dict
         else:
-            status = "Failed"
-            return render_to_response('tasks/updates.html',
-                                      locals(),
-                                      context_instance = global_context (request))            
-
-    update_form = update_modelform ()
-    status = "Blank"
-    return render_to_response('tasks/updates.html',
-                              locals(),
-                              context_instance = global_context (request))           
+            update_status = "Failed"
+            update_dict['update_status'] = update_status
+            update_dict['update_form'] = update_form
+            return update_dict
+    return update_dict
 

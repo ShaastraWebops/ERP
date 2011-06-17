@@ -1,7 +1,7 @@
 {% extends "base_default.html" %}
 
 {% block body %}
-<script language="javascript" type="text/javascript" src="{{MEDIA_URL}}/js/wz_tooltip.js">
+<script language="javascript" type="text/javascript" src="{{MEDIA_URL}}js/wz_tooltip.js">
   </script>
 
 
@@ -58,7 +58,7 @@
 <tr>
 <td><div id="Username_img">
 {% if form.username.errors %}
-<img height=20 width=20 src="{{ MEDIA_URL }}/images/error.png">
+<img height=20 width=20 src="{{ MEDIA_URL }}images/error.png">
 {% endif %}
 </div></td>
 <td>{{ form.username.label_tag }}</td>
@@ -71,7 +71,7 @@
 {% endif %}
 </div>
 </td>
-<td><a onmouseover="Tip('{{ form.username.help_text }}')" onmouseout="UnTip()"><img height=20 width=20 src="{{ MEDIA_URL }}/images/help_icon.png"></a></td>
+<td><a onmouseover="Tip('{{ form.username.help_text }}')" onmouseout="UnTip()"><img height=20 width=20 src="{{ MEDIA_URL }}images/help_icon.png"></a></td>
 </tr>
 <tr />
 <tr />
@@ -82,7 +82,7 @@
 <tr>
 <td><div id="Password_img">
 {% if form.username.errors %}
-<img height=20 width=20 src="{{ MEDIA_URL }}/images/error.png">
+<img height=20 width=20 src="{{ MEDIA_URL }}images/error.png">
 {% endif %}
 </div></td>
 <td>{{ form.password.label_tag }}</td>
@@ -95,7 +95,7 @@
 {% endif %}
 </div>
 </td>
-<td><a onmouseover="Tip('{{ form.password.help_text }}')" onmouseout="UnTip()"><img height=20 width=20 src="{{ MEDIA_URL }}/images/help_icon.png"></a></td>
+<td><a onmouseover="Tip('{{ form.password.help_text }}')" onmouseout="UnTip()"><img height=20 width=20 src="{{ MEDIA_URL }}images/help_icon.png"></a></td>
 </tr>
 <tr />
 <tr /><tr />
@@ -121,7 +121,7 @@
 
 <script type="text/javascript">
 
-err_img='<img height=20 width=20 src="{{ MEDIA_URL }}/images/error.png">';
+err_img='<img height=20 width=20 src="{{ MEDIA_URL }}images/error.png">';
 
 function validateName(fld)
 {

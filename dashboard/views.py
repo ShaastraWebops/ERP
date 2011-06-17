@@ -177,9 +177,6 @@ def editteammember(request):
 """    
 # this function is used for uploading csv files also(for inviting coords)
 def upload_file(request):
-    s="1,2,3"
-    s1=s.split(',')
-    print s1
     users_documents=upload_documents.objects.filter(user=request.user)
     print "one"    
     if request.method=='POST':

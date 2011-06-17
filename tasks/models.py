@@ -110,7 +110,7 @@ class SubTaskComment(AbstractComment):
 class Label(models.Model):
     labelname = models.ForeignKey(Task, related_name="task_label")
     
-class Updates(models.Model):
+class Update (models.Model):
     """ Used by Coord to send updates to a Core
     """
     time_stamp = models.DateTimeField (auto_now = True, editable = False)

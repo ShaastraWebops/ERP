@@ -30,7 +30,7 @@
   {% for field in  form  %}
 <tr>
 	<td id="{{ field.label }}_img">{% if field.errors %}
-	<img height=20 width=20 src="{{ MEDIA_URL }}/images/error.png">
+	<img height=20 width=20 src="{{ MEDIA_URL }}images/error.png">
 	    {% endif %}
 	</td>
 	<th>{{ field.label_tag }}</th>
@@ -39,7 +39,7 @@
 	{% if field.errors %}{% for error in field.errors %} {{ error|escape }} </br> {% endfor %}{% endif %}
 	</div>
 	</td>
-	<td><a onmouseover="Tip('{{ field.help_text }}')" onmouseout="UnTip()"><img height=20 width=20 src="{{ MEDIA_URL }}/images/help_icon.png"></a></td>
+	<td><a onmouseover="Tip('{{ field.help_text }}')" onmouseout="UnTip()"><img height=20 width=20 src="{{ MEDIA_URL }}images/help_icon.png"></a></td>
 </tr><tr></tr><tr></tr><tr></tr><tr></tr>
   {% endfor %}
 </table>

@@ -96,3 +96,4 @@ def no_login (func):
         else:
             return func (*__args, **__kwargs)
     return wrapper
+
