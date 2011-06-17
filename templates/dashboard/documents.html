@@ -12,14 +12,28 @@
  <body id="page">
 
 
+<br>
+<br>	
+<span style="font-family:Arial; font-size:22px; font-weight:bold; color:#100;">Add details of other than cooords/cores</span>
+<br>
+<form action="{{SITE_URL}}/dashboard/documents/" method="POST" >
+{% for field in other_contactform %}
+<span style="font-family:Arial; font-size:16px; font-weight:bold; color:#100;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{field.label}}
+{{field}}
+<br>
+{% endfor %}
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-
-
-
+<input type="submit" value="Add details">
+</span>
+{{success_message}}
  <div id="contacts-master">
  <div id="toppage"></div>
  <div id="contacts">
-  <span style="font-family:Arial; font-size:20px; font-weight:bold; color:#333;">&nbsp;&nbsp;&nbsp;&nbsp;Contacts</span>
+  <span style="font-family:Arial; font-size:30px; font-weight:bold; color:#333;">&nbsp;&nbsp;&nbsp;&nbsp;Contacts</span>
          <ul id="accordion" style="border:none;">
 
 
@@ -441,6 +455,41 @@
 
 
 	<!----------------------------------------------------------------------------------------------------------------->
+
+         <li class="active">
+          <img id="plus" src="media/images/plus.png" style="margin-left:-7px; margin-bottom:-3px;"/>&nbsp;<span style="font-size:22px; ">Others</span>
+          <ul>
+
+           <li class="second">
+            <table>
+            <tr style="color:#111; font-size:18px;"><td style="width:250px; padding-left:-10px;">Name</td><td style="width:100px;">Phone</td><td style="width:150px;">Email-ID</td></tr>
+<tr><td>
+
+		<form action="{{SITE_URL}}/dashboard/delete_detail/" method="GET">
+{% for field in other_profile %}
+
+            <td style="width:209px; padding-left:-10px;">{{field.name}}</td><td style="width:100px;">{{field.number}}</td></td><td style="width:100px;">{{field.emailid}}</td>
+	
+
+<td>
+<input type="enter" value="hey">
+<input type="hidden" value={{field.id}} name="d">
+<input type="submit" value="delete">
+</td>
+
+
+</tr>
+{% endfor%}
+
+</form>
+             </li>
+            </ul>
+            </li>
+
+         
+            <table>
+
+<!---------------------------------------------------------------------------------------------------------------------------------------------------->
         </ul> 
       </div>
   

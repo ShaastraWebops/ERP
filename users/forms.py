@@ -41,7 +41,6 @@ HOSTEL_CHOICES  =(
    
         )
 #author :vivek kumar bagaria
-#i changed it cause it was not working in the templates
 class AddUserForm (forms.Form):
     username=forms.CharField(max_length=30,help_text='your roll no number is your username')
     email=forms.EmailField(help_text='Enter your e-mail address. eg, someone@gmail.com')
@@ -117,7 +116,10 @@ class personal_details(ModelForm):
 	model=userprofile
 	exclude=('user',)
 
-
+class OtherContactDetails_form(ModelForm):
+    class Meta:
+        model=OtherContactDetails
+        exclude=('user',)
 #author: vivek
 class InviteForm (ModelForm):
     class Meta:
