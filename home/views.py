@@ -32,39 +32,38 @@ def login(request):
 
         form =forms. UserLoginForm (data)
 	if form.is_valid():
-            form = forms.UserLoginForm (data)
-            if form.is_valid():
-                user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data["password"])
-                if user is not None and user.is_active == True:
-                    auth.login (request, user)
-                    url = session_get(request, "from_url")
+            #form = forms.UserLoginForm (data)
+            #if form.is_valid():
+            user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data["password"])
+            if user is not None and user.is_active == True:
+                auth.login (request, user)
+                url = session_get(request, "from_url")
                 # Handle redirection
-                    if not url:
-                        url = "%s/home/"%settings.SITE_URL
+                if not url:
+                    url = "%s/home/"%settings.SITE_URL
 
-                    request.session['logged_in'] = True
+                request.session['logged_in'] = True
 		    # # wanted to get the name of the department
 		    # m = userprofile.objects.get(user =user)
 		    # request.session['department']=m.department.Dept_Name
 		    # request.session['username']=form.cleaned_data['username']
 		      #  response= HttpResponseRedirect (url)
 
-                    try:
-                        response.set_cookie('logged_out', 0)
-                    except:
-                        pass
+                try:
+                    response.set_cookie('logged_out', 0)
+                except:
+                    pass
 
-                    if redirected:
-                        return HttpResponseRedirect (redirected)
-                    else:
-                        return HttpResponseRedirect("%s/dashboard/home" %settings.SITE_URL)
+                if redirected:
+                    return HttpResponseRedirect (redirected)
+                else:
+                    return HttpResponseRedirect("%s/dashboard/home" %settings.SITE_URL)
 
             else:
                 request.session['invalid_login'] = True
                 return HttpResponseRedirect (request.path)
-        else:
-            invalid_login =session_get(request, "invalid_login")
-            form = forms.UserLoginForm ()
+                invalid_login =session_get(request, "invalid_login")
+                form = forms.UserLoginForm ()
     else:
         pass
     return render_to_response('home/login.html', locals(), context_instance= global_context(request))
