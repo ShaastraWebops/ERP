@@ -93,3 +93,11 @@ class invitation(models.Model):
     roll_no = models.CharField(max_length=8)
     email_id = models.EmailField()
     time = models.DateField()
+
+
+class OtherContactDetails(models.Model):
+    user=models.ForeignKey(User)
+    name=models.CharField(max_length=100)
+    number=models.CharField(max_length=15)
+    email_id=models.CharField(max_length=30,blank=True)
+    

@@ -26,8 +26,52 @@ def home (request):
     already_logged = session_get (request, "already_logged")
     return render_to_response('dashboard/home.html', locals(), context_instance= global_context(request)) 
 
+def delete_otherdetails(request):
+    print "came"
+    if request.method=='GET':
+        if "d" in request.GET:
+            number=request.GET['d']
+            query=OtherContactDetails(id=number)
+            query.delete()
+            print "deleted"
+            success_message="deleted"
+        else :
+            print "problem"
+    return details()
+def details(request):
+    if request.method=='GET':
+        success_message="came here"
+    else:
+        success_message="wow done it"
+    other_contactform=OtherContactDetails_form(initial={'email_id':"Can be left blank"})
+    if request.method=='POST':
+        data=request.POST.copy()
+        form=OtherContactDetails_form(data)
+        
+        if form.is_valid():
+            print "cool"
+            name=form.cleaned_data['name']
+            number=form.cleaned_data['number']
+            email_id=form.cleaned_data['email_id']
+            if (email_id=="Can be left blank"):
+                print "cool then"
+                email_id=""
+            
+            addcontact=OtherContactDetails     (user=request.user,
+                                                name=name,
+                                                number=number,
+                                                email_id=email_id,
+                                                )
+            try :
+                addcontact.save()
+            except:
+                print "lite maama"
+        else :
+            print "fool"
+            
 
-def documents (request):
+    other_profile=OtherContactDetails.objects.filter(user=request.user)
+    
     events_dept=Department.objects.get(id=1)
     try:
         events_profile=userprofile.objects.filter(department=events_dept)
@@ -108,73 +152,7 @@ def documents (request):
     #memberform=forms.add_team_member() was causing somw probs
     return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
 
-def addteammember(request):
-    events_profile=userprofile.objects.all(department_id=7)
-    print "events"
-    print events_profile
-    memberform=forms.add_team_member()
-    message="Hello"
-    details=teamdetails.objects.all()#still to be filtered according to dept
-    print details
-    if request.method=='POST':
-        print "here"
-        data=request.POST.copy()
-        form=forms.add_team_member(data)
-        if form.is_valid():
-            addmember=teamdetails(
-            name=models.User.objects.get(username=form.cleaned_data['name']) ,
-            email_id=form.cleaned_data['email_id'],
-            mobile_number=form.cleaned_data['mobile_number'],
-            department=Department.objects.get(Dept_Name=request.session['department']),
-            )
-        try:
-            addmember.save()
-            message="team member added"
-            print "peace"
-
-        except:
-            #message="team member could not be added"
-            print "problem"
-            pass
-
-    else:
-        message="team member could not be added"
-    return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
-
-
-def deleteteammember(request):
-    memberform=forms.add_team_member()
-    message = "could not delete the team member "
-    details=teamdetails.objects.all()
-    if "d" in request.GET:
-        number=request.GET['d']
-        delete=teamdetails.objects.get(id=number)
-        print delete
-
-        delete.delete();
-        details=teamdetails.objects.all()
-        message = "Team member deleted "
-        print number
-        print "yahoo"
-        print delete
-
-
-
-    return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
-
-"""
-def editteammember(request):
-    memberform=forms.add_team_member()
-    message = "could not delete the team member "
-    details=teamdetails.objects.all()
-    button="Save"
-        if "e" in request.GET:
-            number=request.GET['e']
-            edit=teamdetails.objects.filter(id=number)
-    return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
-            
-                
-"""    
+   
 # this function is used for uploading csv files also(for inviting coords)
 def upload_file(request):
     users_documents=upload_documents.objects.filter(user=request.user)

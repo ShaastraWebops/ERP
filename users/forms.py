@@ -41,7 +41,6 @@ HOSTEL_CHOICES  =(
    
         )
 #author :vivek kumar bagaria
-#i changed it cause it was not working in the templates
 class AddUserForm (forms.Form):
     username=forms.CharField(max_length=30,help_text='your roll no number is your username')
     email=forms.EmailField(help_text='Enter your e-mail address. eg, someone@gmail.com')
@@ -112,17 +111,15 @@ class invite_coord(forms.Form):
 
 
 
-class personal_details(forms.Form):
-    name=forms.CharField(max_length=50)
-    nick=forms.CharField(max_length=50)
-    rollno=forms.CharField(max_length=10)
-    chennai_number=forms.IntegerField()
-    emailid=forms.EmailField()
-    roomnumber=forms.IntegerField()
-    hostel= forms.ChoiceField(choices=HOSTEL_CHOICES)
-    summerstay=forms.CharField(max_length=30)
-    summer_number=forms.CharField(max_length=10)
+class personal_details(ModelForm):
+    class Meta:
+	model=userprofile
+	exclude=('user',)
 
+class OtherContactDetails_form(ModelForm):
+    class Meta:
+        model=OtherContactDetails
+        exclude=('user',)
 #author: vivek
 class InviteForm (ModelForm):
     class Meta:

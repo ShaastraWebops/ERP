@@ -7,20 +7,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
  <head>
 
-  <title></title>
+ <title></title>
  </head>
  <body id="page">
 
-
-
-
-
-
 <div id="mainform" >
   <div id="main">
-   Coordinator Details
+   Core/Coordinator Details
    <form id="" name="" action="{{SITE_URL}}/users/update/" method="POST">{% csrf_token %}
     <table>
+
+
+{{success_message}}
+{{warning_message}}
 
 {% for field in profileform %}
      <tr>

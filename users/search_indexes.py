@@ -23,8 +23,6 @@ class userprofileindex(indexes.SearchIndex):
     nickname    =indexes.CharField(model_attr='nickname')
     name        =indexes.CharField(model_attr='name')
     hostel 	=indexes.CharField(model_attr='hostel')
-    summer_number=indexes.IntegerField(model_attr='summer_number')
-    room_no     =indexes.IntegerField(model_attr='room_no')
     summer_stay =indexes.CharField(model_attr='room_no')
     
     #email_id    =indexes.EmailField(model_attr='email_id')

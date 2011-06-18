@@ -188,33 +188,35 @@ def update(request):
     if request.method=="POST":
         data=request.POST.copy()
         form=personal_details(data)
+	profile=userprofile.objects.get(user=request.user)
         if form.is_valid():
             print "hurray"
-            profile=userprofile.objects.get(user=request.user)
-            profile.nickname=form.cleaned_data['nick']
+            
+            profile.nickname=form.cleaned_data['nickname']
             profile.name=form.cleaned_data['name']
-            profile.room_no=form.cleaned_data['roomnumber']
+            profile.room_no=form.cleaned_data['room_no']
             profile.hostel=form.cleaned_data['hostel']
-            profile.summer_stay=form.cleaned_data['summerstay']
+            profile.summer_stay=form.cleaned_data['summer_stay']
             profile.chennai_number=form.cleaned_data['chennai_number']
             profile.summer_number=form.cleaned_data['summer_number']
                         
             
             
             profile.save()
-            
-            profileform=personal_details(initial={'name':profile.name,
-                                          'nick':profile.nickname,
-                                          'roomnumber' :profile.room_no ,
+	    success_message="Your data has been successfully updated "
+        else :
+	    warning_message="Please fill in your complete data and update"   
+        profileform=personal_details(initial={'name':profile.name,
+                                          'nickname':profile.nickname,
+                                          'room_no' :profile.room_no ,
                                           'hostel':profile.hostel,
-                                          'summerstay':profile.summer_stay,
+                                          'summer_stay':profile.summer_stay,
                                           'chennai_number':profile.chennai_number,
                                           'summer_number':profile.summer_number,
-                                          'emailid':profile.email_id,
+                                          'email_id':profile.email_id,
                                           'rollno':profile.user,})
             
-        else:
-            profileform=personal_details()
+
 
     return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
             
