@@ -146,15 +146,7 @@ def contact_details(request):
     profile=userprofile.objects.get(user=request.user)
     
     department_name=profile.department.Dept_Name
-    profileform=personal_details(initial={'name':profile.name,
-                                          'nick':profile.nickname,
-                                          'roomnumber' :profile.room_no ,
-                                          'hostel':profile.hostel,
-                                          'summerstay':profile.summer_stay,
-                                          'chennai_number':profile.chennai_number,
-                                          'summer_number':profile.summer_number,
-                                          'emailid':profile.email_id,
-                                          'rollno':profile.user,})
+    profileform=personal_details(instance = profile)
     user_name=profile.name
 
     return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
