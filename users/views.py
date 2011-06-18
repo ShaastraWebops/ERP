@@ -167,6 +167,7 @@ def contact_details(request):
     print "here "
     profile=userprofile.objects.get(user=request.user)
     
+    department_name=profile.department.Dept_Name
     profileform=personal_details(initial={'name':profile.name,
                                           'nick':profile.nickname,
                                           'roomnumber' :profile.room_no ,
@@ -176,12 +177,14 @@ def contact_details(request):
                                           'summer_number':profile.summer_number,
                                           'emailid':profile.email_id,
                                           'rollno':profile.user,})
+    user_name=profile.name
 
     return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
     
 
     
 def update(request):
+
     print "came in the function"
     name=request.session.get('username','nobody')
     print name
@@ -189,12 +192,15 @@ def update(request):
         data=request.POST.copy()
         form=personal_details(data)
 	profile=userprofile.objects.get(user=request.user)
+	department_name=profile.department.Dept_Name
+	print department_name
         if form.is_valid():
             print "hurray"
             
             profile.nickname=form.cleaned_data['nickname']
             profile.name=form.cleaned_data['name']
             profile.room_no=form.cleaned_data['room_no']
+            profile.email_id=form.cleaned_data['email_id']
             profile.hostel=form.cleaned_data['hostel']
             profile.summer_stay=form.cleaned_data['summer_stay']
             profile.chennai_number=form.cleaned_data['chennai_number']
@@ -203,6 +209,8 @@ def update(request):
             
             
             profile.save()
+
+            user_name=profile.name
 	    success_message="Your data has been successfully updated "
         else :
 	    warning_message="Please fill in your complete data and update"   
