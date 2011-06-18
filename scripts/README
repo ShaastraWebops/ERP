@@ -1,5 +1,10 @@
 README for the Scripts:
 
+From a clean start:
+     First
+     + create the database
+     + Then run syncdb
+
 Simply run :
 
 do_it_all ()
