@@ -233,3 +233,5 @@ def do_it_all ():
     create_tasks (n = 5, partial_subtask = False)
     create_tasks (n = 3, partial_subtask = True)
     finish_some_subtasks ()
+    create_updates ()
+    create_comments ()

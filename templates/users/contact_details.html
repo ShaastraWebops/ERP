@@ -1,6 +1,5 @@
 {% extends "home.html" %}
 
-
 {% block body %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -13,19 +12,19 @@
 
 <div id="mainform" >
   <div id="main">
+    {{department_name}}
     {% if is_core %}
     Core Details
     {% else %}
     Coordinator Details
     {% endif %}
-
    <form id="" name="" action="{{SITE_URL}}/users/update/" method="POST">{% csrf_token %}
     <table>
 
 
 {{success_message}}
 {{warning_message}}
-
+{{profileform.non_field_errors}}
 {% for field in profileform %}
      <tr>
       <td style="text-align:right;">
@@ -36,7 +35,7 @@
 
 {{field}}
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
+{{field.errors}}
 <!--problem here
 
 {% ifequal "{{field.label_tag}}" "Name"  %}

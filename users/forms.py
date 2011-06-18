@@ -114,8 +114,30 @@ class invite_coord(forms.Form):
 class personal_details(ModelForm):
     class Meta:
 	model=userprofile
-	exclude=('user',)
+	exclude=('user','department')
 
+
+
+    def clean_email(self):
+        if User.objects.filter(email=self.cleaned_data['email']):
+            pass
+        else:
+            return self.cleaned_data['email']
+        raise forms.ValidationError('This email address is already taken. Please choose another.')
+
+    def clean_chennai_number(self):
+        number1=self.cleaned_data['chennai_number']
+        print "cleaning"
+        if((len(number1)<9) or (len(number1)>12)):
+            print "true"
+            raise forms.ValidationError ("Enter a valid number")
+        else :
+            return self.data['chennai_number']
+
+
+
+
+        
 class OtherContactDetails_form(ModelForm):
     class Meta:
         model=OtherContactDetails
