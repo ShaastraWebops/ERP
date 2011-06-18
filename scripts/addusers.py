@@ -10,7 +10,7 @@ from django.db.models import Q
 from erp import settings
 from erp.users import models
 from erp.department.models import Department, DEP_CHOICES
-from erp.tasks.models import Task, SubTask, DEFAULT_STATUS
+from erp.tasks.models import Task, SubTask, DEFAULT_STATUS, TaskComment, SubTaskComment, Update
 import random
 
 def create_groups ():
@@ -108,13 +108,13 @@ def create_tasks (n = 5, partial_subtask = False):
     if partial_subtask:
         num_other_tasks = 2
         task_subj_str = ' Test Task (Partial) '
-        subtask_subj_str_same = 'Same Dept - Do this (Partial)'
-        subtask_subj_str_other = 'Other Dept - Do this (Partial)'
+        subtask_subj_str_same = ' Same Dept - Do this (Partial)'
+        subtask_subj_str_other = ' Other Dept - Do this (Partial)'
     else:
         num_other_tasks = 1
         task_subj_str = ' Test Task '
-        subtask_subj_str_same = 'Same Dept - Do this'
-        subtask_subj_str_other = 'Other Dept - Do this'
+        subtask_subj_str_same = ' Same Dept - Do this '
+        subtask_subj_str_other = ' Other Dept - Do this '
 
 
     for name in dept_names:
@@ -180,6 +180,51 @@ def finish_some_subtasks ():
             curr_subtask.save ()
         except:
             pass
+def create_comments ():
+    """
+    Create some comments for each Task, SubTask.
+    """
+    cores_list = User.objects.filter (groups__name = 'Cores')
+    coords_list = User.objects.filter (groups__name = 'Coords')
+    standard_test_comment = ' Testing 123'
+    for core in cores_list:
+        task_list = Task.objects.filter (creator = core)
+        subtask_list = SubTask.objects.filter (department = core.get_profile ().department)
+        comment_string = core.get_profile ().name + ' '
+        for task in task_list:
+            new_comment = TaskComment (comment_string = comment_string + 'Task' + standard_test_comment)
+            new_comment.author = core
+            new_comment.task = task
+            new_comment.save ()
+        for subtask in subtask_list:
+            new_comment = SubTaskComment (comment_string = comment_string + 'SubTask' + standard_test_comment)
+            new_comment.author = core
+            new_comment.subtask = subtask
+            new_comment.save ()
+        
+    for coord in coords_list:
+        # List of all SubTasks where coord is one of the Coords assigned
+        subtask_list = SubTask.objects.filter (coords = coord)
+        comment_string = coord.get_profile ().name + ' '
+        for subtask in subtask_list:
+            new_comment = SubTaskComment (comment_string = comment_string + 'SubTask' + standard_test_comment)
+            new_comment.author = coord
+            new_comment.subtask = subtask
+            new_comment.save ()
+        
+def create_updates ():
+    """
+    Create some updates for each Coord.
+    """
+    coords_list = User.objects.filter (groups__name = 'Coords')
+    for coord in coords_list:
+        # List of all SubTasks where coord is one of the Coords assigned
+        new_update = Update (message_string = 'Hey This is Me ' + coord.get_profile ().name, coord = coord)
+        new_update.save ()
+
+
+
+
 
 def do_it_all ():
     create_groups ()

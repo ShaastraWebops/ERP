@@ -11,6 +11,12 @@
 <a href="{% url tasks.views.display_task curr_subtask.task.id %}">View Task</a>
 <form action="" method="post">
   {% csrf_token %}
+  {% if is_creator or is_assignee %}
+  <table>
+    {{ curr_subtask_form }}
+  </table>
+  
+  {% else %}
   <table>
     <tr>
       <th>Subject</th>
@@ -26,7 +32,7 @@
     </tr>
     <tr>
       <th>Proposer</th>
-      <td> {{ curr_subtask.creator }} </td>
+      <td> {{ curr_subtask.creator.get_profile.name }} </td>
     </tr>
     <tr>
       <th>Creation Date</th>
@@ -41,6 +47,9 @@
       <td> {{ curr_subtask_form.status }} </td>
     </tr>
   </table>
+
+  {% endif %}
+
   <input type="submit" value="Submit">
 </form>
 

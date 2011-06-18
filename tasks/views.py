@@ -106,7 +106,7 @@ def get_unassigned_received_subtasks (user):
 
 def get_requested_subtasks (user):
     """
-    Return all SubTasks (created by user) requested from other Departments. 
+    Return all SubTasks (created by user) sent as a request to other Departments. 
 
     user is assumed to be a Core.
     """
@@ -132,19 +132,13 @@ def display_portal (request):
     """
     user = request.user
     update_dict = handle_updates (request)
-    print update_dict
+    display_dict = dict ()
+    print user.username
     if user.groups.filter (name = 'Cores'):
-        all_Tasks = get_timeline (user)
-        all_unassigned_received_SubTasks = get_unassigned_received_subtasks (user)
-        all_requested_SubTasks = get_requested_subtasks (user)
-        all_completed_SubTasks = get_completed_subtasks (user)
-        print user.username
-        # print all_unassigned_received_SubTasks, all_requested_SubTasks
-        display_dict = dict ()
-        display_dict['all_Tasks'] = all_Tasks
-        display_dict['all_unassigned_received_SubTasks'] = all_unassigned_received_SubTasks
-        display_dict['all_requested_SubTasks'] = all_requested_SubTasks
-        display_dict['all_completed_SubTasks'] = all_completed_SubTasks
+        display_dict['all_Tasks'] = get_timeline (user)
+        display_dict['all_unassigned_received_SubTasks'] = get_unassigned_received_subtasks (user)
+        display_dict['all_requested_SubTasks'] = get_requested_subtasks (user)
+        display_dict['all_completed_SubTasks'] = get_completed_subtasks (user)
         # Include the key-value pairs in update_dict
         display_dict.update (update_dict)
         return render_to_response('tasks/core_portal2.html',
@@ -152,11 +146,8 @@ def display_portal (request):
                                   display_dict,
                                   context_instance = global_context (request))
     else:
-        all_Tasks = get_timeline (user)
-        all_SubTasks = get_subtasks (user)
-        display_dict = dict ()
-        display_dict['all_Tasks'] = all_Tasks
-        display_dict['all_SubTasks'] = all_SubTasks
+        display_dict['all_Tasks'] = get_timeline (user)
+        display_dict['all_SubTasks'] = get_subtasks (user)
         # Include the key-value pairs in update_dict
         display_dict.update (update_dict)
         return render_to_response('tasks/coord_portal.html',
@@ -230,18 +221,32 @@ def display_subtask (request, subtask_id):
     TODO :
     Validation
     """
+    user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
     curr_subtask_form = SubTaskForm (instance = curr_subtask)
+    if user.groups.filter (name = 'Cores'):
+        if curr_subtask.task.creator == user:
+            is_creator = True
+        elif curr_subtask.department == user.get_profile ().department:
+            is_assignee = True
     has_updated = False
     if request.method == 'POST':
-        # Hack to get the status
-        if request.POST.get ('status', 'O') != '':
-            curr_subtask.status = request.POST.get ('status', 'O') 
-            curr_subtask.save ()
-            has_updated = True
-            # Reinstantiate the form
-            curr_subtask_form = SubTaskForm (instance = curr_subtask)
-            print 'SubTask updated'
+        if is_creator or is_assignee:
+            # Let the Core save the SubTask
+            curr_subtask_form = SubTaskForm (request.POST, instance = curr_subtask)
+            if curr_subtask_form.is_valid ():
+                curr_subtask_form.save ()
+                return HttpResponseRedirect ('%s/dashboard/home' %
+                                             settings.SITE_URL)
+        else:
+            # Hack to get the status
+            if request.POST.get ('status', 'O') != '':
+                curr_subtask.status = request.POST.get ('status', 'O') 
+                curr_subtask.save ()
+                has_updated = True
+                # Reinstantiate the form
+                curr_subtask_form = SubTaskForm (instance = curr_subtask)
+                print 'SubTask updated'
     return render_to_response('tasks/display_subtask.html',
                               locals(),
                               context_instance = global_context (request))

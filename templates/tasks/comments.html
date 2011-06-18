@@ -18,12 +18,14 @@
  </tr>
  {% for comment in comments %}
  <tr>
-   <td>{{ comment.author.username }}</td>
+   <td>{{ comment.author.get_profile.name }}</td>
    <td>{{ comment.comment_string }}</td>
    <td>{{ comment.time_stamp }}</td>
  </tr>
  {% endfor %}
 </table>
+{% else %}
+<h3>There are no Comments yet.</h3>
 {% endif %}
 
 {% endblock %}

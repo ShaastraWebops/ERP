@@ -12,13 +12,15 @@
     <th>Proposer</th>
     <th>Deadline</th>
     <th>Status</th>
+    <th>Comments</th>
   </tr>
   {% for subtask in all_SubTasks %}
   <tr>
     <td><a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }} </a></td>
-    <td> {{ subtask.creator }} </td>
+    <td> {{ subtask.creator.get_profile.name }} </td>
     <td> {{ subtask.deadline }} </td>
     <td> {{ subtask.status }} </td>
+    <td>  <a href="{% url tasks.views.handle_subtask_comments subtask.id %}">Comments</a> </td>
   </tr>
   {% endfor %}
 </table>
@@ -38,7 +40,7 @@
   {% for task in all_Tasks %}
   <tr>
     <td> {{ task.subject }} </td>
-    <td> {{ task.creator }} </td>
+    <td> {{ task.creator.get_profile.name }} </td>
     <td> {{ task.deadline }} </td>
     <td> {{ task.status }} </td>
   </tr>

@@ -10,6 +10,7 @@
 
 {% block timeline %}
 <h2>Timeline for {{ user_dept_name }} Department</h2>
+List of all Tasks in your Department
 <table>
   <tr>
     <th>Subject</th>
@@ -21,7 +22,7 @@
   {% for task in all_Tasks %}
   <tr>
     <td><a href="{% url tasks.views.edit_task task.id %}">{{ task.subject }}</a></td>
-    <td> {{ task.creator }} </td>
+    <td> {{ task.creator.get_profile.name }} </td>
     <td> {{ task.deadline }} </td>
     <td> {{ task.status }} </td>
     <td>  <a href="{% url tasks.views.handle_task_comments task.id %}">Comments</a> </td>
@@ -33,7 +34,8 @@
 <hr>
 
 {% block received_requests %}
-<h2> Requests from other Departments </h2>
+<h2> Requests from other Departments and Unassigned SubTasks</h2>
+Assign these to your Coords.
 <table>
   <tr>
     <th>Subject</th>
@@ -45,7 +47,7 @@
   {% for subtask in all_unassigned_received_SubTasks %}
   <tr>
     <td> <a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }}</a> </td>
-    <td> {{ subtask.creator }} </td>
+    <td> {{ subtask.creator.get_profile.name }} </td>
     <td> {{ subtask.deadline }} </td>
     <td> {{ subtask.status }} </td>
     <td>  <a href="{% url tasks.views.handle_subtask_comments subtask.id %}">Comments</a> </td>
@@ -57,6 +59,7 @@
 
 {% block sent_requests %}
 <h2> Requests sent to other Departments </h2>
+SubTasks you've sent to other Departments
 <table>
   <tr>
     <th>Task Subject</th>
@@ -67,7 +70,7 @@
   </tr>
   {% for subtask in all_requested_SubTasks %}
   <tr>
-    <td> {{ subtask.task.subject }} </td>
+    <td> <a href="{% url tasks.views.edit_task subtask.task.id %}">{{ subtask.task.subject }}</a> </td>
     <td> <a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }}</a> </td>
     <td> {{ subtask.deadline }} </td>
     <td> {{ subtask.status }} </td>
@@ -81,6 +84,7 @@
 
 {% block completed %}
 <h2> Completed SubTasks</h2>
+SubTasks completed by your Coords
 <table>
   <tr>
     <th>Subject</th>
@@ -93,7 +97,7 @@
     <td> {{ subtask.subject }} </td>
     <td>
       {% for coord in subtask.coords.all %}
-      {{ coord.username }} 
+      {{ coord.get_profile.name }} 
       {% endfor %}
     </td>
     <!-- <td> {{ subtask.status }} </td> -->
@@ -108,5 +112,4 @@
 
 {% block update_stuff %}
 {% include "tasks/updates.html" %}
-<hr>
 {% endblock %}

@@ -14,13 +14,13 @@
 
 {% endif %}
 
-{% if updates %}
 {% if is_core %}
 <h2>Updates in {{ user_dept_name }}  Department</h2>
 {% else %}
 <h2>Your previous Updates</h2>
 {% endif %}
 
+{% if updates %}
 <table>
   <tr>
     <th>Message</th>
@@ -34,12 +34,15 @@
     <td> {{ update.message_string }} </td>
     <td> {{ update.time_stamp }} </td>
     {% if is_core %}
-    <td> {{ update.coord.username }} </td>
+    <td> {{ update.coord.get_profile.name }} </td>
     {% endif %}
   </tr>
   {% endfor %}
 </table>
+{% else %}
+<h3>No Updates Yet</h3>
 {% endif %}
+
 
 <hr>
 

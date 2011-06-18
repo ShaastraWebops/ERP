@@ -14,7 +14,7 @@ Register <a href="{{SITE_URL}}/users/register/">here</a>
 
 {% if user.is_authenticated %}
 <span style="font-size:200%;">* </span>
-Welcome {{ user.username }}, to Erp. 
+Welcome {{ user.get_profile.name }}, to Erp. 
 
 <form action="{{SITE_URL}}/dashboard/upload_document/" method="GET">
   {% csrf_token %}

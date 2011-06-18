@@ -32,8 +32,6 @@ def login(request):
 
         form =forms. UserLoginForm (data)
 	if form.is_valid():
-            #form = forms.UserLoginForm (data)
-            #if form.is_valid():
             user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data["password"])
             if user is not None and user.is_active == True:
                 auth.login (request, user)

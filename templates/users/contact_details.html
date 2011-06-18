@@ -13,7 +13,12 @@
 
 <div id="mainform" >
   <div id="main">
-   Core/Coordinator Details
+    {% if is_core %}
+    Core Details
+    {% else %}
+    Coordinator Details
+    {% endif %}
+
    <form id="" name="" action="{{SITE_URL}}/users/update/" method="POST">{% csrf_token %}
     <table>
 
