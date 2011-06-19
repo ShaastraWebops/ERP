@@ -1,8 +1,7 @@
-import datetime
+"""import datetime
 from haystack import indexes
 from haystack import site
 from users.models import *
-"""
 
 class userprofile(models.Model):
     user = models.ForeignKey(User, unique=True)
@@ -16,7 +15,7 @@ class userprofile(models.Model):
     hostel = models.CharField(max_length=15, choices = HOSTEL_CHOICES)
     room_no = models.IntegerField(default=0, blank=True)
     
-    """
+   
 
 class userprofileindex(indexes.SearchIndex):
     text=indexes.CharField(document=True,use_template=True)
@@ -34,4 +33,4 @@ class userprofileindex(indexes.SearchIndex):
 
 site.register(userprofile,userprofileindex)
 
-    
+ """   

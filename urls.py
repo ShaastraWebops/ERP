@@ -3,8 +3,8 @@ from django.contrib import admin
 from erp.tasks.views import *
 from erp.users.views import *
 from erp.home.views import *
-import haystack
-haystack.autodiscover()
+#import haystack
+#haystack.autodiscover()
 admin.autodiscover()
 
 
