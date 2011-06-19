@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib import admin
 from erp.department.models import *
-from haystack.indexes import *
+
 # Create your models here.
 
 GENDER_CHOICES = (
