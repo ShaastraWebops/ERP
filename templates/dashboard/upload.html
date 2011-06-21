@@ -2,6 +2,35 @@
 
 {% block body %}
 {{message}}
+
+
+<html>
+
+<head>
+<style type="text/css">
+#heading
+{
+    position:absolute;
+    top :130px;
+    left:380px;
+
+}
+#place
+{
+    position:absolute;
+    top :100px;
+    left:250px;
+
+}
+</style>
+<title>
+</title>
+
+</head>
+
+
+<body>
+<div id="place" >
 <form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_document/">{% csrf_token %}
 <table>
 {% for field in form %}
@@ -46,4 +75,7 @@
 {% endfor %}
 
 </form>
+</div>
+</body>
+</html>
 {% endblock %}

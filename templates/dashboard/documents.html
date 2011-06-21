@@ -4,6 +4,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
  <head>
+<style type="text/css">
+
+#heading1
+{
+    position:absolute;
+    top :100px;
+    left :400px;
+}
+#add_details
+{
+    position:relative;
+    top :30px;
+    left :135px;
+}
+#success_message
+{
+    position:relative;
+    top :30px;
+    left :435px;
+}
+
+</style>
   <link rel="stylesheet" type="text/css" href="media/style/css/style.css" />
   <script type="text/javascript" src="media/scripts/js/jquery-1.5.2-min.js"></script>
   <script type="text/javascript" src="media/scripts/js/script.js"></script>
@@ -14,8 +36,9 @@
 
 <br>
 <br>	
-<span style="font-family:Arial; font-size:22px; font-weight:bold; color:#100;">Add details of other than cooords/cores</span>
+<span id="heading1"style="font-family:Arial; font-size:22px; font-weight:bold; color:#100;">Add other members details </span>
 <br>
+<div id="add_details">
 <form action="{{SITE_URL}}/dashboard/documents/" method="POST" >
 {% for field in other_contactform %}
 <span style="font-family:Arial; font-size:16px; font-weight:bold; color:#100;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -29,7 +52,11 @@
 
 <input type="submit" value="Add details">
 </span>
+</form>
+</div>
+<div id="success_message">
 {{success_message}}
+</div>
  <div id="contacts-master">
  <div id="toppage"></div>
  <div id="contacts">
@@ -462,13 +489,15 @@
 
            <li class="second">
             <table>
-            <tr style="color:#111; font-size:18px;"><td style="width:250px; padding-left:-10px;">Name</td><td style="width:100px;">Phone</td><td style="width:150px;">Email-ID</td></tr>
+            <tr style="color:#111; font-size:18px;"><td style="width:100px; padding-left:-10px;">Name</td><td style="width:180px;">Phone</td><td style="width:150px;">Email-ID</td></tr>
 <tr><td>
 
 		<form action="{{SITE_URL}}/dashboard/delete_detail/" method="GET">
 {% for field in other_profile %}
-
-            {{field.name}}</td><td style="width:100px;">{{field.number}}</td></td><td style="width:100px;">{{field.emailid}}</td>
+	{% if not forloop.first %}
+   </td><td style="width:80px;">
+{% endif %}
+{{field.name}}</td><td style="width:100px;">{{field.number}}</td></td><td style="width:100px;">{{field.emailid}}</td>
 	
 
 <td>

@@ -6,6 +6,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
  <head>
 
+<style type="text/css">
+#heading
+{
+    position:absolute;
+    top :130px;
+    left:380px;
+
+}
+#details
+{
+    position:absolute;
+    top : 160px;
+    left :320px;
+
+}
+</style>
  <title></title>
  </head>
  <body id="page">
@@ -15,12 +31,14 @@
 <div class="update_profile_pic "><a href="{% url dashboard.views.change_profile_pic %}"> update/change </a></div> 
 <div id="mainform" >
   <div id="main">
+    <div id ="heading">
     {{department_name}}
     {% if is_core %}
     Core Details
     {% else %}
     Coordinator Details
-    {% endif %}
+    {% endif %}</div>
+<div id="details">
    <form id="" name="" action="{{SITE_URL}}/users/update/" method="POST">{% csrf_token %}
     <table>
 
@@ -28,6 +46,7 @@
 {{success_message}}
 {{warning_message}}
 {{profileform.non_field_errors}}
+
 {% for field in profileform %}
      <tr>
       <td style="text-align:right;">
@@ -39,14 +58,7 @@
 {{field}}
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 {{field.errors}}
-<!--problem here
 
-{% ifequal "{{field.label_tag}}" "Name"  %}
-
-<input  id="" name="" type="checkbox" value="0" />
-
-{% endifequal %}
--->
       </td>
      </tr>
      <tr><td></td><td></td></tr>
@@ -60,6 +72,8 @@
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Update" name="googeal">
    </form>
   </div>
+</div>	
+
 
 <p class="defaultP" style="visibility:hidden;">
 	<input type="radio" name="month" value="6" id="month6" /> <label for="month6">6</label> <br />

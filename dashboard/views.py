@@ -39,11 +39,15 @@ def delete_otherdetails(request):
         else :
             print "problem"
     return details()
+
+
+
+
 def details(request):
     if request.method=='GET':
-        success_message="came here"
+	pass
     else:
-        success_message="wow done it"
+        pass
     other_contactform=OtherContactDetails_form(initial={'email_id':"Can be left blank"})
     if request.method=='POST':
         data=request.POST.copy()
@@ -65,6 +69,7 @@ def details(request):
                                                 )
             try :
                 addcontact.save()
+		success_message="The contact details has been saved"
             except:
                 print "lite maama"
         else :
