@@ -4,38 +4,18 @@
 
 <h1>Dashboard</h1>
 
-<a href="{% url tasks.views.create_task %}"><h2>Create a New Task</h2></a>
-
+<hr />
+<h2>Click to create a Task </h2><a href="{% url tasks.views.create_task %}"><div class="button">Create</div></a>
+<br/>
+<br/>
 <hr>
 
-{% block timeline %}
-<h2>Timeline for {{ user_dept_name }} Department</h2>
-List of all Tasks in your Department
-<table>
-  <tr>
-    <th>Subject</th>
-    <th>Creator</th>
-    <th>Deadline</th>
-    <th>Status</th>
-    <th>Comments</th>
-  </tr>
-  {% for task in all_Tasks %}
-  <tr>
-    <td><a href="{% url tasks.views.edit_task task.id %}">{{ task.subject }}</a></td>
-    <td> {{ task.creator.get_profile.name }} </td>
-    <td> {{ task.deadline }} </td>
-    <td> {{ task.status }} </td>
-    <td>  <a href="{% url tasks.views.handle_task_comments task.id %}">Comments</a> </td>
-  </tr>
-  {% endfor %}
-</table>
-
-{% endblock %}
+{% include "tasks/timeline.html" %}
 <hr>
 
 {% block received_requests %}
 <h2> Requests from other Departments and Unassigned SubTasks</h2>
-Assign these to your Coords.
+Click to assign these to your Coords.
 <table>
   <tr>
     <th>Subject</th>

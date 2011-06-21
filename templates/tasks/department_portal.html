@@ -1,0 +1,17 @@
+{% extends "tasks/portal_common.html" %}
+
+{% block display_stuff %}
+<h2>Portal - {{ user_dept_name }} Department </h2>
+
+<hr />
+{% block timeline %}
+{% include "tasks/timeline.html" %}
+{% endblock %}
+<hr />
+
+{% block updates %}
+<h2>Updates</h2>
+{% include "tasks/display_updates.html" %}
+{% endblock %}
+
+{% endblock %}

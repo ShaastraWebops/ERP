@@ -10,5 +10,6 @@ urlpatterns = patterns('erp.tasks.views',
       (r'^display_subtask/([0-9]+)?', 'display_subtask'),
       (r'^task_comments/([0-9]+)?/', 'handle_task_comments'),
       (r'^subtask_comments/([0-9]+)?/', 'handle_subtask_comments'),
+      (r'^department/', 'display_department_portal'),
 )
 
