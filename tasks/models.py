@@ -26,7 +26,8 @@ class AbstractBaseTask(models.Model):
     creator       = models.ForeignKey(User, related_name = '%(app_label)s_%(class)s_creator')
     creation_date = models.DateTimeField (auto_now = True, editable = False)
     deadline      = models.DateField(null=True , blank=True)
-    status        = models.TextField(max_length=50,choices=STAT_CHOICES,default = DEFAULT_STATUS)	
+    status        = models.CharField(max_length=1,choices=STAT_CHOICES,default = DEFAULT_STATUS)	
+
     class Meta:
         abstract = True
         
