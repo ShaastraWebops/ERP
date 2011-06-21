@@ -6,6 +6,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 from django.db.models import Q
+from django.core.management import setup_environ
+
+setup_environ(settings)
+
 
 from erp import settings
 from erp.users import models
