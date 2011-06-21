@@ -20,31 +20,7 @@
 <h2>Your previous Updates</h2>
 {% endif %}
 
-{% if updates %}
-<table>
-  <tr>
-    <th>Message</th>
-    <th>Time</th>
-    {% if is_core %}
-    <th>Author</th>
-    {% endif %}
-  </tr>
-  {% for update in updates %}
-  <tr>
-    <td> {{ update.message_string }} </td>
-    <td> {{ update.time_stamp }} </td>
-    {% if is_core %}
-    <td> {{ update.coord.get_profile.name }} </td>
-    {% endif %}
-  </tr>
-  {% endfor %}
-</table>
-{% else %}
-<h3>No Updates Yet</h3>
-{% endif %}
-
-
-<hr>
+{% include "tasks/display_updates.html" %}
 
 {% if is_coord %}
 <h2>Send an Update to the Core</h2>

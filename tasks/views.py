@@ -392,3 +392,23 @@ def handle_updates (request):
             return update_dict
     return update_dict
 
+def get_all_updates (dept):
+    """
+    Return all updates for department dept.
+    """
+    return Update.objects.filter (coord__userprofile__department = dept)
+
+@needs_authentication
+def display_department_portal (request):
+    """
+    Display all basic info about user's Department.
+    """
+    user = request.user
+    display_dict = dict ()
+    display_dict['all_Tasks'] = get_timeline (user)
+    display_dict['updates'] = get_all_updates (user.get_profile ().department)
+    return render_to_response('tasks/department_portal.html',
+                              display_dict,
+                              context_instance = global_context (request))
+    
+

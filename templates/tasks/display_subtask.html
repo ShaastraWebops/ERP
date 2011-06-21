@@ -13,6 +13,22 @@
   {% csrf_token %}
   {% if is_creator or is_assignee %}
   <table>
+    <tr>
+      <th>Department</th>
+      <td> {{ curr_subtask.department}} </td>
+    </tr>
+    <tr>
+      <th>Description</th>
+      <td> {{ curr_subtask.description }} </td>
+    </tr>
+    <tr>
+      <th>Proposed by </th>
+      <td> {{ curr_subtask.creator.get_profile.name }} </td>
+    </tr>
+    <tr>
+      <th>Proposing Dept </th>
+      <td> {{ curr_subtask.creator.get_profile.department.Dept_Name }} </td>
+    </tr>
     {{ curr_subtask_form }}
   </table>
   
@@ -31,8 +47,12 @@
       <td> {{ curr_subtask.description }} </td>
     </tr>
     <tr>
-      <th>Proposer</th>
+      <th>Proposed by</th>
       <td> {{ curr_subtask.creator.get_profile.name }} </td>
+    </tr>
+    <tr>
+      <th>Proposing Dept </th>
+      <td> {{ curr_subtask.creator.get_profile.department.Dept_Name }} </td>
     </tr>
     <tr>
       <th>Creation Date</th>

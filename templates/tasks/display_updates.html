@@ -1,0 +1,24 @@
+{% if updates %}
+<table>
+  <tr>
+    <th>Message</th>
+    <th>Time</th>
+    {% if is_core %}
+    <th>Author</th>
+    {% endif %}
+  </tr>
+  {% for update in updates %}
+  <tr>
+    <td> {{ update.message_string }} </td>
+    <td> {{ update.time_stamp }} </td>
+    {% if is_core %}
+    <td> {{ update.coord.get_profile.name }} </td>
+    {% endif %}
+  </tr>
+  {% endfor %}
+</table>
+<hr>
+{% else %}
+<h3>No Updates Yet</h3>
+<hr>
+{% endif %}

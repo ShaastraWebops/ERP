@@ -13,7 +13,15 @@
   <table>
     <tr>
       <th>Department: </th>
+      {% if is_new_task %}
       <td>{{ user.get_profile.department.Dept_Name }} </td>
+      {% else %}
+      <td>{{ curr_task.creator.get_profile.department.Dept_Name }} </td>
+      {% endif %}
+    </tr>
+    <tr>
+      <th>Creator: </th>
+      <td>{{ curr_task.creator.get_profile.name }} </td>
     </tr>
     {{ task_form.as_table }}
   </table>
