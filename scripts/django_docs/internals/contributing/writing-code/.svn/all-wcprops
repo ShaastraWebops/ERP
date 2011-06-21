@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/16349/django/trunk/docs/internals/contributing/writing-code
+END
+coding-style.txt
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/16284/django/trunk/docs/internals/contributing/writing-code/coding-style.txt
+END
+index.txt
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/16284/django/trunk/docs/internals/contributing/writing-code/index.txt
+END
+branch-policy.txt
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/16349/django/trunk/docs/internals/contributing/writing-code/branch-policy.txt
+END
+submitting-patches.txt
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/16284/django/trunk/docs/internals/contributing/writing-code/submitting-patches.txt
+END
+unit-tests.txt
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/16300/django/trunk/docs/internals/contributing/writing-code/unit-tests.txt
+END

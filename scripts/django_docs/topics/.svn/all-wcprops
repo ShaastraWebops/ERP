@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/16433/django/trunk/docs/topics
+END
+auth.txt
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/16378/django/trunk/docs/topics/auth.txt
+END
+files.txt
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/15055/django/trunk/docs/topics/files.txt
+END
+cache.txt
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/16338/django/trunk/docs/topics/cache.txt
+END
+install.txt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/16413/django/trunk/docs/topics/install.txt
+END
+index.txt
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/16360/django/trunk/docs/topics/index.txt
+END
+generic-views.txt
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/14610/django/trunk/docs/topics/generic-views.txt
+END
+security.txt
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/16397/django/trunk/docs/topics/security.txt
+END
+class-based-views.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/16256/django/trunk/docs/topics/class-based-views.txt
+END
+serialization.txt
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/16104/django/trunk/docs/topics/serialization.txt
+END
+testing.txt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/16352/django/trunk/docs/topics/testing.txt
+END
+conditional-view-processing.txt
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/15055/django/trunk/docs/topics/conditional-view-processing.txt
+END
+logging.txt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/16349/django/trunk/docs/topics/logging.txt
+END
+email.txt
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/16290/django/trunk/docs/topics/email.txt
+END
+pagination.txt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/16248/django/trunk/docs/topics/pagination.txt
+END
+signing.txt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/16270/django/trunk/docs/topics/signing.txt
+END
+generic-views-migration.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/15531/django/trunk/docs/topics/generic-views-migration.txt
+END
+templates.txt
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/16290/django/trunk/docs/topics/templates.txt
+END
+settings.txt
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/16290/django/trunk/docs/topics/settings.txt
+END
+signals.txt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/16220/django/trunk/docs/topics/signals.txt
+END

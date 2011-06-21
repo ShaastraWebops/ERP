@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/15967/django/trunk/docs/misc
+END
+distributions.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/13608/django/trunk/docs/misc/distributions.txt
+END
+index.txt
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/13608/django/trunk/docs/misc/index.txt
+END
+api-stability.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/15967/django/trunk/docs/misc/api-stability.txt
+END
+design-philosophies.txt
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/13608/django/trunk/docs/misc/design-philosophies.txt
+END

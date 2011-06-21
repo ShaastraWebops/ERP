@@ -149,3 +149,14 @@ class InviteForm (ModelForm):
         exclude =('core' , 'time')
 
 
+class change_pic(forms.Form):
+    file  = forms.FileField()
+
+
+
+class UploadFileForm(forms.Form):
+    title = forms.CharField(max_length=50)
+    file  = forms.FileField()
+    short_description=forms.CharField(max_length=100)
+
+

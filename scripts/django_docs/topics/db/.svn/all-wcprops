@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/16360/django/trunk/docs/topics/db
+END
+models.txt
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/16220/django/trunk/docs/topics/db/models.txt
+END
+optimization.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/16220/django/trunk/docs/topics/db/optimization.txt
+END
+aggregation.txt
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/16220/django/trunk/docs/topics/db/aggregation.txt
+END
+index.txt
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/15733/django/trunk/docs/topics/db/index.txt
+END
+transactions.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/16349/django/trunk/docs/topics/db/transactions.txt
+END
+managers.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/16324/django/trunk/docs/topics/db/managers.txt
+END
+multi-db.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/15942/django/trunk/docs/topics/db/multi-db.txt
+END
+queries.txt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/16096/django/trunk/docs/topics/db/queries.txt
+END
+sql.txt
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/16360/django/trunk/docs/topics/db/sql.txt
+END

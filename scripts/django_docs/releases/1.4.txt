@@ -1,0 +1,389 @@
+============================================
+Django 1.4 release notes - UNDER DEVELOPMENT
+============================================
+
+This page documents release notes for the as-yet-unreleased Django
+1.4. As such, it's tentative and subject to change. It provides
+up-to-date information for those who are following trunk.
+
+Django 1.4 includes various `new features`_ and some minor `backwards
+incompatible changes`_. There are also some features that have been dropped,
+which are detailed in :doc:`our deprecation plan </internals/deprecation>`, and
+we've `begun the deprecation process for some features`_.
+
+
+
+.. _new features: `What's new in Django 1.4`_
+.. _backwards incompatible changes: backwards-incompatible-changes-1.4_
+.. _begun the deprecation process for some features: deprecated-features-1.4_
+
+Python compatibility
+====================
+
+While not a new feature, it's important to note that Django 1.4 introduces the
+second shift in our Python compatibility policy since Django's initial public
+debut. Django 1.2 dropped support for Python 2.3; now Django 1.4 drops support
+for Python 2.4. As such, the minimum Python version required for Django is now
+2.5, and Django is tested and supported on Python 2.5, 2.6 and 2.7.
+
+This change should affect only a small number of Django users, as most
+operating-system vendors today are shipping Python 2.5 or newer as their default
+version. If you're still using Python 2.4, however, you'll need to stick to
+Django 1.3 until you can upgrade; per :doc:`our support policy
+</internals/release-process>`, Django 1.3 will continue to receive security
+support until the release of Django 1.5.
+
+Django does not support Python 3.x at this time. A document outlining our full
+timeline for deprecating Python 2.x and moving to Python 3.x will be published
+before the release of Django 1.4.
+
+What's new in Django 1.4
+========================
+
+``SELECT FOR UPDATE`` support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Django 1.4 now includes a :meth:`QuerySet.select_for_update()
+<django.db.models.query.QuerySet.select_for_update>` method which generates a
+``SELECT ... FOR UPDATE`` SQL query. This will lock rows until the end of the
+transaction, meaning that other transactions cannot modify or delete rows
+matched by a ``FOR UPDATE`` query.
+
+For more details, see the documentation for
+:meth:`~django.db.models.query.QuerySet.select_for_update`.
+
+HTML5
+~~~~~
+
+We've switched the admin and other bundled templates to use the HTML5
+doctype. While Django will be careful in its use of HTML5 features, to maintain
+compatibility with old browsers, this change means that you can use any HTML5
+features you need in admin pages without having to lose HTML validity or
+override the provided templates to change the doctype.
+
+List filters in admin interface
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Prior to Django 1.4, the Django admin app allowed specifying change list
+filters by specifying a field lookup (including spanning relations), and
+not custom filters. This has been rectified with a simple API previously
+known as "FilterSpec" which was used internally. For more details, see the
+documentation for :attr:`~django.contrib.admin.ModelAdmin.list_filter`.
+
+Multiple sort in admin interface
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The admin change list now supports sorting on multiple columns. It respects
+all elements of the :attr:`~django.contrib.admin.ModelAdmin.ordering`
+attribute, and sorting on multiple columns by clicking on headers is designed
+to work similarly to how desktop GUIs do it. The new hook
+:meth:`~django.contrib.admin.ModelAdmin.get_ordering` for specifying the
+ordering dynamically (e.g. depending on the request) has also been added.
+
+Tools for cryptographic signing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Django 1.4 adds both a low-level API for signing values and a high-level API
+for setting and reading signed cookies, one of the most common uses of
+signing in Web applications.
+
+See :doc:`cryptographic signing </topics/signing>` docs for more information.
+
+New form wizard
+~~~~~~~~~~~~~~~
+
+The previously shipped ``FormWizard`` of the formtools contrib app has been
+replaced with a new implementation that is based on the class based views
+introduced in Django 1.3. It features a pluggable storage API and doesn't
+require the wizard to pass around hidden fields for every previous step.
+
+Django 1.4 ships with a session based storage backend and a cookie based
+storage backend. The latter uses the tools for
+:doc:`cryptographic signing </topics/signing>` also introduced in
+Django 1.4 to store the wizard state in the user's cookies.
+
+See the :doc:`form wizard </ref/contrib/formtools/form-wizard>` docs for
+more information.
+
+Simple clickjacking protection
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We've added a middleware to provide easy protection against `clickjacking
+<http://en.wikipedia.org/wiki/Clickjacking>`_ using the X-Frame-Options
+header. It's not enabled by default for backwards compatibility reasons, but
+you'll almost certainly want to :doc:`enable it </ref/clickjacking/>` to help
+plug that security hole for browsers that support the header.
+
+``reverse_lazy``
+~~~~~~~~~~~~~~~~
+
+A lazily evaluated version of :func:`django.core.urlresolvers.reverse` was
+added to allow using URL reversals before the project's URLConf gets loaded.
+
+Assignment template tags
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+A new helper function,
+:ref:`assignment_tag<howto-custom-template-tags-assignment-tags>`, was added to
+``template.Library`` to ease the creation of template tags that store some
+data in a specified context variable.
+
+CSRF improvements
+~~~~~~~~~~~~~~~~~
+
+We've made various improvements to our CSRF features, including the
+:func:`~django.views.decorators.csrf.ensure_csrf_cookie` decorator which can
+help with AJAX heavy sites, protection for PUT and DELETE, and settings
+:setting:`CSRF_COOKIE_SECURE` and :setting:`CSRF_COOKIE_PATH` which can improve
+the security and usefulness of the CSRF protection. See the :doc:`CSRF docs
+</ref/contrib/csrf>` for more information.
+
+Error report filtering
+~~~~~~~~~~~~~~~~~~~~~~
+
+Two new function decorators, :func:`sensitive_variables` and
+:func:`sensitive_post_parameters`, were added to allow designating the
+traceback frames' local variables and request's POST parameters susceptible
+to contain sensitive information and that should be filtered out of error
+reports.
+
+All POST parameters are now systematically filtered out of error reports for
+certain :mod:`contrib.views.auth` views (``login``, ``password_reset_confirm``,
+``password_change``, and ``add_view`` and ``user_change_password`` in the
+``auth`` admin) to prevent the leaking of sensitive information such as user
+passwords.
+
+You may override or customize the default filtering by writing a
+:ref:`custom filter<custom-error-reports>`. Learn more on
+:ref:`Filtering error reports<filtering-error-reports>`.
+
+Extended IPv6 support
+~~~~~~~~~~~~~~~~~~~~~
+
+The previously added support for IPv6 addresses when using the runserver
+management command in Django 1.3 has now been further extended by adding
+a :class:`~django.db.models.fields.GenericIPAddressField` model field,
+a :class:`~django.forms.fields.GenericIPAddressField` form field and
+the validators :data:`~django.core.validators.validate_ipv46_address` and
+:data:`~django.core.validators.validate_ipv6_address`
+
+Translating URL patterns
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Django 1.4 gained the ability to look for a language prefix in the URL pattern
+when using the new :func:`django.conf.urls.i18n.i18n_patterns` helper function.
+Additionally, it's now possible to define translatable URL patterns using
+:func:`~django.utils.translation.ugettext_lazy`. See
+:ref:`url-internationalization` for more information about the language prefix
+and how to internationalize URL patterns.
+
+Minor features
+~~~~~~~~~~~~~~
+
+Django 1.4 also includes several smaller improvements worth noting:
+
+* A more usable stacktrace in the technical 500 page: frames in the stack
+  trace which reference Django's code are dimmed out, while frames in user
+  code are slightly emphasized. This change makes it easier to scan a stacktrace
+  for issues in user code.
+
+* Customizable names for :meth:`~django.template.Library.simple_tag`.
+
+* In the documentation, a helpful :doc:`security overview </topics/security>`
+  page.
+
+.. _backwards-incompatible-changes-1.4:
+
+Backwards incompatible changes in 1.4
+=====================================
+
+Compatibility with old signed data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Django 1.3 changed the cryptographic signing mechanisms used in a number of
+places in Django. While Django 1.3 kept fallbacks that would accept hashes
+produced by the previous methods, these fallbacks are removed in Django 1.4.
+
+So, if you upgrade to Django 1.4 directly from 1.2 or earlier, you may
+lose/invalidate certain pieces of data that have been cryptographically signed
+using an old method. To avoid this, use Django 1.3 first, for a period of time,
+to allow the signed data to expire naturally. The affected parts are detailed
+below, with 1) the consequences of ignoring this advice and 2) the amount of
+time you need to run Django 1.3 for the data to expire or become irrelevant.
+
+* contrib.sessions data integrity check
+
+  * consequences: the user will be logged out, and session data will be lost.
+
+  * time period: defined by SESSION_COOKIE_AGE.
+
+* contrib.auth password reset hash
+
+  * consequences: password reset links from before the upgrade will not work.
+
+  * time period: defined by PASSWORD_RESET_TIMEOUT_DAYS.
+
+Form related hashes — these are much shorter lifetime, and are relevant only for
+the short window where a user might fill in a form generated by the pre-upgrade
+Django instance, and try to submit it to the upgraded Django instance:
+
+* contrib.comments form security hash
+
+  * consequences: the user will see a validation error "Security hash failed".
+
+  * time period: the amount of time you expect users to take filling out comment
+    forms.
+
+* FormWizard security hash
+
+  * consequences: the user will see an error about the form having expired,
+    and will be sent back to the first page of the wizard, losing the data
+    they have inputted so far.
+
+  * time period: the amount of time you expect users to take filling out the
+    affected forms.
+
+* CSRF check
+
+  * Note: This is actually a Django 1.1 fallback, not Django 1.2,
+    and applies only if you are upgrading from 1.1.
+
+  * consequences: the user will see a 403 error with any CSRF protected POST
+    form.
+
+  * time period: the amount of time you expect user to take filling out
+    such forms.
+
+django.contrib.flatpages
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Starting in the 1.4 release the
+:class:`~django.contrib.flatpages.middleware.FlatpageFallbackMiddleware` only
+adds a trailing slash and redirects if the resulting URL refers to an existing
+flatpage. For example, requesting ``/notaflatpageoravalidurl`` in a previous
+version would redirect to ``/notaflatpageoravalidurl/``, which would
+subsequently raise a 404. Requesting ``/notaflatpageoravalidurl`` now will
+immediately raise a 404. Additionally redirects returned by flatpages are now
+permanent (301 status code) to match the behavior of the
+:class:`~django.middleware.common.CommonMiddleware`.
+
+`COMMENTS_BANNED_USERS_GROUP` setting
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Django's :doc:`comments app </ref/contrib/comments/index>` has historically
+supported excluding the comments of a special user group, but we've never
+documented the feature properly and didn't enforce the exclusion in other parts
+of the app, e.g., the template tags. To fix this problem, we removed the code
+from the feed class.
+
+If you rely on the feature and want to restore the old behavior, simply use
+a custom comment model manager to exclude the user group, like this::
+
+    from django.conf import settings
+    from django.contrib.comments.managers import CommentManager
+
+    class BanningCommentManager(CommentManager):
+        def get_query_set(self):
+            qs = super(BanningCommentManager, self).get_query_set()
+            if getattr(settings, 'COMMENTS_BANNED_USERS_GROUP', None):
+                where = ['user_id NOT IN (SELECT user_id FROM auth_user_groups WHERE group_id = %s)']
+                params = [settings.COMMENTS_BANNED_USERS_GROUP]
+                qs = qs.extra(where=where, params=params)
+            return qs
+
+Save this model manager in your custom comment app (e.g. in
+``my_comments_app/managers.py``) and add it your
+:ref:`custom comment app model <custom-comment-app-api>`::
+
+    from django.db import models
+    from django.contrib.comments.models import Comment
+
+    from my_comments_app.managers import BanningCommentManager
+
+    class CommentWithTitle(Comment):
+        title = models.CharField(max_length=300)
+
+        objects = BanningCommentManager()
+
+For more details, see the documentation about
+:doc:`customizing the comments framework </ref/contrib/comments/custom>`.
+
+`IGNORABLE_404_STARTS` and `IGNORABLE_404_ENDS` settings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Django can report 404 errors: see :doc:`/howto/error-reporting`.
+Until Django 1.3, it was possible to exclude some URLs from the reporting
+by adding prefixes to :setting:`IGNORABLE_404_STARTS` and suffixes to
+:setting:`IGNORABLE_404_ENDS`.
+
+In Django 1.4, these two settings are superseded by
+:setting:`IGNORABLE_404_URLS`, which is a list of compiled regular expressions.
+Django won't send an email for 404 errors on URLs that match any of them.
+
+Furthermore, the previous settings had some rather arbitrary default values::
+
+    IGNORABLE_404_STARTS = ('/cgi-bin/', '/_vti_bin', '/_vti_inf')
+    IGNORABLE_404_ENDS = ('mail.pl', 'mailform.pl', 'mail.cgi', 'mailform.cgi',
+                          'favicon.ico', '.php')
+
+It's not Django's role to decide if your website has a legacy ``/cgi-bin/``
+section or a ``favicon.ico``. As a consequence, the default values of
+:setting:`IGNORABLE_404_URLS`, :setting:`IGNORABLE_404_STARTS` and
+:setting:`IGNORABLE_404_ENDS` are all now empty.
+
+If you have customized :setting:`IGNORABLE_404_STARTS` or
+:setting:`IGNORABLE_404_ENDS`, or if you want to keep the old default value,
+you should add the following lines in your settings file::
+
+    import re
+    IGNORABLE_404_URLS = (
+        # for each <prefix> in IGNORABLE_404_STARTS
+        re.compile(r'^<prefix>'),
+        # for each <suffix> in IGNORABLE_404_ENDS
+        re.compile(r'<suffix>$'),
+    )
+
+Don't forget to escape characters that have a special meaning in a regular
+expression.
+
+CSRF protection extended to PUT and DELETE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Previously, Django's :doc:`CSRF protection </ref/contrib/csrf/>` provided
+protection against only POST requests. Since use of PUT and DELETE methods in
+AJAX applications is becoming more common, we now protect all methods not
+defined as safe by RFC 2616 i.e. we exempt GET, HEAD, OPTIONS and TRACE, and
+enforce protection on everything else.
+
+If you using PUT or DELETE methods in AJAX applications, please see the
+:ref:`instructions about using AJAX and CSRF <csrf-ajax>`.
+
+``django.core.template_loaders``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This was an alias to ``django.template.loader`` since 2005, it has been removed
+without emitting a warning due to the length of the deprecation. If your code
+still referenced this please use ``django.template.loader`` instead.
+
+.. _deprecated-features-1.4:
+
+Features deprecated in 1.4
+==========================
+
+Old styles of calling ``cache_page`` decorator
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Some legacy ways of calling :func:`~django.views.decorators.cache.cache_page`
+have been deprecated, please see the docs for the correct way to use this
+decorator.
+
+Support for PostgreSQL versions older than 8.2
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Django 1.3 dropped support for PostgreSQL versions older than 8.0 and the
+relevant documents suggested to use a recent version because of performance
+reasons but more importantly because end of the upstream support periods for
+releases 8.0 and 8.1 was near (November 2010.)
+
+Django 1.4 takes that policy further and sets 8.2 as the minimum PostgreSQL
+version it officially supports.

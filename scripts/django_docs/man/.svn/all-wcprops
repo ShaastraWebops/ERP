@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/16427/django/trunk/docs/man
+END
+django-admin.1
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/16427/django/trunk/docs/man/django-admin.1
+END
+gather_profile_stats.1
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/14069/django/trunk/docs/man/gather_profile_stats.1
+END
+daily_cleanup.1
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/14069/django/trunk/docs/man/daily_cleanup.1
+END

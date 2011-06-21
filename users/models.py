@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib import admin
 from erp.department.models import *
-
+from django.conf import settings
 # Create your models here.
 
 GENDER_CHOICES = (
@@ -94,10 +94,25 @@ class invitation(models.Model):
     email_id = models.EmailField()
     time = models.DateField()
 
+    class Admin:
+	pass
 
 class OtherContactDetails(models.Model):
     user=models.ForeignKey(User)
     name=models.CharField(max_length=100)
     number=models.CharField(max_length=15)
     email_id=models.CharField(max_length=30,blank=True)
+
+    class Admin:
+	pass
     
+
+
+class userphoto(models.Model):
+    name=models.ForeignKey(User)
+    photo_path=models.FileField(upload_to=settings.MEDIA_ROOT)
+
+
+    class Admin:
+	pass
+

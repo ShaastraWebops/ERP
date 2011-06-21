@@ -1,7 +1,10 @@
 {% extends "home.html" %}
 
 {% block body %}
-{{message}}
+
+<div id="mainform" >
+  <div id="main">
+
 <form  method="POST" action="{{SITE_URL}}/users/invite/">{% csrf_token %}
 <table>
 {% for field in form %}
@@ -19,7 +22,6 @@
 </table>
 <input type="submit" value="invite" id="Save"/>
 </form>
-
 <h3>Upload csv file here which contains the list of the coords you wnat to invite <h3>
 <form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_document/">{% csrf_token %}
 <table>
@@ -39,7 +41,7 @@
 maama
 haha
 <input type="hidden" value="{{field.file_name}}" name="f">
-<input type="hidden" value="1"  name="i">
+
 <input type="submit" value="upload and invite" id="Save"/>
 </form>
 

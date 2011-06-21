@@ -10,6 +10,7 @@ from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.contrib.sessions.models import Session
 from erp.dashboard.models import *
 from erp.users.models import *
+from erp.users.views import *
 from erp.misc.util import *
 from erp.settings import *
 import sha,random,datetime
@@ -152,48 +153,61 @@ def details(request):
     #memberform=forms.add_team_member() was causing somw probs
     return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
 
-   
+
+#this function creates the directory
+def create_dir(file_name ,user_name , method=1):
+    destdir_one=os.path.join(settings.MEDIA_ROOT,"upload_files")
+    destdir=os.path.join(destdir_one,user_name)
+    if not os.path.isdir(destdir):
+        os.makedirs(destdir,0775)
+    save_path=os.path.join(destdir,os.path.basename(file_name))
+            
+    destdir_one=os.path.join(settings.MEDIA_URL,"upload_files")
+    destdir=os.path.join(destdir_one,user_name)
+    if not os.path.isdir(destdir):
+        os.makedirs(destdir,0775)
+    file_path=os.path.join(destdir,os.path.basename(file_name))
+    
+    return (save_path , file_path)
+
+
+
+#this function writes the file
+def write_file(save_path ,f ,method=1):
+    fout=open(save_path,'wb+')
+    for chunk in f.chunks():
+        fout.write(chunk)
+    fout.close()
+
+
+
+    
+    
 # this function is used for uploading csv files also(for inviting coords)
 def upload_file(request):
-    users_documents=upload_documents.objects.filter(user=request.user)
-    print "one"    
+    users_documents=upload_documents.objects.filter(user=request.user)       
     if request.method=='POST':
         print "post"
         form=UploadFileForm(request.POST,request.FILES)
-        if True : #form.is_valid():
-            print"valid"
+        if form.is_valid():
+            
             file_name=request.FILES['file'].name
+
             user_name=request.user.username
-            destdir_one=os.path.join(settings.MEDIA_ROOT,"upload_files")
-            destdir=os.path.join(destdir_one,user_name)
-            if not os.path.isdir(destdir):
-                os.makedirs(destdir,0775)
-            save_path=os.path.join(destdir,os.path.basename(file_name))
 
+            save_path ,file_path = create_dir(file_name ,user_name)#passing to the fuction to make directories if not made         
             
-            destdir_one=os.path.join(settings.MEDIA_URL,"upload_files")
-            destdir=os.path.join(destdir_one,user_name)
-            if not os.path.isdir(destdir):
-                os.makedirs(destdir,0775)
-            file_path=os.path.join(destdir,os.path.basename(file_name))
-
-            
-            f=request.FILES['file']
-            fout=open(save_path,'wb+')
-            for chunk in f.chunks():
-                fout.write(chunk)
-            fout.close()
             date=datetime.datetime.now()
+
             try:
-                try:
-                    file_present=upload_documents.objects.get(user=request.user,file_name=file_name)
-                    message="File with this name exists.please change name  of the file"
-                except:
-                    file_object=upload_documents(user=request.user , file_name=file_name,file_path=file_path, url=file_path ,topic="hello",date=date)#to change topic
-                    file_object.save()
-                    print "SAVED"
+                file_present=upload_documents.objects.get(user=request.user,file_name=file_name)
+                message="File with this name exists.please change name  of the file"
             except:
-                print "duplicate name "
+                f=request.FILES['file']
+                write_file(save_path ,f)
+                file_object=upload_documents(user=request.user , file_name=file_name,file_path=save_path, url=file_path ,topic="hello",date=date)#to change topic
+                file_object.save()
+                print "SAVED"
             
         else:
             file_name=request.FILES['file'].name
@@ -203,35 +217,107 @@ def upload_file(request):
         print "not post"
         form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
 
-  # this part is used for invitingcoords 
-
-    if "i" in request.POST:
-        print "at last"
-        print save_path
-        message="done"
-        form=InviteForm()
-        CsvForm=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
-        reader=csv.reader(open(save_path,'rb'),delimiter=' ')
-        string=[]
-        for field in reader:
-            string=string+[field]
-        final_string=[]
-        for field in string:
-        
-            splits=field[0].split(';')#; is just temprorary
-            final_string=final_string+[splits]
-        print final_string
-        
-        return render_to_response('dashboard/invite.html',locals() ,context_instance = global_context(request))
-
-
-  
-    else :#debugging
-        print "not done"
-
-    # till here
 
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
+
+
+
+
+
+def upload_invite_coords(request):
+    form=InviteForm()
+    CsvForm=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
+    if request.method=='POST':
+        print "post"
+        form=UploadFileForm(request.POST,request.FILES)
+        if True : #form.is_valid(): yet to check the file            
+            file_name=request.FILES['file'].name
+
+            user_name=request.user.username
+
+            save_path ,file_path = create_dir(file_name ,user_name)#passing to the fuction to make directories if not made         
+            
+            date=datetime.datetime.now()
+
+            try:
+                file_present=upload_documents.objects.get(user=request.user,file_name=file_name)
+                message="There is a file already with this name .please change the name of the file"
+            except:
+                f=request.FILES['file']
+                write_file(save_path ,f)
+                file_object=upload_documents(user=request.user , file_name=file_name,file_path=file_path, url=file_path ,topic="invitation to coords",date=date)#to change topic
+                file_object.save()
+
+
+            message="done"
+            """ from here the the csv file is opened and the the coords are invited """
+            
+            reader=csv.reader(open(save_path,'rb'),delimiter=' ')
+            string=[]
+            for field in reader:
+                string=string+[field]
+            final_string=[]
+            for field in string:
+        
+                splits=field[0].split(';')#; is just temprorary
+                final_string=final_string+[splits]
+            print final_string
+        
+        
+        else:
+            print "not valid"
+
+    else:
+        print "not post"
+        
+    return render_to_response('dashboard/invite.html',locals() ,context_instance = global_context(request))
+
+
+
+
+   
+        
+
+def change_profile_pic(request):
+    if request.method == 'POST':
+        form=change_pic(request.POST,request.FILES)      
+        print "cool"
+        if form.is_valid():
+            print "form valid"
+            file_name="PROFILE_PIC_OF_THE_USER"
+            user_name=request.user.username
+
+            save_path ,file_path = create_dir(file_name ,user_name)#passing to the fuction to make directories if not made         
+            
+            photo=userphoto(name =request.user)
+            
+            print "here only"
+            f=request.FILES['file']
+            write_file(save_path ,f)
+	    print save_path
+	    if os.path.isfile(save_path):
+		print "file path is there"
+		delete_object=userphoto.objects.filter(name=request.user)
+		delete_object.delete()
+	    else :
+		print "not there"
+            try:
+                image_object=userphoto(name=request.user ,photo_path=file_path )
+                image_object.save()
+                print "save"
+            except:
+                print "not saved"
+                pass
+            return contact_details(request)    
+	else:
+	    print "not valid"
+            
+    pic_form=change_pic()
+    
+    return render_to_response('users/change_profile_pic.html',locals(),context_instance = global_context(request))
+
+
+
 
 
 
@@ -246,7 +332,6 @@ def delete_file(request):
     if "f" in request.GET:
         file_name=request.GET['f']
         print file_name
-
 
         user_name=request.user.username
         destdir_one=os.path.join(settings.MEDIA_ROOT,"upload_files")

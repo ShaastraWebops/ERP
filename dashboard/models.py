@@ -8,6 +8,9 @@ class teamdetails(models.Model):
     mobile_number=models.CharField(max_length=15)
     email_id=models.EmailField()
 
+    class Admin:
+	pass
+
 
 class upload_documents(models.Model):
     user=models.ForeignKey(User)
@@ -21,4 +24,7 @@ class upload_documents(models.Model):
     def __str__(self):
         return (self.file_path)
     
-    
+
+    class Admin:
+	pass
+

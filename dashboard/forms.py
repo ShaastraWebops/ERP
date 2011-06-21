@@ -5,5 +5,14 @@ from django import forms
 
 class UploadFileForm(forms.Form):
     title = forms.CharField(max_length=50)
-    file  = forms.ImageField()
+    file  = forms.FileField()
     short_description=forms.CharField(max_length=100)
+
+
+""""
+
+class change_pic(forms.Form):
+    file  = forms.FileField()
+
+
+"""

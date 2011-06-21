@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/16366/django/trunk/docs/ref/models
+END
+querysets.txt
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/16220/django/trunk/docs/ref/models/querysets.txt
+END
+fields.txt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/16366/django/trunk/docs/ref/models/fields.txt
+END
+index.txt
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/13608/django/trunk/docs/ref/models/index.txt
+END
+instances.txt
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/16300/django/trunk/docs/ref/models/instances.txt
+END
+options.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/15110/django/trunk/docs/ref/models/options.txt
+END
+relations.txt
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/14842/django/trunk/docs/ref/models/relations.txt
+END

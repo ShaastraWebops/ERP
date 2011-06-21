@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/16433/django/trunk/docs/ref/templates
+END
+index.txt
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/13608/django/trunk/docs/ref/templates/index.txt
+END
+api.txt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/16255/django/trunk/docs/ref/templates/api.txt
+END
+builtins.txt
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/16433/django/trunk/docs/ref/templates/builtins.txt
+END

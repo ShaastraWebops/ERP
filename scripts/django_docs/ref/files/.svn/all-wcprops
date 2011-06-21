@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/14846/django/trunk/docs/ref/files
+END
+storage.txt
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/14846/django/trunk/docs/ref/files/storage.txt
+END
+index.txt
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/14833/django/trunk/docs/ref/files/index.txt
+END
+file.txt
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/14833/django/trunk/docs/ref/files/file.txt
+END

@@ -468,11 +468,11 @@
 		<form action="{{SITE_URL}}/dashboard/delete_detail/" method="GET">
 {% for field in other_profile %}
 
-            <td style="width:209px; padding-left:-10px;">{{field.name}}</td><td style="width:100px;">{{field.number}}</td></td><td style="width:100px;">{{field.emailid}}</td>
+            {{field.name}}</td><td style="width:100px;">{{field.number}}</td></td><td style="width:100px;">{{field.emailid}}</td>
 	
 
 <td>
-<input type="enter" value="hey">
+
 <input type="hidden" value={{field.id}} name="d">
 <input type="submit" value="delete">
 </td>

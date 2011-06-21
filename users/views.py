@@ -16,7 +16,7 @@ from django.contrib.auth.models import Group,Permission
 import sha,random,datetime
 from erp.users.forms import *
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
-
+import os
 
 #author :vivek kumar bagaria
 #description in short
@@ -143,8 +143,16 @@ def invite_inbulk(self):
             
 def contact_details(request):
     print "here "
+    print "came in the function"
     profile=userprofile.objects.get(user=request.user)
-    
+    try:
+	
+	image=userphoto.objects.get(name=request.user)
+        photo_path =image.photo_path
+	print "photo exists"
+        print photo_path
+    except:
+	pass#give some default image
     department_name=profile.department.Dept_Name
     profileform=personal_details(instance = profile)
     user_name=profile.name
@@ -158,7 +166,17 @@ def update(request):
     print "came in the function"
     name=request.session.get('username','nobody')
     print name
+    try:
+	
+	image=userphoto.objects.get(name=request.user)
+        photo_path =image.photo_path
+	print "photo exists"
+        print photo_path
+    except:
+	photo_path="{{MEDIA_URL}}/images/default.jpeg"
+	pass#give some default image
     if request.method=="POST":
+	print "valid"
         data=request.POST.copy()
         form=personal_details(data)
 	profile=userprofile.objects.get(user=request.user)
@@ -179,7 +197,7 @@ def update(request):
             
             
             profile.save()
-
+	    print "complete"
             user_name=profile.name
 	    success_message="Your data has been successfully updated "
         else :
@@ -199,5 +217,6 @@ def update(request):
     return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
             
         
-        
+
+
     
