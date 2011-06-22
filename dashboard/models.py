@@ -28,3 +28,11 @@ class upload_documents(models.Model):
     class Admin:
 	pass
 
+class shout_box(models.Model):
+    user=models.ForeignKey(User)
+    nickname=models.CharField(max_length=50)
+    comments=models.TextField()
+    time_stamp=models.DateTimeField(editable=False)
+
+    class Meta:
+        ordering =['time_stamp']
