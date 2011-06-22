@@ -10,25 +10,36 @@
 #heading
 {
     position:absolute;
-    top :130px;
+    top :138px;
     left:380px;
 
 }
 #details
 {
-    position:absolute;
-    top : 160px;
-    left :320px;
+    position:relative;
+    top : 60px;
+    left :70px;
+
+}#message
+{
+    position:relative;
+    top : 35px;
+    left :220px;
 
 }
 </style>
  <title></title>
  </head>
  <body id="page">
+<div id="message">
+{{success_message}}
+{{warning_message}}
+</div>
 
-<!--<img class="profile_pic" src="{{photo_path}}" width="130" height="190">
-<img  src="{{MEDIA_ROOT}}images/default.jpeg" width="130" height="190">-->
-<div class="update_profile_pic "><a href="{% url dashboard.views.change_profile_pic %}"> update/change </a></div> 
+<!--
+<img class="profile_pic" src="{{photo_path}}" width="140" height="180">
+
+<div class="update_profile_pic "><a href="{% url dashboard.views.change_profile_pic %}"> Change </a></div>  -->
 <div id="mainform" >
   <div id="main">
     <div id ="heading">
@@ -43,8 +54,7 @@
     <table>
 
 
-{{success_message}}
-{{warning_message}}
+
 {{profileform.non_field_errors}}
 
 {% for field in profileform %}

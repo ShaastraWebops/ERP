@@ -17,6 +17,7 @@ import sha,random,datetime
 from erp.dashboard.forms import *
 from erp.users.forms import *
 import os # upload files
+from django.conf import settings
 import csv # invite coords
 #import stringlib
 # Create your views here.
@@ -300,6 +301,7 @@ def change_profile_pic(request):
             f=request.FILES['file']
             write_file(save_path ,f)
 	    print save_path
+            shoto_path=settings.MEDIA_URL+"/upload_files/images/PROFILE_PIC_OF_THE_USER"
 	    if os.path.isfile(save_path):
 		print "file path is there"
 		delete_object=userphoto.objects.filter(name=request.user)

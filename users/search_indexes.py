@@ -30,7 +30,5 @@ class userprofileindex(indexes.SearchIndex):
 
         return userprofile.objects.all()#pub_date=datetime.datetime.now())
 
-
 site.register(userprofile,userprofileindex)
-
- """   
+"""
