@@ -8,6 +8,11 @@ class UploadFileForm(forms.Form):
     file  = forms.FileField()
     short_description=forms.CharField(max_length=100)
 
+    class Admin:
+        pass
+
+class shout_box_form(forms.Form):
+    comments=forms.CharField(max_length=200)
 
 """"
 

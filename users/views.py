@@ -16,6 +16,7 @@ from django.contrib.auth.models import Group,Permission
 import sha,random,datetime
 from erp.users.forms import *
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
+from django.conf import settings
 import os
 
 #author :vivek kumar bagaria
@@ -145,6 +146,8 @@ def contact_details(request):
     print "here "
     print "came in the function"
     profile=userprofile.objects.get(user=request.user)
+    photo_path=settings.MEDIA_URL+"/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
+    print "http://localhost/django-media/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
     try:
 	
 	image=userphoto.objects.get(name=request.user)

@@ -12,12 +12,14 @@ from erp.dashboard.models import *
 from erp.department.models import *
 from erp.users.models import *
 from erp.users.views import *
+from erp.tasks.views import *
 from erp.misc.util import *
 from erp.settings import *
 import sha,random,datetime
 from erp.dashboard.forms import *
 from erp.users.forms import *
 import os # upload files
+from django.conf import settings
 import csv # invite coords
 #import stringlib
 # Create your views here.
@@ -238,6 +240,7 @@ def change_profile_pic(request):
             f=request.FILES['file']
             write_file(save_path ,f)
 	    print save_path
+            shoto_path=settings.MEDIA_URL+"/upload_files/images/PROFILE_PIC_OF_THE_USER"
 	    if os.path.isfile(save_path):
 		print "file path is there"
 		delete_object=userphoto.objects.filter(name=request.user)
@@ -298,3 +301,28 @@ def delete_file(request):
 
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
     
+
+"""
+another feature required is by mistake if the user clicks shout two times or refreshes the page,
+the comment is passes twice,we can remove it by comparing it with the latest update in the database 
+
+"""
+def shout(request):
+    if request.method=="POST":
+        form=shout_box_form(request.POST.copy)
+        if form.is_valid:
+            print "ya da.."
+            print form.is_valid
+            time=datetime.datetime.now() 
+            #comments=form.cleaned_data['comments']#here some error is there 
+            #number=form.cleaned_data['number']          
+            #print comments
+            user=userprofile.objects.get(user=request.user)
+            nickname=user.nickname
+            shout_object=shout_box(user=request.user,nickname=nickname,comments="cool",time_stamp=time)#change the comments part da comments=comments
+            shout_object.save()
+            
+        
+    print "at last"
+    return display_department_portal(request)
+    pass
