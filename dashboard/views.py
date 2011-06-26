@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.contrib.sessions.models import Session
 from erp.dashboard.models import *
+from erp.department.models import *
 from erp.users.models import *
 from erp.users.views import *
 from erp.misc.util import *
@@ -44,6 +45,9 @@ def delete_otherdetails(request):
 
 
 def details(request):
+    """
+    Display all contacts (listed by Department).
+    """
     if request.method=='GET':
 	pass
     else:
@@ -76,83 +80,17 @@ def details(request):
             print "fool"
             
 
-    other_profile=OtherContactDetails.objects.filter(user=request.user)
-    
-    events_dept=Department.objects.get(id=1)
-    try:
-        events_profile=userprofile.objects.filter(department=events_dept)
-        print "done"
-    except:
-        print "events"#debugging
-
-        
-    qms_dept=Department.objects.get(id=2)
-    try:
-        qms_profile=userprofile.objects.filter(department=qms_dept)
-    except:
-        print "QMS"#debugging
-
-        
-    finance_dept=Department.objects.get(id=3)
-    try:
-        finance_profile=userprofile.objects.filter(department=finance_dept)
-    except:
-        print "finance"#debugging
-
-
-        
-    sponsorship_dept=Department.objects.get(id=4)
-    try:
-        sponsorship_profile=userprofile.objects.filter(department=sponsorship_dept)
-    except:
-        print "spons"#debugging
-
-
-        
-    evolve_dept=Department.objects.get(id=5)
-    try:
-        evolve_profile=userprofile.objects.filter(department=evolve_dept)
-    except:
-        print "evolve"#debugging
-
-
-        
-    facilities_dept=Department.objects.get(id=6)
-    try:
-        facilities_profile=userprofile.objects.filter(department=facilities_dept)
-    except:
-        print "facilities"#debugging
-
-
-        
-    webops_dept=Department.objects.get(id=7)
-    try:
-        webops_profile=userprofile.objects.filter(department=webops_dept)
-    except:
-        print "webops awesome"#debugging
-
-        
-    hospilatity_dept=Department.objects.get(id=8)
-    try:
-        hospitality_profile=userprofile.objects.filter(department=hospitality_dept)
-    except:
-        print "hospi"#debugging
-
-
-        
-    publicity_dept=Department.objects.get(id=9)
-    try:
-        publicity_profile=userprofile.objects.filter(department=publicity_dept)
-    except:
-        print "publicity"#debugging
-    
-
-    design_dept=Department.objects.get(id=10)
-    try:
-        design_profile=userprofile.objects.filter(department=design_dept)
-    except:
-        print "design"#debugging
-    
+    dept_names = [name for name, description in DEP_CHOICES]
+    contacts = []
+    # Create a list of tuples
+    # (Dept Name, List of Core profiles, List of Coord profiles)
+    # for each department
+    for name in dept_names:
+        core_profiles = userprofile.objects.filter (department__Dept_Name = name,
+                                                    user__groups__name = 'Cores')
+        coord_profiles = userprofile.objects.filter (department__Dept_Name = name,
+                                                     user__groups__name = 'Coords')
+        contacts.append ((name, core_profiles, coord_profiles))
         
     details=teamdetails.objects.all()#still to be filtered according to dept
     #memberform=forms.add_team_member() was causing somw probs
