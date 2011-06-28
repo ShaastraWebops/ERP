@@ -11,9 +11,9 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_	psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'erp_new',                      # Or path to database file if using sqlite3.
-        'USER': 'root',                      # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.', # Add 'postgresql_	psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
@@ -117,7 +117,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
-    'haystack',
+    #'haystack',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -137,9 +137,9 @@ INSTALLED_APPS = (
 )
 #form here
 HAYSTACK_SITECONF='erp.search_sites'
-#HAYSTACK_SEARCH_ENGINE='whoosh'
+HAYSTACK_SEARCH_ENGINE='whoosh'
 HAYSTACK_SEARCH_ENGINE='xapian'
-#HAYSTACK_WHOOSH_PATH='search/engine'
+HAYSTACK_WHOOSH_PATH='search/engine'
 HAYSTACK_INCLUDE_SPELLING=True
 HAYSTACK_XAPIAN_PATH='/home/vivekkumarbagaria/erp/search/engine/'
 

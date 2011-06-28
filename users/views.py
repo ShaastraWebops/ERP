@@ -46,7 +46,9 @@ def register_user(request):
 		department=form.cleaned_data['department']
 		Dept=Department.objects.get(Dept_Name=department)
                 user.is_active=True #took from userportal
-                user.save()
+		g = Group.objects.get(name='Coords') 
+		g.user_set.add(user)
+ 		user.save()
 		user_profile = userprofile(
                         user = user,
 			department_id="1",
