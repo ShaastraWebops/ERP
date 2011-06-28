@@ -8,12 +8,14 @@ urlpatterns = patterns('erp.dashboard.views',
       (r'^upload_document/$', 'upload_file'),
       (r'^delete_document/$', 'delete_file'),
       (r'^change_profile_pic/$', 'change_profile_pic'),
-      (r'^shout/$', 'shout'),
+      # (r'^shout/$', 'shout'),
 )
 
 
+# Note : home/ URLconf should come before the second one, otherwise
+# 'home' itself is considered as a username and so an error results
 urlpatterns += patterns('erp.tasks.views',
-      (r'^$', 'display_portal'),
-      (r'^home/$', 'display_portal'),
+      (r'^home/?(\w+)?$', 'display_portal'),
+      (r'^(\w+)?$', 'display_portal'),
 )
 	

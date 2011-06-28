@@ -12,6 +12,11 @@ class SubTaskCommentForm (ModelForm):
         model = SubTaskComment
         exclude = ('author', 'subtask')                
 
+class UpdateForm (ModelForm):
+    class Meta:
+        model = Update
+        exclude = ('author')
+
 class TaskForm (ModelForm):
     class Meta:
         model = Task
@@ -21,8 +26,3 @@ class SubTaskForm (ModelForm):
     class Meta:
         model = SubTask
         exclude = ('creator', 'description', 'department', 'task')
-        
-class UpdateForm (ModelForm):
-    class Meta:
-        model = Update
-        exclude = ('coord')

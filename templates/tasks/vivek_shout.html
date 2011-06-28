@@ -1,0 +1,74 @@
+<html>
+
+<head>
+<style type="text/css">
+
+#shoutbox
+{
+
+border-style:solid;
+border-width:2px;
+position:absolute;
+top:70px;
+right:10px;
+overflow-y:scroll;
+width:300px;
+height:370px;
+background-color:#783492;
+
+
+}
+#shoutbox_heading
+{
+position:relative;
+left :60px;
+font-family:Arial;
+font-size:28px;
+}
+#add_shoutbox
+{ 
+position:absolute;
+top:460px;
+right:30px;
+}
+</style>
+
+</head>
+
+<body>
+<div id="shoutbox" >
+
+<div id="shoutbox_heading" >
+My ShoutBox
+</div>
+<table>
+{% for field in shouts %}
+<tr>
+<td id="shouterts name">
+{{field.nickname}} :
+</td>
+<td>
+{{field.comments}}
+</td>
+<td></td>
+</tr>
+{% endfor %}
+hereheheheheheh
+</table>
+</div>
+
+<div id="add_shoutbox">
+<form method="POST" action="{{SITE_URL}}/dashboard/shout/">
+{% for field in shout_form %}
+{{field.label_tag}}
+{{field}}
+{% endfor %}
+<input type="submit" value="Shout">
+
+</form>
+</div>
+
+
+</body>
+</html>
+

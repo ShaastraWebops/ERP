@@ -80,7 +80,7 @@
 				  </tr>
 				  {% for core_profile in core_profiles %}
 				  <tr>
-				    <td style="width:209px; padding-left:-10px;">{{ core_profile.name }} </td>
+				    <td style="width:209px; padding-left:-10px;"> <a href="{% url tasks.views.display_portal core_profile.user.username %}">{{ core_profile.name }}</a> </td>
 				    <td style="width:100px;">{{ core_profile.chennai_number }} </td>
 				    <td style="width:150px;">{{ core_profile.summer_number }} </td>
 				    <td style="width:100px;">{{ core_profile.email_id }} </td>
@@ -103,7 +103,7 @@
 				  </tr>
 				  {% for coord_profile in coord_profiles %}
 				  <tr>
-				    <td style="width:209px; padding-left:-10px;">{{ coord_profile.name }} </td>
+				    <td style="width:209px; padding-left:-10px;"><a href="{% url tasks.views.display_portal coord_profile.user.username %}">{{ coord_profile.name }}</a></td>
 				    <td style="width:100px;">{{ coord_profile.chennai_number }} </td>
 				    <td style="width:150px;">{{ coord_profile.summer_number }} </td>
 				    <td style="width:100px;">{{ coord_profile.email_id }} </td>

@@ -2,6 +2,7 @@
 
 {% block body %}
 
+{% block top_bar %}
 <!--PHP SESS_ID : {{ session_keys }} </br>--->
 <!--DJANGO SESS ID : {{ key }} </br>-->
 <!---{{variables}} </br>--->
@@ -15,23 +16,33 @@ Register <a href="{{SITE_URL}}/users/register/">here</a>
 {% if user.is_authenticated %}
 <span style="font-size:200%;">* </span>
 Welcome {{ user.get_profile.name }}, to Erp. 
+{% endif %}
 
+{% if is_visitor %}
+<br />
+<h3>You are viewing {{ page_owner.get_profile.name }}'s page.</h3>
+{% endif %}
+
+{% endblock top_bar %}
+
+
+{% if user.is_authenticated %}
 {% block portal_stuff %}
 
-{% endblock %}
+{% endblock portal_stuff %}
 
 {% block display_stuff %}
 
-{% endblock %}
+{% endblock display_stuff %}
 
 {% endif %}
 
 {% block form_stuff %}
 
-{% endblock %}
+{% endblock form_stuff %}
 
 {% block update_stuff %}
 
-{% endblock %}
+{% endblock update_stuff %}
 
-{% endblock %}
+{% endblock body %}

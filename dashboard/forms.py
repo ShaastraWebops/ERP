@@ -11,8 +11,8 @@ class UploadFileForm(forms.Form):
     class Admin:
         pass
 
-class shout_box_form(forms.Form):
-    comments=forms.CharField(max_length=200)
+# class shout_box_form(forms.Form):
+#     comments=forms.CharField(max_length=200)
 
 """"
 

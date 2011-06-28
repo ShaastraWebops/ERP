@@ -307,22 +307,22 @@ another feature required is by mistake if the user clicks shout two times or ref
 the comment is passes twice,we can remove it by comparing it with the latest update in the database 
 
 """
-def shout(request):
-    if request.method=="POST":
-        form=shout_box_form(request.POST.copy)
-        if form.is_valid:
-            print "ya da.."
-            print form.is_valid
-            time=datetime.datetime.now() 
-            #comments=form.cleaned_data['comments']#here some error is there 
-            #number=form.cleaned_data['number']          
-            #print comments
-            user=userprofile.objects.get(user=request.user)
-            nickname=user.nickname
-            shout_object=shout_box(user=request.user,nickname=nickname,comments="cool",time_stamp=time)#change the comments part da comments=comments
-            shout_object.save()
+# def shout(request):
+#     if request.method=="POST":
+#         form=shout_box_form(request.POST.copy)
+#         if form.is_valid:
+#             print "ya da.."
+#             print form.is_valid
+#             time=datetime.datetime.now() 
+#             #comments=form.cleaned_data['comments']#here some error is there 
+#             #number=form.cleaned_data['number']          
+#             #print comments
+#             user=userprofile.objects.get(user=request.user)
+#             nickname=user.nickname
+#             shout_object=shout_box(user=request.user,nickname=nickname,comments="cool",time_stamp=time)#change the comments part da comments=comments
+#             shout_object.save()
             
         
-    print "at last"
-    return display_department_portal(request)
-    pass
+#     print "at last"
+#     return display_department_portal(request)
+#     pass

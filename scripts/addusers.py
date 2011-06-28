@@ -6,11 +6,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 from django.db.models import Q
-from django.core.management import setup_environ
-
-setup_environ(settings)
-
-
 from erp import settings
 from erp.users import models
 from erp.department.models import Department, DEP_CHOICES
@@ -223,12 +218,12 @@ def create_updates ():
     coords_list = User.objects.filter (groups__name = 'Coords')
     for coord in coords_list:
         # List of all SubTasks where coord is one of the Coords assigned
-        new_update = Update (message_string = 'Hey This is Me ' + coord.get_profile ().name, coord = coord)
+        new_update = Update (comment_string = 'Hey This is Me ' + coord.get_profile ().name, author = coord)
         new_update.save ()
-
-
-
-
+        new_update = Update (comment_string = 'Yo! This is Me again! ' + coord.get_profile ().name, author = coord)
+        new_update.save ()
+        new_update = Update (comment_string = 'Guess What? ' + coord.get_profile ().name, author = coord)
+        new_update.save ()
 
 def do_it_all ():
     create_groups ()

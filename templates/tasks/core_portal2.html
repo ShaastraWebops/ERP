@@ -1,14 +1,18 @@
-{% extends "tasks/portal_common.html" %}
+{% extends "tasks/base_portal.html" %}
 
 {% block portal_stuff %}
 
 <h1>Dashboard</h1>
 
 <hr />
+{% if not is_visitor %}
+{% block create_task_part %}
 <h2>Click to create a Task </h2><a href="{% url tasks.views.create_task %}"><div class="button">Create</div></a>
 <br/>
 <br/>
 <hr>
+{% endblock create_task_part %}
+{% endif %}
 
 {% include "tasks/timeline.html" %}
 <hr>
@@ -34,7 +38,7 @@ Click to assign these to your Coords.
   </tr>
   {% endfor %}
 </table>
-{% endblock %}
+{% endblock received_requests %}
 <hr>
 
 {% block sent_requests %}
@@ -58,7 +62,7 @@ SubTasks you've sent to other Departments
   </tr>
   {% endfor %}
 </table>
-{% endblock %}
+{% endblock sent_requests %}
 
 <hr>
 
@@ -84,12 +88,12 @@ SubTasks completed by your Coords
   </tr>
   {% endfor %}
 </table>
-{% endblock %}
+{% endblock completed %}
 
 <hr>
 
-{% endblock %}
+{% endblock portal_stuff %}
 
 {% block update_stuff %}
 {% include "tasks/updates.html" %}
-{% endblock %}
+{% endblock update_stuff %}

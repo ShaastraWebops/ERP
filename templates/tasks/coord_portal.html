@@ -1,4 +1,4 @@
-{% extends "tasks/portal_common.html" %}
+{% extends "tasks/base_portal.html" %}
 
 {% block portal_stuff %}
 
@@ -24,19 +24,19 @@
   </tr>
   {% endfor %}
 </table>
-{% endblock %}
+{% endblock subtasklist %}
 
 <hr>
 
 {% block timeline %}
 {% include "tasks/timeline.html" %}
-{% endblock %}
+{% endblock timeline %}
 
 <hr>
-{% endblock %}
+{% endblock portal_stuff %}
 
 {% block update_stuff %}
 {% include "tasks/updates.html" %}
 <hr>
-{% endblock %}
+{% endblock update_stuff %}
 

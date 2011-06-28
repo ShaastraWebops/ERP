@@ -1,4 +1,4 @@
-{% extends "tasks/portal_common.html" %}
+{% extends "tasks/base_portal.html" %}
 
 {% block form_stuff %}
 
@@ -11,18 +11,25 @@
 <form action="" method="post">
   {% csrf_token %}
   <table>
+    {% if is_new_task %}
     <tr>
       <th>Department: </th>
-      {% if is_new_task %}
       <td>{{ user.get_profile.department.Dept_Name }} </td>
-      {% else %}
+    </tr>
+    <tr>
+      <th>Creator: </th>
+      <td>{{ user.get_profile.name }} </td>
+    </tr>
+    {% else %}
+    <tr>
+      <th>Department: </th>
       <td>{{ curr_task.creator.get_profile.department.Dept_Name }} </td>
-      {% endif %}
     </tr>
     <tr>
       <th>Creator: </th>
       <td>{{ curr_task.creator.get_profile.name }} </td>
     </tr>
+    {% endif %}
     {{ task_form.as_table }}
   </table>
   <hr>
@@ -32,10 +39,14 @@
     {{ subtaskfs.management_form }}
     {% for form in subtaskfs.forms %}
     <h4>Subtask {{ forloop.counter }}</h4>
-    <table>
-      {{ form.as_table }}
-    </table>
+    <div class="item">    
+      <table>
+	{{ form.as_table }}
+      </table>
+      <p style=""><a class="delete" href="#">Delete</a></p>
+    </div>
     {% endfor %}
+    <p><a id="add" href="#">Add another item</a></p>
   </table>
   <table>
     <tr>
@@ -52,5 +63,5 @@
     </tr>
   </table>
 </form>
-{% endblock %}
+{% endblock form_stuff %}
 
