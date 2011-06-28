@@ -7,6 +7,27 @@
       background-image:url("/b1.jpeg");
       background-repeat:no-repeat;
       }
+      .rbroundbox    { background: url(http://localhost/erp/images/corners_bg.gif) repeat; }
+      .rbtop         { background: url(http://localhost/erp/images/corners_top.gif) repeat-x; }
+      .rbtop div     { background: url(http://localhost/erp/images/corners_top_left.gif) no-repeat top left; }
+      .rbtop div div { background: url(http://localhost/erp/images/corners_top_right.gif) no-repeat top right; }
+
+      .rbbot         { background: url(http://localhost/erp/images/corners_bottom.gif) repeat-x; }
+      .rbbot div     { background: url(http://localhost/erp/images/corners_bottom_left.gif) no-repeat top left; }
+      .rbbot div div { background: url(http://localhost/erp/images/corners_bottom_right.gif) no-repeat top right; }
+
+      .rbcontentwrap { background: url(http://localhost/erp/images/corners_left.gif) repeat-y; }
+      .rbcontent     { background: url(http://localhost/erp/images/corners_right.gif) repeat-y right; }
+      
+      
+      /* height and width details */
+      .rbtop div,  .rbtop,  .rbbot div,  .rbbot {
+	  width: 100%;
+	  height: 26px;
+	  font-size: 1px;
+      }
+      .rbcontent  { padding: 1px 2em; margin: 0;  }
+      .rbroundbox { width: 500px;  }
 
 
     </style>
