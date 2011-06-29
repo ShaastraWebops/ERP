@@ -98,8 +98,6 @@ def parse_user_info_list (info_list):
       - hostel
       - room_no
     """
-    department_name = info_list[0]
-    group_name = info_list[1]
     user_keys = ['username', 'email', 'password']
     profile_keys = ['nickname', 'name', 'chennai_number', 'summer_number',
                     'summer_stay', 'hostel', 'room_no']
@@ -262,6 +260,9 @@ def create_updates ():
         new_update.save ()
         new_update = Update (comment_string = 'Guess What? ' + coord.get_profile ().name, author = coord)
         new_update.save ()
+
+# Create Core
+# create_test_data.create_user ('Webops', 'Cores', {'username' : 'me09b001', 'email' : '', 'password' : 'password'}, {'nickname' : 'IBM', 'name' : 'Siddharth', 'chennai_number' : '9999999999', 'summer_number' : '9999999999', 'summer_stay' : 'Bangalore', 'hostel' : 'Godavari', 'room_no' : '420'})
 
 def do_it_all ():
     create_groups ()

@@ -41,7 +41,7 @@ Click to assign these to your Coords.
   {% endfor %}
 </table>
 {% else %}
-<h3>No Requests or Unassigned SubTasks for your Department.</h3>
+<h4>No Requests or Unassigned SubTasks for your Department.</h4>
 {% endif %}
 {% endblock received_requests %}
 <hr>
@@ -69,7 +69,7 @@ SubTasks you've sent to other Departments
   {% endfor %}
 </table>
 {% else %}
-<h3>You haven't sent any requests to other departments yet.</h3>
+<h4>You haven't sent any requests to other departments yet.</h4>
 {% endif %}
 {% endblock sent_requests %}
 
@@ -77,9 +77,9 @@ SubTasks you've sent to other Departments
 
 {% block completed %}
 <h2> Completed SubTasks</h2>
+SubTasks completed by your Coords
 {% if all_completed_SubTasks %}
 
-SubTasks completed by your Coords
 <table>
   <tr>
     <th>Subject</th>
@@ -104,7 +104,7 @@ SubTasks completed by your Coords
   {% endfor %}
 </table>
 {% else %}
-<h3>There have been no completed SubTasks in your department yet.</h3>
+<h4>There have been no completed SubTasks in your department yet.</h4>
 {% endif %}
 {% endblock completed %}
 
