@@ -1,4 +1,3 @@
-
 # Create your views here.
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
@@ -137,7 +136,8 @@ def display_portal (request, owner_name = None):
     request.session['page_owner'] = page_owner
     request.session['is_visitor'] = is_visitor
 
-    print page_owner.username
+    print 'User : ', request.user.username
+    print 'Page Owner : ', page_owner.username
 
     # Deal with the Updates part (viewing, creating) of the portal
     update_dict = handle_updates (request, page_owner)
@@ -156,6 +156,7 @@ def display_portal (request, owner_name = None):
                                   display_dict,
                                   context_instance = global_context (request))
     else:
+        # For Coords
         display_dict['all_Tasks'] = get_timeline (page_owner)
         display_dict['all_SubTasks'] = get_subtasks (page_owner)
         # Include the key-value pairs in update_dict

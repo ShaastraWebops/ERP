@@ -2,15 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from erp.department.models import *
 from django.conf import settings
-class teamdetails(models.Model):
-    name = models.ForeignKey(User,unique = True)
-    department = models.ForeignKey(Department )
-    mobile_number = models.CharField(max_length = 15)
-    email_id = models.EmailField()
-
-    class Admin:
-	pass
-
 
 class upload_documents(models.Model):
     user = models.ForeignKey(User)

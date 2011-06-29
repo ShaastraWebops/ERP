@@ -19,16 +19,21 @@
       position:absolute;
       top : 160px;
       left :320px;
-
       }
     </style>
-    <title></title>
+    <title>
+    </title>
   </head>
   <body id="page">
 
+    {% comment %}
     <!--<img class="profile_pic" src="{{photo_path}}" width="130" height="190">
 	<img  src="{{MEDIA_ROOT}}images/default.jpeg" width="130" height="190">-->
-    <div class="update_profile_pic "><a href="{% url dashboard.views.change_profile_pic %}"> update/change </a></div> 
+    <div class="update_profile_pic ">
+      <a href="{% url dashboard.views.change_profile_pic %}"> update/change </a>
+    </div> 
+    {% endcomment %}
+
     <div id="mainform" >
       <div id="main">
 	<div id ="heading">
@@ -37,14 +42,27 @@
 	  Core Details
 	  {% else %}
 	  Coordinator Details
-	  {% endif %}</div>
+	  {% endif %}
+	</div>
+	<br />
+	{% if profile_changed %}
+	Your profile has been changed successfully.
+	{% endif %}
+
 	<div id="details">
-	  <form id="" name="" action="{{SITE_URL}}/users/update/" method="POST">{% csrf_token %}
+	  <form method="POST" id="profile_form" action="">
+	    {% csrf_token %}
 	    <table>
+	      {{ profile_form }} 
+	    </table>
+	    <input type="submit" value="Update" name="update">
+	  </form>
+	</div>
 
-
-	      {{success_message}}
-	      {{warning_message}}
+	{% comment %}
+	<div id="details">
+	  <form id="" name="" action="" method="POST">{% csrf_token %}
+	    <table>
 	      {{profileform.non_field_errors}}
 
 	      {% for field in profileform %}
@@ -61,17 +79,28 @@
 
 		</td>
 	      </tr>
-	      <tr><td></td><td></td></tr>
-	      <tr><td></td><td></td></tr>
+	      <tr>
+		<td>
+		</td>
+		<td>
+		</td>
+	      </tr>
+	      <tr>
+		<td>
+		</td>
+		<td>
+		</td>
+	      </tr>
 
 
 	      {% endfor %}
-
 
 	    </table>
 	    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Update" name="googeal">
 	    </form>
 	  </div>
+	{% endcomment %}
+
 	</div>	
 
 

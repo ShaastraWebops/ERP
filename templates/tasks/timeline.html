@@ -1,5 +1,6 @@
 <h2>Timeline for {{ page_owner_dept_name }} Department</h2>
 List of all Tasks in your Department
+{% if all_Tasks %}
 <table>
   <tr>
     <th>Subject</th>
@@ -32,4 +33,8 @@ List of all Tasks in your Department
   </tr>
   {% endfor %}
 </table>
+{% else %}
+<h4>No Tasks have been set in your Department yet.</h4>
+{% endif %}
+
 

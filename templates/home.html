@@ -20,9 +20,9 @@
       
       /* height and width details */
       .rbtop div,  .rbtop,  .rbbot div,  .rbbot {
-	  width: 100%;
-	  height: 26px;
-	  font-size: 1px;
+      width: 100%;
+      height: 26px;
+      font-size: 1px;
       }
       .rbcontent  { padding: 1px 2em; margin: 0;  }
       .rbroundbox { width: 500px;  }
@@ -37,46 +37,49 @@
     {% block javascript_stuff %}
     
     {% endblock %}
+
+    {% block style_stuff %}
+    
+    {% endblock style_stuff %}
     <title>
     </title>
   </head>
   <body id="page">
-
-    <img arc="b1.jepg ">
-      <div id="top">
-	<div id="header">
-	  <a href="{% url tasks.views.display_portal %}">
-	    <div class="button">Dashboard</div>
-	  </a>
-	  <a href="{% url tasks.views.display_department_portal %}">
-	    <div class="button">Department</div>
-	  </a>
-	  <a href="{% url users.views.invite %}">
-	    <div class="button">Invite</div>
-	  </a>
-	  <a href="#">
-	    <div class="button">Policies</div>
-	  </a>
-	  <a href="#">
-	    <div class="button">Website</div>
-	  </a>
-	  <a href="{% url users.views.contact_details %}">
-	    <div class="button">Profile</div>
-	  </a>
-	  <a href="{% url dashboard.views.details %}">
-	    <div class="button">Contacts</div>
-	  </a>
-	  <a href="{% url dashboard.views.upload_file %}">
-	    <div class="button">Documents</div>
-	  </a>
-	  <a href="{% url home.views.logout %}">
-	    <div class="button">Logout</div> 
-	  </a>
-	  
-	</div>
+    <img arc="b1.jepg "/>
+    <div id="top">
+      <div id="header">
+	<a href="{% url tasks.views.display_portal %}">
+	  <div class="button">Dashboard</div>
+	</a>
+	<a href="{% url tasks.views.display_department_portal %}">
+	  <div class="button">Department</div>
+	</a>
+	<a href="{% url users.views.invite %}">
+	  <div class="button">Invite</div>
+	</a>
+	<a href="#">
+	  <div class="button">Policies</div>
+	</a>
+	<a href="#">
+	  <div class="button">Website</div>
+	</a>
+	<a href="{% url users.views.handle_profile %}">
+	  <div class="button">Profile</div>
+	</a>
+	<a href="{% url dashboard.views.display_contacts %}">
+	  <div class="button">Contacts</div>
+	</a>
+	<a href="{% url dashboard.views.upload_file %}">
+	  <div class="button">Documents</div>
+	</a>
+	<a href="{% url home.views.logout %}">
+	  <div class="button">Logout</div> 
+	</a>
       </div>
+    </div>
+    <br />
 
-      {% block body %}
-      {% endblock %}
-</body>
+    {% block body %}
+    {% endblock %}
+  </body>
 </html>

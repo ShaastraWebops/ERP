@@ -10,58 +10,48 @@ GENDER_CHOICES = (
     ('F','Female'),
 )
 
-
-
 HOSTEL_CHOICES  =(
-        ("Ganga","Ganga"),
-        ("Mandak","Mandak"),
-        ("Jamuna","Jamuna"),
-        ("Alak","Alak"),
-        ("Saraswati","Saraswati"),
-        ("Narmada","Narmada"),
-        ("Godav","Godav"),
-        ("Pampa","Pampa"),
-        ("Tambi","Tambi"),
-        ("Sindhu","Sindhu"),
-        ("Mahanadi","Mahanadi"),
-        ("Sharavati","Sharavati"),
-        ("Krishna","Krishna"),
-        ("Cauvery","Cauvery"),
-        ("Tapti","Tapti"),
-        ("Bhramhaputra","Bhramhaputra"),
-        ("Sarayu","Sarayu"),
-   
+        ("Ganga", "Ganga"),
+        ("Mandak", "Mandak"),
+        ("Jamuna", "Jamuna"),
+        ("Alak", "Alak"),
+        ("Saraswati", "Saraswati"),
+        ("Narmada", "Narmada"),
+        ("Godav", "Godav"),
+        ("Pampa", "Pampa"),
+        ("Tambi", "Tambi"),
+        ("Sindhu", "Sindhu"),
+        ("Mahanadi", "Mahanadi"),
+        ("Sharavati", "Sharavati"),
+        ("Krishna", "Krishna"),
+        ("Cauvery", "Cauvery"),
+        ("Tapti", "Tapti"),
+        ("Bhramhaputra", "Bhramhaputra"),
+        ("Sarayu", "Sarayu"),
         )
 
-#This is the initial users model
-#Author-Krishna Shrinivas
-
 class userprofile(models.Model):
+    """
+    User's profile which contains all personal data.
+    """
     user = models.ForeignKey(User, unique=True)
     nickname = models.CharField(max_length=30, blank=True)
     name = models.CharField(max_length=30, blank=True)
-    email_id = models.EmailField(blank=True)
     department = models.ForeignKey(Department)
     chennai_number = models.CharField(max_length=15, blank=True)
     summer_number = models.CharField(max_length=15, blank=True)
     summer_stay = models.CharField(max_length=30, blank=True)
-    hostel = models.CharField(max_length=15, choices = HOSTEL_CHOICES)
+    hostel = models.CharField(max_length=15, choices = HOSTEL_CHOICES, blank=True)
     room_no = models.IntegerField(default=0, blank=True)
 
     class Meta:
-        permissions=(
-            ("is_core",("Can give Task to coords")),
-            ("is_coord",("Can give tasks to vols")),
-            ("is_vol",("Can view the page")),
-            )
+        pass
 
     def __str__(self):
-        return '%s %s' %(self.user.username,self.hostel)
+        return '%s %s' %(self.user.username, self.hostel)
 
     class Admin:
         pass
-
-#author : vivek kumar bagaria
 
 class Materials(models.Model):
     # name of the  person who asked or gave
@@ -96,17 +86,6 @@ class invitation(models.Model):
 
     class Admin:
 	pass
-
-class OtherContactDetails(models.Model):
-    user=models.ForeignKey(User)
-    name=models.CharField(max_length=100)
-    number=models.CharField(max_length=15)
-    email_id=models.CharField(max_length=30,blank=True)
-
-    class Admin:
-	pass
-    
-
 
 class userphoto(models.Model):
     name=models.ForeignKey(User)

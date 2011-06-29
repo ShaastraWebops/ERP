@@ -23,65 +23,24 @@ from django.conf import settings
 import csv # invite coords
 #import stringlib
 # Create your views here.
-def home (request):
-    redirected=session_get(request,"from_url")
-    access_denied = session_get (request, "access_denied")
-    logged_in = session_get (request, "logged_in")
-    already_logged = session_get (request, "already_logged")
-    return render_to_response('dashboard/home.html', locals(), context_instance= global_context(request)) 
 
-def delete_otherdetails(request):
-    print "came"
-    if request.method=='GET':
-        if "d" in request.GET:
-            number=request.GET['d']
-            query=OtherContactDetails(id=number)
-            query.delete()
-            print "deleted"
-            success_message="deleted"
-        else :
-            print "problem"
-    return details()
+# def delete_otherdetails(request):
+#     print "came"
+#     if request.method=='GET':
+#         if "d" in request.GET:
+#             number=request.GET['d']
+#             query=OtherContactDetails(id=number)
+#             query.delete()
+#             print "deleted"
+#             success_message="deleted"
+#         else :
+#             print "problem"
+#     return details()
 
-
-
-
-def details(request):
+def display_contacts (request):
     """
     Display all contacts (listed by Department).
     """
-    if request.method=='GET':
-	pass
-    else:
-        pass
-    other_contactform=OtherContactDetails_form(initial={'email_id':"Can be left blank"})
-    if request.method=='POST':
-        data=request.POST.copy()
-        form=OtherContactDetails_form(data)
-        
-        if form.is_valid():
-            print "cool"
-            name=form.cleaned_data['name']
-            number=form.cleaned_data['number']
-            email_id=form.cleaned_data['email_id']
-            if (email_id=="Can be left blank"):
-                print "cool then"
-                email_id=""
-            
-            addcontact=OtherContactDetails     (user=request.user,
-                                                name=name,
-                                                number=number,
-                                                email_id=email_id,
-                                                )
-            try :
-                addcontact.save()
-		success_message="The contact details has been saved"
-            except:
-                print "lite maama"
-        else :
-            print "fool"
-            
-
     dept_names = [name for name, description in DEP_CHOICES]
     contacts = []
     # Create a list of tuples
@@ -93,11 +52,40 @@ def details(request):
         coord_profiles = userprofile.objects.filter (department__Dept_Name = name,
                                                      user__groups__name = 'Coords')
         contacts.append ((name, core_profiles, coord_profiles))
-        
-    details=teamdetails.objects.all()#still to be filtered according to dept
-    #memberform=forms.add_team_member() was causing somw probs
     return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
 
+
+# old_details view:
+#     if request.method=='GET':
+# 	pass
+#     else:
+#         pass
+#     other_contactform=OtherContactDetails_form(initial={'email_id':"Can be left blank"})
+#     if request.method=='POST':
+#         data=request.POST.copy()
+#         form=OtherContactDetails_form(data)
+        
+#         if form.is_valid():
+#             print "cool"
+#             name=form.cleaned_data['name']
+#             number=form.cleaned_data['number']
+#             email_id=form.cleaned_data['email_id']
+#             if (email_id=="Can be left blank"):
+#                 print "cool then"
+#                 email_id=""
+            
+#             addcontact=OtherContactDetails     (user=request.user,
+#                                                 name=name,
+#                                                 number=number,
+#                                                 email_id=email_id,
+#                                                 )
+#             try :
+#                 addcontact.save()
+# 		success_message="The contact details has been saved"
+#             except:
+#                 print "lite maama"
+#         else :
+#             print "fool"
 
 #this function creates the directory
 def create_dir(file_name ,user_name , method=1):

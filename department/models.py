@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-DEP_CHOICES    = (
+DEP_CHOICES = (
 	("Events", "Events"),
 	("QMS", "Quality Management"),
 	("Finance", "Finance"),
@@ -18,10 +18,6 @@ DEP_CHOICES    = (
 #This is the initial department model
 class Department(models.Model):
     Dept_Name= models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
-    Event_Manager=models.ForeignKey(User, related_name = "department_monitor")
-    #This is done assuming that cores are just users with relevant permissions
-    
-
     def __str__(self):
         return self.Dept_Name
 

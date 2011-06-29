@@ -6,6 +6,7 @@
 
 {% block subtasklist %}
 <h2> Core Requests </h2>
+{% if all_SubTasks %}
 <table>
   <tr>
     <th>Subject</th>
@@ -24,6 +25,9 @@
   </tr>
   {% endfor %}
 </table>
+{% else %}
+<h4>No Requests from the Core yet.</h4>
+{% endif %}
 {% endblock subtasklist %}
 
 <hr>

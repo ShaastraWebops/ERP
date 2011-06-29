@@ -35,46 +35,44 @@ def create_groups ():
         vols = Group (name = 'Vols')
         vols.save ()
 
-def create_depts (dummy_qms_user = 'root'):
+def create_depts ():
     """
-    By default, this assigns Event_Manager as 'root' (ie. my admin
-    username).
+    Create all the departments with names as given DEP_CHOICES.
     """
     for name, description in DEP_CHOICES:
         try:
             dept = Department.objects.get (Dept_Name = name)
         except:
-            new_dept = Department.objects.create (Dept_Name = name, Event_Manager = User.objects.get (username = 'root'))
+            new_dept = Department.objects.create (Dept_Name = name)
 
 def create_users (users_file_name = 'users.txt'):
     """
     Get user details from users_file_name. Create user if it doesn't exist, update  user if it already exists.
     Record Format:
-    department username email_id password nickname name chennai_number summer_number summer_stay hostel room_no group
+    department username email password nickname name chennai_number summer_number summer_stay hostel room_no group
     """
     users_file = open (users_file_name, 'r')
     for line in users_file:
         # user_fields = line.split ()
-        department, username, email_id, password, nickname, name, chennai_number, summer_number, summer_stay, hostel, room_no, group = line.split ()
-        print department, username, email_id, password, nickname, name, chennai_number, summer_number, summer_stay, hostel, room_no, group 
+        department, username, email, password, nickname, name, chennai_number, summer_number, summer_stay, hostel, room_no, group = line.split ()
+        print department, username, email, password, nickname, name, chennai_number, summer_number, summer_stay, hostel, room_no, group 
         try:
             # In case, user already exists
             user = User.objects.get (username = username)
         except:
             # If it's a new user
             # Note : create_user creates an instance and saves it in the database
-            user = User.objects.create_user(username = username, password = password, email = email_id)
+            user = User.objects.create_user(username = username, password = password, email = email)
             user.save ()
 
         try:
             curr_userprofile = user.get_profile ()
-        # If userprofile doesn't exist (whether or now user is a new
+        # If userprofile doesn't exist (whether or not user is a new
         # one or old one), create it
         except:
             curr_userprofile = models.userprofile ()
             curr_userprofile.user = user
 
-        curr_userprofile.email_id = email_id
         curr_userprofile.nickname = nickname
         curr_userprofile.name = name
         curr_userprofile.chennai_number = chennai_number
