@@ -52,7 +52,7 @@ def display_contacts (request):
         coord_profiles = userprofile.objects.filter (department__Dept_Name = name,
                                                      user__groups__name = 'Coords')
         contacts.append ((name, core_profiles, coord_profiles))
-    return render_to_response('dashboard/documents.html',locals() ,context_instance = global_context(request))
+    return render_to_response('dashboard/display_contacts.html',locals() ,context_instance = global_context(request))
 
 
 # old_details view:

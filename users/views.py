@@ -133,7 +133,7 @@ def handle_profile (request):
             profile_changed = True
             # Should this just redirect to the dashboard?
         
-    return render_to_response('users/contact_details.html',locals(),context_instance = global_context(request))
+    return render_to_response('users/edit_profile.html',locals(),context_instance = global_context(request))
     
 
 # Obsolete now
