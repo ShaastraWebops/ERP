@@ -29,10 +29,10 @@
   <div id="contacts">
     <span style="font-family:Arial; font-size:30px; font-weight:bold; color:#333;">&nbsp;&nbsp;&nbsp;&nbsp;Contacts</span>
     <ul id="accordion" style="border:none;">
-      {% for name, core_profiles, coord_profiles in contacts %}
+      {% for dept_name, core_profiles, coord_profiles in contacts %}
       
       <li class="active">
-	<img id="plus" src="media/images/plus.png" style="margin-left:-7px; margin-bottom:-3px;"/>&nbsp;<span style="font-size:22px; ">{{ name }} </span>
+	<img id="plus" src="media/images/plus.png" style="margin-left:-7px; margin-bottom:-3px;"/>&nbsp;<span style="font-size:22px; ">{{ dept_name }} </span>
 	<ul>
 	  <li class="second">
 	    <h3>Cores</h3>
@@ -43,7 +43,6 @@
 		    <th style="width:250px; padding-left:-10px;">Name</td>
 		    <th style="width:100px;">Phone</td>
 		    <th style="width:150px;">Summer No.</td>
-		    <th style="width:100px;">Email-ID</td>
 		  </tr>
 		  {% for core_profile in core_profiles %}
 		  <tr>
@@ -52,7 +51,6 @@
 		    </td>
 		    <td style="width:100px;">{{ core_profile.chennai_number }} </td>
 		    <td style="width:150px;">{{ core_profile.summer_number }} </td>
-		    <td style="width:100px;">{{ core_profile.email_id }} </td>
 		  </tr>
 		  {% endfor %}
 		</table>
@@ -68,7 +66,6 @@
 		    <th style="width:250px; padding-left:-10px;">Name</td>
 		    <th style="width:100px;">Phone</td>
 		    <th style="width:150px;">Summer No.</td>
-		    <th style="width:100px;">Email-ID</td>
 		  </tr>
 		  {% for coord_profile in coord_profiles %}
 		  <tr>
@@ -77,7 +74,6 @@
 		    </td>
 		    <td style="width:100px;">{{ coord_profile.chennai_number }} </td>
 		    <td style="width:150px;">{{ coord_profile.summer_number }} </td>
-		    <td style="width:100px;">{{ coord_profile.email_id }} </td>
 		  </tr>
 		  {% endfor %}
 		</table>

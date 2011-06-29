@@ -46,12 +46,12 @@ def display_contacts (request):
     # Create a list of tuples
     # (Dept Name, List of Core profiles, List of Coord profiles)
     # for each department
-    for name in dept_names:
-        core_profiles = userprofile.objects.filter (department__Dept_Name = name,
+    for dept_name in dept_names:
+        core_profiles = userprofile.objects.filter (department__Dept_Name = dept_name,
                                                     user__groups__name = 'Cores')
-        coord_profiles = userprofile.objects.filter (department__Dept_Name = name,
+        coord_profiles = userprofile.objects.filter (department__Dept_Name = dept_name,
                                                      user__groups__name = 'Coords')
-        contacts.append ((name, core_profiles, coord_profiles))
+        contacts.append ((dept_name, core_profiles, coord_profiles))
     return render_to_response('dashboard/display_contacts.html',locals() ,context_instance = global_context(request))
 
 

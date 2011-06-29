@@ -12,28 +12,24 @@ from erp.department.models import Department, DEP_CHOICES
 from erp.tasks.models import Task, SubTask, DEFAULT_STATUS, TaskComment, SubTaskComment, Update
 import random
 
+def create_group (group_name):
+    """
+    Create a group with group_name, if it doesn't already exist.
+    """
+    try:
+        new_group = Group.objects.get (name = group_name)
+    except:
+        new_group = Group (name = group_name)
+        new_group.save ()
+        print 'Group %s created' %(group_name)
+    
 def create_groups ():
     """
     Create groups Cores, Coords, and Vols (if they don't already exist).
     """
-
-    try:
-        gp = Group.objects.get (name = 'Cores')
-    except:
-        cores = Group (name = 'Cores')
-        cores.save ()
-
-    try:
-        gp = Group.objects.get (name = 'Coords')
-    except:
-        coords = Group (name = 'Coords')
-        coords.save ()
-
-    try:
-        gp = Group.objects.get (name = 'Vols')
-    except:
-        vols = Group (name = 'Vols')
-        vols.save ()
+    group_list = ['Cores', 'Coords', 'Vols',]
+    for group_name in group_list:
+        create_group (group_name)
 
 def create_depts ():
     """
@@ -42,55 +38,99 @@ def create_depts ():
     for name, description in DEP_CHOICES:
         try:
             dept = Department.objects.get (Dept_Name = name)
+            print 'Department %s exists' %(name)
         except:
             new_dept = Department.objects.create (Dept_Name = name)
+            print 'Department %s created' %(name)
+
+def add_user_to_group (user, group_name):
+    # Allow access to admin interface
+    if group_name == 'Cores':
+        user.is_staff = True
+    else:
+        user.is_staff = False
+    user.groups.add (Group.objects.get (name = group_name))
+    user.save ()
+    print '%s - now a member of Group %s' %(user, group_name)
+    
+def create_user (department_name, group_name, user_dict, profile_dict):
+    """
+    Create a User and fill his userprofile.
+    """
+    try:
+        # In case, user already exists
+        user = User.objects.get (username = user_dict['username'])
+        print '%s - User exists' %(user_dict['username'])
+    except:
+        # If it's a new user
+        # Note : create_user creates an instance and saves it in the database
+
+        # Delivering keyword args in user_dict
+        user = User.objects.create_user(**user_dict)
+        print '%s - User created' %(user_dict['username'])
+
+    try:
+        curr_userprofile = user.get_profile ()
+        print "%s - userprofile exists" %(user_dict['username'])
+    except:
+        # If userprofile doesn't exist (whether or not user is a new
+        # one or old one), create it
+        profile_dict['user'] = user
+        profile_dict['department'] = Department.objects.get (Dept_Name = department_name)
+        curr_userprofile = models.userprofile (**profile_dict)
+        curr_userprofile.save ()
+        print "%s - userprofile created" %(user_dict['username'])
+    add_user_to_group (user, group_name)
+
+def parse_user_info_list (info_list):
+    """
+    Parse given line into appropriate data and return a list of department_name, group_name, and two dicts :
+    user_dict - which contains user info
+      - username
+      - email
+      - password
+    profile_dict - which contains userprofile info
+      - nickname
+      - name
+      - chennai_number
+      - summer_number
+      - summer_stay
+      - hostel
+      - room_no
+    """
+    department_name = info_list[0]
+    group_name = info_list[1]
+    user_keys = ['username', 'email', 'password']
+    profile_keys = ['nickname', 'name', 'chennai_number', 'summer_number',
+                    'summer_stay', 'hostel', 'room_no']
+    user_values = info_list[2:5]
+    profile_values = info_list[5:]
+    user_dict = dict (zip (user_keys, user_values))
+    profile_dict = dict (zip (profile_keys, profile_values))
+    return [department_name, group_name, user_dict, profile_dict]
 
 def create_users (users_file_name = 'users.txt'):
     """
-    Get user details from users_file_name. Create user if it doesn't exist, update  user if it already exists.
-    Record Format:
-    department username email password nickname name chennai_number summer_number summer_stay hostel room_no group
+    Get user details from users_file_name.
+    Create users if they doesn't exist.
     """
     users_file = open (users_file_name, 'r')
     for line in users_file:
         # user_fields = line.split ()
-        department, username, email, password, nickname, name, chennai_number, summer_number, summer_stay, hostel, room_no, group = line.split ()
-        print department, username, email, password, nickname, name, chennai_number, summer_number, summer_stay, hostel, room_no, group 
-        try:
-            # In case, user already exists
-            user = User.objects.get (username = username)
-        except:
-            # If it's a new user
-            # Note : create_user creates an instance and saves it in the database
-            user = User.objects.create_user(username = username, password = password, email = email)
-            user.save ()
-
-        try:
-            curr_userprofile = user.get_profile ()
-        # If userprofile doesn't exist (whether or not user is a new
-        # one or old one), create it
-        except:
-            curr_userprofile = models.userprofile ()
-            curr_userprofile.user = user
-
-        curr_userprofile.nickname = nickname
-        curr_userprofile.name = name
-        curr_userprofile.chennai_number = chennai_number
-        curr_userprofile.summer_number = summer_number
-        curr_userprofile.summer_stay = summer_stay
-        curr_userprofile.hostel = hostel
-        curr_userprofile.room_no = room_no
-        curr_userprofile.department = Department.objects.get (Dept_Name = department)
-        curr_userprofile.save ()
-        # Allow access to admin interface
-        if group == 'Cores':
-            user.is_staff = True
-        else:
-            user.is_staff = False
-        user.groups.add (Group.objects.get (name = group))
-        user.save ()
+        user_data_list = parse_user_info_list (line.split ())
+        create_user (*user_data_list)
     users_file.close ()
 
+# def create_task (task_details, subtask_list = None):
+#     """
+    
+#     Arguments:
+#     - `task_details`:
+#     - `subtask_list`:
+#     """
+#     task_keys = ["subject", "description", "creator", "deadline"]
+#     subtask_keys = ["subject", "description", "creator", "deadline"]
+    
 def create_tasks (n = 5, partial_subtask = False):
     """
     Create n (= 5) Tasks (with 2 SubTasks each) for each Department's

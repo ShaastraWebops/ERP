@@ -19,6 +19,8 @@
 
 {% block received_requests %}
 <h2> Requests from other Departments and Unassigned SubTasks</h2>
+{% if all_unassigned_received_SubTasks %}
+
 Click to assign these to your Coords.
 <table>
   <tr>
@@ -38,12 +40,16 @@ Click to assign these to your Coords.
   </tr>
   {% endfor %}
 </table>
+{% else %}
+<h3>No Requests or Unassigned SubTasks for your Department.</h3>
+{% endif %}
 {% endblock received_requests %}
 <hr>
 
 {% block sent_requests %}
 <h2> Requests sent to other Departments </h2>
 SubTasks you've sent to other Departments
+{% if all_requested_SubTasks %}
 <table>
   <tr>
     <th>Task Subject</th>
@@ -62,12 +68,17 @@ SubTasks you've sent to other Departments
   </tr>
   {% endfor %}
 </table>
+{% else %}
+<h3>You haven't sent any requests to other departments yet.</h3>
+{% endif %}
 {% endblock sent_requests %}
 
 <hr>
 
 {% block completed %}
 <h2> Completed SubTasks</h2>
+{% if all_completed_SubTasks %}
+
 SubTasks completed by your Coords
 <table>
   <tr>
@@ -78,7 +89,11 @@ SubTasks completed by your Coords
   </tr>
   {% for subtask in all_completed_SubTasks %}
   <tr>
-    <td> {{ subtask.subject }} </td>
+    <td>
+      <a href="{% url tasks.views.display_subtask subtask.id %}">
+	{{ subtask.subject }}
+      </a>
+    </td>
     <td>
       {% for coord in subtask.coords.all %}
       {{ coord.get_profile.name }} 
@@ -88,6 +103,9 @@ SubTasks completed by your Coords
   </tr>
   {% endfor %}
 </table>
+{% else %}
+<h3>There have been no completed SubTasks in your department yet.</h3>
+{% endif %}
 {% endblock completed %}
 
 <hr>
