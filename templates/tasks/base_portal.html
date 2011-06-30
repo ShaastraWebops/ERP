@@ -3,30 +3,17 @@
 {% block body %}
 
 {% block top_bar %}
-<!--PHP SESS_ID : {{ session_keys }} </br>--->
-<!--DJANGO SESS ID : {{ key }} </br>-->
-<!---{{variables}} </br>--->
-{% if user.is_anonymous %}
-Please Login <a href="{{SITE_URL}}/home/login/">here</a>
-<br />
-Register before logging in.
-Register <a href="{{SITE_URL}}/users/register/">here</a>
-{% endif %}
 
-{% if user.is_authenticated %}
 <span style="font-size:200%;">* </span>
-Welcome {{ user.get_profile.name }}, to Erp. 
-{% endif %}
+Welcome {{ user_name }}, to Erp. 
 
 {% if is_visitor %}
 <br />
-<h3>You are viewing {{ page_owner.get_profile.name }}'s page.</h3>
+<h3>You are viewing {{ po_name }}'s page.</h3>
 {% endif %}
 
 {% endblock top_bar %}
 
-
-{% if user.is_authenticated %}
 {% block portal_stuff %}
 
 {% endblock portal_stuff %}
@@ -34,8 +21,6 @@ Welcome {{ user.get_profile.name }}, to Erp.
 {% block display_stuff %}
 
 {% endblock display_stuff %}
-
-{% endif %}
 
 {% block form_stuff %}
 

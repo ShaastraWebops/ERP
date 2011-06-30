@@ -1,5 +1,15 @@
 {% extends "tasks/base_portal.html" %}
 
+{% block title %}
+{{ block.super }} 
+
+{% if is_new_task %}
+Create a New Task
+{% else %}
+Edit Task
+{% endif %}
+{% endblock title %}
+
 {% block form_stuff %}
 <div align="center">
 <div class="rbroundbox"> 
@@ -26,11 +36,11 @@
     {% if is_new_task %}
     <tr>
       <th>Department: </th>
-      <td>{{ user.get_profile.department.Dept_Name }} </td>
+      <td>{{ user_dept_name }} </td>
     </tr>
     <tr>
       <th>Creator: </th>
-      <td>{{ user.get_profile.name }} </td>
+      <td>{{ user_name }} </td>
     </tr>
     {% else %}
     <tr>

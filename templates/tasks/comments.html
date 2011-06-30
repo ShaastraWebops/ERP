@@ -1,5 +1,10 @@
 {% extends "tasks/base_portal.html" %}
 
+{% block title %}
+{{ block.super }} 
+ Comments
+{% endblock title %}
+ 
 {% block display_stuff %}
 
 {% if is_task_comment %}

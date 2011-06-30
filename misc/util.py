@@ -23,9 +23,14 @@ def global_context(request):
     # The try...except blocks are there for the case when an anonymous
     # user visits any page (esp the login page)
     try:
-        user_dept_name = request.user.userprofile_set.all()[0].department.Dept_Name
+        user_dept_name = request.user.get_profile ().department.Dept_Name
     except:
         user_dept_name = False
+    try:
+        user_name = request.user.get_profile ().name
+    except:
+        user_name = False
+
     try:
         core_group = request.user.groups.filter (name = 'Cores')
         coord_group = request.user.groups.filter (name = 'Coords')
@@ -34,27 +39,37 @@ def global_context(request):
         core_group = False
 
     page_owner = request.session.get ('page_owner', request.user)
+
     try:
         po_core_group = page_owner.groups.filter (name = 'Cores')
         po_coord_group = page_owner.groups.filter (name = 'Coords')
     except:
         po_coord_group = False
         po_core_group = False
+
     try:
-        page_owner_dept_name = page_owner.get_profile ().department.Dept_Name
+        po_dept_name = page_owner.get_profile ().department.Dept_Name
     except:
-        page_owner_dept_name = False
+        po_dept_name = False
+
+    try:
+        po_name = page_owner.get_profile ().name
+    except:
+        po_name = False
+
     context =  RequestContext (request,
             {'user':request.user,
             'SITE_URL':settings.SITE_URL,
              'user_dept_name': user_dept_name,
+             'user_name': user_name,
              'is_core' : core_group,
              'is_coord' : coord_group,
              'po_is_core' : po_core_group,
              'po_is_coord' : po_coord_group,
              'is_visitor' : request.session.get ('is_visitor', False),
              'page_owner' : page_owner,
-             'page_owner_dept_name' : page_owner_dept_name,
+             'po_name' : po_name,
+             'po_dept_name' : po_dept_name,
             })
     return context
 
@@ -77,6 +92,7 @@ def decamelize (str):
     return result[:-1]
 
 # Take care of session variable
+# Note : This will pop the key from request.session
 def session_get (request, key, default=False):
     value = request.session.get (key, False)
     if value:

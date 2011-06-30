@@ -47,7 +47,8 @@ def register_user(request):
             new_user.is_active=True #took from userportal
             new_user.save()
             registered_successfully = True
-            return render_to_response('home/home.html' , locals() ,context_instance = global_context(request))
+            request.session['just_registered'] = True
+            return HttpResponseRedirect("%s/home/login" %settings.SITE_URL)
     else:
         user_form = AddUserForm ()
         

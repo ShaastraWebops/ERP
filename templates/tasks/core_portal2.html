@@ -1,5 +1,9 @@
 {% extends "tasks/base_portal.html" %}
 
+{% block title %}
+{{ block.super }} 
+Dashboard 
+{% endblock title %}
 {% block portal_stuff %}
 
 <h1>Dashboard</h1>
@@ -20,8 +24,9 @@
 {% block received_requests %}
 <h2> Requests from other Departments and Unassigned SubTasks</h2>
 {% if all_unassigned_received_SubTasks %}
-
+<div>
 Click to assign these to your Coords.
+{# <table width="" cellspacing="10" cellpadding="" border="0"> #}
 <table>
   <tr>
     <th>Subject</th>
@@ -42,6 +47,7 @@ Click to assign these to your Coords.
 </table>
 {% else %}
 <h4>No Requests or Unassigned SubTasks for your Department.</h4>
+</div>
 {% endif %}
 {% endblock received_requests %}
 <hr>

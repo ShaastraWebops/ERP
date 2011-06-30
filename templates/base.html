@@ -2,12 +2,11 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
  <head>
-  <title>
-   Shaastra ERP
-  </title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>
-   {{ title }}
+    {% block title %}
+    Welcome to Shaastra ERP
+    {% endblock title %}
   </title>
  
   <link rel="top" title="Shaastra ERP" href="{{SITE_URL}}" />
@@ -16,6 +15,10 @@
 
 
  <body>
+   {% block body %}
+   {% endblock %}
+
+   {% comment %}
   <div id="screen">.</div>
   <div id="maincontainer">
    {% block topbar %}
@@ -30,8 +33,6 @@
 	    <div class="errors">
          
         </div>
-             {% block body %}
-             {% endblock %}
        </div>
       </div>
      </div>
@@ -89,5 +90,6 @@
         </div>
     </div>--->
   </div>
+  {% endcomment %}
  </body>
 </html>

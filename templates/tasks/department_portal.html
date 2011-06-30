@@ -1,7 +1,12 @@
 {% extends "tasks/base_portal.html" %}
 
+{% block title %}
+{{ block.super }} 
+Department Portal | {{ po_dept_name }} 
+{% endblock title %}
+ 
 {% block display_stuff %}
-<h2>Portal - {{ page_owner_dept_name }} Department </h2>
+<h2>Portal - {{ po_dept_name }} Department </h2>
 
 <hr />
 {% block timeline %}

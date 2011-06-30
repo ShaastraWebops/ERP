@@ -24,7 +24,7 @@ def home(request):
 def login(request):
 
     redirected = request.session.get ("from_url", False)
-    registered = session_get(request, "registered")
+    just_registered = session_get(request, "just_registered")
     form = forms.UserLoginForm ()
 
     if request.method == 'POST':

@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+
+{% block body %}
 <!--PHP SESS_ID : {{ session_keys }} </br>--->
 <!--DJANGO SESS ID : {{ key }} </br>-->
 <!---{{variables}} </br>--->
@@ -25,9 +28,6 @@ You are logged in Click <a href="{% url tasks.views.display_portal %}"> Here</a>
   <p align="center"> Welcome to our site </p>
   <br />
   <br />
-  {% if registered_successfully %}
-  <h3>You have successfully registered with Shaastra Works ERP!</h3>
-  {% endif %}
   <p align="Center"> Not registered yet?
     <a href="{% url users.views.register_user %}">Register Now</a>
     <br>
@@ -37,3 +37,4 @@ You are logged in Click <a href="{% url tasks.views.display_portal %}"> Here</a>
   </p>
 </div>
 
+{% endblock body %}

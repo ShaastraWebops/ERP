@@ -42,6 +42,9 @@
     
     {% endblock style_stuff %}
     <title>
+      {% block title %}
+      Shaastra ERP |
+      {% endblock title %}
     </title>
   </head>
   <body id="page">
@@ -73,7 +76,10 @@
 	  <div class="button">Documents</div>
 	</a>
 	<a href="{% url home.views.logout %}">
-	  <div class="button">Logout</div> 
+	  {% comment %}
+	  <div class="button"></div> 
+	  {% endcomment %}
+	  Logout
 	</a>
       </div>
     </div>
