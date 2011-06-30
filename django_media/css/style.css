@@ -8,17 +8,18 @@ body{
 	text-align:center;
 	height:40px;
 }
+
 .button{
 	width:92px;
-	height:40px;
-	font-size:16px;
+	height:20px;
+	font-size:14px;
 	font-family:"Trebuchet MS";
 	color:#ffffff;
 	float:left;
 	background-image:url('../images/button.png');
  	background-repeat:no-repeat;
 	text-align:center;
-	margin-right:10px;
+	margin-right:3px;
 	padding:2px 0px 2px 0px;
 }
 #main{
