@@ -1,18 +1,15 @@
 {% extends "home.html" %}
 
-{% block body %}
-
 {% block top_bar %}
-
-<span style="font-size:200%;">* </span>
-Welcome {{ user_name }}, to Erp. 
-
+{{ block.super }} 
 {% if is_visitor %}
 <br />
 <h3>You are viewing {{ po_name }}'s page.</h3>
 {% endif %}
 
 {% endblock top_bar %}
+
+{% block body %}
 
 {% block portal_stuff %}
 

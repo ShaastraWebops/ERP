@@ -47,8 +47,10 @@
       {% endblock title %}
     </title>
   </head>
+
   <body id="page">
-    <img arc="b1.jepg "/>
+    <img arc="b1.jpeg "/>
+
     <div id="top">
       <div id="header">
 	<a href="{% url tasks.views.display_portal %}">
@@ -75,15 +77,17 @@
 	<a href="{% url dashboard.views.upload_file %}">
 	  <div class="button">Documents</div>
 	</a>
-	<a href="{% url home.views.logout %}">
-	  {% comment %}
-	  <div class="button"></div> 
-	  {% endcomment %}
-	  Logout
-	</a>
+	{% comment %}
+	{# This was where the Logout button used to be #}
+	<div class="button"></div> 
+	{% endcomment %}
       </div>
     </div>
     <br />
+    {% block top_bar %}
+    <p align="left"><span style="font-size:200%;">* </span>
+      Welcome, {{ user_name }}. <a href="{% url home.views.logout %}"> Logout</a>
+    {% endblock top_bar %}
 
     {% block body %}
     {% endblock %}
