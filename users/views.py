@@ -84,19 +84,22 @@ def invite(request):
                 message+=["got the template"]
                 mail=[emailid,]
 		print mail
-            except :
+            
                 message+=["mail could not be sent "]
                 print "problem da.."
-	    finally :
+	    
 		body=mail_template.render(Context({'coordname':coordname,
                                                    'SITE_URL':settings.SITE_URL,
                                                    'activationkey':activation_key
                                                    }))
-                send_mail('Invitaiton from the core to join ERP',body,'noreplay@shaastra.org',mail,fail_silently=False)
+                send_mail('Invitaiton from the core to join ERP',body,'noreply@shaastra.org',mail,fail_silently=False)
                 message+=["mail sent"]
                 invite_details.save() 
 		      
                 print "peace"
+            except:
+                pass
+
 		
 
     else:
