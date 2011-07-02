@@ -46,7 +46,11 @@ def register_user(request):
             new_user.save()
             registered_successfully = True
             request.session['just_registered'] = True
-            return HttpResponseRedirect("%s/home/login" %settings.SITE_URL+"/register")
+            return HttpResponseRedirect("%s/home/login" %settings.SITE_URL)
+	else:
+	    print "problem da.."
+	    print user_form.errors
+            return render_to_response('users/register.html' , locals() ,context_instance = global_context(request))
     else:
         return render_to_response('users/register.html' , locals() ,context_instance = global_context(request))
 
@@ -100,7 +104,7 @@ def invite(request):
                 print "problem da.."
 	    
 		body=mail_template.render(Context({'coordname':coordname,
-                                                   'SITE_URL':settings.SITE_URL+"/users/register_invite/"+user_dept+"/"+name+"/"+roll_no+"/",
+                                                   'SITE_URL':settings.SITE_URL+"users/register_invite/"+user_dept+"/"+name+"/"+roll_no+"/",
                                                    'activationkey':activation_key
                                                    }))
                 send_mail('Invitaiton from the core to join ERP',body,'noreply@shaastra.org',mail,fail_silently=False)
