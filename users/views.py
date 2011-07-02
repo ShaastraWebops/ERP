@@ -20,7 +20,7 @@ from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.conf import settings
 import os
 
-def register_user(request ,dept_name="none" ,username="none" ,rollno="ee0b000"):
+def register_user(request):
     """
     Get User details + userprofile too (only for testing phase).
     """
@@ -48,9 +48,16 @@ def register_user(request ,dept_name="none" ,username="none" ,rollno="ee0b000"):
             request.session['just_registered'] = True
             return HttpResponseRedirect("%s/home/login" %settings.SITE_URL+"/register")
     else:
-        user_form = AddUserForm (initial={'username':rollno},)
+        return render_to_response('users/register.html' , locals() ,context_instance = global_context(request))
+
         
+
+
+
+def register_invite(request,dept_name="none" ,username="none" ,rollno="ee0b000"):
+    user_form = AddUserForm (initial={'username':rollno},)
     return render_to_response('users/register.html' , locals() ,context_instance = global_context(request))
+
 
 @needs_authentication
 def invite(request):
@@ -70,7 +77,7 @@ def invite(request):
             emailid=form.cleaned_data['email_id']
             roll_no=form.cleaned_data['roll_no']
             #please change this
-            print settings.SITE_URL+"/users/register/"+user_dept+"/"+name+"/"+roll_no+"/"
+            print settings.SITE_URL+"/users/register_invite/"+user_dept+"/"+name+"/"+roll_no+"/"
             invite_details=invitation(
             core=request.user,
             invitee=name,
@@ -93,7 +100,7 @@ def invite(request):
                 print "problem da.."
 	    
 		body=mail_template.render(Context({'coordname':coordname,
-                                                   'SITE_URL':settings.SITE_URL+"/users/register/"+user_dept+"/"+name+"/"+roll_no+"/",
+                                                   'SITE_URL':settings.SITE_URL+"/users/register_invite/"+user_dept+"/"+name+"/"+roll_no+"/",
                                                    'activationkey':activation_key
                                                    }))
                 send_mail('Invitaiton from the core to join ERP',body,'noreply@shaastra.org',mail,fail_silently=False)

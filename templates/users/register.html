@@ -16,17 +16,14 @@ your roll number is {{rollno}}
 <p>
   Please fill in the following details:
 </p>
-<form action="{{SITE_URL}}/users/register/{{dept_name}}/{{username}}/{{rollno}}/" method="POST">{% csrf_token %}
+dude
+{{SITE_URL}}/users/register/{{dept_name}}/{{username}}/{{rollno}}/
+<form action="{{SITE_URL}}/users/register/" method="POST">{% csrf_token %}
   <div class="register">
     <table name="register">
       {{ user_form }}
     </table>
     <hr />
-    <table>
-      <h3>Your profile details</h3>
-      <h5>Note : Due to testing constraints, we need 'Department' and 'Name' at the time of registration.</h5>
-      
-    </table>
     <input type="submit" value="Register" />
   </div>
 </form>
