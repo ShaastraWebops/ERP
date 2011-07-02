@@ -147,8 +147,8 @@ def display_portal (request, owner_name = None):
         # For Cores
         display_dict['all_Tasks'] = get_timeline (page_owner)
         display_dict['all_unassigned_received_SubTasks'] = get_unassigned_received_subtasks (page_owner)
-        display_dict['all_requested_SubTasks'] = get_requested_subtasks (page_owner)
-        display_dict['all_completed_SubTasks'] = get_completed_subtasks (page_owner)
+        display_dict['all_requested_SubTasks']           = get_requested_subtasks (page_owner)
+        display_dict['all_completed_SubTasks']           = get_completed_subtasks (page_owner)
         # Include the key-value pairs in update_dict
         display_dict.update (update_dict)
         return render_to_response('tasks/core_portal2.html',

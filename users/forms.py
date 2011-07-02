@@ -101,6 +101,7 @@ class InviteForm (ModelForm):
         model = invitation
         exclude = ('core' , 'time')
 
+
 class change_pic(forms.Form):
     file = forms.FileField()
 
