@@ -31,7 +31,7 @@ def register_user(request ,dept_name="none" ,username="none" ,rollno="ee0b000"):
     if request.method=='POST':
         user_form = AddUserForm (request.POST)
 
-        if user_form.is_valid () 
+        if user_form.is_valid() 
             # Create the User
             new_user = User.objects.create_user(
                 username = user_form.cleaned_data['username'],
