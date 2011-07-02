@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.contrib.sessions.models import Session
 from erp.dashboard.models import *
+from erp.dashboard.forms import *
 from erp.department.models import *
 from erp.users.models import *
 from erp.users.views import *
@@ -295,22 +296,34 @@ another feature required is by mistake if the user clicks shout two times or ref
 the comment is passes twice,we can remove it by comparing it with the latest update in the database 
 
 """
-# def shout(request):
-#     if request.method=="POST":
-#         form=shout_box_form(request.POST.copy)
-#         if form.is_valid:
-#             print "ya da.."
-#             print form.is_valid
-#             time=datetime.datetime.now() 
-#             #comments=form.cleaned_data['comments']#here some error is there 
-#             #number=form.cleaned_data['number']          
-#             #print comments
-#             user=userprofile.objects.get(user=request.user)
-#             nickname=user.nickname
-#             shout_object=shout_box(user=request.user,nickname=nickname,comments="cool",time_stamp=time)#change the comments part da comments=comments
-#             shout_object.save()
+def shout(request):
+    if request.method=="POST":
+        form=shout_box_form(request.POST)
+        if form.is_valid():
+
+            print "ya da.."
+
+            time=datetime.datetime.now() 
+            comments=form.cleaned_data['comments'] 
+	    try:
+		last_comment=shout_box.objects.filter(user=request.user).reverse()[0]
+		print last_comment
+	
             
-        
-#     print "at last"
-#     return display_department_portal(request)
-#     pass
+	    except:
+		print "painmax"
+            user=userprofile.objects.get(user=request.user)
+            try:
+		nickname=user.nickname
+	    except:
+		nickname=request.user.username	
+	    try:
+		if str(last_comment)!=comments:
+                    shout_object=shout_box(user=request.user,nickname=nickname,comments=comments,time_stamp=time)
+                    shout_object.save()
+            except:    
+                shout_object=shout_box(user=request.user,nickname=nickname,comments=comments,time_stamp=time)
+                shout_object.save()
+
+    return display_department_portal(request)
+

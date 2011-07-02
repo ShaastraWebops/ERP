@@ -19,11 +19,17 @@ class upload_documents(models.Model):
     class Admin:
 	pass
 
-# class shout_box(models.Model):
-#     user = models.ForeignKey(User)
-#     nickname = models.CharField(max_length = 50)
-#     comments = models.TextField()
-#     time_stamp = models.DateTimeField(editable = False)
+class shout_box(models.Model):
+    user = models.ForeignKey(User)
+    nickname = models.CharField(max_length = 50)
+    comments = models.TextField()
+    time_stamp = models.DateTimeField(editable = False)
+    
+    def __str__(self):
+	return '%s'%(self.comments)
 
-#     class Meta:
-#         ordering = ['time_stamp']
+    class Admin:
+	pass
+
+    class Meta:
+        ordering = ['time_stamp']

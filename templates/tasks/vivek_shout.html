@@ -14,7 +14,7 @@ right:10px;
 overflow-y:scroll;
 width:300px;
 height:370px;
-background-color:#783492;
+background-color:#F3E2A9;
 
 
 }
@@ -31,6 +31,28 @@ position:absolute;
 top:460px;
 right:30px;
 }
+
+#nickname
+{
+	font-family :serif;
+ 	font-style  :oblique;
+	font-weight :800;
+	color  :#FF4000;
+	font-size :98%
+
+
+}
+
+#comment
+{
+	font-family :"Cambria";
+ 	font-style  :oblique;
+	font-weight :300;
+	color  :#58ACFA;
+	font-size :88%
+
+
+}
 </style>
 
 </head>
@@ -45,15 +67,15 @@ My ShoutBox
 {% for field in shouts %}
 <tr>
 <td id="shouterts name">
-{{field.nickname}} :
+<span id="nickname" >{{field.nickname}}- </span> &nbsp;
 </td>
 <td>
-{{field.comments}}
+<span id="comment" >{{field.comments}}</span>
 </td>
 <td></td>
 </tr>
 {% endfor %}
-hereheheheheheh
+
 </table>
 </div>
 

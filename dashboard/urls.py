@@ -8,7 +8,7 @@ urlpatterns = patterns('erp.dashboard.views',
       (r'^upload_document/$', 'upload_file'),
       (r'^delete_document/$', 'delete_file'),
       (r'^change_profile_pic/$', 'change_profile_pic'),
-      # (r'^shout/$', 'shout'),
+      (r'^shout/$', 'shout'),
 )
 
 

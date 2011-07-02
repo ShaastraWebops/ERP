@@ -26,7 +26,7 @@ def register_user(request ,dept_name="Events"):
     """
     print "this da cool"
     print dept_name
-    department=Department.objects.get(Dept_Name = dept_name)
+    department=Department.objects.filter(Dept_Name = dept_name)
     print "new" ,department
     user_form = AddUserForm ()
     profile_form = userprofileForm ()
@@ -42,6 +42,7 @@ def register_user(request ,dept_name="Events"):
                 )    
             # Save his profile - mainly his dept name
 	    if True:
+	        department=Department.objects.get(Dept_Name = dept_name)
 		profile=userprofile.objects.create(user=new_user ,department=department)
                 profile.save()
 		print "peace"
