@@ -183,7 +183,7 @@ def upload_invite_coords(request):
 
 
             message="done"
-            """ from here the the csv file is opened and the the coords are invited """
+            """ from here the the csv file is opened and the the coords are invited .yet to be asked and completed """
             
             reader=csv.reader(open(save_path,'rb'),delimiter=' ')
             string=[]

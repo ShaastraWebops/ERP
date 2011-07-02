@@ -1,12 +1,7 @@
 {% extends "home.html" %}
 
 {% block body %}
-
-
-
-
-
-
+{{success_message}}
 <div id="mainform" >
   <div id="main">
 
@@ -29,7 +24,7 @@
 </form>
 
 <h3>Upload csv file here which contains the list of the coords you want to invite <h3>
-<form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_document/">{% csrf_token %}
+<form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_invite_coords/">{% csrf_token %}
 <table>
 {% for field in CsvForm %}
 	<tr>
