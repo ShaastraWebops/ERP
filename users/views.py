@@ -30,8 +30,8 @@ def register_user(request ,dept_name="none" ,username="none" ,rollno="ee0b000"):
     profile_form = userprofileForm ()
     if request.method=='POST':
         user_form = AddUserForm (request.POST)
-        profile_form = userprofileForm (request.POST)
-        if user_form.is_valid () and profile_form.is_valid ():
+
+        if user_form.is_valid () 
             # Create the User
             new_user = User.objects.create_user(
                 username = user_form.cleaned_data['username'],
@@ -39,9 +39,6 @@ def register_user(request ,dept_name="none" ,username="none" ,rollno="ee0b000"):
                 password = user_form.cleaned_data['password'],
                 )    
             # Save his profile - mainly his dept name
-            new_profile = profile_form.save (commit = False)
-            new_profile.user = new_user
-            new_profile.save ()
 
             # Make the user a Coord
             new_user.groups.add (Group.objects.get (name = 'Coords'))

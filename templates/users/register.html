@@ -2,7 +2,6 @@
 
 {% block title %}
 {{ block.super }} 
-Register for {{dept_name}}
 {% endblock title %}
 
 {% block body %}
@@ -26,7 +25,7 @@ your roll number is {{rollno}}
     <table>
       <h3>Your profile details</h3>
       <h5>Note : Due to testing constraints, we need 'Department' and 'Name' at the time of registration.</h5>
-      {{ profile_form }}
+      
     </table>
     <input type="submit" value="Register" />
   </div>
