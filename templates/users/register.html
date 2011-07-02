@@ -16,7 +16,7 @@ your roll number is {{rollno}}
 <p>
   Please fill in the following details:
 </p>
-<form action="" method="POST">{% csrf_token %}
+<form action="{{SITE_URL}}/users/register/{{dept_name}}/{{username}}/{{rollno}}/" method="POST">{% csrf_token %}
   <div class="register">
     <table name="register">
       {{ user_form }}
