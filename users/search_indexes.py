@@ -1,5 +1,5 @@
 import datetime
-from haystack import indexes
+from haystack.indexes import *
 from haystack import site
 from users.models import *
 
