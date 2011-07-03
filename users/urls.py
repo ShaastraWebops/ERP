@@ -7,6 +7,6 @@ urlpatterns = patterns('erp.users.views',
       (r'^register_invite/?(\w+)?/?(\w+)?/?(\w+)?/$', 'register_invite'),
       (r'^invite/$', 'invite'),
       (r'^profile/$', 'handle_profile'),
-      #(r'^search/', include('haystack.urls')),
+      (r'^search/', include('haystack.urls')),
 )
 #      (r'^department/?(\w+)?$', 'display_department_portal'),

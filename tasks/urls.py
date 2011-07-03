@@ -3,6 +3,7 @@ from django.views.generic.simple import *
 from django.contrib import admin
 
 urlpatterns = patterns('erp.tasks.views',
+      (r'^search/', include('haystack.urls')),
       (r'^create/', 'create_task'),
       (r'^edit/([0-9]+)?', 'edit_task'),
       (r'^display_task/([0-9]+)?', 'display_task'),
