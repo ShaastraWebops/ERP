@@ -81,6 +81,7 @@ My ShoutBox
 
 <div id="add_shoutbox">
 <form method="POST" action="{{SITE_URL}}/dashboard/shout/">
+  {% csrf_token %}
 {% for field in shout_form %}
 {{field.label_tag}}
 {{field}}
