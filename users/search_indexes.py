@@ -1,4 +1,4 @@
-import datetime
+"""import datetime
 from haystack.indexes import *
 from haystack import site
 from users.models import *
@@ -14,9 +14,10 @@ class userprofileindex(indexes.SearchIndex):
     
     #email_id    =indexes.EmailField(model_attr='email_id')
 
-    """def index_queryset(self):
+    def index_queryset(self):
 
-        return userprofile.objects.all()#pub_date=datetime.datetime.now())"""
+        return userprofile.objects.all()#pub_date=datetime.datetime.now())
 
 site.register(userprofile,userprofileindex)
 
+"""
