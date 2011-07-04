@@ -31,6 +31,52 @@ def register_user(request ,dept_name="Events"):
     user_form = AddUserForm ()
     profile_form = userprofileForm ()
     if request.method=='POST':
+<<<<<<< HEAD
+        data=request.POST.copy()
+        form = AddUserForm (data)
+        
+        if form.is_valid():
+            if form.cleaned_data["password"] == form.cleaned_data["password_again"]:
+                user = User.objects.create_user(
+                    username = form.cleaned_data['username'],
+                    email = form.cleaned_data['email'],
+                    password = form.cleaned_data['password'],
+		    
+
+                    )    
+	    	print form.cleaned_data['email']    
+		department=form.cleaned_data['department']
+		Dept=Department.objects.get(Dept_Name=department)
+                user.is_active=True #took from userportal
+		g = Group.objects.get(name='Coords') 
+		g.user_set.add(user)
+ 		user.save()
+		user_profile = userprofile(
+                        user = user,
+			department_id="1",
+                        email_id=form.cleaned_data['email'],
+			
+		     )
+		print "hi"
+                user.save()
+
+
+
+                
+
+                try:
+                    user_profile.save()
+		    print "done da.."
+                    #other thing required to be wriiten
+                    return render_to_response('home/registered.html' , locals() ,context_instance= global_context(request))
+
+                except:
+                    print "not successful" #just for debugging purpose
+                    raise	
+        
+           
+
+=======
         user_form = AddUserForm (request.POST)
 
         if user_form.is_valid():
@@ -59,6 +105,7 @@ def register_user(request ,dept_name="Events"):
 	    print "problem da.."
 	    print user_form.errors
             return render_to_response('users/register.html' , locals() ,context_instance = global_context(request))
+>>>>>>> a326eb4f99b33cabc9155f51fffe9fe1c81d45e0
     else:
         return render_to_response('users/register.html' , locals() ,context_instance = global_context(request))
 
