@@ -1,91 +1,46 @@
-{% extends "tasks/portal_common.html" %}
+{% extends "tasks/base_portal.html" %}
 
+{% block title %}
+{{ block.super }} 
+Department Portal | {{ po_dept_name }} 
+{% endblock title %}
+ 
 {% block display_stuff %}
-
-<html>
-
-<head>
-<style type="text/css">
-
-#shoutbox
-{
-
-border-style:solid;
-border-width:2px;
-position:absolute;
-top:70px;
-right:10px;
-overflow-y:scroll;
-width:300px;
-height:370px;
-background-color:#783492;
-
-
-}
-#shoutbox_heading
-{
-position:relative;
-left :60px;
-font-family:Arial;
-font-size:28px;
-}
-#add_shoutbox
-{ 
-position:absolute;
-top:460px;
-right:30px;
-}
-</style>
-
-</head>
-
-<body>
-<div id="shoutbox" >
-
-<div id="shoutbox_heading" >
-My ShoutBox
-</div>
-<table>
-{% for field in shouts %}
-<tr>
-<td id="shouterts name">
-{{field.nickname}} :
-</td>
-<td>
-{{field.comments}}
-</td>
-<td></td>
-</tr>
-{% endfor %}
-hereheheheheheh
-</table>
-</div>
-
-<div id="add_shoutbox">
-<form method="POST" action="{{SITE_URL}}/dashboard/shout/">
-{% for field in shout_form %}
-{{field.label_tag}}
-{{field}}
-{% endfor %}
-<input type="submit" value="Shout">
-
-</form>
-</div>
-
-
-</body>
-</html>
-<h2>Portal - {{ user_dept_name }} Department </h2>
+<h2>Portal - {{ po_dept_name }} Department </h2>
 
 <hr />
 {% block timeline %}
 {% include "tasks/timeline.html" %}
-{% endblock %}
+{% endblock timeline %}
 <hr />
 
-{% block updates %}
+{% block member_list %}
+<h2>Members of your Department</h2>
+<h3>Cores</h3>
+{% for core in dept_cores_list %}
+<a href="{% url tasks.views.display_portal core.username %}">{{ core.get_profile.name }} </a>  
+<br />
+{% endfor %}
+
+<h3>Coords</h3>
+{% for coord in dept_coords_list %}
+<a href="{% url tasks.views.display_portal coord.username %}">{{ coord.get_profile.name }} </a>  
+<br />
+{% endfor %}
+
+<hr />
+{% endblock member_list %}
+
+{% endblock display_stuff %}
+
+{% block update_stuff %}
 <h2>Updates</h2>
 {% include "tasks/display_updates.html" %}
-{% endblock %}
+{% endblock update_stuff %}
 
-{% endblock %}
+
+{% block shout_stuff %}
+<h2>shouts</h2>
+{% include "tasks/vivek_shout.html" %}
+
+{% endblock shout_stuff %}

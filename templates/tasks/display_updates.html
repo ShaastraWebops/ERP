@@ -1,24 +1,24 @@
-{% if updates %}
+{% if True %}
 <table>
   <tr>
     <th>Message</th>
     <th>Time</th>
-    {% if is_core %}
+    {% if po_is_core %}
     <th>Author</th>
     {% endif %}
   </tr>
   {% for update in updates %}
   <tr>
-    <td> {{ update.message_string }} </td>
+    <td> {{ update.comment_string }} </td>
     <td> {{ update.time_stamp }} </td>
-    {% if is_core %}
-    <td> {{ update.coord.get_profile.name }} </td>
+    {% if po_is_core %}
+    <td> {{ update.author.get_profile.name }} </td>
     {% endif %}
   </tr>
   {% endfor %}
 </table>
 <hr>
 {% else %}
-<h3>No Updates Yet</h3>
+<h4>No Updates Yet</h4>
 <hr>
 {% endif %}

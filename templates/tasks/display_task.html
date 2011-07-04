@@ -1,4 +1,9 @@
-{% extends "tasks/portal_common.html" %}
+{% extends "tasks/base_portal.html" %}
+
+{% block title %}
+{{ block.super }} 
+Task
+{% endblock title %}
 
 {% block display_stuff %}
 <h1>Task</h1>
@@ -30,4 +35,4 @@
   </tr>
 </table>
 
-{% endblock %}
+{% endblock display_stuff %}

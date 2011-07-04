@@ -1,5 +1,10 @@
-{% extends "tasks/portal_common.html" %}
+{% extends "tasks/base_portal.html" %}
 
+{% block title %}
+{{ block.super }} 
+ Comments
+{% endblock title %}
+ 
 {% block display_stuff %}
 
 {% if is_task_comment %}
@@ -25,15 +30,16 @@
  {% endfor %}
 </table>
 {% else %}
-<h3>There are no Comments yet.</h3>
+<h4>There are no Comments yet.</h4>
 {% endif %}
 
-{% endblock %}
+{% endblock display_stuff %}
 
 {% block form_stuff %}
+{% if not is_visitor %}
 
 {% if comment_status == 'Success' %}
-<h3> Comment Successfully Added </h3>
+<h4> Comment Successfully Added </h4>
 {% endif %}
 
 {% if comment_status == 'Not Found' %}
@@ -52,4 +58,5 @@
   </table>
   <input type = "submit" value="Submit">
 </form>
-{% endblock %}
+{% endif %}
+{% endblock form_stuff %}

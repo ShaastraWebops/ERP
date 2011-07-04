@@ -1,22 +1,23 @@
-<h2>Timeline for {{ user_dept_name }} Department</h2>
+<h2>Timeline for {{ po_dept_name }} Department</h2>
 List of all Tasks in your Department
+{% if all_Tasks %}
 <table>
   <tr>
     <th>Subject</th>
     <th>Creator</th>
     <th>Deadline</th>
     <th>Status</th>
-    {% if is_core %}
+    {% if po_is_core %}
     <th>Comments</th>
     {% endif %}
   </tr>
   {% for task in all_Tasks %}
   <tr>
     <td>
-      {% if is_core %}
+      {% if po_is_core %}
       <a href="{% url tasks.views.edit_task task.id %}">{{ task.subject }}</a>
       {% else %}
-      <a href="{% url tasks.views.display_task curr_subtask.task.id %}">
+      <a href="{% url tasks.views.display_task task.id %}">
 	{{ task.subject }}
       </a>
       {% endif %}
@@ -24,7 +25,7 @@ List of all Tasks in your Department
     <td> {{ task.creator.get_profile.name }} </td>
     <td> {{ task.deadline }} </td>
     <td> {{ task.status }} </td>
-    {% if is_core %}
+    {% if po_is_core %}
     <td>
       <a href="{% url tasks.views.handle_task_comments task.id %}">Comments</a>
     </td>
@@ -32,4 +33,8 @@ List of all Tasks in your Department
   </tr>
   {% endfor %}
 </table>
+{% else %}
+<h4>No Tasks have been set in your Department yet.</h4>
+{% endif %}
+
 

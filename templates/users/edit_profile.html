@@ -1,0 +1,56 @@
+{% extends "home.html" %}
+
+{% block title %}
+{{ block.super }} 
+Profile
+{% endblock title %}
+
+{% block style_stuff %}
+
+<style type="text/css">
+  #heading
+  {
+  position:absolute;
+  top :130px;
+  left:380px;
+
+  }
+  #details
+  {
+  position:absolute;
+  top : 160px;
+  left :320px;
+  }
+</style>
+{% endblock style_stuff %}
+
+{% block body %}
+
+{% if profile_changed %}
+<h3>Your profile has been updated successfully.</h3>
+{% endif %}
+
+<div id="mainform" >
+  <div id="main">
+    <div id ="heading">
+      {{department_name}}
+      {% if is_core %}
+      Core Details
+      {% else %}
+      Coordinator Details
+      {% endif %}
+    </div>
+
+    <div id="details">
+      <form method="POST" id="profile_form" action="">
+	{% csrf_token %}
+	<table>
+	  {{ profile_form }} 
+	</table>
+	<input type="submit" value="Update" name="update">
+	</form>
+      </div>
+    </div>	
+  </div>
+
+  {% endblock %}

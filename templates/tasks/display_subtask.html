@@ -1,4 +1,9 @@
-{% extends "tasks/portal_common.html" %}
+{% extends "tasks/base_portal.html" %}
+
+{% block title %}
+{{ block.super }} 
+Subtask
+{% endblock title %}
 
 {% block display_stuff %}
 <h1>SubTask</h1>
@@ -64,13 +69,20 @@
     </tr>
     <tr>
       <th>Status</th>
+      {% if is_visitor %}
+      <td> {{ curr_subtask.status }} </td>
+      {% else %}
       <td> {{ curr_subtask_form.status }} </td>
+      {% endif %}
     </tr>
   </table>
 
   {% endif %}
 
+  {% if not is_visitor %}
   <input type="submit" value="Submit">
+  {% endif %}
+
 </form>
 
-{% endblock %}
+{% endblock display_stuff %}

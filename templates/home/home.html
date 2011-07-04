@@ -1,8 +1,6 @@
-{% extends "base_default.html" %}
+{% extends "base.html" %}
 
 {% block body %}
-
-
 <!--PHP SESS_ID : {{ session_keys }} </br>--->
 <!--DJANGO SESS ID : {{ key }} </br>-->
 <!---{{variables}} </br>--->
@@ -10,15 +8,15 @@
 
 <!--{% if logged_in %}
 
-<div class="info">
- You have successfully logged in.
-</div>
-{%endif%}
+    <div class="info">
+      You have successfully logged in.
+    </div>
+    {%endif%}
     {% if already_logged %}
-<div class="errors">
- You have already logged in.
-</div>
-{%endif%}
+    <div class="errors">
+      You have already logged in.
+    </div>
+    {%endif%}
     -->
 
 {% if user.is_authenticated %}
@@ -26,26 +24,17 @@ You are logged in Click <a href="{% url tasks.views.display_portal %}"> Here</a>
 {% endif %}
 
 <div class="register">
-
-
- <h1 align="center">
-  Shaastra 2011 erp
- </h1>
- <p align="center">
-  Welcome to the site  
- </p>
- <br />
- <br />
-<p align="Center">
-Not registered yet?
-<a href="{% url users.views.register_user %}">Register Now</a>
-<br>
-
-<p align="Center">
-Already Registered, then Click Here to Log in.
-<a href="{% url home.views.login %}">Login Now</a>
-
-
+  <h1 align="center"> Shaastra ERP </h1>
+  <p align="center"> Welcome to our site </p>
+  <br />
+  <br />
+  <p align="Center"> Not registered yet?
+    <a href="{% url users.views.register_user %}">Register Now</a>
+    <br>
+  </p>
+  <p align="Center"> Already Registered, then Click Here to Log in.
+    <a href="{% url home.views.login %}">Login Now</a>
+  </p>
 </div>
 
-{% endblock %}
+{% endblock body %}

@@ -1,0 +1,117 @@
+body{
+	background-image:url('../images/bg.png');
+ 	background-repeat:-x -y;
+}
+#top{
+	width:615px;
+	margin:20px auto 20px auto;
+	text-align:center;
+	height:40px;
+}
+
+.button{
+	width:92px;
+	height:20px;
+	font-size:14px;
+	font-family:"Trebuchet MS";
+	color:#ffffff;
+	float:left;
+	background-image:url('../images/button.png');
+ 	background-repeat:no-repeat;
+	text-align:center;
+	margin-right:3px;
+	padding:2px 0px 2px 0px;
+}
+#main{
+	margin:2px auto 2px auto;
+	text-align:left;
+	width:800px;
+	height:480px;
+	background-image:url('../images/div_bg.png');
+ 	background-repeat:no-repeat;
+	padding:10px 0 0 25px;
+	font-family:"Arial";
+	font-weight:bold;
+	color:#444;
+	font-size:28px;
+}
+table{
+	margin-top:20px;
+}
+tr{
+	margin-top:10px;
+}
+td{
+	height:30x;
+	font-size:18px;
+}
+#name, #nick{
+	padding:6px 10px 6px 10px;
+	border:none;
+	background-image:url('../images/input-field_s.png');
+ 	background-repeat:no-repeat;
+}
+#RNO, #Cph, #email,#RmNO,#hostel, #SPOS, #Sph{
+	padding:6px 10px 6px 10px;
+	border:none;
+	background-image:url('../images/input-field.png');
+ 	background-repeat:no-repeat;
+}
+select{
+	padding:2px;
+	font-family:"Cambria";
+	font-size:14px;
+	background-image:url('../images/select-field.png');
+ 	background-repeat:no-repeat;
+}
+
+
+
+.ez-hide { opacity: 0; filter:alpha(opacity=0); }
+.ez-checkbox {
+	background: transparent url('../images/radio.png') 0 1px no-repeat;
+	display:inline-block;
+}
+
+.ez-radio {
+	background: transparent url('../images/radio.png') 0 0px no-repeat;
+	display:inline-block;
+}
+.ez-checkbox, .ez-radio { zoom: 1; *display:inline; _height:30px; }
+.ez-checked { background-position: 0 -17px; }
+.ez-selected { background-position: 0 -19px; }
+
+.ez-checkbox-green {
+	background: transparent url('../images/radio.png') 0 2px no-repeat;
+	display:inline-block;
+}
+.ez-checked-green { background-position: 0 -18px; }
+
+
+   #toppage{
+	height:32px;
+	width:800px;
+   	margin:10px auto -18px auto; 
+	background-image:url('../images/images/div_bg_top.png');
+	background-repeat:no-repeat;
+   }
+	
+   #contacts{
+	font-family:"Tahoma";
+	width:800px;
+   	margin:0px auto 0px auto; 
+	background-image:url('../images/images/div_bg.png');
+	background-repeat:repeat-y;
+   }
+   #bottom{
+	height:35px;
+	width:800px;
+   	margin:-18px auto 10px auto; 
+	background-image:url('../images/images/div_bg_bottom.png');
+	background-repeat:repeat-y;
+   }
+   ul{
+	border-left:solid 0.5mm #888;
+	list-style-type:none;
+	list-style-image:urls('../images/plus.png');
+   }

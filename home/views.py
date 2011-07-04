@@ -15,7 +15,7 @@ from erp.home import models
 from erp.users.models import *
 
 def home(request):
-    redirected=session_get (request,"from_url")
+    redirected = session_get (request,"from_url")
     access_denied = (request, "access_denied")
     logged_in = session_get (request, "logged_in")
     already_logged = session_get (request, "already_logged")
@@ -24,7 +24,7 @@ def home(request):
 def login(request):
 
     redirected = request.session.get ("from_url", False)
-    registered = session_get(request, "registered")
+    just_registered = session_get(request, "just_registered")
     form = forms.UserLoginForm ()
 
     if request.method == 'POST':

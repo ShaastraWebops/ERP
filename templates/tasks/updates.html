@@ -1,4 +1,4 @@
-{% if is_coord %}
+{% if po_is_coord %}
 
 {% if update_status == 'Success' %}
 <h3> The message has been sent to the core </h3>
@@ -14,15 +14,19 @@
 
 {% endif %}
 
-{% if is_core %}
-<h2>Updates in {{ user_dept_name }}  Department</h2>
+{% if po_is_core %}
+<h2>Updates in {{ po_dept_name }}  Department</h2>
+{% else %}
+{% if po_is_coord and is_visitor %}
+<h2>{{ po_name }}'s previous Updates </h2>
 {% else %}
 <h2>Your previous Updates</h2>
+{% endif %}
 {% endif %}
 
 {% include "tasks/display_updates.html" %}
 
-{% if is_coord %}
+{% if po_is_coord and not is_visitor %}
 <h2>Send an Update to the Core</h2>
 <form method="POST" action="./">
   {% csrf_token %}

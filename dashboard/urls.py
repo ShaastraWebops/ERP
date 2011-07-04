@@ -3,8 +3,8 @@ from django.views.generic.simple import *
 from django.contrib import admin
 
 urlpatterns = patterns('erp.dashboard.views',
-      (r'^documents/$', 'details'),
-      (r'^delete_detail/$', 'delete_otherdetails'),
+      (r'^contacts/$', 'display_contacts'),
+      # (r'^delete_detail/$', 'delete_otherdetails'),
       (r'^upload_document/$', 'upload_file'),
       (r'^delete_document/$', 'delete_file'),
       (r'^change_profile_pic/$', 'change_profile_pic'),
@@ -12,8 +12,10 @@ urlpatterns = patterns('erp.dashboard.views',
 )
 
 
+# Note : home/ URLconf should come before the second one, otherwise
+# 'home' itself is considered as a username and so an error results
 urlpatterns += patterns('erp.tasks.views',
-      (r'^$', 'display_portal'),
-      (r'^home/$', 'display_portal'),
+      (r'^home/?(\w+)?$', 'display_portal'),
+      (r'^(\w+)?$', 'display_portal'),
 )
 	

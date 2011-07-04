@@ -1,21 +1,32 @@
-{% extends "tasks/portal_common.html" %}
+{% extends "tasks/base_portal.html" %}
 
+{% block title %}
+{{ block.super }} 
+Dashboard 
+{% endblock title %}
 {% block portal_stuff %}
 
 <h1>Dashboard</h1>
 
 <hr />
+{% if not is_visitor %}
+{% block create_task_part %}
 <h2>Click to create a Task </h2><a href="{% url tasks.views.create_task %}"><div class="button">Create</div></a>
 <br/>
 <br/>
 <hr>
+{% endblock create_task_part %}
+{% endif %}
 
 {% include "tasks/timeline.html" %}
 <hr>
 
 {% block received_requests %}
 <h2> Requests from other Departments and Unassigned SubTasks</h2>
+{% if all_unassigned_received_SubTasks %}
+<div>
 Click to assign these to your Coords.
+{# <table width="" cellspacing="10" cellpadding="" border="0"> #}
 <table>
   <tr>
     <th>Subject</th>
@@ -34,12 +45,17 @@ Click to assign these to your Coords.
   </tr>
   {% endfor %}
 </table>
-{% endblock %}
+{% else %}
+<h4>No Requests or Unassigned SubTasks for your Department.</h4>
+</div>
+{% endif %}
+{% endblock received_requests %}
 <hr>
 
 {% block sent_requests %}
 <h2> Requests sent to other Departments </h2>
 SubTasks you've sent to other Departments
+{% if all_requested_SubTasks %}
 <table>
   <tr>
     <th>Task Subject</th>
@@ -58,13 +74,18 @@ SubTasks you've sent to other Departments
   </tr>
   {% endfor %}
 </table>
-{% endblock %}
+{% else %}
+<h4>You haven't sent any requests to other departments yet.</h4>
+{% endif %}
+{% endblock sent_requests %}
 
 <hr>
 
 {% block completed %}
 <h2> Completed SubTasks</h2>
 SubTasks completed by your Coords
+{% if all_completed_SubTasks %}
+
 <table>
   <tr>
     <th>Subject</th>
@@ -74,7 +95,11 @@ SubTasks completed by your Coords
   </tr>
   {% for subtask in all_completed_SubTasks %}
   <tr>
-    <td> {{ subtask.subject }} </td>
+    <td>
+      <a href="{% url tasks.views.display_subtask subtask.id %}">
+	{{ subtask.subject }}
+      </a>
+    </td>
     <td>
       {% for coord in subtask.coords.all %}
       {{ coord.get_profile.name }} 
@@ -84,12 +109,15 @@ SubTasks completed by your Coords
   </tr>
   {% endfor %}
 </table>
-{% endblock %}
+{% else %}
+<h4>There have been no completed SubTasks in your department yet.</h4>
+{% endif %}
+{% endblock completed %}
 
 <hr>
 
-{% endblock %}
+{% endblock portal_stuff %}
 
 {% block update_stuff %}
 {% include "tasks/updates.html" %}
-{% endblock %}
+{% endblock update_stuff %}

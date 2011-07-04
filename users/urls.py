@@ -2,13 +2,11 @@ from django.conf.urls.defaults import *
 from django.views.generic.simple import *
 
 urlpatterns = patterns('erp.users.views',
-      (r'^$', 'register_user'),
-      (r'^register/$', 'register_user'),
+      (r'^$', 'handle_profile'),
+      (r'^register/?(\w+)?/$', 'register_user'),
+      (r'^register_invite/?(\w+)?/?(\w+)?/?(\w+)?/$', 'register_invite'),
       (r'^invite/$', 'invite'),
-      (r'^contact_details/$', 'contact_details'),
-      (r'^update/$', 'update'),
-      #(r'^search/', include('haystack.urls')),
-
-
+      (r'^profile/$', 'handle_profile'),
+      (r'^search/', include('haystack.urls')),
 )
-
+#      (r'^department/?(\w+)?$', 'display_department_portal'),

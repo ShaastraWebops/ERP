@@ -1,4 +1,9 @@
-{% extends "tasks/portal_common.html" %}
+{% extends "tasks/base_portal.html" %}
+
+{% block title %}
+{{ block.super }} 
+Dashboard 
+{% endblock title %}
 
 {% block portal_stuff %}
 
@@ -6,6 +11,7 @@
 
 {% block subtasklist %}
 <h2> Core Requests </h2>
+{% if all_SubTasks %}
 <table>
   <tr>
     <th>Subject</th>
@@ -24,19 +30,22 @@
   </tr>
   {% endfor %}
 </table>
-{% endblock %}
+{% else %}
+<h4>No Requests from the Core yet.</h4>
+{% endif %}
+{% endblock subtasklist %}
 
 <hr>
 
 {% block timeline %}
 {% include "tasks/timeline.html" %}
-{% endblock %}
+{% endblock timeline %}
 
 <hr>
-{% endblock %}
+{% endblock portal_stuff %}
 
 {% block update_stuff %}
 {% include "tasks/updates.html" %}
 <hr>
-{% endblock %}
+{% endblock update_stuff %}
 

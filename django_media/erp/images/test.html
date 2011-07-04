@@ -1,0 +1,133 @@
+<!DOCTYPE html
+PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+ 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+ 
+<head> 
+ 
+<title>CSS Rounded Corners example - redmelon.net</title> 
+ 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /> 
+<!-- the css file is in: style.css --> 
+ 
+<style type="text/css"> 
+ 
+/* first example */
+ 
+ /* set background images for corners */
+<!-- .rbroundbox { background: url(simple_background.gif) repeat; } -->
+<!-- .rbtop div  { background: url(simple_top_left.gif) no-repeat top left; } -->
+<!-- .rbtop      { background: url(simple_top_right.gif) no-repeat top right; } -->
+<!-- .rbbot div  { background: url(simple_bottom_left.gif) no-repeat bottom left; } -->
+<!-- .rbbot      { background: url(simple_bottom_right.gif) no-repeat bottom right; } -->
+ 
+ /* height and width details */
+.rbtop div, .rbtop, .rbbot div, .rbbot {
+	width: 100%;
+	height: 14px;
+	font-size: 1px;
+}
+.rbcontent  { margin: 0 14px; }
+.rbroundbox { width: 20em; margin: auto; }
+ 
+ 
+/* second example */
+ 
+ /* set background images for corners */
+ .rbroundbox    { background: url(corners_bg.gif) repeat; }
+ 
+ .rbtop         { background: url(http://localhost/erp/corners_top.gif) repeat-x; }
+ .rbtop div     { background: url(http://localhost/erp/corners_top_left.gif) no-repeat top left; }
+ .rbtop div div { background: url(http://localhost/erp/corners_top_right.gif) no-repeat top right; }
+
+ .rbbot         { background: url(http://localhost/erp/corners_bottom.gif) repeat-x; }
+ .rbbot div     { background: url(http://localhost/erp/corners_bottom_left.gif) no-repeat top left; }
+ .rbbot div div { background: url(http://localhost/erp/corners_bottom_right.gif) no-repeat top right; }
+
+ .rbcontentwrap { background: url(http://localhost/erp/corners_left.gif) repeat-y; }
+ .rbcontent     { background: url(http://localhost/erp/corners_right.gif) repeat-y right; }
+ 
+ 
+ /* height and width details */
+ .rbtop div,  .rbtop,  .rbbot div,  .rbbot {
+	width: 100%;
+	height: 26px;
+	font-size: 1px;
+}
+ .rbcontent  { padding: 1px 2em; margin: 0;  }
+ .rbroundbox { width: 300px;  }
+ 
+ 
+ 
+ 
+
+ 
+</style> 
+ 
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"> 
+</script> 
+<script type="text/javascript"> 
+_uacct = "UA-213070-1";
+urchinTracker();
+</script> 
+ 
+</head> 
+ 
+<body> 
+ 
+<div style="height: 70px;"></div> 
+<div style="position: absolute; top: 0; left: 0; width: 100%;"> 
+<a href="/tstme/"><img style="border:0;" src="../images/fullheader.gif" alt="Return to tstme" /></a> 
+</div> 
+ 
+<div id="realcontent"> 
+<h1>Doug's 4 Rounded Corners</h1> 
+<p>Welcome to my <em>4 Rounded Corners</em> demo page! Two prime examples of the nuvo-cool XHTML + CSS rounded corners.</p> 
+ 
+<div class="rbroundbox"> 
+<div class="rbtop"><div><div></div></div></div>
+<div class="rbcontentwrap"> 
+<div class="rbcontent"> 
+ 
+   <h2>Simple Corners</h2> 
+   <p>Four walls makes a house, four corners makes a rounded rectangle. That's all there is in this example.</p> 
+ </div>
+</div><!-- /rbcontent --> 
+<div class="rbbot"><div><div></div></div></div> 
+</div><!-- /rbroundbox --> 
+ 
+<p>This trick uses background images, one for each corner. The focus here is getting it to work in the simplest way possible, without trying to hack fixes together for the benefit of specific browsers. It is designed to just work.</p> 
+<pre>&lt;div class="rbroundbox"&gt;
+&lt;div class="rbtop"&gt;&lt;div&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class="rbcontent"&gt;
+ 
+   &lt;h2&gt;Header&lt;/h2&gt;
+   &lt;p&gt;Text here my love.&lt;/p&gt;
+ 
+&lt;/div&gt;
+&lt;div class="rbbot"&gt;&lt;div&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;</pre> 
+<p>That's the HTML, take a look at the source (right click, "View Source" or "View Page Source") to get a feel for the CSS - then have a go at using it in one of your own pages! Remember that you can use any images you like for the corners, look at the example on the right. Draw a rectangle in your image editor, then use the "slice" tool to cut off the corners.</p> 
+<p>This page has been tested in IE 5 and 6, Firefox 1.0 and Opera 7.5 - all looks dandy! If you want to poke fun at something, feel free to <a href="mailto:4cornersemailaddie@neuance.net">email</a> me and I'll see what I can do!</p> 
+<div style="text-align: right;"><!-- Creative Commons License --><a href="http://creativecommons.org/licenses/sa/1.0/"><img alt="Creative Commons License" src="http://creativecommons.org/images/public/somerights.gif" /></a><!-- /Creative Commons License --></div> 
+</div> 
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"> 
+</script> 
+<script type="text/javascript"> 
+_uacct = "UA-213070-3";
+urchinTracker();
+</script> 
+<div class="rbroundbox">
+<div class="rbtop"><div></div></div>
+<div class="rbcontent">
+ 
+   <h2>Header</h2>
+   <p>Text here my love.</p>
+ 
+</div>
+<div class="rbbot"><div></div></div>
+</div>
+</body> 
+ 
+</html> 

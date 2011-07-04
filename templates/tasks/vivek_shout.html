@@ -1,0 +1,97 @@
+<html>
+
+<head>
+<style type="text/css">
+
+#shoutbox
+{
+
+border-style:solid;
+border-width:2px;
+position:absolute;
+top:70px;
+right:10px;
+overflow-y:scroll;
+width:300px;
+height:370px;
+background-color:#F3E2A9;
+
+
+}
+#shoutbox_heading
+{
+position:relative;
+left :60px;
+font-family:Arial;
+font-size:28px;
+}
+#add_shoutbox
+{ 
+position:absolute;
+top:460px;
+right:30px;
+}
+
+#nickname
+{
+	font-family :serif;
+ 	font-style  :oblique;
+	font-weight :800;
+	color  :#FF4000;
+	font-size :98%
+
+
+}
+
+#comment
+{
+	font-family :"Cambria";
+ 	font-style  :oblique;
+	font-weight :300;
+	color  :#58ACFA;
+	font-size :88%
+
+
+}
+</style>
+
+</head>
+
+<body>
+<div id="shoutbox" >
+
+<div id="shoutbox_heading" >
+My ShoutBox
+</div>
+<table>
+{% for field in shouts %}
+<tr>
+<td id="shouterts name">
+<span id="nickname" >{{field.nickname}}- </span> &nbsp;
+</td>
+<td>
+<span id="comment" >{{field.comments}}</span>
+</td>
+<td></td>
+</tr>
+{% endfor %}
+
+</table>
+</div>
+
+<div id="add_shoutbox">
+<form method="POST" action="{{SITE_URL}}/dashboard/shout/">
+  {% csrf_token %}
+{% for field in shout_form %}
+{{field.label_tag}}
+{{field}}
+{% endfor %}
+<input type="submit" value="Shout">
+
+</form>
+</div>
+
+
+</body>
+</html>
+

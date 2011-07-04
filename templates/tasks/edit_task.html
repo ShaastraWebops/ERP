@@ -1,42 +1,84 @@
-{% extends "tasks/portal_common.html" %}
+{% extends "tasks/base_portal.html" %}
+
+{% block title %}
+{{ block.super }} 
+
+{% if is_new_task %}
+Create a New Task
+{% else %}
+Edit Task
+{% endif %}
+{% endblock title %}
 
 {% block form_stuff %}
-
+<div align="center">
+<div class="rbroundbox"> 
+<div class="rbtop"><div><div></div></div></div>
+<div class="rbcontentwrap"> 
+<div class="rbcontent"> 
 {% if is_new_task %}
 <h2>Create a New Task</h2>
 {% else %}
 <h2>Edit Task</h2>
 {% endif %}
+</div>
+</div><!-- /rbcontent --> 
+<div class="rbbot"><div><div></div></div></div> 
+</div><!-- /rbroundbox --> 
 
 <form action="" method="post">
   {% csrf_token %}
+  <div class="rbroundbox"> 
+    <div class="rbtop"><div><div></div></div></div>
+    <div class="rbcontentwrap"> 
+      <div class="rbcontent"> 
   <table>
+    {% if is_new_task %}
     <tr>
       <th>Department: </th>
-      {% if is_new_task %}
-      <td>{{ user.get_profile.department.Dept_Name }} </td>
-      {% else %}
+      <td>{{ user_dept_name }} </td>
+    </tr>
+    <tr>
+      <th>Creator: </th>
+      <td>{{ user_name }} </td>
+    </tr>
+    {% else %}
+    <tr>
+      <th>Department: </th>
       <td>{{ curr_task.creator.get_profile.department.Dept_Name }} </td>
-      {% endif %}
     </tr>
     <tr>
       <th>Creator: </th>
       <td>{{ curr_task.creator.get_profile.name }} </td>
     </tr>
+    {% endif %}
     {{ task_form.as_table }}
   </table>
-  <hr>
+      </div>
+    </div><!-- /rbcontent --> 
+    <div class="rbbot"><div><div></div></div></div> 
+  </div><!-- /rbroundbox --> 
   <h3>Subtasks</h3>
   <p>Fill as many Subtasks as you want</p>
-  <table>
+
     {{ subtaskfs.management_form }}
     {% for form in subtaskfs.forms %}
     <h4>Subtask {{ forloop.counter }}</h4>
-    <table>
-      {{ form.as_table }}
-    </table>
+    <div class="item"> 
+   <div class="rbroundbox"> 
+     <div class="rbtop"><div><div></div></div></div>
+     <div class="rbcontentwrap"> 
+       <div class="rbcontent"> 
+      <table>
+	{{ form.as_table }}
+      </table>
+       </div>
+     </div><!-- /rbcontent --> 
+     <div class="rbbot"><div><div></div></div></div> 
+   </div><!-- /rbroundbox --> 
+    </div>
     {% endfor %}
-  </table>
+
   <table>
     <tr>
       <td>
@@ -52,5 +94,6 @@
     </tr>
   </table>
 </form>
-{% endblock %}
+</div>
+{% endblock form_stuff %}
 

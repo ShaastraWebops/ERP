@@ -14,7 +14,8 @@ STAT_CHOICES= (
 DEFAULT_STATUS = 'O'
     
 class AbstractBaseTask(models.Model):
-    """ Abstract Base Class for Task, SubTask.
+    """
+    Abstract Base Class for Task, SubTask.
 
     TODO:
     * File upload
@@ -33,7 +34,8 @@ class AbstractBaseTask(models.Model):
         
 class Task(AbstractBaseTask):
 
-    """ Task Model
+    """
+    Task Model
 
     Note : The department where the Task originated is understood from
     the Creator's department. As of now, only Cores can create Tasks.
@@ -48,7 +50,8 @@ class Task(AbstractBaseTask):
         pass
 
 class SubTask(AbstractBaseTask):
-    """ SubTask Model
+    """
+    SubTask Model
 
     As of now, SubTasks can be created mainly in two places :
 
@@ -74,7 +77,8 @@ class SubTask(AbstractBaseTask):
         pass
 
 class AbstractComment (models.Model):
-    """ Abstract Base Class to store a comment.
+    """
+    Abstract Base Class to store a comment.
 
     Timestamp helps to order comments. It is generated automatically.
     Author can be used to select particular comments based on the author.
@@ -88,7 +92,8 @@ class AbstractComment (models.Model):
         ordering = ['time_stamp']
 
 class TaskComment(AbstractComment):
-    """ Comment written for a Task.
+    """
+    Comment written for a Task.
     """
     task = models.ForeignKey (Task)
 
@@ -99,7 +104,8 @@ class TaskComment(AbstractComment):
         
         
 class SubTaskComment(AbstractComment):
-    """ Comment written for a SubTask
+    """
+    Comment written for a SubTask
     """
     subtask = models.ForeignKey (SubTask)
 
@@ -111,9 +117,9 @@ class SubTaskComment(AbstractComment):
 class Label(models.Model):
     labelname = models.ForeignKey(Task, related_name="task_label")
     
-class Update (models.Model):
-    """ Used by Coord to send updates to a Core
+class Update (AbstractComment):
     """
-    time_stamp = models.DateTimeField (auto_now = True, editable = False)
-    message_string = models.TextField ()    
-    coord = models.ForeignKey (User)
+    Used by Coord to send updates to a Core
+    """
+    class Admin:
+        pass
