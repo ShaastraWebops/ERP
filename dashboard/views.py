@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
-
-
-
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
@@ -58,6 +53,8 @@ def display_contacts (request):
         coord_profiles = userprofile.objects.filter (department__Dept_Name = dept_name,
                                                      user__groups__name = 'Coords')
         contacts.append ((dept_name, core_profiles, coord_profiles))
+    for dum in contacts:
+	print dum
     return render_to_response('dashboard/display_contacts.html',locals() ,context_instance = global_context(request))
 
 
@@ -123,15 +120,25 @@ def write_file(save_path ,f ,method=1):
     
     
 # this function is used for uploading csv files also(for inviting coords)
-def upload_file(request ,owner_id=None):
-    if owner_id==None:
+def upload_file(request ,owner_name=None):
+    if owner_name==None or owner_name==request.user.username:
+	upload_message="Your documents and files"
+	owner_name=request.user.username	
 	user=request.user
+	can_delete_files=True
 	print user
     else:
-	user=User.objects.get(id=owner_id)
+
+	can_delete_files=False
+	user=User.objects.get(username=owner_name)
+	upload_message=str(userprofile.objects.get(user=user).nickname)+" documents and files"	
 	print user
-    photo_list=userphoto.objects.all()
-    print "here /n" ,photo_list ,"up /n"
+    print "here /n" +"up /n"
+    photo_list=userphoto.objects.filter()
+    for dum in photo_list:
+	
+	print str(dum) +"/n"+"\n"
+
     users_documents=upload_documents.objects.filter(user=request.user)       
     if request.method=='POST':
         print "post"
@@ -140,9 +147,9 @@ def upload_file(request ,owner_id=None):
             
             file_name=request.FILES['file'].name
 
-            user_name=request.user.username
 
-            save_path ,file_path = create_dir(file_name ,user_name)#passing to the fuction to make directories if not made         
+
+            save_path ,file_path = create_dir(file_name ,owner_name)#passing to the fuction to make directories if not made         
             
             date=datetime.datetime.now()
 
@@ -300,6 +307,7 @@ def delete_file(request):
         delete_file.delete()
     except:
         print "no file"
+    photo_list=userphoto.objects.all() 
     form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
 
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))

@@ -4,9 +4,6 @@
 {{message}}
 
 
-<html>
-
-<head>
 <style type="text/css">
 #heading
 {
@@ -17,8 +14,8 @@
 }
 #place
 {
-    position:absolute;
-    top :100px;
+    position:relative;
+    top :20px;
     left:250px;
 
 }
@@ -28,8 +25,6 @@
 
 </head>
 
-
-<body>
 <div id="place" >
 <form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_document/">{% csrf_token %}
 <table>
@@ -55,7 +50,13 @@
 </table>
 </form>
 <table>
-<h4> Your uploaded documents </h4>
+{{owner_name}}
+{{user.username}}
+{% if users_documents %}
+<h4> {{upload_message}} </h4>
+{% else %}
+<h4>you havent uploaded any documents till now</h4>
+{% endif %}
 <form method="GET" action="{{SITE_URL}}/dashboard/delete_document/">
 {% for field in users_documents %}
 <tr>
@@ -63,7 +64,9 @@
 
 <input type="hidden" value="{{field.id}}" name="d">
 <input type="hidden" value="{{field.file_name}}" name="f">
+{% if can_delete_files %}
 <input type="submit" value="Delete" id="delete" name="delete file">
+{% endif %}
 {{field.file_path|urlize}}
 <a class="bottomlinks" href="{{SITE_URL}}/dashboard/home">
 
@@ -74,11 +77,9 @@
 <br>
 {% endfor %}
 
-</form>
 </div>
+</form>
 {% block photos_list %}
 {% include "dashboard/photo_list.html" %}
 {% endblock photos_list %}
-</body>
-</html>
 {% endblock %}
