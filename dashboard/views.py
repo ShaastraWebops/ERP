@@ -118,7 +118,15 @@ def write_file(save_path ,f ,method=1):
     
     
 # this function is used for uploading csv files also(for inviting coords)
-def upload_file(request):
+def upload_file(request ,owner_id=None):
+    if owner_id==None:
+	user=request.user
+	print user
+    else:
+	user=User.objects.get(id=owner_id)
+	print user
+    photo_list=userphoto.objects.all()
+    print "here /n" ,photo_list ,"up /n"
     users_documents=upload_documents.objects.filter(user=request.user)       
     if request.method=='POST':
         print "post"
@@ -243,10 +251,11 @@ def change_profile_pic(request):
             except:
                 print "not saved"
                 pass
-            return contact_details(request)    
+	    print "handling"
+
 	else:
 	    print "not valid"
-            
+        return handle_profile(request ,change_details=False)                
     pic_form=change_pic()
     
     return render_to_response('users/change_profile_pic.html',locals(),context_instance = global_context(request))

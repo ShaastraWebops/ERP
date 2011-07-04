@@ -91,7 +91,8 @@ class userphoto(models.Model):
     name=models.ForeignKey(User)
     photo_path=models.FileField(upload_to=settings.MEDIA_ROOT)
 
-
+    def __str__(self):
+	return str(self.photo_path)
     class Admin:
 	pass
 

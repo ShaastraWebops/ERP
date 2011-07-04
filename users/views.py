@@ -141,22 +141,25 @@ def invite_inbulk(self):
         pass
             
 @needs_authentication
-def handle_profile (request):
+def handle_profile (request , change_details=True):
+    print change_details
     user = request.user
     profile = user.get_profile ()
-    # photo_path=settings.MEDIA_URL+"/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
-    # print "http://localhost/django-media/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
-    # try:
+    photo_path=settings.MEDIA_URL+"/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
+    print "http://localhost/django-media/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
+    try:
 	
-    #     image=userphoto.objects.get(name=request.user)
-    #     photo_path =image.photo_path
-    #     print "photo exists"
-    #     print photo_path
-    # except:
-    #     pass#give some default image
+	
+        image=userphoto.objects.get(name=request.user)
+        photo_path =image.photo_path
+        print "photo exists"
+        print photo_path
+    except:
+        pass#give some default image
     profile_form = userprofileForm (instance = profile)
 
-    if request.method=='POST':
+    if request.method=='POST' and change_details:
+	print "post"
         profile_form = userprofileForm (request.POST, instance = profile)
         if profile_form.is_valid ():
             profile_form.save ()

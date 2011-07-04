@@ -21,7 +21,7 @@ pls ignore this line just for debugging
 	came in
             <h3>Results</h3>
 
-            {% for result in page.object_list %}
+            {% for result in page.object_list %}	
 		counter {{forloop.counter}}
                 <p>
                     <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>

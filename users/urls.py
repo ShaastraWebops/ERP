@@ -9,4 +9,7 @@ urlpatterns = patterns('erp.users.views',
       (r'^profile/$', 'handle_profile'),
       (r'^search/', include('haystack.urls')),
 )
-#      (r'^department/?(\w+)?$', 'display_department_portal'),
+
+urlpatterns +=patterns('',
+      (r'^change_profile_pic/$', 'erp.dashboard.views.change_profile_pic'),
+)

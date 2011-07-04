@@ -30,6 +30,10 @@ Profile
 <h3>Your profile has been updated successfully.</h3>
 {% endif %}
 
+
+<img class="profile_pic" src="{{photo_path}}" width="150" height="210">
+<div class="update_profile_pic "><a href="{% url dashboard.views.change_profile_pic %}"> update/change </a></div>
+
 <div id="mainform" >
   <div id="main">
     <div id ="heading">
