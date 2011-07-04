@@ -139,7 +139,7 @@ def upload_file(request ,owner_name=None):
 	
 	print str(dum) +"/n"+"\n"
 
-    users_documents=upload_documents.objects.filter(user=request.user)       
+    users_documents=upload_documents.objects.filter(user=user)       
     if request.method=='POST':
         print "post"
         form=UploadFileForm(request.POST,request.FILES)
