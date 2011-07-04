@@ -1,0 +1,37 @@
+
+<style type="text/css">
+#imageDiv
+{
+	position:relative;
+	right:260px:
+	width:200px;
+}
+
+#imgdiv
+{
+
+position:absolute;
+top:20px;
+left:-250px;
+width:200px;
+
+
+
+}
+.image
+{
+float:left;
+width:40px;
+height:40px;
+margin:3px;
+}
+
+</style>
+<div id="imgdiv" >
+
+{% for path in photo_list %}
+<a href="{% url dashboard.views.upload_file path.name.username %}"><img class="image" src="{{path}}" ></a>
+
+{% endfor %}
+
+</div>
