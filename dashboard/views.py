@@ -131,13 +131,14 @@ def upload_file(request ,owner_name=None):
 
 	can_delete_files=False
 	user=User.objects.get(username=owner_name)
-	upload_message=str(userprofile.objects.get(user=user).nickname)+" documents and files"	
+	upload_message=owner_name+" documents and files"	
 	print user
     print "here /n" +"up /n"
     photo_list=userphoto.objects.filter()
+    """
     for dum in photo_list:
 	
-	print str(dum) +"/n"+"\n"
+	print str(dum) +"/n"+"\n" """
 
     users_documents=upload_documents.objects.filter(user=user)       
     if request.method=='POST':
@@ -169,7 +170,7 @@ def upload_file(request ,owner_name=None):
 
     else:
         print "not post"
-        form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
+        form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here" ,'file_name':"if left blank , the original name will be used",})
 
 
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))

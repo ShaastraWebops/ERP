@@ -19,7 +19,20 @@
     left:250px;
 
 }
+#filename
+{
+text-decoration:none;
+}
 </style>
+
+
+<script type="text/javascript">
+function delete_data(field) {
+
+   field.value = "";
+}
+</script>
+
 <title>
 </title>
 
@@ -28,19 +41,9 @@
 <div id="place" >
 <form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_document/">{% csrf_token %}
 <table>
-{% for field in form %}
-	<tr>
-	 <td>
-	  {{ field.label_tag }}
-	 </td>
-	<td>
- 	 {{ field}}
- 	</td>
-	</tr>
-{% endfor %}
 
 
-
+{{form.as_table}}
 </td></tr>
 </table>
 <table>
@@ -49,7 +52,13 @@
 </td></tr>
 </table>
 </form>
-<table>
+<table id="document_list">
+<td>
+File name
+</td>
+<td>
+Date
+</td>
 {{owner_name}}
 {% if users_documents %}
 <h4> {{upload_message}} </h4>
@@ -59,6 +68,14 @@
 <form method="GET" action="{{SITE_URL}}/dashboard/delete_document/">
 {% for field in users_documents %}
 <tr>
+
+<td>
+<a href="{{field.url}}" hover="D2B9D3">{{field.file_name}} </a>
+</td> 
+
+<td>
+{{field.date}}
+</td>
 <td>
 
 <input type="hidden" value="{{field.id}}" name="d">
@@ -66,13 +83,8 @@
 {% if can_delete_files %}
 <input type="submit" value="Delete" id="delete" name="delete file">
 {% endif %}
-{{field.file_path|urlize}}
+</td>
 <a class="bottomlinks" href="{{SITE_URL}}/dashboard/home">
-
-</td>
-<td>
-{{field.date}}
-</td>
 <br>
 {% endfor %}
 

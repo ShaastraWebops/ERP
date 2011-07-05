@@ -67,6 +67,11 @@ class AddUserForm (forms.Form):
             raise forms.ValidationError ("The entered passwords do not match.")
         else:
             return self.data[field_name1]
+
+
+
+    class Admin:
+        pass
 	    
 class userprofileForm (ModelForm):
     class Meta:
@@ -91,10 +96,21 @@ class userprofileForm (ModelForm):
         if given_name == '':
             raise forms.ValidationError ('Please enter your name.')
         return given_name
+
+
+
+    class Admin:
+        pass
         
 class invite_coord(forms.Form):
     name = forms.CharField(max_length = 50)
     email_id = forms.CharField(help_text = "coords email")
+
+
+    class Admin:
+        pass
+
+
 
 class InviteForm (ModelForm):
     class Meta:
@@ -102,12 +118,31 @@ class InviteForm (ModelForm):
         exclude = ('core' , 'time')
 
 
+    class Admin:
+        pass
+
+
+
+
 class change_pic(forms.Form):
     file = forms.FileField()
 
+
+    class Admin:
+        pass
+
+
+
 class UploadFileForm(forms.Form):
-    title = forms.CharField(max_length = 50)
+    title = forms.CharField(max_length = 50,widget=forms.TextInput(attrs={'onfocus':'delete_data(this)'}))
     file = forms.FileField()
-    short_description = forms.CharField(max_length = 100)
+    short_description = forms.CharField(max_length = 100,widget=forms.TextInput(attrs={'onfocus':'delete_data(this)'}))
+
+
+    class Admin:
+        pass
+    #class Meta:
+     #   widgets = {'title': forms.Textarea(attrs={'cols': 80, 'rows': 20}),}
+
 
 
