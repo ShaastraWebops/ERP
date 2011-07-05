@@ -61,7 +61,7 @@ select{
 	padding:2px;
 	font-family:"Cambria";
 	font-size:14px;
-	background-image:url('../images/select-field.png');
+	/* background-image:url('../images/select-field.png'); */
  	background-repeat:no-repeat;
 }
 
