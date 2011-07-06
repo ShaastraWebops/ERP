@@ -160,7 +160,8 @@ def upload_file(request ,owner_name=None):
             except:
                 f=request.FILES['file']
                 write_file(save_path ,f)
-                file_object=upload_documents(user=request.user , file_name=file_name,file_path=save_path, url=file_path ,topic="hello",date=date)#to change topic
+		google_path="http://docs.google.com/viewer?url="+file_path
+                file_object=upload_documents(user=request.user , file_name=file_name,file_path=save_path, url=file_path , google_doc_path=google_path ,topic="hello",date=date)#to change topic
                 file_object.save()
                 print "SAVED"
             
@@ -200,7 +201,8 @@ def upload_invite_coords(request):
             except:
                 f=request.FILES['file']
                 write_file(save_path ,f)
-                file_object=upload_documents(user=request.user , file_name=file_name,file_path=file_path, url=file_path ,topic="invitation to coords",date=date)#to change topic
+		google_path="http://docs.google.com/viewer?url="+file_path
+                file_object=upload_documents(user=request.user , file_name=file_name,file_path=file_path,google_doc_path=google_path,url=file_path ,topic="invitation to coords",date=date)#to change topic
                 file_object.save()
 
 

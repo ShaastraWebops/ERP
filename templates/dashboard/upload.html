@@ -19,9 +19,22 @@
     left:250px;
 
 }
-#filename
+a:hover
 {
-text-decoration:none;
+background-color:#FF704D;
+COLOR:#FF0000;
+text-align:center;
+text-decoration:underline;
+display:block;
+
+
+}
+a:active,a:link
+{
+display:block;
+text-align:center;
+background-color:#B2FF99;
+COLOR:#0000FF;
 }
 </style>
 
@@ -57,6 +70,8 @@ function delete_data(field) {
 File name
 </td>
 <td>
+Google Doc
+<td>
 Date
 </td>
 {{owner_name}}
@@ -70,7 +85,10 @@ Date
 <tr>
 
 <td>
-<a href="{{field.url}}" hover="D2B9D3">{{field.file_name}} </a>
+<a target="_blank" href="{{field.url}}" >{{field.file_name}} </a>
+<td>
+<a href="{{field.google_doc_path}}">{{field.file_name}}</a>
+</td>
 </td> 
 
 <td>
