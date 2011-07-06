@@ -1,0 +1,109 @@
+{% extends "home.html" %}
+{% block body %}
+
+	<table>
+<tr > 
+	<td>	
+	<span id="username" >
+		{{profile.name}} 
+{% if profile.nickname %} 
+aka 
+{% endif %}
+	</span>
+		
+		
+	<span id="nickname" >
+		{{profile.nickname}}
+	</span>
+		</td>
+ </tr>
+<tr>
+
+<tr>
+	<td>
+	<div class ="left" >
+	My department
+	</div>
+	</td>
+	<td>
+	<div class="right" >
+	{{profile.department.Dept_Name}}
+	</div>
+	</td>
+</tr>
+
+<tr>
+	<td>
+	<div class ="left" >
+	Chennai Number 
+	</div>
+	</td>
+	<td>
+	<div class="right" >
+	{{profile.chennai_number}}
+	</div>
+	</td>
+</tr>
+
+<tr>
+	<td>
+	<div class ="left" >
+	Summer Contact
+	</div>
+	</td>
+	<td>
+	<div class="right" >
+	{{profile.summer_number}}
+	</div>
+	</td>
+</tr>
+
+
+<tr>
+	<td>
+	<div class ="left" >
+	Summer Stay
+	</div>
+	</td>
+	<td>
+	<div class="right" >
+	{{profile.summer_stay}}
+	</div>
+	</td>
+</tr>
+
+<tr>
+	<td>
+	<div class ="left" >
+	Hostel
+	</div>
+	</td>
+	<td>
+	<div class="right" >
+	{{profile.hostel}}
+	</div>
+	</td>
+</tr>
+
+
+<tr>
+	<td>
+	<div class ="left" >
+	Room number
+	</div>
+	</td>
+	<td>
+	<div class="right" >
+	{{profile.room_no}}
+	</div>
+	</td>
+</tr>
+
+
+	</table>
+
+      <form method="POST" id="profile_form" action="{{SITE_URL}}/users/edit_profile/">
+	{% csrf_token %}
+	<input type="submit" value="Update" name="update">
+	</form>
+{% endblock %}
