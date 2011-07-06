@@ -46,10 +46,11 @@ Profile
     </div>
 
     <div id="details">
-      <form method="POST" id="profile_form" action="">
+      <form method="POST" id="profile_form" action="{{SITE_URL}}/users/edit_profile/">
 	{% csrf_token %}
 	<table>
 	  {{ profile_form }} 
+
 	</table>
 	<input type="submit" value="Update" name="update">
 	</form>

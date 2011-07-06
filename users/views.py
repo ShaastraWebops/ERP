@@ -143,31 +143,45 @@ def invite_inbulk(self):
         pass
             
 @needs_authentication
-def handle_profile (request , change_details=True):
-    print change_details
-    user = request.user
-    profile = user.get_profile ()
-    photo_path=settings.MEDIA_URL+"/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
-    print "http://localhost/django-media/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
+def view_profile(request ):
     try:
-	
-	
         image=userphoto.objects.get(name=request.user)
         photo_path =image.photo_path
-        print "photo exists"
-        print photo_path
     except:
-        pass#give some default image
-    profile_form = userprofileForm (instance = profile)
+        photo_path=settings.MEDIA_URL+"/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
 
-    if request.method=='POST' and change_details:
-	print "post"
+
+    user = request.user
+    profile = userprofile.objects.get(user=user)
+    print "cool"
+    print profile.nickname
+    print profile.name
+    return render_to_response('users/view_profile.html',locals(),context_instance = global_context(request))
+    	
+
+
+@needs_authentication
+def handle_profile (request ):
+    user = request.user
+    profile = user.get_profile ()
+    if request.method=='POST' :
+        print "post maama"
         profile_form = userprofileForm (request.POST, instance = profile)
         if profile_form.is_valid ():
             profile_form.save ()
             profile_changed = True
             # Should this just redirect to the dashboard?
-        
+	    return view_profile(request)
+
+    profile_form = userprofileForm (instance = profile)       
+    print "http://localhost/django-media/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
+    try:
+        image=userphoto.objects.get(name=request.user)
+        photo_path =image.photo_path
+        print "photo exists"
+        print photo_path
+    except:
+        photo_path=settings.MEDIA_URL+"/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
     return render_to_response('users/edit_profile.html',locals(),context_instance = global_context(request))
     
 

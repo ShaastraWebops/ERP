@@ -48,7 +48,7 @@ class userprofile(models.Model):
         pass
 
     def __str__(self):
-        return '%s %s' %(self.user.username, self.hostel)
+        return '%s %s' %(self.user.username, self.nickname)
 
     class Admin:
         pass

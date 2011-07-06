@@ -270,7 +270,7 @@ def change_profile_pic(request):
 
 	else:
 	    print "not valid"
-        return handle_profile(request ,change_details=False)                
+        return view_profile(request )                
     pic_form=change_pic()
     
     return render_to_response('users/change_profile_pic.html',locals(),context_instance = global_context(request))
