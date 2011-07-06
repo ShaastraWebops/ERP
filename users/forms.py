@@ -76,7 +76,7 @@ class AddUserForm (forms.Form):
 class userprofileForm (ModelForm):
     class Meta:
 	model = userprofile
-	exclude = ('user',)
+	exclude = ('user','department')
 
     def clean_chennai_number(self):
         number1 = self.cleaned_data['chennai_number']
