@@ -1,41 +1,101 @@
 {% extends "home.html" %}
 {% block body %}
 
-	<table>
+<style type="text/css">
+#username
+{
+position:absolute;
+font-family:Arial;
+top:100px;
+left:370px;
+font-size:200%;
+}
+
+#nickname
+{
+color:blue;
+}
+
+.left
+{
+top:-20px;
+position:relative;
+left:420px;
+color:#616D7E;
+text-align:right;
+}
+.right
+{
+top:-20px;
+position:relative;
+left:440px;
+color:#571B7e;
+text-align:left;
+}
+#edit_profile
+{
+position:absolute;
+top:110px;
+right:100px;
+}
+
+#details_table
+{
+line-height:190%;
+}
+#profile_pic
+{
+position:absolute;
+top:170px;
+left:200px;
+width:180px;
+height:185px;
+}
+#dept_name
+{
+position:relative;
+top:-20px;
+font-size:140%;
+text-align:center;
+color:#347235;
+}
+</style>
+
+<img id="profile_pic" src="{{photo_path}}">
+
+	<table id="details_table">
 <tr > 
 	<td>	
-	<span id="username" >
+	<div id="username" >
 		{{profile.name}} 
 {% if profile.nickname %} 
 aka 
 {% endif %}
-	</span>
+
 		
 		
 	<span id="nickname" >
 		{{profile.nickname}}
 	</span>
+	</div>
 		</td>
  </tr>
 <tr>
+<tr>
+<div id ="dept_name" >
+      {{profile.department.Dept_Name}}
+      {% if is_core %}
+      Core 
+      {% else %}
+      Coordinator 
+      {% endif %}
+</div>
+<tr>
 
 <tr>
 	<td>
 	<div class ="left" >
-	My department
-	</div>
-	</td>
-	<td>
-	<div class="right" >
-	{{profile.department.Dept_Name}}
-	</div>
-	</td>
-</tr>
-
-<tr>
-	<td>
-	<div class ="left" >
-	Chennai Number 
+	Contact Number 
 	</div>
 	</td>
 	<td>
@@ -102,8 +162,8 @@ aka
 
 	</table>
 
-      <form method="POST" id="profile_form" action="{{SITE_URL}}/users/edit_profile/">
+      <form method="POST" id ="edit_profile" action="{{SITE_URL}}/users/edit_profile/">
 	{% csrf_token %}
-	<input type="submit" value="Update" name="update">
+	<input type="submit" value="Edit profile" name="Edit profile">
 	</form>
 {% endblock %}

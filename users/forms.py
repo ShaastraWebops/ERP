@@ -140,9 +140,7 @@ class UploadFileForm(forms.Form):
 
 
     class Admin:
-        pass
-    #class Meta:
-     #   widgets = {'title': forms.Textarea(attrs={'cols': 80, 'rows': 20}),}
+        pass	
 
 
 
