@@ -83,11 +83,11 @@ Date
 <form method="GET" action="{{SITE_URL}}/dashboard/delete_document/">
 {% for field in users_documents %}
 <tr>
-
+{{field.google_doc_path}}
 <td>
 <a target="_blank" href="{{field.url}}" >{{field.file_name}} </a>
 <td>
-<a href="{{field.google_doc_path}}">{{field.file_name}}</a>
+<a href="http://docs.google.com/viewer?url={{field.url}}">{{field.file_name}}</a>
 </td>
 </td> 
 
