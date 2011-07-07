@@ -120,65 +120,6 @@ def write_file(save_path ,f ,method=1):
     
     
 # this function is used for uploading csv files also(for inviting coords)
-def upload_file(request ,owner_name=None):
-    if owner_name==None or owner_name==request.user.username:
-	upload_message="Your documents and files"
-	owner_name=request.user.username	
-	user=request.user
-	can_delete_files=True
-	print user
-    else:
-
-	can_delete_files=False
-	user=User.objects.get(username=owner_name)
-	upload_message=owner_name+" documents and files"	
-	print user
-    print "here /n" +"up /n"
-    photo_list=userphoto.objects.filter()
-    """
-    for dum in photo_list:
-	
-	print str(dum) +"/n"+"\n" """
-
-    users_documents=upload_documents.objects.filter(user=user)       
-    if request.method=='POST':
-        print "post"
-        form=UploadFileForm(request.POST,request.FILES)
-        if form.is_valid():
-            
-            file_name=request.FILES['file'].name
-
-
-
-            save_path ,file_path = create_dir(file_name ,owner_name)#passing to the fuction to make directories if not made         
-            
-            date=datetime.datetime.now()
-
-            try:
-                file_present=upload_documents.objects.get(user=request.user,file_name=file_name)
-                message="File with this name exists.please change name  of the file"
-            except:
-                f=request.FILES['file']
-                write_file(save_path ,f)
-		google_path="http://docs.google.com/viewer?url="+file_path
-                file_object=upload_documents(user=request.user , file_name=file_name,file_path=save_path, url=file_path , google_doc_path=google_path ,topic="hello",date=date)#to change topic
-                file_object.save()
-                print "SAVED"
-            
-        else:
-            file_name=request.FILES['file'].name
-            print "done"
-
-    else:
-        print "not post"
-        form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here" ,'file_name':"if left blank , the original name will be used",})
-
-
-    return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
-
-
-
-
 
 def upload_invite_coords(request):
     form=InviteForm()
@@ -276,13 +217,112 @@ def change_profile_pic(request):
     return render_to_response('users/change_profile_pic.html',locals(),context_instance = global_context(request))
 
 
+def check_perms(owner_name , request):
+    if owner_name==None or owner_name==request.user.username:
+	upload_message="Your documents and files"
+	owner_name=request.user.username	
+	user=request.user
+	can_delete_files=True
+	print user
+    else:
+
+	can_delete_files=False
+	user=User.objects.get(username=owner_name)
+	upload_message=owner_name+" documents and files"	
+	print user
+	
+	return (user ,can_delete_files , upload_message)
+
+
+
+def upload_file(request ,owner_name=None):
+    if owner_name==None or owner_name==request.user.username:
+	upload_message="Your documents and files"
+	owner_name=request.user.username	
+	user=request.user
+	can_delete_files=True
+	print user
+    else:
+
+	can_delete_files=False
+	user=User.objects.get(username=owner_name)
+	upload_message=owner_name+" documents and files"	
+	print user
+    #user , can_delete_files,upload_message=check_perms(owner_name , request)
+    photo_list=userphoto.objects.filter()
+    """
+    for dum in photo_list:
+	
+	print str(dum) +"/n"+"\n" """
+
+    users_documents=upload_documents.objects.filter(user=user)       
+    if request.method=='POST':
+        print "post"
+        form=UploadFileForm(request.POST,request.FILES)
+        if form.is_valid():
+            
+            file_name=request.FILES['file'].name
+            topic=form.cleaned_data['short_description']
+	    print topic
+	    if topic=="short description of the file":
+		topic="No description"
+
+
+            save_path ,file_path = create_dir(file_name ,owner_name)#passing to the fuction to make directories if not made         
+            
+            date=datetime.datetime.now()
+
+            try:
+                file_present=upload_documents.objects.get(user=request.user,file_name=file_name)
+                message="File with this name exists.please change name  of the file"
+            except:
+                f=request.FILES['file']
+                write_file(save_path ,f)
+		google_path="http://docs.google.com/viewer?url="+file_path
+                file_object=upload_documents(user=request.user , file_name=file_name,file_path=save_path, url=file_path , google_doc_path=google_path ,topic=topic,date=date)#to change topic
+                file_object.save()
+                print "SAVED"
+            
+        else:
+            file_name=request.FILES['file'].name
+            print "done"
+
+    else:
+        print "not post"
+        form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"short description of the file" ,'file_name':"if left blank , the original name will be used",})
+
+
+    return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
 
 
 
 
-def delete_file(request):
 
-    users_documents=upload_documents.objects.filter(user=request.user)
+
+
+def delete_file(request,owner_name=None ,number=0 ,file_name="default" ):
+    print number ,file_name
+
+    if owner_name==None or owner_name==request.user.username:
+	upload_message="Your documents and files"
+	owner_name=request.user.username	
+	user=request.user
+	can_delete_files=True
+	print user
+    else:
+
+	can_delete_files=False
+	user=User.objects.get(username=owner_name)
+	upload_message=owner_name+" documents and files"	
+	print user
+    #user , can_delete_files,upload_message=check_perms(owner_name , request)
+    photo_list=userphoto.objects.filter()
+    
+    for dum in photo_list:
+	
+	print str(dum) +"/n"+"\n" 
+
+    users_documents=upload_documents.objects.filter(user=user)  
     
     if "d" in request.GET:
         number=request.GET['d']
@@ -311,7 +351,7 @@ def delete_file(request):
     except:
         print "no file"
     photo_list=userphoto.objects.all() 
-    form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
+    form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"short description of the file"})
 
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
     
