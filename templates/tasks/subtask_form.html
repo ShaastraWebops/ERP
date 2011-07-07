@@ -1,0 +1,63 @@
+<div class="subtask-heading">
+  Subtask {% if forloop %} {{ forloop.counter }} {% else %} 0 {% endif %} 
+</div>
+<table>
+  <!-- {% comment %} -->
+  <!-- {{ form.as_table }} -->
+  <!-- {% endcomment %} -->
+
+  <!-- For the template form -->
+  {% if not forloop %}
+  {% with template_form as form %}
+
+  {% for field in form.visible_fields %}
+  {% if field.label != 'Delete' %}
+  <tr>
+    <th>{{ field.label_tag }}</th>
+    <td>
+      {{ field.errors }}
+      {{ field }} 
+    </td>
+  </tr>
+  {% else %}
+  <div class="delete-checkbox">
+    {{ field.label_tag }}
+    {{ field }}
+  </div>
+  {% endif %}
+  {% endfor %}
+
+  {% for field in form.hidden_fields %}
+  {{ field }} 
+  {% endfor %}
+
+  {% endwith %}
+
+  {% else %}
+
+  <!-- For normal forms -->
+  {% for field in form.visible_fields %}
+  {% if field.label != 'Delete' %}
+  <tr>
+    <th>{{ field.label_tag }}</th>
+    <td>
+      {{ field.errors }}
+      {{ field }} 
+    </td>
+  </tr>
+  {% else %}
+  <div class="delete-checkbox">
+    {{ field.label_tag }}
+    {{ field }}
+  </div>
+  {% endif %}
+  {% endfor %}
+
+  {% for field in form.hidden_fields %}
+  {{ field }} 
+  {% endfor %}
+  {% endif %}
+</table>
+<p>
+  <a href="#" class="delete">Delete this SubTask</a>
+</p>

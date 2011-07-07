@@ -11,7 +11,7 @@ Dashboard
 <hr />
 {% if not is_visitor %}
 {% block create_task_part %}
-<h2>Click to create a Task </h2><a href="{% url tasks.views.create_task %}"><div class="button">Create</div></a>
+<h2>Click to create a Task </h2><a href="{% url tasks.views.edit_task %}"><div class="button">Create</div></a>
 <br/>
 <br/>
 <hr>
