@@ -172,7 +172,7 @@ def handle_profile (request ):
             profile_changed = True
             # Should this just redirect to the dashboard?
 	    return view_profile(request)
-
+    print profile.hostel
     profile_form = userprofileForm (instance = profile)       
     print "http://localhost/django-media/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
     try:
