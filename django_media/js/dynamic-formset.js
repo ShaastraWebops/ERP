@@ -1,10 +1,13 @@
 $(document).ready(function() {
     // Code adapted from http://djangosnippets.org/snippets/1389/
+
+    // Django's default for formsets
+    var form_prefix = "subtask_set";
     
-    function updateElementIndex(el, prefix, ndx) {
+    function updateElementIndex(el, index) {
 	// Update the indices of attributes like for, id and name
-	var id_regex = new RegExp('(' + prefix + '-\\d+-)');
-	var replacement = prefix + '-' + ndx + '-';
+	var id_regex = new RegExp('(' + form_prefix + '-\\d+-)');
+	var replacement = form_prefix + '-' + index + '-';
 	if ($(el).attr("for")) $(el).attr("for",
 					  $(el).attr("for")
 					  .replace(id_regex, replacement));
@@ -12,41 +15,74 @@ $(document).ready(function() {
 	if (el.name) el.name = el.name.replace(id_regex, replacement);
     }
 
-    function updateFormElements (currForm, prefix, index, isNewForm) {
+    function updateFormIndices (currForm, formIndex) {
 	// Relabel or rename all the relevant bits (all the
 	// labels, input, select fields, etc.)
-	$("th, td", currForm).children().each(function() {
-	    updateElementIndex(this, prefix, index);
-	    if (isNewForm){
-		// Empty the field
-		$(this).val("");
-	    }
-	});
-	
-	// Note : The hidden template form will have index 0
-	// So, the visible forms will have 1-based index
-	$("h4:first", currForm).text ("Subtask " + (index));
+	$("th, td, .delete-checkbox, tbody", currForm)
+	    .children().each(function() {
+		updateElementIndex(this, formIndex);
+	    });
     }
 
-    function deleteForm(link, prefix) {
-	// Remove current form and update the rest
+    function updateFormHeading (currForm) {
+	// Call this after updating its elements' indices
+	$(".subtask-heading:first", currForm)
+	    .text ("Subtask " + (parseInt (getFormIndex (currForm)) + 1));
+    }
+
+    function getFormIndex (form) {
+	// Get the index (marked by INDEX)
+	// format is for="id_prefix-INDEX-DELETE"
+	var id_regex = new RegExp(form_prefix + '-(\\d+)-DELETE');
+	var for_text = $(".delete-checkbox > label", form).attr ("for");
+	var index = id_regex.exec (for_text)[1];
+	console.log (index);
+	return index;
+    }
+
+    function isExistingSubtaskForm (form) {
+	// If it's form ID is not present, it's a new subtask form
+	if ($("#id_" + form_prefix + "-" + getFormIndex (form) + "-id").val () == "")
+	    return false;
+	return true;
+    }
+    
+    function deleteForm(link) {
+	// If it is a new form, remove it and update the rest
+	// Else, mark for deletion on the server
 
 	// TODO : The screen flickers when the bottom-most form is
 	// deleted. Rest slide up gracefully. Fix it.
+	// Right now - no sliding. Just removal.
 
-	// Update the total form count
-	var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-	$("#id_" + prefix + "-TOTAL_FORMS").val(formCount - 1);
-	
 	// Remove the form from which delete was called
-	$(link).parents('.visible-form:first').slideUp (function () {
-	    $ (this).remove();
+	currForm = $(link).parents('.visible-form:first');
+	currFormIndex = getFormIndex (currForm);
+
+	if (isExistingSubtaskForm (currForm)) {
+	    // Check the DELETE checkbox
+	    if (confirm ("This subtask exists in our database. Mark for Deletion?")) {
+		$("#id_" + form_prefix + "-" + currFormIndex + "-DELETE").attr ("checked", "checked");
+		highlightDeletedForms ();
+		// currForm.addClass ("to-be-deleted");
+	    }
+	}
+	else {
+	    // Update the total form count
+	    var formCount = parseInt($('#id_' + form_prefix + '-TOTAL_FORMS')
+				     .val());
+	    $("#id_" + form_prefix + "-TOTAL_FORMS").val(formCount - 1);
+	    
+	    // Was too jerky for the last subtask form
+	    // currForm.slideUp (function () {
+	    $ (currForm).remove();
 	    // Get all the remaining visible forms
 	    $('.visible-form').each (function (index) {
-		// Since the visible form indices are 1-based
-		updateFormElements (this, prefix, index + 1, false);
+		updateFormIndices (this, index);
+		updateFormHeading (this);
 	    });
-	});
+	    // });
+	}
 	return false;
     }
     
@@ -59,14 +95,13 @@ $(document).ready(function() {
     // 	// Update the total form count
     // 	var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
     // 	$("#id_" + prefix + "-TOTAL_FORMS").val(formCount - 1);
-	
+    
     // 	var updateOtherForms =
     // 	    function (obj) {
     // 		$ (obj).remove();
     // 		// Get all the remaining visible forms
     // 		$('.visible-form').each (function (index) {
-    // 		    // Since the visible form indices are 1-based
-    // 		    updateFormElements (this, prefix, index + 1, false);
+    // 		    updateFormIndices (this, prefix, index + 1, false);
     // 		});
     // 	    }
     // 	parentForm = $(link).parents('.visible-form:first');
@@ -82,42 +117,45 @@ $(document).ready(function() {
     // 	return false;
     // }
 
-    function addForm(link, prefix) {
+    function addForm(link) {
 	// Copy the hidden form (with 'template-form' class) and
 	// insert it at the end of all the forms.
 	// Remove error messages and update all the form indices.
 
-	var max_num_forms = 11;
-	var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+	var max_num_forms = 10;
+	var formCount = parseInt($('#id_' + form_prefix + '-TOTAL_FORMS').val());
+	console.log (formCount);
+
 	// You can only submit a maximum of 10 subtasks
 	if (formCount < max_num_forms) {
-	    // Clone a form (without event handlers) from the first form
-	    var row = $(".template-form:last").clone(false).get(0);
+	    // Clone a form (without event handlers) from the template form
+	    var currForm = $(".template-form:first").clone(false).get(0);
 	    
-	    // Insert it before the hidden template form
-	    $(row).removeAttr('id')
+	    // Set the index for the new form as formCount
+	    var inner_txt = $(currForm).html().replace (/__prefix__/g, formCount);
+	    // console.log (inner_txt);
+
+	    $(currForm).html (inner_txt);
+
+	    // Insert it before the add link
+	    $(currForm).removeAttr('id')
 		.hide()
-		.insertBefore(".template-form:last")
+		.insertBefore("#add")
 		.slideDown(300);
 
-	    // Remove the bits we don't want in the new row/form
-	    // e.g. error messages
-	    $(".errorlist", row).remove();
-	    $(".error", row).removeClass("error");
-
 	    // Add an event handler for the delete form link
-	    $(row).find(".delete").click(function() {
-		return deleteForm(this, prefix);
+	    $(currForm).find(".delete").click(function() {
+		return deleteForm(this);
 	    });
 
 	    // This form should be visible
-	    $(row).removeClass('template-form').addClass('visible-form');
+	    $(currForm).removeClass('template-form').addClass('visible-form');
 
-	    // Update its elements
-	    updateFormElements (row, prefix, formCount, true);
+	    // Update its heading
+	    updateFormHeading (currForm);
 
 	    // Update the total form count
-	    $("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
+	    $("#id_" + form_prefix + "-TOTAL_FORMS").val(formCount + 1);
 
 	} // End if
 	else {
@@ -129,15 +167,31 @@ $(document).ready(function() {
     // Register the click event handlers
     $("#add").click(function(event) {
 	event.preventDefault ();
-	return addForm(this, "all");
+	return addForm(this, form_prefix);
     });
     
     $(".delete").click(function(event) {
 	event.preventDefault ();
-	return deleteForm(this, "all");
+	return deleteForm(this, form_prefix);
     });
     
     // Hide the Template form
     $ (".template-form").hide ();
-    // $ ("table").css ("background-color", "red");
+
+    function highlightDeletedForms () {
+	// Add class to-be-deleted to all forms which are marked to be
+	// deleted
+	$('.visible-form').each (function (index) {
+	    if ($("#id_" + form_prefix + "-" + getFormIndex (this) + "-DELETE")
+		.is (":checked")) {
+		$(this).addClass ("to-be-deleted");
+		$(".subtask-heading", this).append (" (Will be deleted)");
+	    }
+	});
+    }
+
+    // Highlight all deleted forms at the beginning (in case form had
+    // errors and is being redisplayed)
+    highlightDeletedForms ();
+
 });

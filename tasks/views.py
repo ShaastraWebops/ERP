@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
-from django.forms.models import modelformset_factory
+from django.forms.models import modelformset_factory, inlineformset_factory
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import datetime
@@ -20,56 +20,8 @@ from erp.settings import SITE_URL
 
 from django import forms
 
-# Fields to be excluded in the SubTask forms during Task creation / editing
+# Fields to be excluded in the SubTask forms during Task editing
 subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
-
-# TODO :
-@needs_authentication
-def create_task(request):
-    """Handle Creation of Task using TaskForm.
-    
-    TODO:
-    Cancel Create
-    Save Draft
-    Check if user has task-creating privileges
-    """
-    user = request.user
-    dept_names = [name for name, description in DEP_CHOICES]
-    # Template variable
-    is_new_task = True
-    # For multiple forms
-    SubTaskFormSet = modelformset_factory (SubTask,
-                                           exclude = subtask_exclusion_tuple,
-                                           extra = 3)
-    if request.method == 'POST':
-        subtaskfs = SubTaskFormSet (request.POST, prefix = 'all')
-        task_form = TaskForm (request.POST)
-        if task_form.is_valid ():
-            new_task = task_form.save (commit = False)
-            new_task.creator = user
-            # If the filled forms (if any) are valid
-            if subtaskfs.is_valid ():
-                new_task.save ()
-                subtasks = subtaskfs.save (commit = False)
-                for subtask in subtasks:
-                    subtask.creator = user
-                    subtask.status = DEFAULT_STATUS
-                    subtask.task = new_task
-                    subtask.save ()
-                subtaskfs.save_m2m () # Necessary, since we used commit = False
-                return HttpResponseRedirect ('%s/dashboard/home'
-                                             % settings.SITE_URL)
-            else:
-                # One or more Forms are invalid
-                pass
-    else:
-        task_form = TaskForm ()
-        subtaskfs = SubTaskFormSet (prefix = 'all',
-                                    queryset = SubTask.objects.none ())
-    print 'No. of forms : ', subtaskfs.total_form_count ()
-    return render_to_response('tasks/edit_task.html',
-                              locals(),
-                              context_instance = global_context (request))
 
 def get_timeline (user):
     """
@@ -147,8 +99,8 @@ def display_portal (request, owner_name = None):
         # For Cores
         display_dict['all_Tasks'] = get_timeline (page_owner)
         display_dict['all_unassigned_received_SubTasks'] = get_unassigned_received_subtasks (page_owner)
-        display_dict['all_requested_SubTasks']           = get_requested_subtasks (page_owner)
-        display_dict['all_completed_SubTasks']           = get_completed_subtasks (page_owner)
+        display_dict['all_requested_SubTasks'] = get_requested_subtasks (page_owner)
+        display_dict['all_completed_SubTasks'] = get_completed_subtasks (page_owner)
         # Include the key-value pairs in update_dict
         display_dict.update (update_dict)
         return render_to_response('tasks/core_portal2.html',
@@ -165,14 +117,12 @@ def display_portal (request, owner_name = None):
                                   # locals(),
                                   display_dict,
                                   context_instance = global_context (request))
-
 @needs_authentication
-def edit_task (request, task_id):
+def edit_task (request, task_id = False):
     """
     Edit existing Task.
     TODO :
     Do user validation (should have permission)
-    Allow delete SubTask facility
     Allow delete Task facility (?)
     Cancel Edit
     Save Draft
@@ -182,42 +132,54 @@ def edit_task (request, task_id):
         return display_task (request, task_id)
     user = request.user
     dept_names = [name for name, description in DEP_CHOICES]
-    curr_task = Task.objects.get (id = task_id)
-    # Template variable
-    is_new_task = False
-    SubTaskFormSet = modelformset_factory (SubTask,
-                                           exclude = subtask_exclusion_tuple,
-                                           extra = 1)
+    if task_id:
+        # Existing Task
+        curr_task = Task.objects.get (id = task_id)
+        is_new_task = False
+    else:
+        # New Task
+        curr_task = Task (creator = user)
+        is_new_task = True
+
+    SubTaskFormSet = inlineformset_factory (Task,
+                                            SubTask,
+                                            form = SubTaskForm,
+                                            exclude = subtask_exclusion_tuple,
+                                            extra = 0,
+                                            can_delete = True)
     if request.method == 'POST':
-        # Get the submitted formset - filled with the existing
-        # SubTasks of the current Task
+        # Get the submitted formset
         subtaskfs = SubTaskFormSet (request.POST,
-                                    prefix = 'all',
-                                    queryset = SubTask.objects.filter (
-                                        task__id = int (task_id)))
+                                    instance = curr_task)
+        template_form = subtaskfs.empty_form
         task_form = TaskForm (request.POST, instance = curr_task)
         if task_form.is_valid ():
             if subtaskfs.is_valid ():
-                task_form.save ()
+                curr_task = task_form.save (commit = False)
+                curr_task.save()
+                print 'Task : ', curr_task
+
+                # Only the filled forms will be stored in subtasks
+                # Also, subtasks marked for deletion are deleted here.
                 subtasks = subtaskfs.save (commit = False)
-                print 'SubTasks'
                 for subtask in subtasks:
+                    print 'Subtask : ', subtask
                     subtask.creator = user
                     subtask.status = DEFAULT_STATUS
+                    # In case it's a new form (inline formset won't
+                    # fill in the task in that case)
                     subtask.task = curr_task
                     subtask.save ()
-                subtaskfs.save_m2m ()   # Necessary, since we used commit = False
-                return HttpResponseRedirect ('%s/dashboard/home' %
-                                             settings.SITE_URL)
+                subtaskfs.save_m2m () # Necessary, since we used commit = False
+                return HttpResponseRedirect ('%s/dashboard/home'
+                                             % settings.SITE_URL)
             else:
                 # One or more Forms are invalid
                 pass
     else:
-        task_form = TaskForm (instance = Task.objects.get (id = task_id))
-        subtaskfs = SubTaskFormSet (prefix = 'all',
-                                    queryset = SubTask.objects.filter (
-                                        task__id = int (task_id)))
-    print 'No. of forms : ', subtaskfs.total_form_count ()
+        task_form = TaskForm (instance = curr_task)
+        subtaskfs = SubTaskFormSet (instance = curr_task)
+        template_form = subtaskfs.empty_form
     return render_to_response('tasks/edit_task.html',
                               locals(),
                               context_instance = global_context (request))
