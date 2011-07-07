@@ -2,7 +2,7 @@
 dude help
 {% block body %}
     <h2>Search</h2>
-hahahaha
+pls ignore this line just for debugging
     <form method="get" action=".">
         <table>
             {{ form.as_table }}
@@ -21,11 +21,12 @@ hahahaha
 	came in
             <h3>Results</h3>
 
-            {% for result in page.object_list %}
-		{{forloop.counter}}
+            {% for result in page.object_list %}	
+		counter {{forloop.counter}}
                 <p>
                     <a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a>
-			{{result.object.nickname}}
+			{{result.object.nickname}} {{result.object.hostel}}{{result.object.summerstay}}  {{result.object.user.get_full_name}}{{result.object.subject}} {{result.object.status}}
+ 
                 </p>
             {% empty %}
                 <p>No results found.</p>

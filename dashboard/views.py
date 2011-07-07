@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.contrib.sessions.models import Session
 from erp.dashboard.models import *
+from erp.dashboard.forms import *
 from erp.department.models import *
 from erp.users.models import *
 from erp.users.views import *
@@ -52,6 +53,8 @@ def display_contacts (request):
         coord_profiles = userprofile.objects.filter (department__Dept_Name = dept_name,
                                                      user__groups__name = 'Coords')
         contacts.append ((dept_name, core_profiles, coord_profiles))
+    for dum in contacts:
+	print dum
     return render_to_response('dashboard/display_contacts.html',locals() ,context_instance = global_context(request))
 
 
@@ -117,8 +120,27 @@ def write_file(save_path ,f ,method=1):
     
     
 # this function is used for uploading csv files also(for inviting coords)
-def upload_file(request):
-    users_documents=upload_documents.objects.filter(user=request.user)       
+def upload_file(request ,owner_name=None):
+    if owner_name==None or owner_name==request.user.username:
+	upload_message="Your documents and files"
+	owner_name=request.user.username	
+	user=request.user
+	can_delete_files=True
+	print user
+    else:
+
+	can_delete_files=False
+	user=User.objects.get(username=owner_name)
+	upload_message=owner_name+" documents and files"	
+	print user
+    print "here /n" +"up /n"
+    photo_list=userphoto.objects.filter()
+    """
+    for dum in photo_list:
+	
+	print str(dum) +"/n"+"\n" """
+
+    users_documents=upload_documents.objects.filter(user=user)       
     if request.method=='POST':
         print "post"
         form=UploadFileForm(request.POST,request.FILES)
@@ -126,9 +148,9 @@ def upload_file(request):
             
             file_name=request.FILES['file'].name
 
-            user_name=request.user.username
 
-            save_path ,file_path = create_dir(file_name ,user_name)#passing to the fuction to make directories if not made         
+
+            save_path ,file_path = create_dir(file_name ,owner_name)#passing to the fuction to make directories if not made         
             
             date=datetime.datetime.now()
 
@@ -138,7 +160,8 @@ def upload_file(request):
             except:
                 f=request.FILES['file']
                 write_file(save_path ,f)
-                file_object=upload_documents(user=request.user , file_name=file_name,file_path=save_path, url=file_path ,topic="hello",date=date)#to change topic
+		google_path="http://docs.google.com/viewer?url="+file_path
+                file_object=upload_documents(user=request.user , file_name=file_name,file_path=save_path, url=file_path , google_doc_path=google_path ,topic="hello",date=date)#to change topic
                 file_object.save()
                 print "SAVED"
             
@@ -148,7 +171,7 @@ def upload_file(request):
 
     else:
         print "not post"
-        form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
+        form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here" ,'file_name':"if left blank , the original name will be used",})
 
 
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
@@ -178,12 +201,13 @@ def upload_invite_coords(request):
             except:
                 f=request.FILES['file']
                 write_file(save_path ,f)
-                file_object=upload_documents(user=request.user , file_name=file_name,file_path=file_path, url=file_path ,topic="invitation to coords",date=date)#to change topic
+		google_path="http://docs.google.com/viewer?url="+file_path
+                file_object=upload_documents(user=request.user , file_name=file_name,file_path=file_path,google_doc_path=google_path,url=file_path ,topic="invitation to coords",date=date)#to change topic
                 file_object.save()
 
 
             message="done"
-            """ from here the the csv file is opened and the the coords are invited """
+            """ from here the the csv file is opened and the the coords are invited .yet to be asked and completed """
             
             reader=csv.reader(open(save_path,'rb'),delimiter=' ')
             string=[]
@@ -242,10 +266,11 @@ def change_profile_pic(request):
             except:
                 print "not saved"
                 pass
-            return contact_details(request)    
+	    print "handling"
+
 	else:
 	    print "not valid"
-            
+        return view_profile(request )                
     pic_form=change_pic()
     
     return render_to_response('users/change_profile_pic.html',locals(),context_instance = global_context(request))
@@ -285,6 +310,7 @@ def delete_file(request):
         delete_file.delete()
     except:
         print "no file"
+    photo_list=userphoto.objects.all() 
     form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
 
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
@@ -295,22 +321,34 @@ another feature required is by mistake if the user clicks shout two times or ref
 the comment is passes twice,we can remove it by comparing it with the latest update in the database 
 
 """
-# def shout(request):
-#     if request.method=="POST":
-#         form=shout_box_form(request.POST.copy)
-#         if form.is_valid:
-#             print "ya da.."
-#             print form.is_valid
-#             time=datetime.datetime.now() 
-#             #comments=form.cleaned_data['comments']#here some error is there 
-#             #number=form.cleaned_data['number']          
-#             #print comments
-#             user=userprofile.objects.get(user=request.user)
-#             nickname=user.nickname
-#             shout_object=shout_box(user=request.user,nickname=nickname,comments="cool",time_stamp=time)#change the comments part da comments=comments
-#             shout_object.save()
+def shout(request):
+    if request.method=="POST":
+        form=shout_box_form(request.POST)
+        if form.is_valid():
+
+            print "ya da.."
+
+            time=datetime.datetime.now() 
+            comments=form.cleaned_data['comments'] 
+	    try:
+		last_comment=shout_box.objects.filter(user=request.user).reverse()[0]
+		print last_comment
+	
             
-        
-#     print "at last"
-#     return display_department_portal(request)
-#     pass
+	    except:
+		print "painmax"
+            user=userprofile.objects.get(user=request.user)
+            try:
+		nickname=user.nickname
+	    except:
+		nickname=request.user.username	
+	    try:
+		if str(last_comment)!=comments:
+                    shout_object=shout_box(user=request.user,nickname=nickname,comments=comments,time_stamp=time)
+                    shout_object.save()
+            except:    
+                shout_object=shout_box(user=request.user,nickname=nickname,comments=comments,time_stamp=time)
+                shout_object.save()
+
+    return display_department_portal(request)
+

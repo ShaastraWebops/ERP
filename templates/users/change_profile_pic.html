@@ -8,6 +8,7 @@
 
 here
 <form enctype="multipart/form-data" action="{{SITE_URL}}/dashboard/change_profile_pic/" method ="POST">
+  {% csrf_token %}
 <br>
 {% for field in pic_form %}
 {{field.label_tag}}

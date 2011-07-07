@@ -5,12 +5,11 @@ from django.contrib import admin
 urlpatterns = patterns('erp.dashboard.views',
       (r'^contacts/$', 'display_contacts'),
       # (r'^delete_detail/$', 'delete_otherdetails'),
-      (r'^upload_document/$', 'upload_file'),
+      (r'^upload_document/(\w+)?$', 'upload_file'),
       (r'^delete_document/$', 'delete_file'),
       (r'^change_profile_pic/$', 'change_profile_pic'),
-      # (r'^shout/$', 'shout'),
+      (r'^shout/$', 'shout'),
 )
-
 
 # Note : home/ URLconf should come before the second one, otherwise
 # 'home' itself is considered as a username and so an error results

@@ -48,7 +48,7 @@ class userprofile(models.Model):
         pass
 
     def __str__(self):
-        return '%s %s' %(self.user.username, self.hostel)
+        return '%s %s' %(self.user.username, self.nickname)
 
     class Admin:
         pass
@@ -91,7 +91,8 @@ class userphoto(models.Model):
     name=models.ForeignKey(User)
     photo_path=models.FileField(upload_to=settings.MEDIA_ROOT)
 
-
+    def __str__(self):
+	return str(self.photo_path)
     class Admin:
 	pass
 

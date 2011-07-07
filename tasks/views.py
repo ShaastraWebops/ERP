@@ -15,8 +15,8 @@ from models import *
 from erp.misc.util import *
 from erp.department.models import *
 from erp.settings import SITE_URL
-# from erp.dashboard.forms import shout_box_form
-# from erp.dashboard.models import shout_box
+from erp.dashboard.forms import shout_box_form
+from erp.dashboard.models import shout_box
 
 from django import forms
 
@@ -375,10 +375,10 @@ def display_department_portal (request, owner_name = None):
     Display all basic info about user's Department.
     """
     # #added by vivek
-    # print "departmental portal here"
-    # shout_form=shout_box_form()
-    # shouts=shout_box.objects.all()
-    # print "done"
+    print "departmental portal here"
+    shout_form=shout_box_form()
+    shouts=shout_box.objects.all()
+    print "done"
 
     if owner_name is None:
         page_owner = request.user
@@ -393,8 +393,8 @@ def display_department_portal (request, owner_name = None):
 
     department = page_owner.get_profile ().department
     display_dict = dict ()
-    # display_dict['shouts']=shouts#by vivek
-    # display_dict['shout_form']=shout_form#by vivek
+    display_dict['shouts']=shouts#by vivek
+    display_dict['shout_form']=shout_form#by vivek
     display_dict['all_Tasks'] = get_timeline (page_owner)
     display_dict['updates'] = get_all_updates (department)
     display_dict ['dept_cores_list'] = User.objects.filter (

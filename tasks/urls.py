@@ -6,6 +6,7 @@ from django.contrib import admin
 # Caution : Any non-matched url goes straight to display_portal and
 # gives an error since a user of that name would not be found.
 urlpatterns = patterns('erp.tasks.views',
+      (r'^search/', include('haystack.urls')),
       (r'^create', 'edit_task'),
       (r'^edit', 'edit_task'),
       (r'^edit/([0-9]+)?', 'edit_task'),

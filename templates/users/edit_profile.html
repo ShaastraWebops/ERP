@@ -17,10 +17,40 @@ Profile
   }
   #details
   {
-  position:absolute;
-  top : 160px;
-  left :320px;
+  position:relative;
+
+  left:9%;
   }
+#profile_pic
+{
+position:absolute;
+left:63%;
+top:215px;
+}
+#update_profile_pic
+{
+position:absolute;
+left:825px;
+top:430px;
+text-decoration:none;
+}
+a:hover
+{
+color:red;
+text-decoration:none;
+}
+a:link
+{
+color:red;
+}
+
+#update	
+{
+position:absolute;
+align:center;
+left:40%;
+top:-85px;
+}
 </style>
 {% endblock style_stuff %}
 
@@ -29,6 +59,10 @@ Profile
 {% if profile_changed %}
 <h3>Your profile has been updated successfully.</h3>
 {% endif %}
+
+
+<img id="profile_pic"  src="{{photo_path}}" width="190" height="195">
+<div id="update_profile_pic"><a href="{% url dashboard.views.change_profile_pic %}">Change </a></div>
 
 <div id="mainform" >
   <div id="main">
@@ -42,12 +76,13 @@ Profile
     </div>
 
     <div id="details">
-      <form method="POST" id="profile_form" action="">
+      <form method="POST" id="profile_form" action="{{SITE_URL}}/users/edit_profile/">
 	{% csrf_token %}
 	<table>
 	  {{ profile_form }} 
+
 	</table>
-	<input type="submit" value="Update" name="update">
+<div id="update"	<input type="submit" value="Finish Editing" name="update"  ></div>
 	</form>
       </div>
     </div>	

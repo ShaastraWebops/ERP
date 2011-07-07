@@ -2,32 +2,26 @@
 
 {% block title %}
 {{ block.super }} 
-Register for {{dept_name}}
 {% endblock title %}
 
 {% block body %}
 <br />
 <h1>
- 
-  <br>{{username}} 
-<br>{{dept_name}} department
-<br>
-your roll number is {{rollno}}
+User Registration
+{{username}}
+{{dept_name}}
+{{rollno}}
 </h1>
 <p>
-  Please fill in the following details:
+  Please fill in the following details: 
 </p>
-<form action="" method="POST">{% csrf_token %}
+<form action="{{SITE_URL}}/users/register_invite/Events/" method="POST">{% csrf_token %}
   <div class="register">
     <table name="register">
       {{ user_form }}
+	<input type="hidden" value ="{{dept_name}}" name="dept_name" >
     </table>
     <hr />
-    <table>
-      <h3>Your profile details</h3>
-      <h5>Note : Due to testing constraints, we need 'Department' and 'Name' at the time of registration.</h5>
-      {{ profile_form }}
-    </table>
     <input type="submit" value="Register" />
   </div>
 </form>

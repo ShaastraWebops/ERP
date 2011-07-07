@@ -4,9 +4,6 @@
 {{message}}
 
 
-<html>
-
-<head>
 <style type="text/css">
 #heading
 {
@@ -17,35 +14,49 @@
 }
 #place
 {
-    position:absolute;
-    top :100px;
+    position:relative;
+    top :20px;
     left:250px;
 
 }
+a:hover
+{
+background-color:#FF704D;
+COLOR:#FF0000;
+text-align:center;
+text-decoration:underline;
+display:block;
+
+
+}
+a:active,a:link
+{
+display:block;
+text-align:center;
+background-color:#B2FF99;
+COLOR:#0000FF;
+}
 </style>
+
+
+<script type="text/javascript">
+function delete_data(field) {
+
+   field.value = "";
+}
+</script>
+
 <title>
 </title>
 
 </head>
 
-
-<body>
 <div id="place" >
 <form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_document/">{% csrf_token %}
 <table>
-{% for field in form %}
-	<tr>
-	 <td>
-	  {{ field.label_tag }}
-	 </td>
-	<td>
- 	 {{ field}}
- 	</td>
-	</tr>
-{% endfor %}
 
 
-
+{{form.as_table}}
 </td></tr>
 </table>
 <table>
@@ -54,28 +65,50 @@
 </td></tr>
 </table>
 </form>
-<table>
-<h4> Your uploaded documents </h4>
+<table id="document_list">
+<td>
+File name
+</td>
+<td>
+Google Doc
+<td>
+Date
+</td>
+{{owner_name}}
+{% if users_documents %}
+<h4> {{upload_message}} </h4>
+{% else %}
+<h4>you havent uploaded any documents till now</h4>
+{% endif %}
 <form method="GET" action="{{SITE_URL}}/dashboard/delete_document/">
 {% for field in users_documents %}
 <tr>
+{{field.google_doc_path}}
+<td>
+<a target="_blank" href="{{field.url}}" >{{field.file_name}} </a>
+<td>
+<a href="http://docs.google.com/viewer?url={{field.url}}">{{field.file_name}}</a>
+</td>
+</td> 
+
+<td>
+{{field.date}}
+</td>
 <td>
 
 <input type="hidden" value="{{field.id}}" name="d">
 <input type="hidden" value="{{field.file_name}}" name="f">
+{% if can_delete_files %}
 <input type="submit" value="Delete" id="delete" name="delete file">
-{{field.file_path|urlize}}
+{% endif %}
+</td>
 <a class="bottomlinks" href="{{SITE_URL}}/dashboard/home">
-
-</td>
-<td>
-{{field.date}}
-</td>
 <br>
 {% endfor %}
 
-</form>
 </div>
-</body>
-</html>
+</form>
+{% block photos_list %}
+{% include "dashboard/photo_list.html" %}
+{% endblock photos_list %}
 {% endblock %}

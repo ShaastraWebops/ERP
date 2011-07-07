@@ -1,6 +1,7 @@
-{{ object.title }}
+{{ object.room_no }}
 {{ object.user.get_full_name }}
-{{ object.body }}
+{{ object.department.Dept_name }}
+{{ object.summer_stay }}
 {{ object.name }}
 {{ object.hostel }}
 {{ object.nickname }}
