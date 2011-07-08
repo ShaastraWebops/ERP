@@ -74,7 +74,7 @@
 	<a href="{% url dashboard.views.display_contacts %}">
 	  <div class="button">Contacts</div>
 	</a>
-	<a href="{% url dashboard.views.upload_file %}">
+	<a href="{% url dashboard.views.upload_file %}{{request.user.username}}">
 	  <div class="button">Documents</div>
 	</a>
 	{% comment %}
