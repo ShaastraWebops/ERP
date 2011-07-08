@@ -175,7 +175,7 @@ def upload_invite_coords(request):
 
    
         
-@needs_authentication
+
 def change_profile_pic(request):
     if request.method == 'POST':
         form=change_pic(request.POST,request.FILES)      

@@ -160,7 +160,7 @@ def view_profile(request ):
     	
 
 
-@needs_authentication
+
 def handle_profile (request ):
     user = request.user
     profile = user.get_profile ()
