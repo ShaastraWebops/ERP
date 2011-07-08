@@ -175,7 +175,7 @@ def upload_invite_coords(request):
 
    
         
-
+@needs_authentication
 def change_profile_pic(request):
     if request.method == 'POST':
         form=change_pic(request.POST,request.FILES)      
@@ -234,7 +234,7 @@ def check_perms(owner_name , request):
 	return (user ,can_delete_files , upload_message)
 
 
-
+@needs_authentication
 def upload_file(request ,owner_name=None):
     arr=[1,2,3]
     if owner_name==None or owner_name==request.user.username:
@@ -300,7 +300,7 @@ def upload_file(request ,owner_name=None):
 
 
 
-
+@needs_authentication
 def delete_file(request,owner_name=None ,number=0 ,file_name="default" ):
     print number ,file_name
 
@@ -362,6 +362,7 @@ another feature required is by mistake if the user clicks shout two times or ref
 the comment is passes twice,we can remove it by comparing it with the latest update in the database 
 
 """
+@needs_authentication
 def shout(request):
     if request.method=="POST":
         form=shout_box_form(request.POST)
