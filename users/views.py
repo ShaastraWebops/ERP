@@ -164,7 +164,7 @@ def view_profile(request ):
 
 def handle_profile (request ):
     user = request.user
-    profile = user.get_profile ()
+    profile = userprofile.objects.get(user=request.user)
     if request.method=='POST' :
         print "post maama"
         profile_form = userprofileForm (request.POST, instance = profile)

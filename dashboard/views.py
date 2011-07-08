@@ -186,8 +186,10 @@ def change_profile_pic(request):
             user_name=request.user.username
 
             save_path ,file_path = create_dir(file_name ,user_name)#passing to the fuction to make directories if not made         
-            
-            photo=userphoto(name =request.user)
+            try:
+                photo=userphoto(name =request.user)
+            except:
+            	pass
             
             print "here only"
             f=request.FILES['file']
