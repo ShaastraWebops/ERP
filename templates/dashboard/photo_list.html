@@ -26,6 +26,15 @@ margin:3px;
 }
 
 
+.image2
+{
+float:left;
+width:40px;
+height:40px;
+margin:3px;
+}
+
+
 
 </style>
 
@@ -73,7 +82,7 @@ display:none;
 <div class="info{{forloop.counter}}" >
 this is div number {{forloop.counter}}
 the pic is displaced
-<a href="{% url dashboard.views.upload_file path.name.username %}" class="photo{{forloop.counter}}"><img  src="{{path}}" ></a>
+<a href="{% url dashboard.views.upload_file path.name.username %}" class="photo{{forloop.counter}}"><img  class="image2" src="{{path}}" ></a>
 </div>
 
 
