@@ -98,6 +98,8 @@ def parse_user_info_list (info_list):
       - hostel
       - room_no
     """
+    department_name = info_list[0]
+    group_name = info_list[1]
     user_keys = ['username', 'email', 'password']
     profile_keys = ['nickname', 'name', 'chennai_number', 'summer_number',
                     'summer_stay', 'hostel', 'room_no']
@@ -118,6 +120,7 @@ def create_users (users_file_name = 'users.txt'):
         user_data_list = parse_user_info_list (line.split ())
         create_user (*user_data_list)
     users_file.close ()
+    print 'All users created successfully.'
 
 # def create_task (task_details, subtask_list = None):
 #     """
@@ -158,7 +161,7 @@ def create_tasks (n = 5, partial_subtask = False):
         curr_core = User.objects.filter (groups__name = 'Cores', userprofile__department__Dept_Name = name)[0]
         curr_coord1 = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = name)[0]
         curr_coord2 = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = name)[1]
-        print curr_dept.Dept_Name
+        print 'Tasks for ', curr_dept.Dept_Name
         for i in xrange (n):
             new_task = Task ()
             new_task.subject = name + task_subj_str + str (i)
@@ -198,7 +201,7 @@ def create_tasks (n = 5, partial_subtask = False):
                     subtask2.coords.add (coord_list[0])
                     subtask2.coords.add (coord_list[1])
                     subtask2.save ()
-                print i, 'Done'
+                print 'Task ', i, 'Created'
 
 
 def finish_some_subtasks ():
@@ -206,6 +209,7 @@ def finish_some_subtasks ():
     Mark one complete SubTask in each Department as Done.
     """
     dept_names = [tup[0] for tup in DEP_CHOICES]
+    print 'Subtasks marked as completed :'
     for name in dept_names:
         # The SubTask must not be a partial SubTask (for the sake of testing)
         try:
@@ -215,6 +219,7 @@ def finish_some_subtasks ():
             curr_subtask.save ()
         except:
             pass
+
 def create_comments ():
     """
     Create some comments for each Task, SubTask.
@@ -236,7 +241,8 @@ def create_comments ():
             new_comment.author = core
             new_comment.subtask = subtask
             new_comment.save ()
-        
+    print 'Core comments - Created'
+
     for coord in coords_list:
         # List of all SubTasks where coord is one of the Coords assigned
         subtask_list = SubTask.objects.filter (coords = coord)
@@ -246,7 +252,7 @@ def create_comments ():
             new_comment.author = coord
             new_comment.subtask = subtask
             new_comment.save ()
-        
+    print 'Coord comments - Created'
 def create_updates ():
     """
     Create some updates for each Coord.
@@ -260,6 +266,7 @@ def create_updates ():
         new_update.save ()
         new_update = Update (comment_string = 'Guess What? ' + coord.get_profile ().name, author = coord)
         new_update.save ()
+    print 'Coord updates - Created'
 
 # Create Core
 # create_test_data.create_user ('Webops', 'Cores', {'username' : 'me09b001', 'email' : '', 'password' : 'password'}, {'nickname' : 'IBM', 'name' : 'Siddharth', 'chennai_number' : '9999999999', 'summer_number' : '9999999999', 'summer_stay' : 'Bangalore', 'hostel' : 'Godavari', 'room_no' : '420'})
