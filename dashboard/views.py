@@ -236,6 +236,7 @@ def check_perms(owner_name , request):
 
 
 def upload_file(request ,owner_name=None):
+    arr=[1,2,3]
     if owner_name==None or owner_name==request.user.username:
 	upload_message="Your documents and files"
 	owner_name=request.user.username	
@@ -391,4 +392,10 @@ def shout(request):
                 shout_object.save()
 
     return display_department_portal(request)
+
+"""
+def position():
+    
+    for i range(1,50):"""
+    
 
