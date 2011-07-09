@@ -55,7 +55,7 @@ def login(request):
                 if redirected:
                     return HttpResponseRedirect (redirected)
                 else:
-                    return HttpResponseRedirect("%s/dashboard/home" %settings.SITE_URL)
+                    return HttpResponseRedirect("%sdashboard/home" %settings.SITE_URL)
 
             else:
                 request.session['invalid_login'] = True
