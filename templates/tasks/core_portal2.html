@@ -1,4 +1,4 @@
-{% extends "tasks/base_portal.html" %}
+{% extends "base_portal.html" %}
 
 {% block title %}
 {{ block.super }} 
@@ -6,115 +6,131 @@ Dashboard
 {% endblock title %}
 {% block portal_stuff %}
 
-<h1>Dashboard</h1>
+<div class="core-portal-stuff">
+  <div class="content-heading">
+    <h1>Dashboard</h1>
+  </div>
 
-<hr />
-{% if not is_visitor %}
-{% block create_task_part %}
-<h2>Click to create a Task </h2><a href="{% url tasks.views.edit_task %}"><div class="button">Create</div></a>
-<br/>
-<br/>
-<hr>
-{% endblock create_task_part %}
-{% endif %}
+  <!-- <hr /> -->
+  {% if not is_visitor %}
+  {% block create_task_part %}
+  <!-- <h2>Click to create a Task </h2> -->
+  <a href="{% url tasks.views.edit_task %}">
+    <h2>Create a New Task</h2>
+    <!-- <div class="button">Create</div> -->
+  </a>
+  <!-- <hr> -->
+  {% endblock create_task_part %}
+  {% endif %}
 
-{% include "tasks/timeline.html" %}
-<hr>
+  {% include "tasks/timeline.html" %}
+  <!-- <hr> -->
 
-{% block received_requests %}
-<h2> Requests from other Departments and Unassigned SubTasks</h2>
-{% if all_unassigned_received_SubTasks %}
-<div>
-Click to assign these to your Coords.
-{# <table width="" cellspacing="10" cellpadding="" border="0"> #}
-<table>
-  <tr>
-    <th>Subject</th>
-    <th>Proposer</th>
-    <th>Deadline</th>
-    <th>Status</th>
-    <th>Comments</th>
-  </tr>
-  {% for subtask in all_unassigned_received_SubTasks %}
-  <tr>
-    <td> <a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }}</a> </td>
-    <td> {{ subtask.creator.get_profile.name }} </td>
-    <td> {{ subtask.deadline }} </td>
-    <td> {{ subtask.status }} </td>
-    <td>  <a href="{% url tasks.views.handle_subtask_comments subtask.id %}">Comments</a> </td>
-  </tr>
-  {% endfor %}
-</table>
-{% else %}
-<h4>No Requests or Unassigned SubTasks for your Department.</h4>
+  {% block received_requests %}
+  <h2> Requests from other Departments and Unassigned SubTasks</h2>
+  {% if all_unassigned_received_SubTasks %}
+  <div>
+    <p>Click to assign these to your Coords.</p>
+    {# <table width="" cellspacing="10" cellpadding="" border="0"> #}
+      <table>
+	<tr>
+	  <th>Subject</th>
+	  <th>Proposer</th>
+	  <th>Deadline</th>
+	  <th>Status</th>
+	  <th>Comments</th>
+	</tr>
+	{% for subtask in all_unassigned_received_SubTasks %}
+	<tr>
+	  <td> 
+	    <a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }}</a> 
+	  </td>
+	  <td> {{ subtask.creator.get_profile.name }} </td>
+	  <td> {{ subtask.deadline }} </td>
+	  <td> {{ subtask.status }} </td>
+	  <td>  
+	    <a href="{% url tasks.views.handle_subtask_comments subtask.id %}">Comments</a> 
+	  </td>
+	</tr>
+	{% endfor %}
+      </table>
+      {% else %}
+      <h4>No Requests or Unassigned SubTasks for your Department.</h4>
+  </div>
+  {% endif %}
+  {% endblock received_requests %}
+  <!-- <hr> -->
+
+  {% block sent_requests %}
+  <h2> Requests sent to other Departments </h2>
+  <p> SubTasks you've sent to other Departments</p>
+  {% if all_requested_SubTasks %}
+  <table>
+    <tr>
+      <th>Task Subject</th>
+      <th>SubTask Subject</th>
+      <th>Deadline</th>
+      <th>Status</th>
+      <th>Comments</th>
+    </tr>
+    {% for subtask in all_requested_SubTasks %}
+    <tr>
+      <td> 
+	<a href="{% url tasks.views.edit_task subtask.task.id %}">{{ subtask.task.subject }}</a> 
+      </td>
+      <td> 
+	<a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }}</a> 
+      </td>
+      <td> {{ subtask.deadline }} </td>
+      <td> {{ subtask.status }} </td>
+      <td>  
+	<a href="{% url tasks.views.handle_subtask_comments subtask.id %}">Comments</a> 
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <h4>You haven't sent any requests to other departments yet.</h4>
+  {% endif %}
+  {% endblock sent_requests %}
+
+  <!-- <hr> -->
+
+  {% block completed %}
+  <h2> Completed SubTasks</h2>
+  <p> SubTasks completed by your Coords</p>
+  {% if all_completed_SubTasks %}
+
+  <table>
+    <tr>
+      <th>Subject</th>
+      <th>Finisher</th>
+      <!-- <th>Deadline</th> -->
+      <!-- <th>Status</th> -->
+    </tr>
+    {% for subtask in all_completed_SubTasks %}
+    <tr>
+      <td>
+	<a href="{% url tasks.views.display_subtask subtask.id %}">
+	  {{ subtask.subject }}
+	</a>
+      </td>
+      <td>
+	{% for coord in subtask.coords.all %}
+	{{ coord.get_profile.name }} 
+	{% endfor %}
+      </td>
+      <!-- <td> {{ subtask.status }} </td> -->
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <h4>There have been no completed SubTasks in your department yet.</h4>
+  {% endif %}
+  {% endblock completed %}
+
+  <!-- <hr> -->
 </div>
-{% endif %}
-{% endblock received_requests %}
-<hr>
-
-{% block sent_requests %}
-<h2> Requests sent to other Departments </h2>
-SubTasks you've sent to other Departments
-{% if all_requested_SubTasks %}
-<table>
-  <tr>
-    <th>Task Subject</th>
-    <th>SubTask Subject</th>
-    <th>Deadline</th>
-    <th>Status</th>
-    <th>Comments</th>
-  </tr>
-  {% for subtask in all_requested_SubTasks %}
-  <tr>
-    <td> <a href="{% url tasks.views.edit_task subtask.task.id %}">{{ subtask.task.subject }}</a> </td>
-    <td> <a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }}</a> </td>
-    <td> {{ subtask.deadline }} </td>
-    <td> {{ subtask.status }} </td>
-    <td>  <a href="{% url tasks.views.handle_subtask_comments subtask.id %}">Comments</a> </td>
-  </tr>
-  {% endfor %}
-</table>
-{% else %}
-<h4>You haven't sent any requests to other departments yet.</h4>
-{% endif %}
-{% endblock sent_requests %}
-
-<hr>
-
-{% block completed %}
-<h2> Completed SubTasks</h2>
-SubTasks completed by your Coords
-{% if all_completed_SubTasks %}
-
-<table>
-  <tr>
-    <th>Subject</th>
-    <th>Finisher</th>
-    <!-- <th>Deadline</th> -->
-    <!-- <th>Status</th> -->
-  </tr>
-  {% for subtask in all_completed_SubTasks %}
-  <tr>
-    <td>
-      <a href="{% url tasks.views.display_subtask subtask.id %}">
-	{{ subtask.subject }}
-      </a>
-    </td>
-    <td>
-      {% for coord in subtask.coords.all %}
-      {{ coord.get_profile.name }} 
-      {% endfor %}
-    </td>
-    <!-- <td> {{ subtask.status }} </td> -->
-  </tr>
-  {% endfor %}
-</table>
-{% else %}
-<h4>There have been no completed SubTasks in your department yet.</h4>
-{% endif %}
-{% endblock completed %}
-
-<hr>
 
 {% endblock portal_stuff %}
 

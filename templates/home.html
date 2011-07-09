@@ -48,46 +48,54 @@
     </title>
   </head>
 
-
+  <body>
     <img arc="b1.jpeg "/>
 
-    <div id="top">
-      <div id="header">
-	<a href="{% url tasks.views.display_portal %}">
-	  <div class="button">Dashboard</div>
-	</a>
-	<a href="{% url tasks.views.display_department_portal %}">
-	  <div class="button">Department</div>
-	</a>
-	<a href="{% url users.views.invite %}">
-	  <div class="button">Invite</div>
-	</a>
-	<a href="#">
-	  <div class="button">Policies</div>
-	</a>
-	<a href="#">
-	  <div class="button">Website</div>
-	</a>
-	<a href="{% url users.views.view_profile %}">
-	  <div class="button">Profile</div>
-	</a>
-	<a href="{% url dashboard.views.display_contacts %}">
-	  <div class="button">Contacts</div>
-	</a>
-	<a href="{% url dashboard.views.upload_file %}">
-	  <div class="button">Documents</div>
-	</a>
-	{% comment %}
-	{# This was where the Logout button used to be #}
-	<div class="button"></div> 
-	{% endcomment %}
-      </div>
+    <!-- <div id="top"> -->
+    <!--   <div id="header"> -->
+    <!-- 	<a href="{% url tasks.views.display_portal %}"> -->
+    <!-- 	  <div class="button">Dashboard</div> -->
+    <!-- 	</a> -->
+    <!-- 	<a href="{% url tasks.views.display_department_portal %}"> -->
+    <!-- 	  <div class="button">Department</div> -->
+    <!-- 	</a> -->
+    <!-- 	<a href="{% url users.views.invite %}"> -->
+    <!-- 	  <div class="button">Invite</div> -->
+    <!-- 	</a> -->
+    <!-- 	<a href="#"> -->
+    <!-- 	  <div class="button">Policies</div> -->
+    <!-- 	</a> -->
+    <!-- 	<a href="#"> -->
+    <!-- 	  <div class="button">Website</div> -->
+    <!-- 	</a> -->
+    <!-- 	<a href="{% url users.views.view_profile %}"> -->
+    <!-- 	  <div class="button">Profile</div> -->
+    <!-- 	</a> -->
+    <!-- 	<a href="{% url dashboard.views.display_contacts %}"> -->
+    <!-- 	  <div class="button">Contacts</div> -->
+    <!-- 	</a> -->
+    <!-- 	<a href="{% url dashboard.views.upload_file %}"> -->
+    <!-- 	  <div class="button">Documents</div> -->
+    <!-- 	</a> -->
+    <!-- 	{% comment %} -->
+    <!-- 	{# This was where the Logout button used to be #} -->
+    <!-- 	<div class="button">
+		</div>  -->
+    <!-- 	{% endcomment %} -->
+    <!--   </div> -->
+    <!-- </div> -->
+    <!-- <br /> -->
+
+    <!-- Ripped off from FB -->
+    <div id="blueBar"> </div>
+    <strong id="pageLogo" class="lFloat">SHAASTRA ERP</strong>
+    <div id="top_bar">
+      {% block top_bar %}
+      <div id="greeting" class="lFloat">Welcome, {{ user_name }}.</div>
+      <div id="navigation" class=""></div>
+      <div class="rFloat"><a id="logout" href="{% url home.views.logout %}"> Logout</a></div>
+      {% endblock top_bar %}
     </div>
-    <br />
-    {% block top_bar %}
-    <p align="left"><span style="font-size:200%;">* </span>
-      Welcome, {{ user_name }}. <a href="{% url home.views.logout %}"> Logout</a>
-    {% endblock top_bar %}
 
     {% block body %}
     {% endblock %}

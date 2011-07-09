@@ -1,3 +1,4 @@
+
 body{
     background-image:url('../images/bg.png');
     background-repeat:-x -y;
@@ -23,13 +24,6 @@ body{
     padding:2px 0px 2px 0px;
 }
 
-.delete-checkbox{
-    display : none;
-}
-
-.to-be-deleted {
-    background-color : red;
-}
 
 #main{
     margin:2px auto 2px auto;
@@ -44,15 +38,18 @@ body{
     color:#444;
     font-size:28px;
 }
+
 table{
+    /* margin-left : auto; */
+    margin-right : auto;
     margin-top:20px;
 }
 tr{
-    margin-top:10px;
+    /* margin-top:10px; */
 }
 td{
     height:30x;
-    font-size:18px;
+    /* font-size:18px; */
 }
 #name, #nick{
     padding:6px 10px 6px 10px;
@@ -123,4 +120,91 @@ ul{
     border-left:solid 0.5mm #888;
     list-style-type:none;
     list-style-image:urls('../images/plus.png');
+}
+
+/* For Task/Subtask creation/editing */
+.delete-checkbox{
+    display : none;
+}
+
+.to-be-deleted {
+    background-color : red;
+}
+
+/* For Dashboard */
+#content {
+    margin-left : 10em;
+    margin-right : 10em;
+}
+
+.sidebar-left {
+    float : left;
+    width : 10em;
+}
+
+.sidebar-right {
+    float : right;
+    width : 10em;
+}
+
+.core-portal-stuff {
+    width : auto;
+}
+
+.global-content {
+    width : 80%;
+    margin : 0 auto;
+    font-family : Verdana;
+}
+
+h1, h2, h3, h4, p {
+    /* margin-left : auto; */
+    /* margin-right : auto; */
+    /* text-align : center; */
+}
+
+#top_bar {
+    margin-top : 11px;
+    width : auto;
+    height: 30px;
+}
+
+/* Just copied from FB */
+#blueBar {
+    margin : 0;
+    background-color: #3B5998;
+    height: 41px;
+    left: 0;
+    top : 0;
+    position: absolute;
+    width: 100%;
+    z-index: -1;
+}
+
+.lFloat {
+    float : left;
+}
+
+.rFloat {
+    float : right;
+}
+
+#pageLogo {
+    margin-right : 10px;
+    font-family : Verdana;
+    font-size : 20px;
+    color : white;
+}
+
+#greeting, #navigation, #logout {
+    color : white;
+    margin-top : 10px;
+}
+
+a#logout:visited {
+    color : white;
+}
+
+a#logout:link {
+    color : white;
 }
