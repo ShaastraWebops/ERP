@@ -1,0 +1,39 @@
+{% extends "home.html" %}
+
+{% block top_bar %}
+{{ block.super }} 
+{% if is_visitor %}
+<br />
+<h3>You are viewing {{ po_name }}'s page.</h3>
+{% endif %}
+
+{% endblock top_bar %}
+
+{% block body %}
+<div class="global-content">
+  {% include "tasks/left-sidebar.html" %}
+  <!-- TODO : Fill right sidebar with valid links -->
+  {% include "tasks/right-sidebar.html" %}
+  <div id="content">
+    {% block portal_stuff %}
+
+    {% endblock portal_stuff %}
+
+    {% block display_stuff %}
+
+    {% endblock display_stuff %}
+
+    {% block form_stuff %}
+
+    {% endblock form_stuff %}
+
+    {% block update_stuff %}
+
+    {% endblock update_stuff %}
+
+    {% block shout_stuff %}
+
+    {% endblock shout_stuff %}
+  </div>
+</div>
+{% endblock body %}
