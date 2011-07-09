@@ -38,7 +38,7 @@ def login(request):
                 url = session_get(request, "from_url")
                 # Handle redirection
                 if not url:
-                    url = "%s/home/"%settings.SITE_URL
+                    url = "%shome/"%settings.SITE_URL
 
                 request.session['logged_in'] = True
 		    # # wanted to get the name of the department
@@ -69,7 +69,7 @@ def login(request):
 def logout (request):
     if request.user.is_authenticated():
         auth.logout (request)
-        url = "%s/home/"%settings.SITE_URL
+        url = "%shome/"%settings.SITE_URL
         response= HttpResponseRedirect (url)
         try:
           #  response.set_cookie('unb_User',"")

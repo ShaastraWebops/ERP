@@ -2,6 +2,7 @@
 body{
     background-image:url('../images/bg.png');
     background-repeat:-x -y;
+    font-family : Verdana;
 }
 #top{
     width:615px;
@@ -163,10 +164,16 @@ h1, h2, h3, h4, p {
     /* text-align : center; */
 }
 
-#top_bar {
+#topBar {
     margin-top : 11px;
     width : auto;
     height: 30px;
+}
+
+#bottomBar {
+    clear : both;
+    width : 100%;
+    text-align : center;
 }
 
 /* Just copied from FB */

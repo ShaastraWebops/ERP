@@ -18,7 +18,7 @@ Profile
   #details
   {
   position:relative;
-
+   width:450px;
   left:9%;
   }
 #profile_pic
@@ -29,19 +29,9 @@ top:215px;
 }
 #update_profile_pic
 {
-position:absolute;
+position:relative;
 left:825px;
-top:430px;
-text-decoration:none;
-}
-a:hover
-{
-color:red;
-text-decoration:none;
-}
-a:link
-{
-color:red;
+top:250px;
 }
 
 #update	
@@ -49,7 +39,7 @@ color:red;
 position:absolute;
 align:center;
 left:40%;
-top:-85px;
+top:-125px;
 }
 </style>
 {% endblock style_stuff %}
@@ -62,7 +52,7 @@ top:-85px;
 
 
 <img id="profile_pic"  src="{{photo_path}}" width="190" height="195">
-<div id="update_profile_pic"><a href="{% url dashboard.views.change_profile_pic %}">Change </a></div>
+<div id="update_profile_pic"><a href="{% url dashboard.views.change_profile_pic %}">Change 1</a></div>
 
 <div id="mainform" >
   <div id="main">

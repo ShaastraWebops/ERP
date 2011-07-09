@@ -87,17 +87,30 @@
     <!-- <br /> -->
 
     <!-- Ripped off from FB -->
-    <div id="blueBar"> </div>
+    <div id="blueBar"> 
+    </div>
     <strong id="pageLogo" class="lFloat">SHAASTRA ERP</strong>
-    <div id="top_bar">
+    <div id="topBar">
       {% block top_bar %}
+      {% if user_name %}
       <div id="greeting" class="lFloat">Welcome, {{ user_name }}.</div>
-      <div id="navigation" class=""></div>
-      <div class="rFloat"><a id="logout" href="{% url home.views.logout %}"> Logout</a></div>
+      <div id="navigation" class="">
+      </div>
+      <div class="rFloat">
+	<a id="logout" href="{% url home.views.logout %}"> Logout</a>
+      </div>
+      {% endif %}
       {% endblock top_bar %}
     </div>
 
     {% block body %}
-    {% endblock %}
+    {% endblock body %}
+
+    {% block bottom_bar %}
+    <div id="bottomBar">
+      <!-- To be filled in -->
+    </div>
+    {% endblock bottom_bar %}
+
   </body>
 </html>

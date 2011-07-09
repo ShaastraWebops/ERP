@@ -8,11 +8,11 @@ Department Portal | {{ po_dept_name }}
 {% block display_stuff %}
 <h2>Portal - {{ po_dept_name }} Department </h2>
 
-<hr />
+<!-- <hr /> -->
 {% block timeline %}
 {% include "tasks/timeline.html" %}
 {% endblock timeline %}
-<hr />
+<!-- <hr /> -->
 
 {% block member_list %}
 <h2>Members of your Department</h2>
@@ -28,7 +28,7 @@ Department Portal | {{ po_dept_name }}
 <br />
 {% endfor %}
 
-<hr />
+<!-- <hr /> -->
 {% endblock member_list %}
 
 {% endblock display_stuff %}

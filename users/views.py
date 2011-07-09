@@ -25,7 +25,7 @@ def register_user(request ,dept_name="Events"):
     """
     Get User details + userprofile too (only for testing phase).
     """
-    print "this da cool"
+    print "this is cool"
     print dept_name
     department=Department.objects.filter(Dept_Name = dept_name)
     print "new" ,department
@@ -69,6 +69,7 @@ def register_user(request ,dept_name="Events"):
 
 
 def register_invite(request,dept_name="none" ,username="none" ,rollno="ee0b000"):
+    print "name" ,dept_name
     user_form = AddUserForm (initial={'username':rollno},)
     return render_to_response('users/register.html' , locals() ,context_instance = global_context(request))
 
@@ -160,10 +161,10 @@ def view_profile(request ):
     	
 
 
-@needs_authentication
+
 def handle_profile (request ):
     user = request.user
-    profile = user.get_profile ()
+    profile = userprofile.objects.get(user=request.user)
     if request.method=='POST' :
         print "post maama"
         profile_form = userprofileForm (request.POST, instance = profile)
