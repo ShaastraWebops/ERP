@@ -1,0 +1,117 @@
+<style type="text/css">
+#imageDiv
+{
+	position:relative;
+	right:260px:
+	width:200px;
+}
+
+#imgdiv
+{
+
+position:absolute;
+top:20px;
+left:-250px;
+width:200px;
+
+
+
+}
+.image
+{
+float:left;
+width:40px;
+height:40px;
+margin:3px;
+}
+
+</style>
+
+{% for path in photo_list %}
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+$("a.photo{{forloop.counter}}").hover(function(){
+$("div.info{{forloop.counter}}").show();
+
+},function(){
+$("div.info{{forloop.counter}}").hide();
+});
+});
+</script> 
+
+<style type="text/css">
+.info{{forloop.counter}}
+{
+
+position:relative;
+left:50px;
+width:200px;
+height:200px;
+top:45px;
+background-color:#E9CFEC;
+display:none;
+}
+
+</style>
+{% endfor %}
+<div id="imgdiv" >
+{% for path in photo_list %}
+
+
+
+
+<a href="{% url dashboard.views.upload_file path.name.username %}" class="photo{{forloop.counter}}"><img class="image" src="{{path}}" ></a>
+
+
+
+
+
+
+
+{% endfor %}
+
+</div>
+
+{% for path in photo_list %}
+cool
+
+<div class="info{{forloop.counter}}" >
+
+hey da {{request.user.username}}
+{{forloop.counter}}
+</span>
+
+<script type="text/javascript">
+$(document).ready(function(){
+$("a.photo{{forloop.counter}}").hover(function(){
+$("div.info{{forloop.counter}}").show();
+
+},function(){
+$("div.info{{forloop.counter}}").hide();
+});
+});
+</script> 
+
+<style type="text/css">
+.info{{forloop.counter}}
+{
+
+position:relative;
+left:50px;
+width:200px;
+height:200px;
+top:45px;
+background-color:#E9CFEC;
+
+}
+
+</style>
+{% endfor %}
+
+
+
+<br>
+
