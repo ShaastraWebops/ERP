@@ -1,4 +1,10 @@
 $(document).ready(function(){
+	
+	
+	$(function() {
+		$('#popupDatepicker').datepick();
+	})
+	;
 
     $('#contacts ul > li')
 	.find('ul:first')
@@ -19,6 +25,7 @@ $(document).ready(function(){
 	    .slideToggle();
     });
 });
+
 
 
 

@@ -55,7 +55,7 @@ def login(request):
                 if redirected:
                     return HttpResponseRedirect (redirected)
                 else:
-                    return HttpResponseRedirect("%s/dashboard/home" %settings.SITE_URL)
+                    return HttpResponseRedirect("%sdashboard/home" %settings.SITE_URL)
 
             else:
                 request.session['invalid_login'] = True
@@ -69,7 +69,7 @@ def login(request):
 def logout (request):
     if request.user.is_authenticated():
         auth.logout (request)
-        url = "%s/home/"%settings.SITE_URL
+        url = "%shome/"%settings.SITE_URL
         response= HttpResponseRedirect (url)
         try:
           #  response.set_cookie('unb_User',"")

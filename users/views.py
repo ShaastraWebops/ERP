@@ -167,7 +167,7 @@ def handle_profile (request ):
     profile = userprofile.objects.get(user=request.user)
     if request.method=='POST' :
         print "posted"
-
+        profile_form = userprofileForm (request.POST, instance = profile)
         if profile_form.is_valid ():
             profile_form.save ()
             profile_changed = True
