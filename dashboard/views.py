@@ -21,6 +21,7 @@ from erp.dashboard.forms import *
 from erp.users.forms import *
 import os # upload files
 from django.conf import settings
+from django.utils import simplejson
 import csv # invite coords
 #import stringlib
 # Create your views here.
@@ -393,8 +394,22 @@ def shout(request):
             except:    
                 shout_object=shout_box(user=request.user,nickname=nickname,comments=comments,time_stamp=time)
                 shout_object.save()
+                
+                
+                # chnages done here for ajax integration
+    print "shout function here"
+    display_dict = dict ()    
+    response_dict = {}
+    response_dict.update({'name': "it works", 'total': "coming form shout function"})    
+    shouts=shout_box.objects.all()
+    
+    display_dict['shouts']=shouts#by vivek
 
-    return display_department_portal(request)
+    print "done"
+    
+    return render_to_response('tasks/department_portal.html',simplejson.dumps(response_dict),context_instance = global_context (request))
+    return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
+    #return display_department_portal(request) old request ,before ajax integration
 
 """
 def position():

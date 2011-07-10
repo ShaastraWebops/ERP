@@ -112,7 +112,7 @@ def needs_authentication (func):
         if not request.user.is_authenticated():
             # Return here after logging in
             request.session['from_url'] = request.path
-            return HttpResponseRedirect ("%s/home/login/"%settings.SITE_URL)
+            return HttpResponseRedirect ("%shome/login/"%settings.SITE_URL)
         else:
             return func (*__args, **__kwargs)
     return wrapper
@@ -126,7 +126,7 @@ def no_login (func):
             # Return here after logging in
             request.session['already_logged'] = True
 	    #html = "%s/home/" %SITEURL
-            return HttpResponseRedirect ("%s/home/" %settings.SITE_URL)
+            return HttpResponseRedirect ("%shome/" %settings.SITE_URL)
         else:
             return func (*__args, **__kwargs)
     return wrapper
