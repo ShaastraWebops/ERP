@@ -1,6 +1,12 @@
 	{% extends "home.html" %}
 
 	{% block body %}
+	
+
+
+{% block photos_list %}
+{% include "photo_list.html" %}
+{% endblock photos_list %}
 	{{message}}
 
 
@@ -189,9 +195,4 @@ Date
 
 </div>
 </form>
-
-
-{% block photos_list %}
-{% include "dashboard/photo_list.html" %}
-{% endblock photos_list %}
 {% endblock %}

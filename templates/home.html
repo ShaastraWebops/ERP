@@ -91,6 +91,12 @@
     </div>
     <strong id="pageLogo" class="lFloat">SHAASTRA ERP</strong>
     <div id="topBar">
+    
+{% block photos_list %}
+{% include "photo_list.html" %}
+{% endblock photos_list %}
+
+
       {% block top_bar %}
       
       {% if user_name %}

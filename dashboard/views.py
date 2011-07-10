@@ -253,7 +253,7 @@ def upload_file(request ,owner_name=None):
 	upload_message=owner_name+" documents and files"	
 	print user
     #user , can_delete_files,upload_message=check_perms(owner_name , request)
-    photo_list=userphoto.objects.filter()
+#    photo_list=userphoto.objects.filter()
     """
     for dum in photo_list:
 	
@@ -320,11 +320,8 @@ def delete_file(request,owner_name=None ,number=0 ,file_name="default" ):
 	upload_message=owner_name+" documents and files"	
 	print user
     #user , can_delete_files,upload_message=check_perms(owner_name , request)
-    photo_list=userphoto.objects.filter()
-    
-    for dum in photo_list:
-	
-	print str(dum) +"/n"+"\n" 
+    #photo_list=userphoto.objects.filter()
+
 
     users_documents=upload_documents.objects.filter(user=user)  
     
@@ -406,10 +403,10 @@ def shout(request):
     display_dict['shouts']=shouts#by vivek
 
     print "done"
-    
+    """
     return render_to_response('tasks/department_portal.html',simplejson.dumps(response_dict),context_instance = global_context (request))
-    return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')
-    #return display_department_portal(request) old request ,before ajax integration
+    return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')"""
+    return display_department_portal(request) 
 
 """
 def position():

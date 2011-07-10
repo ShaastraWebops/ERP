@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
+from erp.users.models import *
 
 from erp import settings
 from erp.users import models
@@ -37,6 +38,12 @@ def global_context(request):
     except:
         coord_group = False
         core_group = False
+    try:
+        photo_list=userphoto.objects.filter()           
+        print "photo_list declared in need_authentication"
+        print photo_list
+    except:
+       photo_list=False    
 
     page_owner = request.session.get ('page_owner', request.user)
 
@@ -70,6 +77,7 @@ def global_context(request):
              'page_owner' : page_owner,
              'po_name' : po_name,
              'po_dept_name' : po_dept_name,
+             'photo_list':photo_list,
             })
     return context
 
