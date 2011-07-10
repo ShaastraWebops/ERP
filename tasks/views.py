@@ -232,6 +232,7 @@ def display_task (request, task_id):
     Validation
     Back Button to go back
     """
+    print 'Display Task - Task ID : ', task_id
     curr_task = Task.objects.get (id = task_id)
     return render_to_response('tasks/display_task.html',
                               locals(),

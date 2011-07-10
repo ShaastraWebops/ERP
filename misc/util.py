@@ -132,7 +132,7 @@ def no_login (func):
     return wrapper
 
 # TODO : decorator
-# def same_dept_only (redirect_url = None):
+# def page_owner_only (redirect_url = None):
 #     """
 #     If user is not of the same department as the task, then just
 #     display the task, etc.
