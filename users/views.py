@@ -171,6 +171,8 @@ def view_profile(request ,owner_id=0):
 
 @needs_authentication
 def handle_profile (request ):
+    print request.user.id , "is the id of the user"
+    user_viewing=check_user(request ,request.user.id)
     user = request.user
     profile = userprofile.objects.get(user=request.user)
     if request.method=='POST' :
@@ -178,7 +180,7 @@ def handle_profile (request ):
         if profile_form.is_valid ():
             profile_form.save ()
             # Should this just redirect to the dashboard?
-	    return view_profile(request)
+	    return view_profile(request ,request.user.id)
     print profile.hostel
     profile_form = userprofileForm (instance = profile)       
     print " default pic address http://localhost/django-media/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
