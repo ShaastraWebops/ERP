@@ -40,12 +40,11 @@ def global_context(request):
         core_group = False
     try:
         photo_list=userphoto.objects.filter()           
-        print "photo_list declared in need_authentication"
-        print photo_list
     except:
        photo_list=False    
 
     page_owner = request.session.get ('page_owner', request.user)
+    print "this is the page owner (form util.py ) ",page_owner
 
     try:
         po_core_group = page_owner.groups.filter (name = 'Cores')
@@ -53,6 +52,10 @@ def global_context(request):
     except:
         po_coord_group = False
         po_core_group = False
+    
+    can_edit=request.session.get('can_edit','False')
+    print "path is :" ,request.path
+    print "the user can edit ?" ,can_edit
 
     try:
         po_dept_name = page_owner.get_profile ().department.Dept_Name
@@ -78,6 +81,7 @@ def global_context(request):
              'po_name' : po_name,
              'po_dept_name' : po_dept_name,
              'photo_list':photo_list,
+             'can_edit':can_edit,
             })
     return context
 
@@ -120,6 +124,8 @@ def needs_authentication (func):
         if not request.user.is_authenticated():
             # Return here after logging in
             request.session['from_url'] = request.path
+            
+            print "path from util", request.path
             return HttpResponseRedirect ("%shome/login/"%settings.SITE_URL)
         else:
             return func (*__args, **__kwargs)

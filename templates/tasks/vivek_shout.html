@@ -80,6 +80,7 @@ My ShoutBox
 </div>
 
 <div id="add_shoutbox">
+{% if can_edit %}
 <form method="POST" action="{{SITE_URL}}dashboard/shout/">
   {% csrf_token %}
 {% for field in shout_form %}
@@ -89,6 +90,7 @@ My ShoutBox
 <input type="submit" value="Shout">
 
 </form>
+{% endif %}
 </div>
 
 

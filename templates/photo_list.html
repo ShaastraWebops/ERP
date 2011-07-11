@@ -75,7 +75,7 @@ display:none;
 
 
 
-<a href="{% url dashboard.views.upload_file path.name.username %}" class="photo{{forloop.counter}}"><img class="image" src="{{path}}" ></a>
+<a href="{% url dashboard.views.other_coord path.name.id %}" class="photo{{forloop.counter}}"><img class="image" src="{{path}}" ></a>
 
 
 
@@ -83,6 +83,7 @@ display:none;
 <div class="info{{forloop.counter}}" >
 this is div number {{forloop.counter}}
 the pic is displaced
+the below link is to his docs
 <a href="{% url dashboard.views.upload_file path.name.username %}" class="photo{{forloop.counter}}"><img  class="image2" src="{{path}}" ></a>
 </div>
 

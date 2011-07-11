@@ -24,22 +24,19 @@ from django.conf import settings
 from django.utils import simplejson
 import csv # invite coords
 #import stringlib
-# Create your views here.
 
-# def delete_otherdetails(request):
-#     print "came"
-#     if request.method=='GET':
-#         if "d" in request.GET:
-#             number=request.GET['d']
-#             query=OtherContactDetails(id=number)
-#             query.delete()
-#             print "deleted"
-#             success_message="deleted"
-#         else :
-#             print "problem"
-#     return details()
 
-def display_contacts (request):
+"""
+
+Common Tab - a tab which contains information which every one can see by their own profile ,like  photos of all your friends in g+
+personal tab-tab which can be edited by a person but viewed by everyone , like your profile 
+
+dept tab -tab which can be controlled by people in that dept and other dept coords can only view it 
+
+
+"""
+
+def display_contacts (request):#this will be a common tab 
     """
     Display all contacts (listed by Department).
     """
@@ -59,39 +56,13 @@ def display_contacts (request):
     return render_to_response('dashboard/display_contacts.html',locals() ,context_instance = global_context(request))
 
 
-# old_details view:
-#     if request.method=='GET':
-# 	pass
-#     else:
-#         pass
-#     other_contactform=OtherContactDetails_form(initial={'email_id':"Can be left blank"})
-#     if request.method=='POST':
-#         data=request.POST.copy()
-#         form=OtherContactDetails_form(data)
-        
-#         if form.is_valid():
-#             print "cool"
-#             name=form.cleaned_data['name']
-#             number=form.cleaned_data['number']
-#             email_id=form.cleaned_data['email_id']
-#             if (email_id=="Can be left blank"):
-#                 print "cool then"
-#                 email_id=""
-            
-#             addcontact=OtherContactDetails     (user=request.user,
-#                                                 name=name,
-#                                                 number=number,
-#                                                 email_id=email_id,
-#                                                 )
-#             try :
-#                 addcontact.save()
-# 		success_message="The contact details has been saved"
-#             except:
-#                 print "lite maama"
-#         else :
-#             print "fool"
 
-#this function creates the directory
+"""
+this function creates the directory which will store infromation about the user
+like his photos , documents
+
+
+"""
 def create_dir(file_name ,user_name , method=1):
     destdir_one=os.path.join(settings.MEDIA_ROOT,"upload_files")
     destdir=os.path.join(destdir_one,user_name)
@@ -109,7 +80,12 @@ def create_dir(file_name ,user_name , method=1):
 
 
 
-#this function writes the file
+"""
+this function writes the file
+takes a file and saves it in recpective path
+
+
+"""
 def write_file(save_path ,f ,method=1):
     fout=open(save_path,'wb+')
     for chunk in f.chunks():
@@ -164,10 +140,10 @@ def upload_invite_coords(request):
         
         
         else:
-            print "not valid"
+            print "the uploadfileform is not valid"
 
     else:
-        print "not post"
+        pass
         
     return render_to_response('dashboard/invite.html',locals() ,context_instance = global_context(request))
 
@@ -176,7 +152,9 @@ def upload_invite_coords(request):
 
    
         
-
+""" 
+personal tab- only request.user can view it
+"""
 def change_profile_pic(request):
     if request.method == 'POST':
         form=change_pic(request.POST,request.FILES)      
@@ -192,34 +170,30 @@ def change_profile_pic(request):
             except:
             	pass
             
-            print "here only"
             f=request.FILES['file']
             write_file(save_path ,f)
 	    print save_path
-            shoto_path=settings.MEDIA_URL+"/upload_files/images/PROFILE_PIC_OF_THE_USER"
 	    if os.path.isfile(save_path):
-		print "file path is there"
+		print "file path of the user exists "
 		delete_object=userphoto.objects.filter(name=request.user)
 		delete_object.delete()
 	    else :
-		print "not there"
+		print "file path of the user doesnt exists"
             try:
                 image_object=userphoto(name=request.user ,photo_path=file_path )
                 image_object.save()
-                print "save"
+                print "photo changed"
             except:
-                print "not saved"
+                print "photo not changed"
                 pass
-	    print "handling"
-
 	else:
-	    print "not valid"
+	    print "form not valid"
         return view_profile(request )                
     pic_form=change_pic()
     
     return render_to_response('users/change_profile_pic.html',locals(),context_instance = global_context(request))
 
-
+#this function is currently not used
 def check_perms(owner_name , request):
     if owner_name==None or owner_name==request.user.username:
 	upload_message="Your documents and files"
@@ -237,29 +211,17 @@ def check_perms(owner_name , request):
 	return (user ,can_delete_files , upload_message)
 
 
+
+""" 
+owner  adds a file and views it
+other person just views it
+
+"""
 @needs_authentication
-def upload_file(request ,owner_name=None):
-    arr=[1,2,3]
-    if owner_name==None or owner_name==request.user.username:
-	upload_message="Your documents and files"
-	owner_name=request.user.username	
-	user=request.user
-	can_delete_files=True
-	print user
-    else:
 
-	can_delete_files=False
-	user=User.objects.get(username=owner_name)
-	upload_message=owner_name+" documents and files"	
-	print user
-    #user , can_delete_files,upload_message=check_perms(owner_name , request)
-#    photo_list=userphoto.objects.filter()
-    """
-    for dum in photo_list:
-	
-	print str(dum) +"/n"+"\n" """
-
-    users_documents=upload_documents.objects.filter(user=user)       
+def upload_file(request ,owner_id=0):
+    user_viewing=check_user(request,owner_id)
+    users_documents=upload_documents.objects.filter(user=user_viewing)       
     if request.method=='POST':
         print "post"
         form=UploadFileForm(request.POST,request.FILES)
@@ -272,10 +234,8 @@ def upload_file(request ,owner_name=None):
 		topic="No description"
 
 
-            save_path ,file_path = create_dir(file_name ,owner_name)#passing to the fuction to make directories if not made         
-            
+            save_path ,file_path = create_dir(file_name ,owner_name)#passing to the fuction to make directories if not made                   
             date=datetime.datetime.now()
-
             try:
                 file_present=upload_documents.objects.get(user=request.user,file_name=file_name)
                 message="File with this name exists.please change name  of the file"
@@ -285,25 +245,29 @@ def upload_file(request ,owner_name=None):
 		google_path="http://docs.google.com/viewer?url="+file_path
                 file_object=upload_documents(user=request.user , file_name=file_name,file_path=save_path, url=file_path , google_doc_path=google_path ,topic=topic,date=date)#to change topic
                 file_object.save()
-                print "SAVED"
+
             
         else:
             file_name=request.FILES['file'].name
-            print "done"
+
 
     else:
-        print "not post"
+        print "the user has entered the page not posted (uploaded a doc) :)"
         form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"short description of the file" ,'file_name':"if left blank , the original name will be used",})
 
-
+    print "can _edit form views" ,request.session['can_edit']
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
 
 
 
 
-
+"""
+personal tab-only user can use it
+this function needs lots of changes but one sinle thing isnt working so waiting for that to work ,
+"""
 
 @needs_authentication
+
 def delete_file(request,owner_name=None ,number=0 ,file_name="default" ):
     print number ,file_name
 
@@ -362,6 +326,12 @@ another feature required is by mistake if the user clicks shout two times or ref
 the comment is passes twice,we can remove it by comparing it with the latest update in the database 
 
 """
+
+
+"""
+department tab 
+vivek thinks we must include AJAX and make this proper and more good
+"""
 @needs_authentication
 def shout(request):
     if request.method=="POST":
@@ -407,10 +377,37 @@ def shout(request):
     return render_to_response('tasks/department_portal.html',simplejson.dumps(response_dict),context_instance = global_context (request))
     return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')"""
     return display_department_portal(request) 
+@needs_authentication
 
-"""
-def position():
+
+def check_user(request,owner_id ):
+    print "the owner id is " ,owner_id
+    print "user_is is ",request.user.id
+    user_viewing=request.user
+    if int(owner_id)==int(request.user.id):
+        print request.user.id
+        print "request,user is viewing the file "
+        request.session['can_edit'] =True
+    else:
+        print "other person is viewing " ,request.user.id
+        try:
+            user_viewing=User.objects.get(id=owner_id)
+        except:
+            print "check othercoord view  plaese"
+	request.session['can_edit']=False
     
-    for i range(1,50):"""
+    
+    request.session['page_owner'] = user_viewing
+    return user_viewing
+
+
+def other_coord(request, owner_id=0):
+
+    
+    user_viewing=check_user(request,owner_id)
+#may be still some stuff is left
+	
+    return display_portal(request , user_viewing.username)
+
     
 

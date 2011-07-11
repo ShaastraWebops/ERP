@@ -96,6 +96,8 @@ function delete_data(field) {
 </head>
 
 <div id="place" >
+{% if can_edit %} 
+
 <form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}dashboard/upload_document/">{% csrf_token %}
 <table>
 
@@ -109,8 +111,10 @@ function delete_data(field) {
 </td></tr>
 </table>
 </form>
+{% endif %}
 
 {% if users_documents %}
+these documents are of {{page_owner.username}}
 
 <table id="document_list">
 <tr >
