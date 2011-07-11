@@ -59,8 +59,8 @@ $("div.info{{forloop.counter}}").hide();
 
 position:relative;
 left:50px;
-width:150px;
-height:150px;
+width:110px;
+height:90px;
 top:45px;
 background-color:#E9CFEC;
 display:none;
@@ -80,10 +80,8 @@ display:none;
 
 
 
-<div class="info{{forloop.counter}}" >
-this is div number {{forloop.counter}}
-the pic is displaced
-the below link is to his docs
+<div class="info{{forloop.counter}}" >user roll
+{{path.name.username}}
 <a href="{% url dashboard.views.upload_file path.name.username %}" class="photo{{forloop.counter}}"><img  class="image2" src="{{path}}" ></a>
 </div>
 

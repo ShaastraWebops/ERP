@@ -13,7 +13,7 @@ from erp.misc.util import *
 from erp.department.models import *
 from erp.users import models
 from erp.dashboard.forms import *
-from erp.dashboard.views import check_user
+from erp.dashboard.views import *
 from django.contrib.auth.models import Group,Permission
 import sha,random,datetime
 from erp.users.forms import *
@@ -41,11 +41,20 @@ for test phase the default dept is Events
                 password = user_form.cleaned_data['password'],
                 )    
             # Save his profile - mainly his dept name
+            #here if must be changed to try
 	    if True:
 	        department=Department.objects.get(Dept_Name = dept_name)
 		profile=userprofile.objects.create(user=new_user ,department=department)
                 profile.save()
+                #creating a folder for the user
 		print "user profile saved"
+		
+                print "trying to craete a folder for the user and assigning a default profile pic"
+                file_name="PROFILE_PIC_OF_THE_USER"
+                savepath ,file_path=create_dir(file_name  , user_form.cleaned_data['username'])
+                image_object=userphoto(name=new_user ,photo_path="http://localhost/django-media/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER")
+                image_object.save()
+                print "created folder and given default user_profil_pic"
 	    else:
 		print "userprofile not saved ,check out"
             # Make the user a Coord
@@ -54,7 +63,7 @@ for test phase the default dept is Events
             new_user.save()
             registered_successfully = True
             request.session['just_registered'] = True
-            return HttpResponseRedirect("%s/home/login" %settings.SITE_URL)
+            return HttpResponseRedirect("%shome/login" %settings.SITE_URL)
 	else:
 	    print "the user form is not valid the errors are :"
 	    print user_form.errors
