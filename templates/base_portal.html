@@ -3,7 +3,7 @@
 {% block top_bar %}
 {{ block.super }} 
 {% if is_visitor %}
-<br />
+<!-- <br /> -->
 <h3>You are viewing {{ po_name }}'s page.</h3>
 {% endif %}
 
@@ -19,17 +19,15 @@
 
     {% endblock portal_stuff %}
 
+    <!-- For displaying of objects -->
     {% block display_stuff %}
 
     {% endblock display_stuff %}
 
+    <!-- For edit/create forms -->
     {% block form_stuff %}
 
     {% endblock form_stuff %}
-
-    {% block update_stuff %}
-
-    {% endblock update_stuff %}
 
     {% block shout_stuff %}
 

@@ -54,9 +54,9 @@ Dashboard
 	</tr>
 	{% endfor %}
       </table>
-      {% else %}
-      <h4>No Requests or Unassigned SubTasks for your Department.</h4>
   </div>
+  {% else %}
+  <h4>No Requests or Unassigned SubTasks for your Department.</h4>
   {% endif %}
   {% endblock received_requests %}
   <!-- <hr> -->
@@ -130,10 +130,10 @@ Dashboard
   {% endblock completed %}
 
   <!-- <hr> -->
+  {% block update_stuff %}
+  {% include "tasks/updates.html" %}
+  {% endblock update_stuff %}
 </div>
 
 {% endblock portal_stuff %}
 
-{% block update_stuff %}
-{% include "tasks/updates.html" %}
-{% endblock update_stuff %}

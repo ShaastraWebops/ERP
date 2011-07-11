@@ -35,17 +35,12 @@ Dashboard
 {% endif %}
 {% endblock subtasklist %}
 
-<hr>
-
 {% block timeline %}
 {% include "tasks/timeline.html" %}
 {% endblock timeline %}
 
-<hr>
-{% endblock portal_stuff %}
-
 {% block update_stuff %}
 {% include "tasks/updates.html" %}
-<hr>
 {% endblock update_stuff %}
 
+{% endblock portal_stuff %}
