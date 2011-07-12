@@ -25,17 +25,6 @@ height:40px;
 margin:3px;
 }
 
-
-.image2
-{
-float:left;
-width:40px;
-height:40px;
-margin:3px;
-}
-
-
-
 </style>
 
 {% for path in photo_list %}
@@ -59,8 +48,8 @@ $("div.info{{forloop.counter}}").hide();
 
 position:relative;
 left:50px;
-width:150px;
-height:150px;
+width:200px;
+height:200px;
 top:45px;
 background-color:#E9CFEC;
 display:none;
@@ -69,7 +58,6 @@ display:none;
 </style>
 {% endfor %}
 <div id="imgdiv" >
-test: to confirm the enrty in photo_list.hmtl  cool
 {% for path in photo_list %}
 
 
@@ -80,11 +68,6 @@ test: to confirm the enrty in photo_list.hmtl  cool
 
 
 
-<div class="info{{forloop.counter}}" >
-this is div number {{forloop.counter}}
-the pic is displaced
-<a href="{% url dashboard.views.upload_file path.name.username %}" class="photo{{forloop.counter}}"><img  class="image2" src="{{path}}" ></a>
-</div>
 
 
 
@@ -92,24 +75,14 @@ the pic is displaced
 
 </div>
 
-<style type="text/css">
-.info{{forloop.counter}}
-{
-position:relative;
-
-left:50px;
-width:200px;
-height:200px;
-top:50px;
-background-color:#E9CFEC;
-
-}
-
-</style>
 {% for path in photo_list %}
+cool
 
+<div class="info{{forloop.counter}}" >
 
-
+hey da {{request.user.username}}
+{{forloop.counter}}
+</span>
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -122,8 +95,23 @@ $("div.info{{forloop.counter}}").hide();
 });
 </script> 
 
+<style type="text/css">
+.info{{forloop.counter}}
+{
 
+position:relative;
+left:50px;
+width:200px;
+height:200px;
+top:45px;
+background-color:#E9CFEC;
+
+}
+
+</style>
 {% endfor %}
 
 
+
+<br>
 

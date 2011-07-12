@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
+from erp.users.models import *
 
 from erp import settings
 from erp.users import models
@@ -31,7 +32,17 @@ def global_context(request):
     except:
         user_name = False
 
+    try:
+        photo_list=userphoto.objects.filter()           
+    except:
+        photo_list=False    
+
     page_owner = request.session.get ('page_owner', request.user)
+    print "this is the page owner (form util.py ) ",page_owner
+    
+    can_edit=request.session.get('can_edit','False')
+    print "path is :" ,request.path
+    print "the user can edit ?" ,can_edit
 
     try:
         po_dept_name = page_owner.get_profile ().department.Dept_Name
@@ -61,6 +72,8 @@ def global_context(request):
              'page_owner' : page_owner,
              'po_name' : po_name,
              'po_dept_name' : po_dept_name,
+             'photo_list':photo_list,
+             'can_edit':can_edit,
             })
     return context
 
@@ -103,7 +116,9 @@ def needs_authentication (func):
         if not request.user.is_authenticated():
             # Return here after logging in
             request.session['from_url'] = request.path
-            return HttpResponseRedirect ("%s/home/login/"%settings.SITE_URL)
+            
+            print "path from util", request.path
+            return HttpResponseRedirect ("%shome/login/"%settings.SITE_URL)
         else:
             return func (*__args, **__kwargs)
     return wrapper
@@ -117,7 +132,7 @@ def no_login (func):
             # Return here after logging in
             request.session['already_logged'] = True
 	    #html = "%s/home/" %SITEURL
-            return HttpResponseRedirect ("%s/home/" %settings.SITE_URL)
+            return HttpResponseRedirect ("%shome/" %settings.SITE_URL)
         else:
             return func (*__args, **__kwargs)
     return wrapper

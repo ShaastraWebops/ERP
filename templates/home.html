@@ -30,9 +30,11 @@
 
     </style>
     <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/style.css" />
+    <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery.datepick.css" />
     <script type="text/javascript" src="{{MEDIA_URL}}js/jquery-1.5.2-min.js">
     </script>
     <script type="text/javascript" src="{{MEDIA_URL}}js/script.js">
+    <script type="text/javascript" src="{{MEDIA_URL}}js/jquery.datepick.js">
     </script>
     {% block javascript_stuff %}
     
@@ -93,6 +95,9 @@
     </div>
     <strong id="pageLogo" class="lFloat">SHAASTRA ERP</strong>
     <div id="topBar">
+
+
+
       {% block top_bar %}
       
       {% if user_name %}
@@ -105,7 +110,10 @@
       {% endif %}
       {% endblock top_bar %}
     </div>
-
+    
+{% block photos_list %}
+{% include "photo_list.html" %}
+{% endblock photos_list %}
     {% block body %}
     {% endblock body %}
 
@@ -114,6 +122,7 @@
       <!-- To be filled in -->
     </div>
     {% endblock bottom_bar %}
+    {{can_edit}}
 
   </body>
 </html>

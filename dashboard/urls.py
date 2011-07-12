@@ -10,6 +10,7 @@ urlpatterns = patterns('erp.dashboard.views',
       # (r'^delete_document/(?P<owner_name>\w+)/(?P<number>\w+)/(?P<file_name>\w+)$', 'delete_file'),
       (r'^change_profile_pic/$', 'change_profile_pic'),
       (r'^shout/$', 'shout'),
+      (r'^(\w+)?$', 'other_coord'),
 )
 
 # Note : home/ URLconf should come before the second one, otherwise
