@@ -22,12 +22,14 @@ def home(request):
     return render_to_response('home/home.html', locals(), context_instance= global_context(request))
 
 def login(request):
-
+    print "in the view funtion"
+    print "in the login view funtion"
     redirected = request.session.get ("from_url", False)
     just_registered = session_get(request, "just_registered")
     form = forms.UserLoginForm ()
-
+    print "just before if"
     if request.method == 'POST':
+        print "in the login , it is post"
         data = request.POST.copy()
 
         form =forms. UserLoginForm (data)
@@ -36,6 +38,7 @@ def login(request):
             if user is not None and user.is_active == True:
                 auth.login (request, user)
                 url = session_get(request, "from_url")
+                print "the url is " ,url
                 # Handle redirection
                 if not url:
                     url = "%s/home/"%settings.SITE_URL
@@ -55,7 +58,7 @@ def login(request):
                 if redirected:
                     return HttpResponseRedirect (redirected)
                 else:
-                    return HttpResponseRedirect("%sdashboard/home" %settings.SITE_URL)
+                    return HttpResponseRedirect("%sdashboard/task" %settings.SITE_URL)
 
             else:
                 request.session['invalid_login'] = True
@@ -63,6 +66,7 @@ def login(request):
                 invalid_login =session_get(request, "invalid_login")
                 form = forms.UserLoginForm ()
     else:
+        print "not a post da"
         pass
     return render_to_response('home/login.html', locals(), context_instance= global_context(request))
 
