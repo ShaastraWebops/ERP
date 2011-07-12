@@ -63,7 +63,7 @@ for test phase the default dept is Events
             new_user.save()
             registered_successfully = True
             request.session['just_registered'] = True
-            return HttpResponseRedirect("%shome/login" %settings.SITE_URL)
+            return HttpResponseRedirect("%s/home/login" %settings.SITE_URL)
 	else:
 	    print "the user form is not valid the errors are :"
 	    print user_form.errors

@@ -70,28 +70,8 @@ def get_completed_subtasks (user):
     user_dept = user.userprofile_set.all()[0].department
     return SubTask.objects.filter (department = user_dept, status = 'C')
 
-def get_page_owner (request, owner_name):
-    """
-    If owner_name is passed, return page owner, if he exists. If user
-    with that name doesn't exist, return 'Invalid'.
-
-    Else, return current user.
-
-    Also, set the session variable for page_owner.
-    """
-    print 'Get Page Owner - owner_name : ', owner_name
-    if owner_name == '' or owner_name is None:
-        page_owner = request.user
-    else:
-        try:
-            page_owner = User.objects.get (username = owner_name)
-        except:
-            return 'Invalid'
-    request.session['page_owner'] = page_owner
-    return page_owner
-
 @needs_authentication
-def display_portal (request, owner_name = ''):
+def display_portal (request, owner_name = None):
     """
     Display owner's portal.
     """
@@ -136,7 +116,7 @@ def display_coord_portal (request, coord):
                               context_instance = global_context (request))
 
 @needs_authentication
-def edit_task (request, task_id = False, owner_name = ''):
+def edit_task (request, task_id = False, owner_name = None):
     """
     Edit existing Task.
     TODO :
@@ -204,7 +184,7 @@ def edit_task (request, task_id = False, owner_name = ''):
                               context_instance = global_context (request))
 
 @needs_authentication
-def display_subtask (request, subtask_id, owner_name = ''):
+def display_subtask (request, subtask_id, owner_name = None):
     """
     Display full details of a SubTask.
     TODO :
@@ -247,7 +227,7 @@ def display_subtask (request, subtask_id, owner_name = ''):
                               context_instance = global_context (request))
     
 @needs_authentication
-def display_task (request, task_id, owner_name = ''):
+def display_task (request, task_id, owner_name = None):
     """
     Display full details of a Task.
     TODO :
@@ -265,7 +245,7 @@ def display_task (request, task_id, owner_name = ''):
 # Comments for Tasks and subtasks are very similar. So they call the same function.
 
 @needs_authentication    
-def handle_task_comments (request, task_id, owner_name = ''):
+def handle_task_comments (request, task_id, owner_name = None):
     """
     Displays all comments for Task of task_id and allows addition of a
     comment.
@@ -284,7 +264,7 @@ def handle_task_comments (request, task_id, owner_name = ''):
                               context_instance = global_context (request))
 
 @needs_authentication    
-def handle_subtask_comments (request, subtask_id, owner_name = ''):
+def handle_subtask_comments (request, subtask_id, owner_name = None):
     """
     Displays all comments for SubTask of subtask_id and allows
     addition of a comment.
@@ -350,7 +330,7 @@ def handle_comment (request, is_task_comment, object_id):
         comment_form = curr_modelform ()
     return (comment_form, 'Blank')
 
-def handle_updates (request, owner_name = ''):
+def handle_updates (request, owner_name = None):
     """
     Used by coords to send updates to Core.
     Cores will just see the updates they have received.
@@ -396,7 +376,7 @@ def get_all_updates (dept):
     return Update.objects.filter (author__userprofile__department = dept)
 
 @needs_authentication
-def display_department_portal (request, owner_name = '', department_name = None):
+def display_department_portal (request, owner_name = None, department_name = None):
     """
     Display all basic info about user's Department.
     """

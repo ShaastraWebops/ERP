@@ -67,7 +67,7 @@ def global_context(request):
              'is_core' : is_core (request.user),
              'is_coord' : not is_core (request.user),
              'po_is_core' : is_core (page_owner),
-             'po_is_coord' : not is_core (page_owner,
+             'po_is_coord' : not is_core (page_owner),
              'is_visitor' : is_visitor,
              'page_owner' : page_owner,
              'po_name' : po_name,
@@ -118,7 +118,7 @@ def needs_authentication (func):
             request.session['from_url'] = request.path
             
             print "path from util", request.path
-            return HttpResponseRedirect ("%shome/login/"%settings.SITE_URL)
+            return HttpResponseRedirect ("%s/home/login/"%settings.SITE_URL)
         else:
             return func (*__args, **__kwargs)
     return wrapper
@@ -132,7 +132,7 @@ def no_login (func):
             # Return here after logging in
             request.session['already_logged'] = True
 	    #html = "%s/home/" %SITEURL
-            return HttpResponseRedirect ("%shome/" %settings.SITE_URL)
+            return HttpResponseRedirect ("%s/home/" %settings.SITE_URL)
         else:
             return func (*__args, **__kwargs)
     return wrapper
@@ -166,4 +166,23 @@ def is_core (user):
         return True
     return False
 
+def get_page_owner (request, owner_name):
+    """
+    If owner_name is passed, return page owner, if he exists. If user
+    with that name doesn't exist, return 'Invalid'.
+
+    Else, return current user.
+
+    Also, set the session variable for page_owner.
+    """
+    print 'Get Page Owner - owner_name : ', owner_name
+    if owner_name == '' or owner_name is None:
+        page_owner = request.user
+    else:
+        try:
+            page_owner = User.objects.get (username = owner_name)
+        except:
+            return 'Invalid'
+    request.session['page_owner'] = page_owner
+    return page_owner
 
