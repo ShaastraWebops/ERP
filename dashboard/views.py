@@ -12,13 +12,12 @@ from erp.dashboard.models import *
 from erp.dashboard.forms import *
 from erp.department.models import *
 from erp.users.models import *
-from erp.users.views import *
+from erp.users.views import view_profile
+from erp.users.forms import *
 from erp.tasks.views import *
 from erp.misc.util import *
 from erp.settings import *
 import sha,random,datetime
-from erp.dashboard.forms import *
-from erp.users.forms import *
 import os # upload files
 from django.conf import settings
 from django.utils import simplejson
@@ -35,7 +34,7 @@ dept tab -tab which can be controlled by people in that dept and other dept coor
 
 
 """
-
+@needs_authentication
 def display_contacts (request):#this will be a common tab 
     """
     Display all contacts (listed by Department).
@@ -61,8 +60,8 @@ def display_contacts (request):#this will be a common tab
 this function creates the directory which will store infromation about the user
 like his photos , documents
 
-
 """
+
 def create_dir(file_name ,user_name , method=1):
     destdir_one=os.path.join(settings.MEDIA_ROOT,"upload_files")
     destdir=os.path.join(destdir_one,user_name)
@@ -87,6 +86,7 @@ takes a file and saves it in recpective path
 
 
 """
+
 def write_file(save_path ,f ,method=1):
     fout=open(save_path,'wb+')
     for chunk in f.chunks():
@@ -98,7 +98,7 @@ def write_file(save_path ,f ,method=1):
     
     
 # this function is used for uploading csv files also(for inviting coords)
-
+@needs_authentication
 def upload_invite_coords(request):
     form=InviteForm()
     CsvForm=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
@@ -156,21 +156,20 @@ def upload_invite_coords(request):
 """ 
 personal tab- only request.user can view it
 """
+@needs_authentication
 def change_profile_pic(request):
+    print request.user , "in change-profile-pic"
     if request.method == 'POST':
         form=change_pic(request.POST,request.FILES)      
-        print "cool"
         if form.is_valid():
-            print "form valid"
+            print "change pic form valid"
             file_name="PROFILE_PIC_OF_THE_USER"
             user_name=request.user.username
-
-            save_path ,file_path = create_dir(file_name ,user_name)#passing to the fuction to make directories if not made         
+            save_path ,file_path = create_dir(file_name ,user_name)#passing to the fuction to make directories if not made       
             try:
                 photo=userphoto(name =request.user)
             except:
             	pass
-            
             f=request.FILES['file']
             write_file(save_path ,f)
 	    print save_path
@@ -189,7 +188,8 @@ def change_profile_pic(request):
                 pass
 	else:
 	    print "form not valid"
-        return view_profile(request )                
+        #return render_to_response('users/view_profile.html',locals(),context_instance = global_context(request))
+	return view_profile(request )
     pic_form=change_pic()
     
     return render_to_response('users/change_profile_pic.html',locals(),context_instance = global_context(request))
@@ -219,7 +219,6 @@ other person just views it
 
 """
 @needs_authentication
-
 def upload_file(request ,owner_name=0):
     page_owner = get_page_owner (request, owner_name)
     users_documents=upload_documents.objects.filter(user=page_owner)       
@@ -268,7 +267,6 @@ this function needs lots of changes but one sinle thing isnt working so waiting 
 """
 
 @needs_authentication
-
 def delete_file(request,owner_name=None ,number=0 ,file_name="default" ):
     page_owner = get_page_owner (request, owner_name)
     print number ,file_name

@@ -8,12 +8,10 @@ from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 from forms import * 
 from django import forms
-from erp.users import *
+from erp.users.models import *
 from erp.misc.util import *
 from erp.department.models import *
-from erp.users import models
-from erp.dashboard.forms import *
-from erp.dashboard.views import *
+from erp.dashboard.forms import *			
 from django.contrib.auth.models import Group,Permission
 import sha,random,datetime
 from erp.users.forms import *
@@ -153,9 +151,12 @@ def invite_inbulk(self):
     form=InviteForm()
     if request.method=='POST':
         pass
+
+
+
             
 @needs_authentication
-def view_profile(request ,owner_name=0):
+def view_profile(request ,owner_name=None):
     page_owner = get_page_owner (request, owner_name)
     try:
         image=userphoto.objects.get(name=page_owner)
@@ -172,7 +173,7 @@ def view_profile(request ,owner_name=0):
 @needs_authentication
 def handle_profile (request ):
     print request.user.id , "is the id of the user"
-    page_owner = get_page_owner (request, owner_name)
+
     user = request.user
     profile = userprofile.objects.get(user=request.user)
     if request.method=='POST' :
@@ -180,12 +181,12 @@ def handle_profile (request ):
         if profile_form.is_valid ():
             profile_form.save ()
             # Should this just redirect to the dashboard?
-	    return view_profile(request ,page_owner.id)
+	    return view_profile(request ,request.user.username)
     print profile.hostel
     profile_form = userprofileForm (instance = profile)       
     print " default pic address http://localhost/django-media/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
     try:
-        image=userphoto.objects.get(name=page_onwer)
+        image=userphoto.objects.get(name=request.user)
         photo_path =image.photo_path
         print photo_path
     except:

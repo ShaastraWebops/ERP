@@ -10,8 +10,8 @@
 {
 
 position:absolute;
-top:20px;
-left:-250px;
+top:280px;
+
 width:200px;
 
 
@@ -59,8 +59,8 @@ $("div.info{{forloop.counter}}").hide();
 
 position:relative;
 left:50px;
-width:150px;
-height:150px;
+width:110px;
+height:90px;
 top:45px;
 background-color:#E9CFEC;
 display:none;
@@ -69,21 +69,16 @@ display:none;
 </style>
 {% endfor %}
 <div id="imgdiv" >
-test: to confirm the enrty in photo_list.hmtl  cool
+
 {% for path in photo_list %}
 
 
 
 
-<a href="{% url dashboard.views.upload_file path.name.username %}" class="photo{{forloop.counter}}"><img class="image" src="{{path}}" ></a>
+<a href="{% url tasks.views.display_portal path.name.username %}" class="photo{{forloop.counter}}"><img class="image" src="{{path}}" ></a>
+<div class="info{{forloop.counter}}" >user roll
+{{path.name.username}}
 
-
-
-
-<div class="info{{forloop.counter}}" >
-this is div number {{forloop.counter}}
-the pic is displaced
-<a href="{% url dashboard.views.upload_file path.name.username %}" class="photo{{forloop.counter}}"><img  class="image2" src="{{path}}" ></a>
 </div>
 
 
@@ -126,4 +121,6 @@ $("div.info{{forloop.counter}}").hide();
 {% endfor %}
 
 
+
+<br>
 

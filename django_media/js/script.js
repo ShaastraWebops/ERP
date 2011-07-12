@@ -1,10 +1,9 @@
 $(document).ready(function(){
 	
 	
-	$(function() {
-		$('#popupDatepicker').datepick();
-	})
-	;
+	
+   $('#popupDatepicker').datepick();
+
 
     $('#contacts ul > li')
 	.find('ul:first')
