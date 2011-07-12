@@ -72,6 +72,7 @@ def create_dir(file_name ,user_name , method=1):
             
     destdir_one=os.path.join(settings.MEDIA_URL,"upload_files")
     destdir=os.path.join(destdir_one,user_name)
+    print destdir , "is the destdir for the file"
     if not os.path.isdir(destdir):
         os.makedirs(destdir,0775)
     file_path=os.path.join(destdir,os.path.basename(file_name))
@@ -219,22 +220,22 @@ other person just views it
 """
 @needs_authentication
 
-def upload_file(request ,owner_id=0):
-    user_viewing=check_user(request,owner_id)
-    users_documents=upload_documents.objects.filter(user=user_viewing)       
+def upload_file(request ,owner_name=0):
+    page_owner = get_page_owner (request, owner_name)
+    users_documents=upload_documents.objects.filter(user=page_owner)       
     if request.method=='POST':
         print "post"
         form=UploadFileForm(request.POST,request.FILES)
         if form.is_valid():
-            
+            print "form is valid"
             file_name=request.FILES['file'].name
             topic=form.cleaned_data['short_description']
-	    print topic
+
 	    if topic=="short description of the file":
 		topic="No description"
 
-
-            save_path ,file_path = create_dir(file_name ,owner_name)#passing to the fuction to make directories if not made                   
+	    print "creating dir for the user "
+            save_path ,file_path = create_dir(file_name ,request.user.username)#passing to the fuction to make directories if not made                   
             date=datetime.datetime.now()
             try:
                 file_present=upload_documents.objects.get(user=request.user,file_name=file_name)
@@ -255,7 +256,7 @@ def upload_file(request ,owner_id=0):
         print "the user has entered the page not posted (uploaded a doc) :)"
         form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"short description of the file" ,'file_name':"if left blank , the original name will be used",})
 
-    print "can _edit form views" ,request.session['can_edit']
+    print "can _edit form views" ,request.session.get('is_visitor','True')
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
 
 
@@ -269,6 +270,7 @@ this function needs lots of changes but one sinle thing isnt working so waiting 
 @needs_authentication
 
 def delete_file(request,owner_name=None ,number=0 ,file_name="default" ):
+    page_owner = get_page_owner (request, owner_name)
     print number ,file_name
 
     if owner_name==None or owner_name==request.user.username:
@@ -287,7 +289,7 @@ def delete_file(request,owner_name=None ,number=0 ,file_name="default" ):
     #photo_list=userphoto.objects.filter()
 
 
-    users_documents=upload_documents.objects.filter(user=user)  
+    users_documents=upload_documents.objects.filter(user=page_owner)  
     
     if "d" in request.GET:
         number=request.GET['d']
@@ -380,34 +382,34 @@ def shout(request):
 @needs_authentication
 
 
-def check_user(request,owner_id ):
-    print "the owner id is " ,owner_id
+def check_user(request,owner_name ):
+    print "the owner id is " ,owner_name
     print "user_is is ",request.user.id
-    user_viewing=request.user
-    if int(owner_id)==int(request.user.id):
+    page_owner=request.user
+    if int(owner_name)==int(request.user.id):
         print request.user.id
         print "request,user is viewing the file "
-        request.session['can_edit'] =True
+        request.session['is_visitor'] =True
     else:
         print "other person is viewing " ,request.user.id
         try:
-            user_viewing=User.objects.get(id=owner_id)
+            page_owner=User.objects.get(id=owner_name)
         except:
             print "check othercoord view  plaese"
-	request.session['can_edit']=False
+	request.session['is_visitor']=False
     
     
-    request.session['page_owner'] = user_viewing
-    return user_viewing
+    request.session['page_owner'] = page_owner
+    return page_owner
 
 
-def other_coord(request, owner_id=0):
+def other_coord(request, owner_name=0):
 
     
-    user_viewing=check_user(request,owner_id)
+    page_owner=check_user(request,owner_name)
 #may be still some stuff is left
 	
-    return display_portal(request , user_viewing.username)
+    return display_portal(request , page_owner.username)
 
     
 

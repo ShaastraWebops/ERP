@@ -155,14 +155,14 @@ def invite_inbulk(self):
         pass
             
 @needs_authentication
-def view_profile(request ,owner_id=0):
-    user_viewing=check_user(request,owner_id)
+def view_profile(request ,owner_name=0):
+    page_owner = get_page_owner (request, owner_name)
     try:
-        image=userphoto.objects.get(name=user_viewing)
+        image=userphoto.objects.get(name=page_owner)
         photo_path =image.photo_path
     except:
         photo_path=settings.MEDIA_URL+"/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
-    profile = userprofile.objects.get(user=user_viewing)
+    profile = userprofile.objects.get(user=page_owner)
     print profile.nickname
     print profile.name
     return render_to_response('users/view_profile.html',locals(),context_instance = global_context(request))
@@ -172,7 +172,7 @@ def view_profile(request ,owner_id=0):
 @needs_authentication
 def handle_profile (request ):
     print request.user.id , "is the id of the user"
-    user_viewing=check_user(request ,request.user.id)
+    page_owner = get_page_owner (request, owner_name)
     user = request.user
     profile = userprofile.objects.get(user=request.user)
     if request.method=='POST' :
@@ -180,12 +180,12 @@ def handle_profile (request ):
         if profile_form.is_valid ():
             profile_form.save ()
             # Should this just redirect to the dashboard?
-	    return view_profile(request ,request.user.id)
+	    return view_profile(request ,page_owner.id)
     print profile.hostel
     profile_form = userprofileForm (instance = profile)       
     print " default pic address http://localhost/django-media/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
     try:
-        image=userphoto.objects.get(name=request.user)
+        image=userphoto.objects.get(name=page_onwer)
         photo_path =image.photo_path
         print photo_path
     except:

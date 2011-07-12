@@ -39,10 +39,6 @@ def global_context(request):
 
     page_owner = request.session.get ('page_owner', request.user)
     print "this is the page owner (form util.py ) ",page_owner
-    
-    can_edit=request.session.get('can_edit','False')
-    print "path is :" ,request.path
-    print "the user can edit ?" ,can_edit
 
     try:
         po_dept_name = page_owner.get_profile ().department.Dept_Name
@@ -73,7 +69,7 @@ def global_context(request):
              'po_name' : po_name,
              'po_dept_name' : po_dept_name,
              'photo_list':photo_list,
-             'can_edit':can_edit,
+
             })
     return context
 

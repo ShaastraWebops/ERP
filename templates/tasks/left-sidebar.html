@@ -20,37 +20,37 @@
 	Invite
       </a>
     </li>
-    Bar 2 
-    
-    <li>
-      <a href="{% url tasks.views.display_department_portal owner_name=user %}">
+       	Bar 2 
+     
+      <li>
+      <a href="{% url tasks.views.display_department_portal owner_name=page_owner%}">
 	newDepttab
       </a>
     </li>
     <li>
-      <a href="{% url tasks.views.display_portal owner_name=user %}">
+      <a href="{% url tasks.views.display_portal %}{{page_owner.username}}">
 	newDashboardtab
       </a>
     </li>
     <li>
-      
+    
     <li>
-      <a href="{% url users.views.view_profile page_owner.id %}">
+      <a href="{% url users.views.view_profile %}{{page_owner.username}}">
 	Profile
       </a>
     </li>
 
     <li>
-      <a href="{% url dashboard.views.upload_file page_owner.id %}">
+      <a href="{% url dashboard.views.upload_file %}{{page_owner.username}}">
 	Documents
       </a>
     </li>
-    <!---
-	<li>
-	  <a href="#">
-	    Policies
-	  </a>
-	</li>
+ <!--   
+    <li>
+      <a href="#">
+	Policies
+      </a>
+    </li>
     <li>
       <a href="#">
 	Website

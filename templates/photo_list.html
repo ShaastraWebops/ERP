@@ -75,11 +75,7 @@ display:none;
 
 
 
-<a href="{% url dashboard.views.other_coord path.name.id %}" class="photo{{forloop.counter}}"><img class="image" src="{{path}}" ></a>
-
-
-
-
+<a href="{% url tasks.views.display_portal path.name.username %}" class="photo{{forloop.counter}}"><img class="image" src="{{path}}" ></a>
 <div class="info{{forloop.counter}}" >user roll
 {{path.name.username}}
 

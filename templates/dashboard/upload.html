@@ -96,7 +96,7 @@ function delete_data(field) {
 </head>
 
 <div id="place" >
-{% if can_edit %} 
+
 
 <form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_document/">{% csrf_token %}
 <table>
@@ -111,10 +111,9 @@ function delete_data(field) {
 </td></tr>
 </table>
 </form>
-{% endif %}
 
 {% if users_documents %}
-these documents are of {{page_owner.username}}
+{{user.username}} these documents are of {{page_owner.username}}
 
 <table id="document_list">
 <tr >
@@ -131,11 +130,16 @@ Description
 Date
 </td>
 <tr>
-{{owner_name}}
+
 
 <h4> {{upload_message}} </h4>
 {% else %}
+
+{% if page_ownner.username != user.username %}
+hey ,<br> {{user.username }} no documents have been uploaded by {{page_owner.username}}
+{% else %}
 <h4>you have not uploaded any documents till now</h4>
+{% endif %}
 {% endif %}
 
 <form method="GET" action="{{SITE_URL}}/dashboard/delete_document/">
@@ -164,10 +168,9 @@ Date
 	<td>
 	<input type="hidden" value="{{field.id}}" name="d">
 	<input type="hidden" value="{{field.file_name}}" name="f">
-	{% if can_delete_files %}
+	{% if not is_visitor %}
+
 	<input type="submit" value="Delete" id="delete" name="delete file">
-	{% else %}
-	you cannot delete
 	{% endif %}
 	
 	</td>

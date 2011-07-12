@@ -80,7 +80,7 @@ My ShoutBox
 </div>
 
 <div id="add_shoutbox">
-{% if can_edit %}
+{% if not is_visitor %}
 <form method="POST" action="{{SITE_URL}}/dashboard/shout/">
   {% csrf_token %}
 {% for field in shout_form %}

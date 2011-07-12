@@ -161,7 +161,7 @@ aka
 
 
 	</table>
-	{% if can_edit  %}
+	{% if not is_visitor  %}
 <a href="{{SITE_URL}}/users/edit_profile/"  id ="edit_profile"> Edit profile </a>
      {% endif %}
 {% endblock %}
