@@ -15,9 +15,9 @@
   <tr>
     <td>
       {% if po_is_core %}
-      <a href="{% url tasks.views.edit_task task.id %}">{{ task.subject }}</a>
+      <a href="{% url tasks.views.edit_task task_id=task.id owner_name=page_owner %}">{{ task.subject }}</a>
       {% else %}
-      <a href="{% url tasks.views.display_task task.id %}">
+      <a href="{% url tasks.views.display_task task_id=task.id owner_name=page_owner %}">
 	{{ task.subject }}
       </a>
       {% endif %}
@@ -27,7 +27,7 @@
     <td> {{ task.status }} </td>
     {% if po_is_core %}
     <td>
-      <a href="{% url tasks.views.handle_task_comments task.id %}">Comments</a>
+      <a href="{% url tasks.views.handle_task_comments task_id=task.id owner_name=page_owner %}">Comments</a>
     </td>
     {% endif %}
   </tr>

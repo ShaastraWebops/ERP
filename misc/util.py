@@ -33,25 +33,12 @@ def global_context(request):
         user_name = False
 
     try:
-        core_group = request.user.groups.filter (name = 'Cores')
-        coord_group = request.user.groups.filter (name = 'Coords')
-    except:
-        coord_group = False
-        core_group = False
-    try:
         photo_list=userphoto.objects.filter()           
     except:
-       photo_list=False    
+        photo_list=False    
 
     page_owner = request.session.get ('page_owner', request.user)
     print "this is the page owner (form util.py ) ",page_owner
-
-    try:
-        po_core_group = page_owner.groups.filter (name = 'Cores')
-        po_coord_group = page_owner.groups.filter (name = 'Coords')
-    except:
-        po_coord_group = False
-        po_core_group = False
     
     can_edit=request.session.get('can_edit','False')
     print "path is :" ,request.path
@@ -67,16 +54,21 @@ def global_context(request):
     except:
         po_name = False
 
+    if page_owner != request.user:
+        is_visitor = True
+    else:
+        is_visitor = False
+
     context =  RequestContext (request,
             {'user':request.user,
             'SITE_URL':settings.SITE_URL,
              'user_dept_name': user_dept_name,
              'user_name': user_name,
-             'is_core' : core_group,
-             'is_coord' : coord_group,
-             'po_is_core' : po_core_group,
-             'po_is_coord' : po_coord_group,
-             'is_visitor' : request.session.get ('is_visitor', False),
+             'is_core' : is_core (request.user),
+             'is_coord' : not is_core (request.user),
+             'po_is_core' : is_core (page_owner),
+             'po_is_coord' : not is_core (page_owner),
+             'is_visitor' : is_visitor,
              'page_owner' : page_owner,
              'po_name' : po_name,
              'po_dept_name' : po_dept_name,
@@ -126,7 +118,7 @@ def needs_authentication (func):
             request.session['from_url'] = request.path
             
             print "path from util", request.path
-            return HttpResponseRedirect ("%shome/login/"%settings.SITE_URL)
+            return HttpResponseRedirect ("%s/home/login/"%settings.SITE_URL)
         else:
             return func (*__args, **__kwargs)
     return wrapper
@@ -140,7 +132,7 @@ def no_login (func):
             # Return here after logging in
             request.session['already_logged'] = True
 	    #html = "%s/home/" %SITEURL
-            return HttpResponseRedirect ("%shome/" %settings.SITE_URL)
+            return HttpResponseRedirect ("%s/home/" %settings.SITE_URL)
         else:
             return func (*__args, **__kwargs)
     return wrapper
@@ -162,3 +154,35 @@ def no_login (func):
 #                 return func (*__args, **__kwargs)
 #         return wrapper
 #     return _dec
+
+
+# Temporary workaround for the fact that I don't know whether / how to
+# extend the User class with methods
+def is_core (user):
+    """
+    Return True if user is a Core.
+    """
+    if user.groups.filter (name = 'Cores'):
+        return True
+    return False
+
+def get_page_owner (request, owner_name):
+    """
+    If owner_name is passed, return page owner, if he exists. If user
+    with that name doesn't exist, return 'Invalid'.
+
+    Else, return current user.
+
+    Also, set the session variable for page_owner.
+    """
+    print 'Get Page Owner - owner_name : ', owner_name
+    if owner_name == '' or owner_name is None:
+        page_owner = request.user
+    else:
+        try:
+            page_owner = User.objects.get (username = owner_name)
+        except:
+            return 'Invalid'
+    request.session['page_owner'] = page_owner
+    return page_owner
+

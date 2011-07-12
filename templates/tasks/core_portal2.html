@@ -15,7 +15,7 @@ Dashboard
   {% if not is_visitor %}
   {% block create_task_part %}
   <!-- <h2>Click to create a Task </h2> -->
-  <a href="{% url tasks.views.edit_task %}">
+  <a href="{% url tasks.views.edit_task owner_name=user %}">
     <h2>Create a New Task</h2>
     <!-- <div class="button">Create</div> -->
   </a>
@@ -43,20 +43,20 @@ Dashboard
 	{% for subtask in all_unassigned_received_SubTasks %}
 	<tr>
 	  <td> 
-	    <a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }}</a> 
+	    <a href="{% url tasks.views.display_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a> 
 	  </td>
 	  <td> {{ subtask.creator.get_profile.name }} </td>
 	  <td> {{ subtask.deadline }} </td>
 	  <td> {{ subtask.status }} </td>
 	  <td>  
-	    <a href="{% url tasks.views.handle_subtask_comments subtask.id %}">Comments</a> 
+	    <a href="{% url tasks.views.handle_subtask_comments subtask_id=subtask.id owner_name=page_owner %}">Comments</a> 
 	  </td>
 	</tr>
 	{% endfor %}
       </table>
-      {% else %}
-      <h4>No Requests or Unassigned SubTasks for your Department.</h4>
   </div>
+  {% else %}
+  <h4>No Requests or Unassigned SubTasks for your Department.</h4>
   {% endif %}
   {% endblock received_requests %}
   <!-- <hr> -->
@@ -76,15 +76,15 @@ Dashboard
     {% for subtask in all_requested_SubTasks %}
     <tr>
       <td> 
-	<a href="{% url tasks.views.edit_task subtask.task.id %}">{{ subtask.task.subject }}</a> 
+	<a href="{% url tasks.views.edit_task task_id=subtask.task.id owner_name=page_owner %}">{{ subtask.task.subject }}</a> 
       </td>
       <td> 
-	<a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }}</a> 
+	<a href="{% url tasks.views.display_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a> 
       </td>
       <td> {{ subtask.deadline }} </td>
       <td> {{ subtask.status }} </td>
       <td>  
-	<a href="{% url tasks.views.handle_subtask_comments subtask.id %}">Comments</a> 
+	<a href="{% url tasks.views.handle_subtask_comments subtask_id=subtask.id owner_name=page_owner %}">Comments</a> 
       </td>
     </tr>
     {% endfor %}
@@ -111,7 +111,7 @@ Dashboard
     {% for subtask in all_completed_SubTasks %}
     <tr>
       <td>
-	<a href="{% url tasks.views.display_subtask subtask.id %}">
+	<a href="{% url tasks.views.display_subtask subtask_id=subtask.id owner_name=page_owner %}">
 	  {{ subtask.subject }}
 	</a>
       </td>
@@ -130,10 +130,10 @@ Dashboard
   {% endblock completed %}
 
   <!-- <hr> -->
+  {% block update_stuff %}
+  {% include "tasks/updates.html" %}
+  {% endblock update_stuff %}
 </div>
 
 {% endblock portal_stuff %}
 
-{% block update_stuff %}
-{% include "tasks/updates.html" %}
-{% endblock update_stuff %}
