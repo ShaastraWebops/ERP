@@ -19,12 +19,10 @@ class UpdateForm (ModelForm):
 
 class TaskForm (ModelForm):
     class Meta:
-        widgets={'deadline':forms.TextInput(attrs={'id':'popupDatepicker'}) ,}
         model = Task
         exclude = ('creator', )
 
 class SubTaskForm (ModelForm):
     class Meta:
-        widgets={'deadline':forms.TextInput(attrs={'id':'popupDatepicker'}) ,}
         model = SubTask
         exclude = ('creator', 'description', 'department', 'task')

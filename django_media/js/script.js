@@ -3,6 +3,7 @@ $(document).ready(function(){
 	
 	
    $('#popupDatepicker').datepick();
+   $('#id_deadline').datepick();
 
 
     $('#contacts ul > li')
