@@ -22,11 +22,11 @@ Dashboard
   </tr>
   {% for subtask in all_SubTasks %}
   <tr>
-    <td><a href="{% url tasks.views.display_subtask subtask.id %}">{{ subtask.subject }} </a></td>
+    <td><a href="{% url tasks.views.display_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }} </a></td>
     <td> {{ subtask.creator.get_profile.name }} </td>
     <td> {{ subtask.deadline }} </td>
     <td> {{ subtask.status }} </td>
-    <td>  <a href="{% url tasks.views.handle_subtask_comments subtask.id %}">Comments</a> </td>
+    <td>  <a href="{% url tasks.views.handle_subtask_comments subtask_id=subtask.id owner_name=page_owner %}">Comments</a> </td>
   </tr>
   {% endfor %}
 </table>

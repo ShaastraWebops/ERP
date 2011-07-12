@@ -32,7 +32,7 @@ def get_timeline (user):
     """
     # Get user's department name
     user_dept = user.userprofile_set.all()[0].department
-    if user.groups.filter (name = 'Cores'):
+    if is_core (user):
         return Task.objects.filter (creator = user)
     else:
         return Task.objects.filter (creator__userprofile__department = user_dept)
@@ -70,55 +70,73 @@ def get_completed_subtasks (user):
     user_dept = user.userprofile_set.all()[0].department
     return SubTask.objects.filter (department = user_dept, status = 'C')
 
-@needs_authentication
-def display_portal (request, owner_name = None):
+def get_page_owner (request, owner_name):
     """
-    List all Tasks created by this user
+    If owner_name is passed, return page owner, if he exists. If user
+    with that name doesn't exist, return 'Invalid'.
 
-    Check whether user is authenticated.
-    Assumes that the user is either a Coord or a Core.
+    Else, return current user.
+
+    Also, set the session variable for page_owner.
     """
-    if owner_name is None:
+    print 'Get Page Owner - owner_name : ', owner_name
+    if owner_name == '' or owner_name is None:
         page_owner = request.user
-        is_visitor = False
     else:
-        page_owner = User.objects.get (username = owner_name)
-        is_visitor = True
-
+        try:
+            page_owner = User.objects.get (username = owner_name)
+        except:
+            return 'Invalid'
     request.session['page_owner'] = page_owner
-    request.session['is_visitor'] = is_visitor
+    return page_owner
 
-    print 'User : ', request.user.username
-    print 'Page Owner : ', page_owner.username
-
-    # Deal with the Updates part (viewing, creating) of the portal
-    update_dict = handle_updates (request, page_owner)
-
-    display_dict = dict ()
-    if page_owner.groups.filter (name = 'Cores'):
-        # For Cores
-        display_dict['all_Tasks'] = get_timeline (page_owner)
-        display_dict['all_unassigned_received_SubTasks'] = get_unassigned_received_subtasks (page_owner)
-        display_dict['all_requested_SubTasks'] = get_requested_subtasks (page_owner)
-        display_dict['all_completed_SubTasks'] = get_completed_subtasks (page_owner)
-        # Include the key-value pairs in update_dict
-        display_dict.update (update_dict)
-        return render_to_response('tasks/core_portal2.html',
-                                  # locals(),
-                                  display_dict,
-                                  context_instance = global_context (request))
-    else:
-        # For Coords
-        display_dict['all_Tasks'] = get_timeline (page_owner)
-        display_dict['all_SubTasks'] = get_subtasks (page_owner)
-        # Include the key-value pairs in update_dict
-        display_dict.update (update_dict)
-        return render_to_response('tasks/coord_portal.html',
-                                  # locals(),
-                                  display_dict,
-                                  context_instance = global_context (request))
 @needs_authentication
-def edit_task (request, task_id = False):
+def display_portal (request, owner_name = ''):
+    """
+    Display owner's portal.
+    """
+    page_owner = get_page_owner (request, owner_name)
+
+    if is_core (page_owner):
+        return display_core_portal (request, page_owner)
+    else:
+        return display_coord_portal (request, page_owner)
+
+def display_core_portal (request, core):
+    """
+    Display core's portal
+    """
+    display_dict = dict ()
+    # Deal with the Updates part (viewing, creating) of the portal
+    update_dict = handle_updates (request, core)
+    display_dict['all_Tasks'] = get_timeline (core)
+    display_dict['all_unassigned_received_SubTasks'] = get_unassigned_received_subtasks (core)
+    display_dict['all_requested_SubTasks'] = get_requested_subtasks (core)
+    display_dict['all_completed_SubTasks'] = get_completed_subtasks (core)
+    # Include the key-value pairs in update_dict
+    display_dict.update (update_dict)
+    return render_to_response('tasks/core_portal2.html',
+                              display_dict,
+                              context_instance = global_context (request))
+
+def display_coord_portal (request, coord):
+    """
+    Display coord's portal
+    """
+    display_dict = dict ()
+    # Deal with the Updates part (viewing, creating) of the portal
+    update_dict = handle_updates (request, coord)
+
+    display_dict['all_Tasks'] = get_timeline (coord)
+    display_dict['all_SubTasks'] = get_subtasks (coord)
+    # Include the key-value pairs in update_dict
+    display_dict.update (update_dict)
+    return render_to_response('tasks/coord_portal.html',
+                              display_dict,
+                              context_instance = global_context (request))
+
+@needs_authentication
+def edit_task (request, task_id = False, owner_name = ''):
     """
     Edit existing Task.
     TODO :
@@ -128,7 +146,8 @@ def edit_task (request, task_id = False):
     Save Draft
     """
 
-    if request.session.get ('is_visitor', False):
+    page_owner = get_page_owner (request, owner_name)
+    if page_owner != request.user:
         return display_task (request, task_id)
     user = request.user
     dept_names = [name for name, description in DEP_CHOICES]
@@ -185,17 +204,20 @@ def edit_task (request, task_id = False):
                               context_instance = global_context (request))
 
 @needs_authentication
-def display_subtask (request, subtask_id):
+def display_subtask (request, subtask_id, owner_name = ''):
     """
     Display full details of a SubTask.
     TODO :
     Validation
+    Have an Edit Subtask view (like for Tasks)?
     """
+    page_owner = get_page_owner (request, owner_name)
+
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
     curr_subtask_form = SubTaskForm (instance = curr_subtask)
 
-    if user.groups.filter (name = 'Cores'):
+    if is_core (user):
         if curr_subtask.task.creator == user:
             is_creator = True
         elif curr_subtask.department == user.get_profile ().department:
@@ -225,13 +247,14 @@ def display_subtask (request, subtask_id):
                               context_instance = global_context (request))
     
 @needs_authentication
-def display_task (request, task_id):
+def display_task (request, task_id, owner_name = ''):
     """
     Display full details of a Task.
     TODO :
     Validation
     Back Button to go back
     """
+    page_owner = get_page_owner (request, owner_name)
     print 'Display Task - Task ID : ', task_id
     curr_task = Task.objects.get (id = task_id)
     return render_to_response('tasks/display_task.html',
@@ -242,7 +265,7 @@ def display_task (request, task_id):
 # Comments for Tasks and subtasks are very similar. So they call the same function.
 
 @needs_authentication    
-def handle_task_comments (request, task_id):
+def handle_task_comments (request, task_id, owner_name = ''):
     """
     Displays all comments for Task of task_id and allows addition of a
     comment.
@@ -250,6 +273,8 @@ def handle_task_comments (request, task_id):
     TODO :
     Make sure that user is a Core. (Necessary?)
     """
+    page_owner = get_page_owner (request, owner_name)
+
     comment_form, comment_status = handle_comment (request = request, is_task_comment = True, object_id = task_id)
     comments = TaskComment.objects.filter (task__id = task_id)
     curr_object = Task.objects.get (id = task_id)
@@ -259,11 +284,13 @@ def handle_task_comments (request, task_id):
                               context_instance = global_context (request))
 
 @needs_authentication    
-def handle_subtask_comments (request, subtask_id):
+def handle_subtask_comments (request, subtask_id, owner_name = ''):
     """
     Displays all comments for SubTask of subtask_id and allows
     addition of a comment.
     """
+    page_owner = get_page_owner (request, owner_name)
+
     comment_form, comment_status = handle_comment (request = request, is_task_comment = False, object_id = subtask_id)
     comments = SubTaskComment.objects.filter (subtask__id = subtask_id)
     curr_object = SubTask.objects.get (id = subtask_id)
@@ -323,16 +350,14 @@ def handle_comment (request, is_task_comment, object_id):
         comment_form = curr_modelform ()
     return (comment_form, 'Blank')
 
-@needs_authentication
-def handle_updates (request, page_owner = None):
+def handle_updates (request, owner_name = ''):
     """
     Used by coords to send updates to Core.
     Cores will just see the updates they have received.
 
     Return a dict containing update variables.
     """
-    if page_owner is None:
-        page_owner = request.user
+    page_owner = get_page_owner (request, owner_name)
 
     update_dict = dict ()
     if page_owner.groups.filter (name = 'Coords'):
@@ -371,28 +396,23 @@ def get_all_updates (dept):
     return Update.objects.filter (author__userprofile__department = dept)
 
 @needs_authentication
-def display_department_portal (request, owner_name = None):
+def display_department_portal (request, owner_name = '', department_name = None):
     """
     Display all basic info about user's Department.
     """
+    print 'Department name :', department_name
     # #added by vivek
     print "departmental portal here"
     shout_form=shout_box_form()
     shouts=shout_box.objects.all()
     print "done"
 
-    if owner_name is None:
-        page_owner = request.user
-        is_visitor = False
+    page_owner = get_page_owner (request, owner_name)
+
+    if department_name is None:
+        department = page_owner.get_profile ().department
     else:
-        print 'Owner name : ', owner_name
-        page_owner = User.objects.get (username = owner_name)
-        is_visitor = True
-
-    request.session['page_owner'] = page_owner
-    request.session['is_visitor'] = is_visitor
-
-    department = page_owner.get_profile ().department
+        department = Department.objects.get (department_name)
     display_dict = dict ()
     display_dict['shouts']=shouts#by vivek
     display_dict['shout_form']=shout_form#by vivek

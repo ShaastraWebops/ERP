@@ -31,21 +31,7 @@ def global_context(request):
     except:
         user_name = False
 
-    try:
-        core_group = request.user.groups.filter (name = 'Cores')
-        coord_group = request.user.groups.filter (name = 'Coords')
-    except:
-        coord_group = False
-        core_group = False
-
     page_owner = request.session.get ('page_owner', request.user)
-
-    try:
-        po_core_group = page_owner.groups.filter (name = 'Cores')
-        po_coord_group = page_owner.groups.filter (name = 'Coords')
-    except:
-        po_coord_group = False
-        po_core_group = False
 
     try:
         po_dept_name = page_owner.get_profile ().department.Dept_Name
@@ -57,16 +43,21 @@ def global_context(request):
     except:
         po_name = False
 
+    if page_owner != request.user:
+        is_visitor = True
+    else:
+        is_visitor = False
+
     context =  RequestContext (request,
             {'user':request.user,
             'SITE_URL':settings.SITE_URL,
              'user_dept_name': user_dept_name,
              'user_name': user_name,
-             'is_core' : core_group,
-             'is_coord' : coord_group,
-             'po_is_core' : po_core_group,
-             'po_is_coord' : po_coord_group,
-             'is_visitor' : request.session.get ('is_visitor', False),
+             'is_core' : is_core (request.user),
+             'is_coord' : not is_core (request.user),
+             'po_is_core' : is_core (page_owner),
+             'po_is_coord' : not is_core (page_owner,
+             'is_visitor' : is_visitor,
              'page_owner' : page_owner,
              'po_name' : po_name,
              'po_dept_name' : po_dept_name,
@@ -148,3 +139,16 @@ def no_login (func):
 #                 return func (*__args, **__kwargs)
 #         return wrapper
 #     return _dec
+
+
+# Temporary workaround for the fact that I don't know whether / how to
+# extend the User class with methods
+def is_core (user):
+    """
+    Return True if user is a Core.
+    """
+    if user.groups.filter (name = 'Cores'):
+        return True
+    return False
+
+
