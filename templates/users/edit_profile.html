@@ -66,7 +66,7 @@ top:-125px;
     </div>
 
     <div id="details">
-      <form method="POST" id="profile_form" action="{{SITE_URL}}users/edit_profile/">
+      <form method="POST" id="profile_form" action="{{SITE_URL}}/users/edit_profile/">
 	{% csrf_token %}
 	<table>
 	  {{ profile_form }} 

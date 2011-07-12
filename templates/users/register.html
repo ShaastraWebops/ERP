@@ -13,7 +13,7 @@ User Registration
 <p>
   Please fill in the following details: 
 </p>
-<form action="{{SITE_URL}}users/register/{{dept_name}}/" method="POST">{% csrf_token %}
+<form action="{{SITE_URL}}/users/register/{{dept_name}}/" method="POST">{% csrf_token %}
   <div class="register">
     <table name="register">
       {{ user_form }}
