@@ -98,7 +98,7 @@ function delete_data(field) {
 <div id="place" >
 {% if can_edit %} 
 
-<form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}dashboard/upload_document/">{% csrf_token %}
+<form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_document/">{% csrf_token %}
 <table>
 
 
@@ -138,7 +138,7 @@ Date
 <h4>you have not uploaded any documents till now</h4>
 {% endif %}
 
-<form method="GET" action="{{SITE_URL}}dashboard/delete_document/">
+<form method="GET" action="{{SITE_URL}}/dashboard/delete_document/">
 
 
 
@@ -181,7 +181,7 @@ Date
 	<td>
 	<td>
 	<div class="docs_link_2">
-	<a href="{{SITE_URL}}dashboard/delete_document/{{owner_name}}/{{field.id}}/{{field.file_name}}" >delete </a>
+	<a href="{{SITE_URL}}/dashboard/delete_document/{{owner_name}}/{{field.id}}/{{field.file_name}}" >delete </a>
 	</div>
 	</td>
 	<td>

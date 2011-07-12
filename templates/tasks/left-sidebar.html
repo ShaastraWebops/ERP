@@ -35,13 +35,13 @@
     <li>
       
     <li>
-      <a href="{% url users.views.view_profile %}">
+      <a href="{% url users.views.view_profile page_owner.id %}">
 	Profile
       </a>
     </li>
 
     <li>
-      <a href="{% url dashboard.views.upload_file %}">
+      <a href="{% url dashboard.views.upload_file page_owner.id %}">
 	Documents
       </a>
     </li>
