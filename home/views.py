@@ -99,17 +99,19 @@ def forgot_password(request):
                 print form.cleaned_data['email_id'] , "is the username entered"
                 user=User.objects.get(username=form.cleaned_data['username'] , email=form.cleaned_data['email_id'])
                 print "the user with this name and emailid exists "
-                invalid_login_message ="We have mailed you your new password if any further problem contact the webops dept"
+                invalid_login_message ="such and such a username exists dotn worry"
                 # here to send email to the coord
                 
                 hyperlink=settings.SITE_URL+"/testonly_ignore"
                 mail_header="follow the link and change your password , once you log in"
                 mail=["form.cleaned_data['email_id'] ",]
+                invalid_login_message ="We have tried to mail you but then there is some internal problem"                
                 message=mail_coord(hyperlink ,mail_header ,form.cleaned_data['username'],"home/forgot_password_mail.html",mail)
+                invalid_login_message ="We have mailed you your new password if any further problem contact the webops dept"                
                 return render_to_response('home/login.html', locals(), context_instance= global_context(request))
         
             except:
-                invalid_login_message= "details given by u dont match , please for further clarification contact webops  dept"
+                pass #invalid_login_message= "details given by u dont match , please for further clarification contact webops  dept"
     else:
         print "problem in forgot_password_view"
     userpro=User.objects.all()
