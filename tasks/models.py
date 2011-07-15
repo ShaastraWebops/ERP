@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from erp.department.models import Department
+from erp.misc.helper import is_core, is_coord, get_page_owner
 
 # Create your models here.
 #The choices may be cup level but if any thing better pls do change.
@@ -43,6 +44,16 @@ class Task(AbstractBaseTask):
     A Task mainly consists of SubTasks which are created and assigned by the respective Cores of each department.
     """
 
+    def is_owner (self, user):
+        """
+        user is the owner of the current Task if
+        - user is a Core in the Task's department
+        """
+        print 'User Dept : ', user.get_profile ().department
+        print 'Is Core : ', is_core (user)
+        print 'Task Dept : ', self.creator.get_profile ().department
+        return user.get_profile ().department == self.creator.get_profile ().department and is_core (user)
+
     def __str__(self):
         return self.subject
 
@@ -69,6 +80,31 @@ class SubTask(AbstractBaseTask):
     coords = models.ManyToManyField (User, blank = True)
     department = models.ForeignKey (Department)
     task = models.ForeignKey (Task)
+
+    def is_owner (self, user):
+        """
+        user is the owner of the current SubTask if
+        - user is a Core in the department which created the Task
+          which SubTask is related to
+        - user is a Core in the department to which SubTask is assigned
+        """
+        print 'User Dept : ', user.get_profile ().department
+        print 'Is Core : ', is_core (user)
+        print 'Task Dept : ', self.task.creator.get_profile ().department
+        print 'SubTask Dept : ', self.department
+        user_dept = user.get_profile().department
+        return is_core (user) and (
+            (user_dept == self.task.creator.get_profile ().department) or
+            (user_dept == self.department))
+
+    def is_assignee (self, user):
+        """
+        Return True if user is a Coord who has been assigned this subtask.
+        """
+        print 'User Dept : ', user.get_profile ().department
+        print 'Is Coord : ', is_coord (user)
+        user_dept = user.get_profile().department
+        return is_coord (user) and (self.coords.filter (id = user.id).exists ())
 
     def __str__(self):
         return self.subject

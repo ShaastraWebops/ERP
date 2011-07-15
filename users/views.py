@@ -10,6 +10,7 @@ from forms import *
 from django import forms
 from erp.users.models import *
 from erp.misc.util import *
+from erp.misc.helper import is_core, get_page_owner
 from erp.department.models import *
 from erp.dashboard.forms import *			
 from django.contrib.auth.models import Group,Permission
@@ -156,7 +157,7 @@ def invite_inbulk(self):
 
             
 @needs_authentication
-def view_profile(request ,owner_name=None):
+def view_profile(request, owner_name=None):
     page_owner = get_page_owner (request, owner_name)
     try:
         image=userphoto.objects.get(name=page_owner)

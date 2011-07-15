@@ -31,29 +31,28 @@ Dashboard
   {% if all_unassigned_received_SubTasks %}
   <div>
     <p>Click to assign these to your Coords.</p>
-    {# <table width="" cellspacing="10" cellpadding="" border="0"> #}
-      <table>
-	<tr>
-	  <th>Subject</th>
-	  <th>Proposer</th>
-	  <th>Deadline</th>
-	  <th>Status</th>
-	  <th>Comments</th>
-	</tr>
-	{% for subtask in all_unassigned_received_SubTasks %}
-	<tr>
-	  <td> 
-	    <a href="{% url tasks.views.display_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a> 
-	  </td>
-	  <td> {{ subtask.creator.get_profile.name }} </td>
-	  <td> {{ subtask.deadline }} </td>
-	  <td> {{ subtask.status }} </td>
-	  <td>  
-	    <a href="{% url tasks.views.handle_subtask_comments subtask_id=subtask.id owner_name=page_owner %}">Comments</a> 
-	  </td>
-	</tr>
-	{% endfor %}
-      </table>
+    <table>
+      <tr>
+	<th>Subject</th>
+	<th>Proposer</th>
+	<th>Deadline</th>
+	<th>Status</th>
+	<th>Comments</th>
+      </tr>
+      {% for subtask in all_unassigned_received_SubTasks %}
+      <tr>
+	<td> 
+	  <a href="{% url tasks.views.edit_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a> 
+	</td>
+	<td> {{ subtask.creator.get_profile.name }} </td>
+	<td> {{ subtask.deadline }} </td>
+	<td> {{ subtask.status }} </td>
+	<td>  
+	  <a href="{% url tasks.views.handle_subtask_comments subtask_id=subtask.id owner_name=page_owner %}">Comments</a> 
+	</td>
+      </tr>
+      {% endfor %}
+    </table>
   </div>
   {% else %}
   <h4>No Requests or Unassigned SubTasks for your Department.</h4>
@@ -79,7 +78,7 @@ Dashboard
 	<a href="{% url tasks.views.edit_task task_id=subtask.task.id owner_name=page_owner %}">{{ subtask.task.subject }}</a> 
       </td>
       <td> 
-	<a href="{% url tasks.views.display_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a> 
+	<a href="{% url tasks.views.edit_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a> 
       </td>
       <td> {{ subtask.deadline }} </td>
       <td> {{ subtask.status }} </td>
@@ -111,14 +110,16 @@ Dashboard
     {% for subtask in all_completed_SubTasks %}
     <tr>
       <td>
-	<a href="{% url tasks.views.display_subtask subtask_id=subtask.id owner_name=page_owner %}">
+	<a href="{% url tasks.views.edit_subtask subtask_id=subtask.id owner_name=page_owner %}">
 	  {{ subtask.subject }}
 	</a>
       </td>
       <td>
-	{% for coord in subtask.coords.all %}
-	{{ coord.get_profile.name }} 
-	{% endfor %}
+	<ul>
+	  {% for coord in subtask.coords.all %}
+	  <li>{{ coord.get_profile.name }}</li>
+	  {% endfor %}
+	</ul>
       </td>
       <!-- <td> {{ subtask.status }} </td> -->
     </tr>

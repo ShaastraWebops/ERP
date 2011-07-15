@@ -1,3 +1,4 @@
+
 {% extends "base_portal.html" %}
 
 {% block title %}
@@ -5,16 +6,38 @@
 Subtask
 {% endblock title %}
 
-{% block display_stuff %}
+{% block form_stuff %}
 <h1>SubTask</h1>
 
 {% if has_updated %}
 <h3>The SubTask has successfully been updated.</h3>
 {% endif %}
 
-<a href="{% url tasks.views.display_task task_id=curr_subtask.task.id owner_name=page_owner %}">View Task</a>
+<a href="{% url tasks.views.edit_task task_id=curr_subtask.task.id owner_name=page_owner %}">Go to Task</a>
 <form action="" method="post">
   {% csrf_token %}
+  {% if is_owner %}
+  <table>
+    <tr>
+      <th>Department</th>
+      <td> {{ curr_subtask.department}} </td>
+    </tr>
+    <tr>
+      <th>Description</th>
+      <td> {{ curr_subtask.description }} </td>
+    </tr>
+    <tr>
+      <th>Proposed by </th>
+      <td> {{ curr_subtask.creator.get_profile.name }} </td>
+    </tr>
+    <tr>
+      <th>Proposing Dept </th>
+      <td> {{ curr_subtask.creator.get_profile.department.Dept_Name }} </td>
+    </tr>
+    {{ curr_subtask_form }}
+  </table>
+  
+  {% else %}
   <table>
     <tr>
       <th>Subject</th>
@@ -46,9 +69,11 @@ Subtask
     </tr>
     <tr>
       <th>Status</th>
-      <td> {{ curr_subtask.status }} </td>
+      <td> {{ curr_subtask_form.status }} </td>
     </tr>
   </table>
+  {% endif %}
+  <input type="submit" value="Submit">
 </form>
 
-{% endblock display_stuff %}
+{% endblock form_stuff %}

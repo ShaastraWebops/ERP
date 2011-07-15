@@ -16,6 +16,7 @@ from erp.users.views import view_profile
 from erp.users.forms import *
 from erp.tasks.views import *
 from erp.misc.util import *
+from erp.misc.helper import is_core, get_page_owner
 from erp.settings import *
 import sha,random,datetime
 import os # upload files

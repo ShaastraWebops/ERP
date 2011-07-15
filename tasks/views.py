@@ -11,8 +11,8 @@ from django.contrib.auth.decorators import login_required
 import datetime
 from forms import TaskForm, SubTaskForm, TaskCommentForm, SubTaskCommentForm, UpdateForm
 from models import *
-# This seems necessary to avoid CSRF errors
 from erp.misc.util import *
+from erp.misc.helper import is_core, is_coord, get_page_owner
 from erp.department.models import *
 from erp.settings import SITE_URL
 from erp.dashboard.forms import shout_box_form
@@ -41,7 +41,7 @@ def get_subtasks (user):
     """
     Return all SubTasks assigned to user (assumed to be a Coord).
     """
-    # Return list of SubTasks for which at least one of the coords is user
+    # Return list of SubTasks for which one of the coords is user
     return SubTask.objects.filter (coords = user)
     
 def get_unassigned_received_subtasks (user):
@@ -115,10 +115,15 @@ def display_coord_portal (request, coord):
                               display_dict,
                               context_instance = global_context (request))
 
+# The page owner only decorator ensures that only owners of a
+# Task can edit the Task (and that too only in their own page, ie. not
+# while visiting some other user's page)
 @needs_authentication
+@page_owner_only (alternate_view_name = '')
 def edit_task (request, task_id = False, owner_name = None):
     """
     Edit existing Task.
+
     TODO :
     Do user validation (should have permission)
     Allow delete Task facility (?)
@@ -127,8 +132,6 @@ def edit_task (request, task_id = False, owner_name = None):
     """
 
     page_owner = get_page_owner (request, owner_name)
-    if page_owner != request.user:
-        return display_task (request, task_id)
     user = request.user
     dept_names = [name for name, description in DEP_CHOICES]
     if task_id:
@@ -184,9 +187,17 @@ def edit_task (request, task_id = False, owner_name = None):
                               context_instance = global_context (request))
 
 @needs_authentication
-def display_subtask (request, subtask_id, owner_name = None):
+@page_owner_only (alternate_view_name = '')
+def edit_subtask (request, subtask_id, owner_name = None):
     """
     Display full details of a SubTask.
+
+    Note :
+    Only owners of a subtask can (fully) edit the subtask (and that too only
+    in their own page, ie. not while visiting some other user's page)
+
+    Coords who have been assigned the SubTask can change only the Status.
+
     TODO :
     Validation
     Have an Edit Subtask view (like for Tasks)?
@@ -197,31 +208,46 @@ def display_subtask (request, subtask_id, owner_name = None):
     curr_subtask = SubTask.objects.get (id = subtask_id)
     curr_subtask_form = SubTaskForm (instance = curr_subtask)
 
-    if is_core (user):
-        if curr_subtask.task.creator == user:
-            is_creator = True
-        elif curr_subtask.department == user.get_profile ().department:
-            is_assignee = True
+    if curr_subtask.is_owner (user):
+        is_owner = True
+    else:
+        # User is a Coord
+        is_owner = False
 
     has_updated = False
     if request.method == 'POST':
-        if is_creator or is_assignee:
+        if is_owner:
             # Let the Core save the SubTask
             curr_subtask_form = SubTaskForm (request.POST, instance = curr_subtask)
             if curr_subtask_form.is_valid ():
                 curr_subtask_form.save ()
                 return HttpResponseRedirect ('%s/dashboard/home' %
                                              settings.SITE_URL)
-        else:
-            # CHANGE - status is now a dropdown box
-            # Hack to get the status
-            if request.POST.get ('status', 'O') != '':
-                curr_subtask.status = request.POST.get ('status', 'O') 
-                curr_subtask.save ()
-                has_updated = True
-                # Reinstantiate the form
-                curr_subtask_form = SubTaskForm (instance = curr_subtask)
-                print 'SubTask updated'
+        elif 'status' in request.POST:
+            # Coord - allowed to change only the status
+            curr_subtask.status = request.POST.get ('status', 'O') 
+            curr_subtask.save ()
+            has_updated = True
+            # Reinstantiate the form
+            curr_subtask_form = SubTaskForm (instance = curr_subtask)
+            print 'SubTask updated'
+            return HttpResponseRedirect ('%s/dashboard/home' %
+                                         settings.SITE_URL)
+    return render_to_response('tasks/edit_subtask.html',
+                              locals(),
+                              context_instance = global_context (request))
+
+@needs_authentication
+def display_subtask (request, subtask_id, owner_name = None):
+    """
+    Display full details of a SubTask.
+    TODO :
+    Validation
+    Have an Edit Subtask view (like for Tasks)?
+    """
+    page_owner = get_page_owner (request, owner_name)
+    user = request.user
+    curr_subtask = SubTask.objects.get (id = subtask_id)
     return render_to_response('tasks/display_subtask.html',
                               locals(),
                               context_instance = global_context (request))

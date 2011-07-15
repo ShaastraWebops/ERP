@@ -1,11 +1,12 @@
 # Helper functions
 from django.contrib import auth
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
+from erp.tasks.models import Task, SubTask
 from erp.users.models import *
-
+from erp.misc.helper import is_core, get_page_owner
 from erp import settings
 from erp.users import models
 from erp.department.models import Department
@@ -107,6 +108,7 @@ def session_get (request, key, default=False):
 
 # Force authentication first
 def needs_authentication (func):
+    # print 'In Decorator - Function Name : ', func.__name__
     def wrapper (*__args, **__kwargs):
         request = __args[0]
         if not request.user.is_authenticated():
@@ -134,51 +136,118 @@ def no_login (func):
     return wrapper
 
 # TODO : decorator
-# def page_owner_only (redirect_url = None):
-#     """
-#     If user is not of the same department as the task, then just
-#     display the task, etc.
-#     """
-#     def _dec(func):
-#         def wrapper (*__args, **__kwargs):
-#             request = __args[0]
-#             if not request.user.is_authenticated():
-#                 # Return here after logging in
-#                 request.session['from_url'] = request.path
-#                 return HttpResponseRedirect ("%s/home/login/"%settings.SITE_URL)
-#             else:
-#                 return func (*__args, **__kwargs)
-#         return wrapper
-#     return _dec
-
-
-# Temporary workaround for the fact that I don't know whether / how to
-# extend the User class with methods
-def is_core (user):
+def page_owner_only (alternate_view_name = '', **kwargs):
     """
-    Return True if user is a Core.
-    """
-    if user.groups.filter (name = 'Cores'):
-        return True
-    return False
+    Based on the view name, decide which wrapper to return.
 
-def get_page_owner (request, owner_name):
-    """
-    If owner_name is passed, return page owner, if he exists. If user
-    with that name doesn't exist, return 'Invalid'.
+    Edit Task / SubTask:
+    If user is not of the same department as the task, then just
+    display the task, etc.
+    If Task does not exist, redirect.
 
-    Else, return current user.
-
-    Also, set the session variable for page_owner.
+    General view:
+    If page owner != current user, redirect to alternate_view_name and
+    pass kwargs.
     """
-    print 'Get Page Owner - owner_name : ', owner_name
-    if owner_name == '' or owner_name is None:
-        page_owner = request.user
+    def _dec(func):
+        def edit_task_wrapper (*__args, **__kwargs):
+            request = __args[0]
+            curr_task_id = __kwargs.get('task_id', None)
+            curr_page_owner = User.objects.get(
+                username = __kwargs.get('owner_name', None))
+            if curr_task_id is None:
+                # Creation of Task
+                if is_core (request.user):
+                    if request.user == curr_page_owner:
+                        # Go ahead
+                        return func (*__args, **__kwargs)
+                    else:
+                        # You can't create Tasks while visiting some
+                        # other user's pages
+                        # (use case : manually typing erp/coord_name/edit/)
+                        print 'Go create Tasks in your own page, dude.'
+                        print 'Redirecting... to visited User\'s portal'
+                        return redirect (
+                            'erp.tasks.views.display_portal',
+                            owner_name = __kwargs.get('owner_name',
+                                                      request.user.username))
+                else:
+                    # User is not a Core
+                    print 'You aren\'t authorized to create Tasks.'
+                    print 'Redirecting... to visited User\'s portal'
+                    return redirect ('erp.tasks.views.display_portal',
+                                     owner_name = __kwargs.get('owner_name',
+                                                               request.user.username))
+            return handle_existing_object (Task, curr_task_id,
+                                           request.user, curr_page_owner,
+                                           func, __args, __kwargs)
+
+        def edit_subtask_wrapper (*__args, **__kwargs):
+            request = __args[0]
+            curr_subtask_id = __kwargs.get('subtask_id', None)
+            curr_page_owner = User.objects.get(
+                username = __kwargs.get('owner_name', None))
+            return handle_existing_object (SubTask, curr_subtask_id,
+                                           request.user, curr_page_owner,
+                                           func, __args, __kwargs)
+
+        def simple_wrapper (*__args, **__kwargs):
+            """
+            Just check that the page owner and the curr user are the same.
+            """
+            request = __args[0]
+            curr_page_owner = User.objects.get(
+                username = __kwargs.get('owner_name', None))
+
+            if curr_page_owner != request.user:
+                # Call the alternate view with the keyword args passed
+                # to the decorator.
+                return redirect (alternate_view_name, **kwargs)
+            else:
+                return func (*__args, **__kwargs)
+
+        # Decide which function to return based on the view being decorated
+        if func.__name__ == 'edit_task':
+            return edit_task_wrapper
+        elif func.__name__ == 'edit_subtask':
+            return edit_subtask_wrapper
+        else:
+            return simple_wrapper
+    return _dec
+
+
+def handle_existing_object (Model, object_id, curr_user,
+                            curr_page_owner, func, __args, __kwargs):
+    """
+    If object of model 'Model' does not exist, redirect to user portal.
+    Else, if curr_user is an owner of the model and is in his own
+    page, let him edit it.
+
+    Or else, simply display the object.
+    """
+    model_name = Model.__name__.lower ()
+    print 'Curr ', model_name, ' id : ', object_id
+    try:
+        curr_object = Model.objects.get (id = object_id)
+    except:
+        print model_name, ' with id : ', object_id, ' does not exist.'
+        print 'Redirecting... to visited User\'s portal'
+        return redirect ('erp.tasks.views.display_portal',
+                         owner_name = __kwargs.get('owner_name',
+                                                   curr_user.username))
     else:
-        try:
-            page_owner = User.objects.get (username = owner_name)
-        except:
-            return 'Invalid'
-    request.session['page_owner'] = page_owner
-    return page_owner
-
+        # Only the owner(s) can edit the object and that too only in
+        # their own page
+        if model_name == 'task' and curr_object.is_owner (curr_page_owner) and curr_user == curr_page_owner:
+            # User can edit the object in his own page
+            return func (*__args, **__kwargs)
+        if model_name == 'subtask' and (curr_object.is_owner (curr_page_owner) or curr_object.is_assignee (curr_page_owner)) and curr_user == curr_page_owner:
+            # User can edit the object in his own page
+            return func (*__args, **__kwargs)
+        # View Name
+        my_pos_args = ['erp.tasks.views.display_' + model_name]
+        # Arguments to be passed to the view
+        my_kw_args = {model_name + '_id' : object_id,
+                      'owner_name' : __kwargs.get('owner_name',
+                                                  curr_user.username)}
+        return redirect (*my_pos_args, **my_kw_args)
