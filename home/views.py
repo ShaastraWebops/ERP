@@ -106,12 +106,13 @@ def forgot_password(request):
                 mail_header="follow the link and change your password , once you log in"
                 mail=["form.cleaned_data['email_id'] ",]
                 message=mail_coord(hyperlink ,mail_header ,form.cleaned_data['username'],"home/forgot_password_mail.html",mail)
-                return render_to_response('home/home.html', locals(), context_instance= global_context(request))
+                return render_to_response('home/login.html', locals(), context_instance= global_context(request))
         
             except:
                 invalid_login_message= "details given by u dont match , please for further clarification contact webops  dept"
     else:
         print "problem in forgot_password_view"
+    userpro=User.objects.all()
     return render_to_response('home/forgot_password.html', locals(), context_instance= global_context(request))
         
         
