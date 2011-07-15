@@ -1,0 +1,89 @@
+lite maama
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Chat</title>
+    <script src="/_/orbited.js"></script>
+    <script type="text/javascript" src="/site_media/ajaxroutine.js"></script>
+    <link rel="stylesheet" href="/site_media/chat.css">
+    <script src="/site_media/chat.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <input type="text" id="nickname">
+    <input type="button" value="nickname" name="nickname" onClick="connect();">
+    <div id="box"></div>
+    <input type="text" id="chat">
+    <input type="submit" value="chat" onClick="send_msg();">
+    <iframe id="events"></iframe>
+  </body>
+</html>
+
+
+<style type="text/css" >
+body {
+  margin-left:2em;
+}
+
+#box {
+  border: 1px solid black;
+  width: 80%;
+  margin: .5em auto .5em 0;
+  height: 10em;
+  overflow: scroll;
+}
+
+.event {
+  border: 1px dashed blue;
+  margin: .5em auto;
+  padding: .2em;
+  width: 90%;
+}
+
+#events {
+  display: none;
+}
+
+</style>
+
+<script type="text/javascript">
+function processGetPost()
+	{
+	var myajax=ajaxpack.ajaxobj
+	var myfiletype=ajaxpack.filetype
+	if (myajax.readyState == 4)
+		{ //if request of file completed
+		if (myajax.status==200 || window.location.href.indexOf("http")==-1)
+			{ //if request was successful or running script locally
+			if (myfiletype=="txt")
+			alert(myajax.responseText)
+			else
+			alert(myajax.responseXML)
+			}
+		}
+	}
+
+
+function connect()
+{
+  var nick = document.getElementById('nickname').value;
+  Orbited.connect(chat_event, nick, "/chat", "0");
+  ajaxpack.getAjaxRequest("/join/" + nick + "/", "", processGetPost, "txt");
+}
+
+
+chat_event = function(data) {
+  var chat_box = document.getElementById('box');
+  var div = window.parent.document.createElement('div');
+  div.className = "event";
+  div.innerHTML = data;
+  chat_box.appendChild(div);
+  chat_box.scrollTop = chat_box.scrollHeight;
+}
+
+function send_msg() {
+  var msg = document.getElementById('chat').value;
+  var nick = document.getElementById('nickname').value;
+  ajaxpack.getAjaxRequest("/send/" + nick + "/" + msg + "/", "", processGetPost, "txt");
+}
+</script>
