@@ -10,7 +10,7 @@ from forms import *
 from django import forms
 from erp.users.models import *
 from erp.misc.util import *
-from erp.misc.helper import is_core, get_page_owner
+from erp.misc.helper import *
 from erp.department.models import *
 from erp.dashboard.forms import *			
 from django.contrib.auth.models import Group,Permission
@@ -88,7 +88,8 @@ def invite(request):
     message+=["start"]
     User=request.user
     user_dept = str(User.userprofile_set.all()[0].department)
-    print user_dept 
+    print user_dept
+    success_message="" 
     if request.method=='POST':
         form=InviteForm(request.POST)
         if form.is_valid():
@@ -105,30 +106,31 @@ def invite(request):
             email_id=emailid,
             time=datetime.datetime.now(),
             )#this stores the information of invitation
-            try:
-                message+=["invitation tried "]
-                #activation key#
-                salt = sha.new(str(random.random())).hexdigest()[:5]
-                activation_key = sha.new(salt+name).hexdigest()
-                coordname=name
-                #sending mail here
+            if True:
+                #here the essential mail details are assigned
+                hyperlink=settings.SITE_URL+"users/register_invite/"+user_dept+"/"+name+"/"+roll_no+"/"
+                mail_header="Invitaiton from the core to join ERP"
                 mail_template=get_template('users/emailcoords.html')
-                message+=["got the template"]
                 mail=[emailid,]
 		print mail
-            
+                #sending mail here
+                print "came till the function part"
+                success_message=mail_coord(hyperlink ,mail_header ,name ,"users/emailcoords.html" ,mail ) 
+                """        
+                salt = sha.new(str(random.random())).hexdigest()[:5]
+                activation_key = sha.new(salt+name).hexdigest()
 	    
 		body=mail_template.render(Context({'coordname':coordname,
-                                                   'SITE_URL':settings.SITE_URL+"users/register_invite/"+user_dept+"/"+name+"/"+roll_no+"/",
+                                                   'SITE_URL':hyperlink
                                                    'activationkey':activation_key
                                                    }))
-                send_mail('Invitaiton from the core to join ERP',body,'noreply@shaastra.org',mail,fail_silently=False)
-                message+=["mail sent"]
+                send_mail(mail_header,body,'noreply@shaastra.org',mail,fail_silently=False)
                 success_message=["mail sent"]
                 invite_details.save() 
 		      
                 print "mail sent"
-            except:
+                """
+            else:
                 message+=["mail could not be sent "]
                 success_message=["mail could not be sent may be wrong details"]
                 print "mail not sent."

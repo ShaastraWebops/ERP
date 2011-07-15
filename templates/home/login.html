@@ -11,7 +11,6 @@ Shaastra ERP - Login
 
 <!-- Validation for the form -->
 
-
 {% if redirected %}
 <div class="errors" id="login_first">
   <b>
@@ -99,6 +98,7 @@ Shaastra ERP - Login
 		</div>
 	      </td>
 	      <td>{{ form.password.label_tag }}</td>
+
 	      <td>{{ form.password }}
 		<div id="Password_div" style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
 		  {% if form.password.errors %}
@@ -106,8 +106,12 @@ Shaastra ERP - Login
 		  {{ error|escape }}
 		  {% endfor %}
 		  {% endif %}
-		</div>
-	      </td>
+		
+	      </td></div>
+	      <td>
+	      <div id ="forgot_password">
+	      <a href = "{% url home.views.forgot_password %}" >Forgot Password ?</a> 
+	      </div>
 	      <td>
 		<a onmouseover="Tip('{{ form.password.help_text }}')" onmouseout="UnTip()">
 		  <img height=20 width=20 src="{{ MEDIA_URL }}images/help_icon.png">
@@ -137,7 +141,28 @@ Shaastra ERP - Login
     </td>
   </tr>
 </table>
+<div id="login_message">
+{% if invalid_login_message %}
+{{ invalid_login_message }}
+{% endif %}
+</div>
 
+<style type="text/css" >
+#login_message
+{
+position:relative;
+left:550px;
+font-size:75%;
+color:#153E7E;
+}
+#forgot_password
+{
+position:absolute;
+
+right:230px;
+}
+
+<style>
 <script type="text/javascript">
 
   err_img='<img height=20 width=20 src="{{ MEDIA_URL }}images/error.png">';

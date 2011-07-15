@@ -7,6 +7,7 @@ from django.template.context import Context, RequestContext
 from django.utils.translation import ugettext as _
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.contrib.sessions.models import Session
+from erp.home.forms import *
 # Create your views here.
 import models,forms
 from erp.misc.util import *
@@ -60,12 +61,15 @@ def login(request):
                                                 %(settings.SITE_URL, user.username))
 
             else:
+                invalid_login_message="The details provided by you dont match , please try again "
+                print "the user has not logged in -invalid "
                 request.session['invalid_login'] = True
-                return HttpResponseRedirect (request.path)
+                print request.path
+                return render_to_response('home/login.html', locals(), context_instance= global_context(request))
+#                return HttpResponseRedirect (request.path)
                 invalid_login =session_get(request, "invalid_login")
                 form = forms.UserLoginForm ()
     else:
-        print "not a post da"
         pass
 
     return render_to_response('home/login.html', locals(), context_instance= global_context(request))
@@ -83,6 +87,30 @@ def logout (request):
         return response
     return render_to_response('home/home.html', locals(), context_instance= global_context(request))
 
+def forgot_password(request):
+
+    forgot_form=forgot_password_form()
+    if request.method == 'POST':
+        data = request.POST.copy()
+        form =forms. forgot_password_form (data)
+        print "checking details for forgot_password"
+        if form.is_valid():
+            form = forms.UserLoginForm ()            
+            try:
+                print form.cleaned_data['email_id'] , "is the username entered"
+                user=User.objects.get(username=form.cleaned_data['username'] , email=form.cleaned_data['email_id'])
+                print "the user with this name and emailid exists "
+                invalid_login_message ="We have mailed you your new password if any further problem contact the webops dept"
+                # here to send email to the coord
+            except:
+                invalid_login_message= "details given by u dont match , please for further clarification contact webops  dept"
+            return render_to_response('home/home.html', locals(), context_instance= global_context(request))
+    else:
+        print "problem da.."
+        return render_to_response('home/forgot_password.html', locals(), context_instance= global_context(request))
+        
+        
+    pass
 
 def test (request):
     return render_to_response('home.html', locals(), context_instance= global_context(request))

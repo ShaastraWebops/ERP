@@ -1,5 +1,8 @@
 from django.contrib.auth.models import User
-
+import sha,random,datetime
+from django.core.mail import send_mail,EmailMessage,SMTPConnection
+from django.template.loader import get_template
+from django.template.context import Context, RequestContext
 # Temporary workaround for the fact that I don't know whether / how to
 # extend the User class with methods
 def is_core (user):
@@ -74,3 +77,25 @@ def write_file(save_path ,f ,method=1):
     for chunk in f.chunks():
         fout.write(chunk)
     fout.close()
+    
+"""
+helper function to mail junta
+using it for invitation and forgot password thing
+
+"""
+def mail_coord(hyperlink ,mail_header ,name ,template,mail , password=""):
+    print "mail helper function here hey"
+    mail_template=get_template(template)
+    print mail_template
+    salt = sha.new(str(random.random())).hexdigest()[:5]
+    activation_key = sha.new(salt+name).hexdigest()
+    print activation_key
+    body=mail_template.render(Context({'coordname':name,
+                                                   'SITE_URL':hyperlink,
+                                                   'activationkey':activation_key,
+                                                   'new_password':password
+                                                   }))
+    send_mail(mail_header,body,'noreply@shaastra.org',mail,fail_silently=False)
+    success_message="mail sent"
+    return success_message
+
