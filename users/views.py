@@ -146,7 +146,7 @@ def invite(request):
 this part yet to be done
 """
 @needs_authentication
-def invite_inbulk(self):
+def invite_inbulk(request ,self):
     CsvForm=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"you may write anything here"})
     form=InviteForm()
     if request.method=='POST':
