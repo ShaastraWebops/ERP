@@ -22,7 +22,8 @@ import os # upload files
 from django.conf import settings
 from django.utils import simplejson
 import csv # invite coords
-#import stringlib
+
+
 
 
 """
@@ -136,21 +137,21 @@ def change_profile_pic(request):
             write_file(save_path ,f)
 	    print save_path
 	    if os.path.isfile(save_path):
-		print "file path of the user exists "
+		print "file path of the user photo exists "
 		delete_object=userphoto.objects.filter(name=request.user)
 		delete_object.delete()
 	    else :
-		print "file path of the user doesnt exists"
+		print "file path of the user photo doesnt exists"
             try:
                 image_object=userphoto(name=request.user ,photo_path=file_path )
                 image_object.save()
-                print "photo changed"
+                print "profile photo changed"
             except:
-                print "photo not changed"
+                print "profile photo not changed"
                 pass
 	else:
 	    print "form not valid"
-        #return render_to_response('users/view_profile.html',locals(),context_instance = global_context(request))
+
 	return view_profile(request )
     pic_form=change_pic()
     
@@ -229,57 +230,25 @@ this function needs lots of changes but one sinle thing isnt working so waiting 
 """
 
 @needs_authentication
-def delete_file(request,owner_name=None ,number=0 ,file_name="default" ):
+def delete_file(request,owner_name=None ,number=0  ):
     page_owner = get_page_owner (request, owner_name)
-    print number ,file_name
-
-    if owner_name==None or owner_name==request.user.username:
-	upload_message="Your documents and files"
-	owner_name=request.user.username	
-	user=request.user
-	can_delete_files=True
-	print user
-    else:
-
-	can_delete_files=False
-	user=User.objects.get(username=owner_name)
-	upload_message=owner_name+" documents and files"	
-	print user
-    #user , can_delete_files,upload_message=check_perms(owner_name , request)
-    #photo_list=userphoto.objects.filter()
-
-
-    users_documents=upload_documents.objects.filter(user=page_owner)  
-    
-    if "d" in request.GET:
-        number=request.GET['d']
-        print number
-        
-    if "f" in request.GET:
-        file_name=request.GET['f']
-        print file_name
-
+    users_documents=upload_documents.objects.filter(user=page_owner)    
+    form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"short description of the file"})   
+    try:
         user_name=request.user.username
-        destdir_one=os.path.join(settings.MEDIA_ROOT,"upload_files")
-        destdir=os.path.join(destdir_one,user_name)
-        
-        file_path=os.path.join(destdir,os.path.basename(file_name))
-        print file_path
-        print "harere"
-        if os.path.isfile(file_path):
-            print "cool"
-            os.remove(file_path)
+        file_to_be_deleted=upload_documents.objects.get(id=number)
+        print "the path of the file to be delete is  :" ,file_to_be_deleted
+        file_name=file_to_be_deleted.file_name
+        if os.path.isfile(str(file_to_be_deleted)):
+            os.remove(str(file_to_be_deleted))
             message=file_name+" deleted"
         else:
             print "file not found"
-    try:
+        print file_name , "the file name "
         delete_file=upload_documents.objects.get(user=request.user , file_name=file_name)
         delete_file.delete()
     except:
         print "no file"
-    photo_list=userphoto.objects.all() 
-    form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"short description of the file"})
-
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
     
 
@@ -339,8 +308,60 @@ def shout(request):
     return render_to_response('tasks/department_portal.html',simplejson.dumps(response_dict),context_instance = global_context (request))
     return HttpResponse(simplejson.dumps(response_dict), mimetype='application/javascript')"""
     return display_department_portal(request) 
-@needs_authentication
+
 
 
 def test(request):
-        return render_to_response('dashboard/dummy.html',locals())
+    print "in test function"
+    return render_to_response('dashboard/dummy.html',{})
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+"""
+    
+    
+users = []
+orbit = Client()
+
+def chat_page(request, users=users, orbit=orbit):
+
+	return render_to_response('chat.html', {})
+
+def add_nick(request, nick, users=users, orbit=orbit):
+
+	users.append((nick, '0'))
+	orbit.event(user_k(), '%s joined' % nick)
+	return HttpResponse("ok")
+
+def send_msg(request, nick, msg, users=users, orbit=orbit):
+
+	orbit.event(user_k(), '%s %s' % (nick, msg))
+	return HttpResponse("ok")
+
+def user_k(users=users):
+	
+	Create a user-client list for orbited
+	
+	lista = ["%s, %s, /chat" % (user[0], str(user[1]))
+		for user in users]
+	return lista
+"""

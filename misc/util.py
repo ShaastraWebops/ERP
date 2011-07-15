@@ -158,9 +158,11 @@ def is_core (user):
     """
     Return True if user is a Core.
     """
-    if user.groups.filter (name = 'Cores'):
-        return True
-    return False
+    try:
+        if user.groups.filter (name = 'Cores'):
+            return True
+    except:
+        return False
 
 
 
