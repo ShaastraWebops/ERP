@@ -98,7 +98,7 @@ function delete_data(field) {
 <div id="place" >
 
 
-<form enctype="multipart/form-data" method="POST" action="{{SITE_URL}}/dashboard/upload_document/">{% csrf_token %}
+<form enctype="multipart/form-data" method="POST" action="{% url dashboard.views.upload_file %}">{% csrf_token %}
 <table>
 
 
@@ -142,7 +142,7 @@ hey ,<br> {{user.username }} no documents have been uploaded by {{page_owner.use
 {% endif %}
 {% endif %}
 
-<form method="GET" action="{{SITE_URL}}/dashboard/delete_document/">
+
 
 
 
@@ -166,12 +166,6 @@ hey ,<br> {{user.username }} no documents have been uploaded by {{page_owner.use
 	<a href="{{field.url}}" class="google_doc" >Download</a>
 	</td>
 	<td>
-	<input type="hidden" value="{{field.id}}" name="d">
-	<input type="hidden" value="{{field.file_name}}" name="f">
-	{% if not is_visitor %}
-
-	<input type="submit" value="Delete" id="delete" name="delete file">
-	{% endif %}
 	
 	</td>
 
@@ -184,7 +178,9 @@ hey ,<br> {{user.username }} no documents have been uploaded by {{page_owner.use
 	<td>
 	<td>
 	<div class="docs_link_2">
-	<a href="{{SITE_URL}}/dashboard/delete_document/{{owner_name}}/{{field.id}}/{{field.file_name}}" >delete </a>
+	{% if not is_visitor %}
+	<a href="{% url dashboard.views.delete_file owner_name=page_owner number=field.id %}" >delete </a>
+		{% endif %}
 	</div>
 	</td>
 	<td>

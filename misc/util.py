@@ -10,7 +10,7 @@ from erp.misc.helper import is_core, get_page_owner
 from erp import settings
 from erp.users import models
 from erp.department.models import Department
-
+import os # upload files
 import MySQLdb
 import re, md5, time
 

@@ -14,7 +14,7 @@ class upload_documents(models.Model):
 
 
     def __str__(self):
-        return (self.file_path)
+        return '%s'%str(self.file_path)
     
 
     class Admin:
