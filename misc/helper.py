@@ -3,6 +3,8 @@ import sha,random,datetime
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
+import os
+from django.conf import settings
 # Temporary workaround for the fact that I don't know whether / how to
 # extend the User class with methods
 def is_core (user):

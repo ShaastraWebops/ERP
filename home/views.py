@@ -95,7 +95,7 @@ def forgot_password(request):
         form =forms. forgot_password_form (data)
         print "checking details for forgot_password"
         if form.is_valid():
-            if True:
+            try:
                 print form.cleaned_data['email_id'] , "is the username entered"
                 user=User.objects.get(username=form.cleaned_data['username'] , email=form.cleaned_data['email_id'])
                 print "the user with this name and emailid exists "
@@ -106,10 +106,10 @@ def forgot_password(request):
                 mail_header="follow the link and change your password , once you log in"
                 mail=["form.cleaned_data['email_id'] ",]
                 message=mail_coord(hyperlink ,mail_header ,form.cleaned_data['username'],"home/forgot_password_mail.html",mail)
-                    
-            else:
+                return render_to_response('home/home.html', locals(), context_instance= global_context(request))
+        
+            except:
                 invalid_login_message= "details given by u dont match , please for further clarification contact webops  dept"
-            return render_to_response('home/home.html', locals(), context_instance= global_context(request))
     else:
         print "problem in forgot_password_view"
     return render_to_response('home/forgot_password.html', locals(), context_instance= global_context(request))
