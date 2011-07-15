@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.contrib.sessions.models import Session
 from erp.home.forms import *
-# Create your views here.
+from erp.misc.helper import *
 import models,forms
 from erp.misc.util import *
 # Take care of session variable
@@ -95,22 +95,26 @@ def forgot_password(request):
         form =forms. forgot_password_form (data)
         print "checking details for forgot_password"
         if form.is_valid():
-            form = forms.UserLoginForm ()            
-            try:
+            if True:
                 print form.cleaned_data['email_id'] , "is the username entered"
                 user=User.objects.get(username=form.cleaned_data['username'] , email=form.cleaned_data['email_id'])
                 print "the user with this name and emailid exists "
                 invalid_login_message ="We have mailed you your new password if any further problem contact the webops dept"
                 # here to send email to the coord
-            except:
+                
+                hyperlink=settings.SITE_URL+"/testonly_ignore"
+                mail_header="follow the link and change your password , once you log in"
+                mail=["form.cleaned_data['email_id'] ",]
+                message=mail_coord(hyperlink ,mail_header ,form.cleaned_data['username'],"home/forgot_password_mail.html",mail)
+                    
+            else:
                 invalid_login_message= "details given by u dont match , please for further clarification contact webops  dept"
             return render_to_response('home/home.html', locals(), context_instance= global_context(request))
     else:
-        print "problem da.."
-        return render_to_response('home/forgot_password.html', locals(), context_instance= global_context(request))
+        print "problem in forgot_password_view"
+    return render_to_response('home/forgot_password.html', locals(), context_instance= global_context(request))
         
         
-    pass
-
+   
 def test (request):
     return render_to_response('home.html', locals(), context_instance= global_context(request))
