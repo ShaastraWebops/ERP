@@ -101,12 +101,21 @@ def forgot_password(request):
                 print "the user with this name and emailid exists "
                 invalid_login_message ="such and such a username exists dotn worry"
                 # here to send email to the coord
-                
+                coordname=form.cleaned_data['username']
                 hyperlink=settings.SITE_URL+"/testonly_ignore"
                 mail_header="follow the link and change your password , once you log in"
-                mail=["form.cleaned_data['email_id'] ",]
-                invalid_login_message ="We have tried to mail you but then there is some internal problem"                
-                message=mail_coord(hyperlink ,mail_header ,form.cleaned_data['username'],"home/forgot_password_mail.html",mail)
+                email_id=form.cleaned_data['email_id']
+                mail=[email_id,]
+                invalid_message="if it stops here there is some problem in getting mail template"
+                mail_template=get_template("home/forgot_password_mail.html")
+                invalid_login_message ="We have tried to mail you but then there is some internal problem ,get_template works"
+                body=mail_template.render(Context({'coordname':coordname,
+                                                   'SITE_URL':hyperlink,
+                                                   'new_password':"password"
+                                                   }))
+                invalid_message="body ban gayi , send_mail mai gadbad"
+                send_mail(mail_header,body,'noreply@shaastra.org',mail,fail_silently=False)
+                #message=mail_coord(hyperlink ,mail_header ,coordname ,  "home/forgot_password_mail.html",mail)
                 invalid_login_message ="We have mailed you your new password if any further problem contact the webops dept"                
                 return render_to_response('home/login.html', locals(), context_instance= global_context(request))
         
@@ -114,10 +123,11 @@ def forgot_password(request):
                 pass #invalid_login_message= "details given by u dont match , please for further clarification contact webops  dept"
     else:
         print "problem in forgot_password_view"
-    userpro=User.objects.all()
+    form = forms.UserLoginForm ()    
     return render_to_response('home/forgot_password.html', locals(), context_instance= global_context(request))
         
         
+   
    
 def test (request):
     return render_to_response('home.html', locals(), context_instance= global_context(request))
