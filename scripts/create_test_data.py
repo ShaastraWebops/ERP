@@ -10,7 +10,7 @@ from erp import settings
 from erp.users import models
 from erp.department.models import Department, DEP_CHOICES
 from erp.tasks.models import Task, SubTask, DEFAULT_STATUS, TaskComment, SubTaskComment, Update
-import random
+import random ,datetime
 
 def create_group (group_name):
     """
@@ -162,19 +162,24 @@ def create_tasks (n = 5, partial_subtask = False):
         curr_coord1 = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = name)[0]
         curr_coord2 = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = name)[1]
         print 'Tasks for ', curr_dept.Dept_Name
+        
+	start_date = datetime.date.today().replace(day=1, month=7).toordinal()
+	end_date = datetime.date.today().toordinal()
+
         for i in xrange (n):
             new_task = Task ()
             new_task.subject = name + task_subj_str + str (i)
             new_task.description = 'Gen Testing ' + str (i)
             new_task.creator = curr_core
-            new_task.deadline = '2011-06-15'
+            
+            new_task.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
             new_task.save () 
 
             if not partial_subtask:
                 subtask1 = SubTask ()
                 subtask1.subject = name + subtask_subj_str_same + str (i)
                 subtask1.creator = curr_core
-                subtask1.deadline = '2011-06-10'
+                subtask1.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
                 subtask1.department = curr_dept
                 subtask1.task = new_task
                 # Seems the SubTask must exist before many to many
@@ -187,7 +192,7 @@ def create_tasks (n = 5, partial_subtask = False):
             for j in xrange (num_other_tasks):
                 subtask2 = SubTask ()
                 subtask2.creator = curr_core
-                subtask2.deadline = '2011-06-10'
+                subtask2.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
                 index = random.randint (0, 9)
                 subtask2.department = Department.objects.get (Dept_Name = dept_names[index])
                 subtask2.subject = subtask2.department.Dept_Name + subtask_subj_str_other + str (i)

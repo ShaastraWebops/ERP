@@ -1,0 +1,293 @@
+
+
+{% block body %}
+
+<!--
+{% block lefthtml %}
+{% include "tasks/left-sidebar.html"  %}
+{% endblock %} 
+
+<style ="text/css" >
+
+.date_box
+{
+width:100px;
+height:85px;
+background-color:	#6698FF;
+padding:2px;
+color:#E0FFFF
+}
+
+.date
+{
+background-color:	#D4A017;
+font-size:150%;
+}
+
+
+.subtasks
+{
+color:#463E41;
+font-size:60%;
+}
+#month_header
+{
+position:relative;
+left:280px;
+padding:2px;
+background-color:#2B1B17;
+top:0px;
+height:50px;
+width:752px;
+
+color:#FFFFFF;
+}
+
+#next_month
+{
+position:relative;
+text-decoration:none;
+z-index:10;
+left:650px;
+text-align:right;
+top:-40px;
+width:100px;
+}
+
+#prev_month
+{
+top:30px;
+position:relative;
+width:100px;
+text-decoration:none;
+text-align:left;
+z-index:10;
+}
+#month_name
+{
+
+font-size:200%;
+text-align:center;
+position:relative;
+top:-30px;
+}
+
+#main_pos
+{
+position:relative;
+background-color:#ECE5B6;
+left:283px;
+top:0px;
+width:758px;
+}
+
+#weekday_header
+{
+position:relative;
+top:0px;
+padding:2px;
+left:280px;
+height:100px;
+}
+.weekday
+{
+position:relative;
+top:5px;
+padding:2px;
+text-align:center;
+font-size:87%;
+background-color:#747170;
+height:45px;
+width:100px;
+}
+
+// for diffrent types of tasks
+.open_task
+{
+color:#FFFFFF;
+
+}
+
+
+.completed_task
+{
+background-color:#4AA02C;
+}
+
+.overdue_task
+{
+
+color:#150517;
+
+}
+
+
+.almost_task
+{
+
+}
+
+
+#today_date_box
+{
+position:absolute;
+left:55px;
+top:166px;
+background-color:#FFE87C;
+width:236px;
+height:470px;
+}
+
+#today_date
+{
+position:relative;
+top:40px;
+left:30px;
+font-size:700%
+}
+#today_word
+{
+position:relative;
+top:20px;
+left:50px;
+font-size:200%;
+color:#FF0000;
+
+}
+
+#no_task_pending
+{
+position:relative;
+top:100px;
+font-size:130%;
+text-align:center;
+color:#473409;
+}
+</style>
+
+<div id="month_header">
+		<div id="month_name">
+	<div id="prev_month" >
+	<a href="{% url dashboard.views.display_calendar %}{{page_owner}}/{{prev_month}}/{{prev_year}}" >
+	Prev 
+	</a>
+	</div>
+	
+	
+
+	{{month_name}} ,{{year}}
+	
+	
+	<div id="next_month" >
+
+	<a href="{% url dashboard.views.display_calendar %}{{page_owner}}/{{next_month}}/{{next_year}}" >
+	Next
+	</a>
+	</div>
+	</div>
+	
+	
+</div>
+
+<div id="weekday_header" >
+	<table >
+	<tr>
+		<td>
+		<div class="weekday" >
+		MONDAY
+		</div>
+		</td>
+		<td>
+		<div class="weekday" >
+		TUESDAY
+		</div>
+		</td>
+		<td>
+		<div class="weekday" >
+		WEDNESDAY
+		</div>
+		</td>
+		<td>
+		<div class="weekday" >
+		THRUSDAY
+		</div>
+		</td>
+		<td>
+		<div class="weekday" >
+		FRIDAY
+		</div>
+		</td>
+		<td>
+		<div class="weekday" >
+		SATURDAY
+		</div>
+		</td>
+		<td>
+		<div class="weekday" >
+		SUNDAY
+		</div>
+		</td>
+	</tr>
+	</table>
+
+
+</div>	
+
+<div id="main_pos">
+	<table>
+
+	{% for row in main_data %}
+		<tr>
+		{% for column in row %}
+
+			<td>					
+			{% if column.date != 0 %}
+				<div class ="date_box" >
+
+						<div class="date">
+						{{column.date }}
+						</div>
+
+
+						{% for field in column.subtask %}
+						<div class="subtasks" >
+						<a href="{% url tasks.views.display_task task_id=field.id owner_name=page_owner %}">
+						{{field}}
+						</a>
+						</div>						
+
+						{% endfor %}
+				</div>
+			{% endif %}
+
+			</td>
+		{% endfor %}
+		</tr>
+	{% endfor %}
+	</table>
+</div>
+
+<div id="today_date_box">
+       <div id="today_word" >
+       Today
+       </div>
+	<div id="today_date">
+		{{today}}
+	</div>	
+		{% if today_task.subtask %}
+	
+			{% for field in today_task.subtask %}
+				<div id="no_task_pending">
+			{{field}}
+						</div>
+			{% endfor %}
+	
+		{% else %}
+			<div id="no_task_pending">
+				No task pending today
+			</div>
+		{% endif %}
+
+</div>
+
+{% endblock %}
