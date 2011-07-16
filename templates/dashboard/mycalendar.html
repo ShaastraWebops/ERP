@@ -2,34 +2,19 @@
 
 {% block body %}
 
-<!--
-{% block lefthtml %}
-{% include "tasks/left-sidebar.html"  %}
-{% endblock %} 
 
 <style ="text/css" >
 
-.date_box
+
+#main_pos
 {
-width:100px;
-height:85px;
-background-color:	#6698FF;
-padding:2px;
-color:#E0FFFF
+position:relative;
+background-color:#ECE5B6;
+left:283px;
+top:0px;
+width:758px;
 }
 
-.date
-{
-background-color:	#D4A017;
-font-size:150%;
-}
-
-
-.subtasks
-{
-color:#463E41;
-font-size:60%;
-}
 #month_header
 {
 position:relative;
@@ -72,15 +57,6 @@ position:relative;
 top:-30px;
 }
 
-#main_pos
-{
-position:relative;
-background-color:#ECE5B6;
-left:283px;
-top:0px;
-width:758px;
-}
-
 #weekday_header
 {
 position:relative;
@@ -100,33 +76,6 @@ background-color:#747170;
 height:45px;
 width:100px;
 }
-
-// for diffrent types of tasks
-.open_task
-{
-color:#FFFFFF;
-
-}
-
-
-.completed_task
-{
-background-color:#4AA02C;
-}
-
-.overdue_task
-{
-
-color:#150517;
-
-}
-
-
-.almost_task
-{
-
-}
-
 
 #today_date_box
 {
@@ -163,6 +112,56 @@ font-size:130%;
 text-align:center;
 color:#473409;
 }
+
+.date
+{
+background-color:	#D4A017;
+font-size:150%;
+}
+
+.date_box
+{
+width:100px;
+height:85px;
+background-color:	#6698FF;
+padding:2px;
+color:#E0FFFF
+}
+
+
+.subtasks
+{
+color:#463E41;
+font-size:60%;
+}
+// for diffrent types of tasks
+
+.open_task
+{
+color:#FFFFFF;
+
+}
+
+
+.completed_task
+{
+background-color:#4AA02C;
+}
+
+.overdue_task
+{
+
+color:#150517;
+
+}
+
+
+.almost_task
+{
+
+}
+
+
 </style>
 
 <div id="month_header">

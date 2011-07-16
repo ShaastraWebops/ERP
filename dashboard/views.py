@@ -328,22 +328,23 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
     month=int(month)
     year=int(year)
     now = datetime.datetime.now()
+    #assigning variable of prev and next catogories    , i think their are inbuilt function .I mjust lazy :P
     if month==0:
         month =now.month
     if year==0:
         year =now.year
      
-    #assigning variable of prev and next catogories    , i think their are inbuilt function .I mjust lazy :P
-
+    
     prev_year=year
     next_year=year    
     if month==12 :
         next_month=1
         next_year=year+1
-
     else:
         next_month=month+1;
     print "month:" ,month
+    
+    
     if month==1:
         prev_year=year-1
         prev_month=12
@@ -352,73 +353,46 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
         prev_month=month-1;
         
         
-    print "Current date and time using str method of datetime object:"
-    print "Current date and time using instance attributes:"
-    print "year: %d" % year
-    print "month: %d" % month
+    print "month: " , month
     print "Current day: %d" % now.day
-    print "prev month" , prev_month
     today=now.day
     month_arr=["Jan" ,"Feb" ,"March" ,"April" ,"May" ,"June" ,"July" ,"August" ,"September","Ocotober","November","December"]
     month_name=month_arr[month-1]
-    
-    
-    
+      
     #the calander object
     mycalendar = calendar.monthcalendar(year ,month)
     page_owner=get_page_owner(request ,owner_name=owner_name)
-    print page_owner ,"is the page_owner"
     if is_core(page_owner):
-        print "he is core "
         user_tasks=Task.objects.filter(creator = page_owner)
     else:
-        print "he is a coord"
-        print page_owner
         user_tasks=SubTask.objects.filter(coords=page_owner.id)  
     
     
     first_week_day=weekday(mycalendar[0])#gives the gap between weekday number of 1st
-    
-    print "1 of this month corresponds to " ,first_week_day+1 ,"day of the week"
-    print "users tasks"
-    for dum in user_tasks:
-        print dum
+  
+  #delcaring complete_data please if some one finds a better way do it
     complete_data=[]
-
-
-    #delcaring complete_data please if some one finds a better way do it
     for row in range(0,42):
         complete_data.append({'subtask':[] , 'date':0})# add new data for each date
-    n=0    
-   
-   
-       #entering date in complete_data
+    
+   #entering date in complete_data
     print mycalendar
+    n=0
     for row in mycalendar:
         for col in row:
     	    complete_data[n]['date']=col
     	    n +=1
     	
-
-
-	#adding subtask in complete_data
+    #adding subtask in complete_data
     for sub in user_tasks:
         pos_to_task=int(sub.deadline.day+first_week_day)-1
-	#print  "subject of the substask :" , sub.subject
-        if  sub.deadline.month==month:
+	if  sub.deadline.month==month:
             complete_data[pos_to_task]['subtask'].append(sub)
   
     today_task=complete_data[today+first_week_day-1]
     print "todays task" ,today_task
     # okay i know this is not right way to do it , but tried many ways , when i tried to initialize one element multiple element was getting initialized ,so i did it like this
     main_data=[ complete_data[0:7] ,complete_data[7:14] ,complete_data[14:21] ,complete_data[21:28] ,complete_data[28:35] ,complete_data[35:38] ]
-    """
-    for dum in complete_data:
-        for dummer in dum:
-            print dummer
-        print "\n"
-    """
     
-
     return render_to_response('dashboard/mycalendar.html',locals() ,context_instance = global_context(request))
 
