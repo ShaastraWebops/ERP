@@ -160,7 +160,7 @@ def view_profile(request, owner_name=None):
 
 
 @needs_authentication
-def handle_profile (request ):
+def handle_profile (request  , owner_name):
     print request.user.id , "is the id of the user"
 
     user = request.user

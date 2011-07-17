@@ -1,20 +1,56 @@
 <div class="sidebar-left">
   <ul>
     <li>
-      <a href="{% url tasks.views.display_portal %}">
+      <a href="{% url tasks.views.display_portal owner_name=user %}">
 	Dashboard
       </a>
     </li>
     <li>
-      <a href="{% url tasks.views.display_department_portal %}">
+      <a href="{% url tasks.views.display_department_portal owner_name=user %}">
 	Department
+    </li>
+    <li>
+      <a href="{% url dashboard.views.display_contacts owner_name=user%}">
+	Contacts
       </a>
     </li>
     <li>
-      <a href="{% url users.views.invite %}">
+      <a href="{% url users.views.invite owner_name=user%}">
+
 	Invite
       </a>
     </li>
+       	Bar 2 
+     
+      <li>
+      <a href="{% url tasks.views.display_department_portal owner_name=page_owner%}">
+	newDepttab
+      </a>
+    </li>
+    <li>
+      <a href="{% url tasks.views.display_portal owner_name=page_owner%}">
+	newDashboardtab
+      </a>
+    </li>
+    <li>
+    
+    <li>
+      <a href="{% url users.views.view_profile owner_name=page_owner%}">
+	Profile
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url dashboard.views.upload_file owner_name=page_owner%}">
+	Documents
+      </a>
+    </li>
+    <li>
+      <a href="{% url dashboard.views.display_calendar owner_name=page_owner%}">
+	My Calender
+      </a>
+    </li>
+ <!--   
     <li>
       <a href="#">
 	Policies
@@ -25,21 +61,6 @@
 	Website
       </a>
     </li>
-    <li>
-      <a href="{% url users.views.view_profile %}">
-	Profile
-      </a>
-    </li>
-    <li>
-      <a href="{% url dashboard.views.display_contacts %}">
-	Contacts
-      </a>
-    </li>
-    <li>
-      <a href="{% url dashboard.views.upload_file %}">
-	Documents
-      </a>
-    </li>
-    
+    -->
   </ul>
 </div>

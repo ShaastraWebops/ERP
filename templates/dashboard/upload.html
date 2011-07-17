@@ -98,7 +98,7 @@ function delete_data(field) {
 <div id="place" >
 
 
-<form enctype="multipart/form-data" method="POST" action="{% url dashboard.views.upload_file %}">{% csrf_token %}
+<form enctype="multipart/form-data" method="POST" action="{% url dashboard.views.upload_file owner_name=page_owner%}">{% csrf_token %}
 <table>
 
 

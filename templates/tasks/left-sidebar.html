@@ -10,12 +10,12 @@
 	Department
     </li>
     <li>
-      <a href="{% url dashboard.views.display_contacts %}">
+      <a href="{% url dashboard.views.display_contacts owner_name=user%}">
 	Contacts
       </a>
     </li>
     <li>
-      <a href="{% url users.views.invite %}">
+      <a href="{% url users.views.invite owner_name=user%}">
 
 	Invite
       </a>
@@ -28,25 +28,25 @@
       </a>
     </li>
     <li>
-      <a href="{% url tasks.views.display_portal %}{{page_owner.username}}">
+      <a href="{% url tasks.views.display_portal owner_name=page_owner%}">
 	newDashboardtab
       </a>
     </li>
     <li>
     
     <li>
-      <a href="{% url users.views.view_profile %}{{page_owner.username}}">
+      <a href="{% url users.views.view_profile owner_name=page_owner%}">
 	Profile
       </a>
     </li>
 
     <li>
-      <a href="{% url dashboard.views.upload_file %}{{page_owner.username}}">
+      <a href="{% url dashboard.views.upload_file owner_name=page_owner%}">
 	Documents
       </a>
     </li>
     <li>
-      <a href="{% url dashboard.views.display_calendar %}{{page_owner.username}}">
+      <a href="{% url dashboard.views.display_calendar owner_name=page_owner%}">
 	My Calender
       </a>
     </li>
