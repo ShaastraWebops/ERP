@@ -133,10 +133,10 @@ ul{
 }
 
 /* For Dashboard */
-#content {
-    margin-left : 10em;
-    margin-right : 10em;
-}
+/* #content { */
+/*     margin-left : 10em; */
+/*     margin-right : 10em; */
+/* } */
 
 .sidebar-left {
     float : left;

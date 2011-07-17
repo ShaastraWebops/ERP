@@ -1,4 +1,4 @@
-{% extends "home.html" %}
+{% extends "new_home.html" %}
 
 {% block top_bar %}
 {{ block.super }} 
@@ -10,14 +10,20 @@
 {% endblock top_bar %}
 
 {% block body %}
-<div class="global-content">
-  {% include "tasks/left-sidebar.html" %}
-  <!-- TODO : Fill right sidebar with valid links -->
-  {% include "tasks/right-sidebar.html" %}
-  <div id="content">
-    {% block portal_stuff %}
 
-    {% endblock portal_stuff %}
+<div id="content">
+  <div id="left_panel">
+    {% include "tasks/left-sidebar.html" %}
+  </div>
+
+  <div id="central_console">
+    {% block content-heading %}
+    
+    {% endblock content-heading %}
+
+    {% block tabs %}
+
+    {% endblock tabs %}
 
     <!-- For displaying of objects -->
     {% block display_stuff %}
@@ -28,10 +34,9 @@
     {% block form_stuff %}
 
     {% endblock form_stuff %}
-
-    {% block shout_stuff %}
-
-    {% endblock shout_stuff %}
+  </div>
+  <div id="right_panel">
+    {% include "tasks/right-sidebar.html" %}
   </div>
 </div>
 {% endblock body %}

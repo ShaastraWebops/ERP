@@ -1,12 +1,14 @@
-<div class="sidebar-left">
+<div id="profile_pic">
+</div>
+<div id="imp_links">
   <ul>
     <li>
-      <a href="{% url tasks.views.display_portal owner_name=user %}">
+      <a href="{% url tasks.views.display_portal owner_name=page_owner %}">
 	Dashboard
       </a>
     </li>
     <li>
-      <a href="{% url tasks.views.display_department_portal owner_name=user %}">
+      <a href="{% url tasks.views.display_department_portal owner_name=page_owner %}">
 	Department
     </li>
     <li>
@@ -20,37 +22,29 @@
 	Invite
       </a>
     </li>
-       	Bar 2 
-     
-      <li>
-      <a href="{% url tasks.views.display_department_portal owner_name=page_owner%}">
-	newDepttab
-      </a>
-    </li>
-    <li>
-      <a href="{% url tasks.views.display_portal %}{{page_owner.username}}">
-	newDashboardtab
-      </a>
-    </li>
-    <li>
-    
     <li>
       <a href="{% url users.views.view_profile %}{{page_owner.username}}">
 	Profile
       </a>
     </li>
-
     <li>
       <a href="{% url dashboard.views.upload_file %}{{page_owner.username}}">
 	Documents
       </a>
     </li>
- <!--   
+    {% if not is_visitor %}
     <li>
-      <a href="#">
-	Policies
+      <a href="{% url tasks.views.edit_task owner_name=user %}">
+	<p>Create a New Task</p>
       </a>
     </li>
+    {% endif %}
+    <!--   
+	   <li>
+	     <a href="#">
+	       Policies
+	     </a>
+	   </li>
     <li>
       <a href="#">
 	Website
