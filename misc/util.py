@@ -212,7 +212,7 @@ def page_owner_only (alternate_view_name = '', **kwargs):
         elif func.__name__ == 'edit_subtask':
             return edit_subtask_wrapper
         else:
-            return simple_wrapper
+            return simple_wrapper	
     return _dec
 
 
@@ -222,7 +222,6 @@ def handle_existing_object (Model, object_id, curr_user,
     If object of model 'Model' does not exist, redirect to user portal.
     Else, if curr_user is an owner of the model and is in his own
     page, let him edit it.
-
     Or else, simply display the object.
     """
     model_name = Model.__name__.lower ()

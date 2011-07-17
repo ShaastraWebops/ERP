@@ -32,6 +32,11 @@
 	Documents
       </a>
     </li>
+    <li>
+      <a href="{% url dashboard.views.display_calendar %}{{page_owner.username}}">
+	My Calendar
+      </a>
+    </li>
     {% if not is_visitor %}
     <li>
       <a href="{% url tasks.views.edit_task owner_name=user %}">

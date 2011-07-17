@@ -10,6 +10,9 @@ urlpatterns = patterns('erp.dashboard.views',
        (r'^delete_document/(?P<owner_name>\w+)/(?P<number>\w+)$', 'delete_file'),
       #(r'^change_profile_pic/$', 'change_profile_pic'),
       (r'^shout/$', 'shout'),
+      (r'^display_calendar/(\w+)?$', 'display_calendar'),
+      (r'^display_calendar/(\w+)/(?P<month>\w+)/(?P<year>\w+)$', 'display_calendar'),
+
       (r'^dummy/$', 'test'),
       # (r'^(\w+)?$', 'other_coord'),
 )
