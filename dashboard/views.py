@@ -37,7 +37,7 @@ dept tab -tab which can be controlled by people in that dept and other dept coor
 
 """
 @needs_authentication
-def display_contacts (request):#this will be a common tab 
+def display_contacts (request , owner_name=None):#this will be a common tab 
     """
     Display all contacts (listed by Department).
     """

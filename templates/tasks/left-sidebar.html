@@ -1,5 +1,7 @@
+
+      <a href="{% url tasks.views.display_portal owner_name=user %}">
 <div id="profile_pic">
-</div>
+</div></a>
 <div id="imp_links">
   <ul>
     <li>
@@ -18,27 +20,10 @@
     </li>
     <li>
       <a href="{% url users.views.invite owner_name=user%}">
-
-	Invite
+      	Invite
       </a>
     </li>
-<<<<<<< HEAD
-       	Bar 2 
      
-      <li>
-      <a href="{% url tasks.views.display_department_portal owner_name=page_owner%}">
-	newDepttab
-      </a>
-    </li>
-    <li>
-      <a href="{% url tasks.views.display_portal owner_name=page_owner%}">
-	newDashboardtab
-      </a>
-    </li>
-    <li>
-    
-=======
->>>>>>> ed368cfbf020301091b3f4e2522e67f3970a65b7
     <li>
       <a href="{% url users.views.view_profile owner_name=page_owner%}">
 	Profile

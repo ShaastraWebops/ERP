@@ -82,7 +82,7 @@ def register_invite(request,dept_name="none" ,username="none" ,rollno="ee0b000")
 
 
 @needs_authentication
-def invite(request):
+def invite(request ,owner_name):
     CsvForm=UploadFileForm(initial={'title':"Enter the name" , 'short_description':"you may write anything here"})
     message=[]
     message+=["start"]
