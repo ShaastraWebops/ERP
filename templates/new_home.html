@@ -1,0 +1,133 @@
+<!DOCTYPE HTML5>
+<html>
+  <head>
+    <link rel="stylesheet" href="http://www.shaastra.org/people/erp/erp-html/development-bundle/themes/redmond/jquery.ui.all.css"/>
+    <link rel="stylesheet" href="http://www.shaastra.org/people/erp/erp-html/css/erp_main.css"/>
+    
+    <script src="http://www.shaastra.org/people/erp/erp-html/development-bundle/jquery-1.5.1.js">
+    </script>
+    <script src="http://www.shaastra.org/people/erp/erp-html/development-bundle/ui/jquery.ui.core.js">
+    </script>
+    <script src="http://www.shaastra.org/people/erp/erp-html/development-bundle/ui/jquery.ui.widget.js">
+    </script>
+
+    <script src="http://www.shaastra.org/people/erp/erp-html/development-bundle/ui/jquery.ui.mouse.js">
+    </script>
+    <script src="http://www.shaastra.org/people/erp/erp-html/development-bundle/ui/jquery.ui.sortable.js">
+    </script>
+    <script src="http://www.shaastra.org/people/erp/erp-html/development-bundle/ui/jquery.ui.accordion.js">
+    </script>
+    <script src="http://www.shaastra.org/people/erp/erp-html/development-bundle/ui/jquery.ui.tabs.js">
+    </script>
+    <script>
+      $(function() {
+      $( "#tabs" ).tabs();
+      });
+      
+      $(function() {
+      var stop = false;
+      $( "#accordion h3" ).click(function( event ) {
+      if ( stop ) {
+      event.stopImmediatePropagation();
+      event.preventDefault();
+      stop = false;
+      }
+      });
+      $( "#accordion" )
+      .accordion({
+      collapsible: true,
+      header: "> div > h3"
+      })
+      .sortable({
+      axis: "y",
+      handle: "h3",
+      stop: function() {
+      stop = true;
+      }
+      });
+      });
+      
+      $(function() {
+      $( "#accordion1" ).accordion({
+      collapsible: true,
+      autoHeight: false
+      });
+      });
+    </script>
+    <style type = "text/css" >
+      body 
+      {
+      background-image:url("/b1.jpeg");
+      background-repeat:no-repeat;
+      }
+      .rbroundbox    { background: url({{MEDIA_URL}}images/erp/images/corners_bg.gif) repeat; }
+      .rbtop         { background: url({{MEDIA_URL}}images/erp/images/corners_top.gif) repeat-x; }
+      .rbtop div     { background: url({{MEDIA_URL}}images/erp/images/corners_top_left.gif) no-repeat top left; }
+      .rbtop div div { background: url({{MEDIA_URL}}images/erp/images/corners_top_right.gif) no-repeat top right; }
+      .rbbot         { background: url({{MEDIA_URL}}images/erp/images/corners_bottom.gif) repeat-x; }
+      .rbbot div     { background: url({{MEDIA_URL}}images/erp/images/corners_bottom_left.gif) no-repeat top left; }
+      .rbbot div div { background: url({{MEDIA_URL}}images/erp/images/corners_bottom_right.gif) no-repeat top right; }
+      .rbcontentwrap { background: url({{MEDIA_URL}}images/erp/images/corners_left.gif) repeat-y; }
+      .rbcontent     { background: url({{MEDIA_URL}}images/erp/images/corners_right.gif) repeat-y right; }
+      
+      
+      /* height and width details */
+      .rbtop div,  .rbtop,  .rbbot div,  .rbbot {
+      width: 100%;
+      height: 26px;
+      font-size: 1px;
+      }
+      .rbcontent  { padding: 1px 2em; margin: 0;  }
+      .rbroundbox { width: 500px;  }
+
+
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/style.css" />
+    <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/jquery.datepick.css" />
+    <script type="text/javascript" src="{{MEDIA_URL}}js/script.js">
+    </script>
+    <script type="text/javascript" src="{{MEDIA_URL}}js/jquery.datepick.js">
+    </script>
+
+    {% block javascript_stuff %}
+    
+    {% endblock %}
+
+    {% block style_stuff %}
+    
+    {% endblock style_stuff %}
+
+    <title>
+      {% block title %}
+      Shaastra ERP |
+      {% endblock title %}
+    </title>
+  </head>
+  <body>
+    <div id="header">
+      <h1 id="title">Shaastra ERP</h1>
+      {% block top_bar %}
+      
+      <div id="links" align="right">
+	{% if user_name %}
+	Welcome, <a href="{% url tasks.views.display_portal owner_name=user %}">{{ user_name }}</a>.
+	<!-- <div id="navigation"> -->
+	<!--   <\!-- To be filled up -\-> -->
+	<!-- </div> -->
+	<a href="{% url home.views.logout %}"> Logout</a>
+	{% endif %}
+      </div>
+      {% endblock top_bar %}
+    </div>
+
+    {% block body %}
+    {% endblock body %}
+
+    {% block bottom_bar %}
+    <div id="footer">
+    </div>
+    <!-- To be filled in -->
+    {% endblock bottom_bar %}
+  </body>
+</html>
