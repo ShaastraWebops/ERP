@@ -39,7 +39,6 @@ def global_context(request):
         photo_list=False    
 
     page_owner = request.session.get ('page_owner', request.user)
-    print "this is the page owner (form util.py ) ",page_owner
 
     try:
         po_dept_name = page_owner.get_profile ().department.Dept_Name

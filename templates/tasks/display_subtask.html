@@ -8,47 +8,42 @@ Subtask
 {% block display_stuff %}
 <h1>SubTask</h1>
 
-{% if has_updated %}
-<h3>The SubTask has successfully been updated.</h3>
-{% endif %}
-
 <a href="{% url tasks.views.display_task task_id=curr_subtask.task.id owner_name=page_owner %}">View Task</a>
-<form action="" method="post">
-  {% csrf_token %}
-  <table>
-    <tr>
-      <th>Subject</th>
-      <td> {{ curr_subtask.subject }} </td>
-    </tr>
-    <tr>
-      <th>Department</th>
-      <td> {{ curr_subtask.department}} </td>
-    </tr>
-    <tr>
-      <th>Description</th>
-      <td> {{ curr_subtask.description }} </td>
-    </tr>
-    <tr>
-      <th>Proposed by</th>
-      <td> {{ curr_subtask.creator.get_profile.name }} </td>
-    </tr>
-    <tr>
-      <th>Proposing Dept </th>
-      <td> {{ curr_subtask.creator.get_profile.department.Dept_Name }} </td>
-    </tr>
-    <tr>
-      <th>Creation Date</th>
-      <td> {{ curr_subtask.creation_date }} </td>
-    </tr>
-    <tr>
-      <th>Deadline</th>
-      <td> {{ curr_subtask.deadline }} </td>
-    </tr>
-    <tr>
-      <th>Status</th>
-      <td> {{ curr_subtask.status }} </td>
-    </tr>
-  </table>
-</form>
+<table>
+  <tr>
+    <th>Subject</th>
+    <td> {{ curr_subtask.subject }} </td>
+  </tr>
+  <tr>
+    <th>Department</th>
+    <td> {{ curr_subtask.department}} </td>
+  </tr>
+  <tr>
+    <th>Description</th>
+    <td> {{ curr_subtask.description }} </td>
+  </tr>
+  <tr>
+    <th>Proposed by</th>
+    <td> {{ curr_subtask.creator.get_profile.name }} </td>
+  </tr>
+  <tr>
+    <th>Proposing Dept </th>
+    <td> {{ curr_subtask.creator.get_profile.department.Dept_Name }} </td>
+  </tr>
+  <tr>
+    <th>Creation Date</th>
+    <td> {{ curr_subtask.creation_date }} </td>
+  </tr>
+  <tr>
+    <th>Deadline</th>
+    <td> {{ curr_subtask.deadline }} </td>
+  </tr>
+  <tr>
+    <th>Status</th>
+    <td> {{ curr_subtask.status }} </td>
+  </tr>
+</table>
+
+{% include "tasks/comments.html" %}
 
 {% endblock display_stuff %}

@@ -1,5 +1,5 @@
 # Create your views here.
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
@@ -120,7 +120,7 @@ def display_coord_portal (request, coord):
 # while visiting some other user's page)
 @needs_authentication
 @page_owner_only (alternate_view_name = '')
-def edit_task (request, task_id = False, owner_name = None):
+def edit_task (request, task_id = None, owner_name = None):
     """
     Edit existing Task.
 
@@ -143,6 +143,10 @@ def edit_task (request, task_id = False, owner_name = None):
         curr_task = Task (creator = user)
         is_new_task = True
 
+    # curr_object = Task.objects.get (id = task_id)
+    is_task_comment = True
+    other_errors = False
+
     SubTaskFormSet = inlineformset_factory (Task,
                                             SubTask,
                                             form = SubTaskForm,
@@ -155,33 +159,42 @@ def edit_task (request, task_id = False, owner_name = None):
                                     instance = curr_task)
         template_form = subtaskfs.empty_form
         task_form = TaskForm (request.POST, instance = curr_task)
-        if task_form.is_valid ():
-            if subtaskfs.is_valid ():
-                curr_task = task_form.save (commit = False)
-                curr_task.save()
-                print 'Task : ', curr_task
+        if task_form.is_valid () and subtaskfs.is_valid ():
+            curr_task = task_form.save (commit = False)
+            curr_task.save()
+            print 'Task : ', curr_task
 
-                # Only the filled forms will be stored in subtasks
-                # Also, subtasks marked for deletion are deleted here.
-                subtasks = subtaskfs.save (commit = False)
-                for subtask in subtasks:
-                    print 'Subtask : ', subtask
-                    subtask.creator = user
-                    subtask.status = DEFAULT_STATUS
-                    # In case it's a new form (inline formset won't
-                    # fill in the task in that case)
-                    subtask.task = curr_task
-                    subtask.save ()
-                subtaskfs.save_m2m () # Necessary, since we used commit = False
-                return HttpResponseRedirect ('%s/dashboard/home'
-                                             % settings.SITE_URL)
-            else:
-                # One or more Forms are invalid
-                pass
+            comments, comment_form, comment_status = handle_comment (
+                request = request,
+                is_task_comment = True,
+                object_id = task_id)
+
+            # Only the filled forms will be stored in subtasks
+            # Also, subtasks marked for deletion are deleted here.
+            subtasks = subtaskfs.save (commit = False)
+            for subtask in subtasks:
+                print 'Subtask : ', subtask
+                subtask.creator = user
+                subtask.status = DEFAULT_STATUS
+                # In case it's a new form (inline formset won't
+                # fill in the task in that case)
+                subtask.task = curr_task
+                subtask.save ()
+            subtaskfs.save_m2m () # Necessary, since we used commit = False
+            return redirect ('erp.tasks.views.display_portal',
+                             owner_name = owner_name)
+        else:
+            # One or more Forms are invalid
+            other_errors = True
     else:
         task_form = TaskForm (instance = curr_task)
         subtaskfs = SubTaskFormSet (instance = curr_task)
         template_form = subtaskfs.empty_form
+    comments, comment_form, comment_status = handle_comment (
+        request = request,
+        is_task_comment = True,
+        object_id = task_id,
+        other_errors = other_errors)
     return render_to_response('tasks/edit_task.html',
                               locals(),
                               context_instance = global_context (request))
@@ -215,14 +228,16 @@ def edit_subtask (request, subtask_id, owner_name = None):
         is_owner = False
 
     has_updated = False
+    other_errors = False
     if request.method == 'POST':
         if is_owner:
             # Let the Core save the SubTask
             curr_subtask_form = SubTaskForm (request.POST, instance = curr_subtask)
             if curr_subtask_form.is_valid ():
                 curr_subtask_form.save ()
-                return HttpResponseRedirect ('%s/dashboard/home' %
-                                             settings.SITE_URL)
+                has_updated = True
+            else:
+                other_errors = True
         elif 'status' in request.POST:
             # Coord - allowed to change only the status
             curr_subtask.status = request.POST.get ('status', 'O') 
@@ -231,9 +246,16 @@ def edit_subtask (request, subtask_id, owner_name = None):
             # Reinstantiate the form
             curr_subtask_form = SubTaskForm (instance = curr_subtask)
             print 'SubTask updated'
-            return HttpResponseRedirect ('%s/dashboard/home' %
-                                         settings.SITE_URL)
-    return render_to_response('tasks/edit_subtask.html',
+    comments, comment_form, comment_status = handle_comment (
+        request = request,
+        is_task_comment = False,
+        object_id = subtask_id,
+        other_errors = other_errors)
+    if has_updated:
+        return redirect ('erp.tasks.views.display_portal',
+                         owner_name = owner_name)
+    else:
+        return render_to_response('tasks/edit_subtask.html',
                               locals(),
                               context_instance = global_context (request))
 
@@ -248,6 +270,8 @@ def display_subtask (request, subtask_id, owner_name = None):
     page_owner = get_page_owner (request, owner_name)
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
+    comments = SubTaskComment.objects.filter (subtask__id = subtask_id)
+
     return render_to_response('tasks/display_subtask.html',
                               locals(),
                               context_instance = global_context (request))
@@ -263,6 +287,7 @@ def display_task (request, task_id, owner_name = None):
     page_owner = get_page_owner (request, owner_name)
     print 'Display Task - Task ID : ', task_id
     curr_task = Task.objects.get (id = task_id)
+    comments = TaskComment.objects.filter (task__id = task_id)
     return render_to_response('tasks/display_task.html',
                               locals(),
                               context_instance = global_context (request))
@@ -270,75 +295,80 @@ def display_task (request, task_id, owner_name = None):
 # Comments Part:
 # Comments for Tasks and subtasks are very similar. So they call the same function.
 
-@needs_authentication    
-def handle_task_comments (request, task_id, owner_name = None):
-    """
-    Displays all comments for Task of task_id and allows addition of a
-    comment.
+# @needs_authentication    
+# def handle_task_comments (request, task_id, owner_name = None):
+#     """
+#     Displays all comments for Task of task_id and allows addition of a
+#     comment.
 
-    TODO :
-    Make sure that user is a Core. (Necessary?)
-    """
-    page_owner = get_page_owner (request, owner_name)
+#     TODO :
+#     Make sure that user is a Core. (Necessary?)
+#     """
+#     page_owner = get_page_owner (request, owner_name)
 
-    comment_form, comment_status = handle_comment (request = request, is_task_comment = True, object_id = task_id)
-    comments = TaskComment.objects.filter (task__id = task_id)
-    curr_object = Task.objects.get (id = task_id)
-    is_task_comment = True
-    return render_to_response('tasks/comments.html',
-                              locals(),
-                              context_instance = global_context (request))
+#     comment_form, comment_status = handle_comment (request = request, is_task_comment = True, object_id = task_id)
+#     comments = TaskComment.objects.filter (task__id = task_id)
+#     curr_object = Task.objects.get (id = task_id)
+#     is_task_comment = True
+#     return render_to_response('tasks/comments.html',
+#                               locals(),
+#                               context_instance = global_context (request))
 
-@needs_authentication    
-def handle_subtask_comments (request, subtask_id, owner_name = None):
-    """
-    Displays all comments for SubTask of subtask_id and allows
-    addition of a comment.
-    """
-    page_owner = get_page_owner (request, owner_name)
+# @needs_authentication    
+# def handle_subtask_comments (request, subtask_id, owner_name = None):
+#     """
+#     Displays all comments for SubTask of subtask_id and allows
+#     addition of a comment.
+#     """
+#     page_owner = get_page_owner (request, owner_name)
 
-    comment_form, comment_status = handle_comment (request = request, is_task_comment = False, object_id = subtask_id)
-    comments = SubTaskComment.objects.filter (subtask__id = subtask_id)
-    curr_object = SubTask.objects.get (id = subtask_id)
-    is_task_comment = False
-    return render_to_response('tasks/comments.html',
-                              locals(),
-                              context_instance = global_context (request))
+#     comment_form, comment_status = handle_comment (request = request, is_task_comment = False, object_id = subtask_id)
+#     comments = SubTaskComment.objects.filter (subtask__id = subtask_id)
+#     curr_object = SubTask.objects.get (id = subtask_id)
+#     is_task_comment = False
+#     return render_to_response('tasks/comments.html',
+#                               locals(),
+#                               context_instance = global_context (request))
 
 # Adds comments to task / subtasks
-def handle_comment (request, is_task_comment, object_id):
+def handle_comment (request, is_task_comment, object_id, other_errors = False):
     """
-    Return a tuple : (comment form, status).
+    Return a tuple : (comments, comment form, status).
 
-    If the form was POSTed, then save the comment and return empty form, status =
-    'Success'.
-    If the form data is invalid, then return form and status = 'Invalid Form'
-    If the object of given id was not found, status = 'Not Found'
+    comments : Comments for that object, if it exists. Else, None.
+    other_errors : Whether the rest of the Task / SubTask form has
+    errors. In that case, just keep the comment form content as is.
+
+    If the form was POSTed, then save the comment and return comments,
+    empty form, status = 'Success'.
+
+    If the form data is invalid (ie. if it is blank) or if
+    other_errors is True, then return status as 'Error'
+
     Else, return blank form and status = 'Blank'
 
-    If is_task_comment is True, treat it as a TaskComment. Else, treat
-    it as a SubTaskComment.
+    If is_task_comment is True, treat it as a TaskComment.
+    Else, treat it as a SubTaskComment.
     """    
     success = False
     not_found = True
     user = request.user
 
+
     if is_task_comment:
         curr_modelform = TaskCommentForm
         curr_model = Task
+        comments = TaskComment.objects.filter (task__id = object_id)
     else:
         curr_modelform = SubTaskCommentForm
         curr_model = SubTask
+        comments = SubTaskComment.objects.filter (subtask__id = object_id)
 
     if request.method == 'POST':
-        comment_form = curr_modelform(request.POST)            
-        if comment_form.is_valid():
+        comment_form = curr_modelform (request.POST)            
+        if not other_errors and comment_form.is_valid():
             new_comment = comment_form.save (commit = False)
-            try:
-                curr_object = curr_model.objects.get (id = object_id)
-            except:
-                not_found = True
-                return (comment_form, 'Not Found')
+            curr_object = curr_model.objects.get (id = object_id)
             success = True
             new_comment.author = user
             if is_task_comment:
@@ -348,13 +378,13 @@ def handle_comment (request, is_task_comment, object_id):
             new_comment.save ()
             # Blank the form
             comment_form = curr_modelform ()
-            return (comment_form, 'Success')
+            return (comments, comment_form, 'Success')
         else:
-            return (comment_form, 'Invalid Form')
+            return (comments, comment_form, 'Error')
     else:
         # Blank form
         comment_form = curr_modelform ()
-    return (comment_form, 'Blank')
+    return (comments, comment_form, 'Blank')
 
 def handle_updates (request, owner_name = None):
     """

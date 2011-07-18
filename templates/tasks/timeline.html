@@ -19,11 +19,6 @@
     <td> {{ task.creator.get_profile.name }} </td>
     <td> {{ task.deadline }} </td>
     <td> {{ task.status }} </td>
-    {% if po_is_core %}
-    <td>
-      <a href="{% url tasks.views.handle_task_comments task_id=task.id owner_name=page_owner %}">Comments</a>
-    </td>
-    {% endif %}
   </tr>
   {% endfor %}
 </table>
