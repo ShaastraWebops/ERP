@@ -37,7 +37,7 @@
 	My Calendar
       </a>
     </li>
-    {% if not is_visitor %}
+    {% if is_core and not is_visitor %}
     <li>
       <a href="{% url tasks.views.edit_task owner_name=user %}">
 	<p>Create a New Task</p>
