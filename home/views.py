@@ -1,5 +1,5 @@
-from django.shortcuts import render_to_response
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render_to_response, redirect
+# from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
 from django.template.loader import get_template
@@ -54,12 +54,10 @@ def login(request):
                     pass
 
                 if redirected:
-                    return HttpResponseRedirect (redirected)
+                    return redirect (redirected)
                 else:
-
-                    return HttpResponseRedirect("%s/%s/"
-                                                %(settings.SITE_URL, user.username))
-
+                    return redirect ('erp.tasks.views.display_portal',
+                                     owner_name = user.username)
             else:
                 invalid_login_message="The details provided by you dont match , please try again "
                 print "the user has not logged in -invalid "
@@ -77,8 +75,7 @@ def login(request):
 def logout (request):
     if request.user.is_authenticated():
         auth.logout (request)
-        url = "%s/home/"%settings.SITE_URL
-        response= HttpResponseRedirect (url)
+        response= redirect ('erp.home.views.home')
         try:
           #  response.set_cookie('unb_User',"")
             response.set_cookie('logged_out', 1)

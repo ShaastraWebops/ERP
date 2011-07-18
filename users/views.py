@@ -1,6 +1,6 @@
 # Create your views here.
-from django.shortcuts import render_to_response
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render_to_response, redirect
+# from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
 from django.contrib.auth.models import User
@@ -62,7 +62,7 @@ for test phase the default dept is Events
             new_user.save()
             registered_successfully = True
             request.session['just_registered'] = True
-            return HttpResponseRedirect("%s/home/login" %settings.SITE_URL)
+            return redirect ('erp.home.views.login')
 	else:
 	    print "the user form is not valid the errors are :"
 	    print user_form.errors

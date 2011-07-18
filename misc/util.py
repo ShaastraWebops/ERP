@@ -1,7 +1,6 @@
 # Helper functions
 from django.contrib import auth
 from django.shortcuts import render_to_response, redirect
-from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 from erp.tasks.models import Task, SubTask
@@ -115,7 +114,7 @@ def needs_authentication (func):
             request.session['from_url'] = request.path
             
             print "path from util", request.path
-            return HttpResponseRedirect ("%s/home/login/"%settings.SITE_URL)
+            return redirect ('erp.home.views.login')
         else:
             return func (*__args, **__kwargs)
     return wrapper
@@ -129,7 +128,7 @@ def no_login (func):
             # Return here after logging in
             request.session['already_logged'] = True
 	    #html = "%s/home/" %SITEURL
-            return HttpResponseRedirect ("%s/home/" %settings.SITE_URL)
+            return redirect ('erp.home.views.home')
         else:
             return func (*__args, **__kwargs)
     return wrapper

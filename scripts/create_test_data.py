@@ -2,7 +2,6 @@
 from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
-from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 from django.db.models import Q
