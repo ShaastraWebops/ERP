@@ -162,6 +162,6 @@ aka
 
 	</table>
 	{% if not is_visitor  %}
-<a href="{% url users.views.handle_profile %}"  id ="edit_profile"> Edit profile </a>
+<a href="{% url users.views.handle_profile owner_name=user%}"  id ="edit_profile"> Edit profile </a>
      {% endif %}
 {% endblock %}

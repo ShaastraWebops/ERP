@@ -8,17 +8,16 @@
 
 #main_pos
 {
-position:relative;
+position:absolute;
 background-color:#ECE5B6;
-left:283px;
-top:0px;
+left:383px;
+top:30px;
 width:758px;
 }
 
 #month_header
 {
 position:relative;
-left:280px;
 padding:2px;
 background-color:#2B1B17;
 top:0px;
@@ -62,7 +61,7 @@ top:-30px;
 position:relative;
 top:0px;
 padding:2px;
-left:280px;
+
 height:100px;
 }
 .weekday
@@ -80,11 +79,11 @@ width:100px;
 #today_date_box
 {
 position:absolute;
-left:55px;
-top:166px;
+left:-206px;
+top:53px;
 background-color:#FFE87C;
-width:236px;
-height:470px;
+width:206px;
+height:575px;
 }
 
 #today_date
@@ -164,10 +163,14 @@ color:#150517;
 
 </style>
 
+{% block left_side_bar %}
+{% include "left-sidebar.html" %}
+{% endblock left_side_bar %}
+<div id="main_pos">
 <div id="month_header">
 		<div id="month_name">
 	<div id="prev_month" >
-	<a href="{% url dashboard.views.display_calendar %}{{page_owner}}/{{prev_month}}/{{prev_year}}" >
+	<a href="{% url dashboard.views.display_calendar owner_name=page_owner%}{{prev_month}}/{{prev_year}}" >
 	Prev 
 	</a>
 	</div>
@@ -179,7 +182,7 @@ color:#150517;
 	
 	<div id="next_month" >
 
-	<a href="{% url dashboard.views.display_calendar %}{{page_owner}}/{{next_month}}/{{next_year}}" >
+	<a href="{% url dashboard.views.display_calendar owner_name=page_owner%}{{next_month}}/{{next_year}}" >
 	Next
 	</a>
 	</div>
@@ -232,7 +235,7 @@ color:#150517;
 
 </div>	
 
-<div id="main_pos">
+
 	<table>
 
 	{% for row in main_data %}
@@ -264,7 +267,7 @@ color:#150517;
 		</tr>
 	{% endfor %}
 	</table>
-</div>
+
 
 <div id="today_date_box">
        <div id="today_word" >
@@ -286,7 +289,7 @@ color:#150517;
 				No task pending today
 			</div>
 		{% endif %}
-
+</div>
 </div>
 
 {% endblock %}

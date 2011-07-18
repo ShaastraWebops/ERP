@@ -1,14 +1,12 @@
-<div id="profile_pic">
-</div>
-<div id="imp_links">
+<div class="sidebar-left">
   <ul>
     <li>
-      <a href="{% url tasks.views.display_portal owner_name=page_owner %}">
+      <a href="{% url tasks.views.display_portal owner_name=user %}">
 	Dashboard
       </a>
     </li>
     <li>
-      <a href="{% url tasks.views.display_department_portal owner_name=page_owner %}">
+      <a href="{% url tasks.views.display_department_portal owner_name=user %}">
 	Department
     </li>
     <li>
@@ -23,10 +21,13 @@
       </a>
     </li>
     <li>
+    
+    <li>
       <a href="{% url users.views.view_profile owner_name=page_owner%}">
 	Profile
       </a>
     </li>
+
     <li>
       <a href="{% url dashboard.views.upload_file owner_name=page_owner%}">
 	Documents
@@ -37,19 +38,12 @@
 	My Calender
       </a>
     </li>
-    {% if is_core and not is_visitor %}
+ <!--   
     <li>
-      <a href="{% url tasks.views.edit_task owner_name=user %}">
-	<p>Create a New Task</p>
+      <a href="#">
+	Policies
       </a>
     </li>
-    {% endif %}
-    <!--   
-	   <li>
-	     <a href="#">
-	       Policies
-	     </a>
-	   </li>
     <li>
       <a href="#">
 	Website

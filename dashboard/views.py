@@ -37,7 +37,7 @@ dept tab -tab which can be controlled by people in that dept and other dept coor
 
 """
 @needs_authentication
-def display_contacts (request):#this will be a common tab 
+def display_contacts (request , owner_name=None):#this will be a common tab 
     """
     Display all contacts (listed by Department).
     """
@@ -183,7 +183,7 @@ other person just views it
 
 """
 @needs_authentication
-def upload_file(request ,owner_name=0):
+def upload_file(request ,owner_name=None):
     page_owner = get_page_owner (request, owner_name)
     users_documents=upload_documents.objects.filter(user=page_owner)       
     if request.method=='POST':
