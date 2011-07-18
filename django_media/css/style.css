@@ -29,7 +29,7 @@ body{
 #main{
    position:absolute;
    top:100px;
-   left:200px;
+   left:300px;
     margin:2px auto 2px auto;
     text-align:left;
     width:800px;
@@ -38,14 +38,30 @@ body{
     font-family:"Arial";
     font-weight:bold;
     color:#444;
-    font-size:18px;
+    font-size:100%;
+}
+#main_edit_profile{
+   position:absolute;
+   top:130px;
+   left:300px;
+    margin:2px auto 2px auto;
+    text-align:left;
+    width:800px;
+    height:480px;
+    padding:10px 0 0 25px;
+    font-family:"Arial";
+    font-weight:bold;
+    color:#444;
+    font-size:100%;
 }
 #left_panel2
 {
 position:absolute;
-left:20px;
-top:100px;
+left:130px;
+top:140px;
+font-size:110%;
 }
+
 
 table{
     /* margin-left : auto; */

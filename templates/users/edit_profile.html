@@ -10,9 +10,10 @@ Edit Profile
 <style type="text/css">
   #heading
   {
-  position:absolute;
-  top :38px;
-  left:380px;
+  position:relative;
+  top :8px;
+  left:200px;
+  font-size:180%;
 
   }
   #details
@@ -20,18 +21,19 @@ Edit Profile
   position:relative;
    width:450px;
   left:9%;
+  cellspacing:
   }
 #profile_pic
 {
-position:absolute;
-left:63%;
-top:85px;
+position:relative;
+left:69%;
+top:175px;
 }
 #update_profile_pic
 {
 position:relative;
-left:825px;
-top:250px;
+left:865px;
+top:190px;
 }
 
 #update	
@@ -46,6 +48,10 @@ top:-125px;
 
 {% block body %}
 
+  <div id="left_panel2">
+    {% include "left-sidebar.html" %}
+  </div>
+
 {% if profile_changed %}
 <h3>Your profile has been updated successfully.</h3>
 {% endif %}
@@ -54,8 +60,7 @@ top:-125px;
 <img id="profile_pic"  src="{{photo_path}}" width="190" height="195">
 <div id="update_profile_pic"><a href="{% url dashboard.views.change_profile_pic owner_name=user%}">Change</a></div>
 
-<div id="mainform" >
-  <div id="main">
+  <div id="main_edit_profile">
     <div id ="heading">
       {{department_name}}
       {% if is_core %}
@@ -68,7 +73,7 @@ top:-125px;
     <div id="details">
       <form method="POST" id="profile_form" action="{% url users.views.handle_profile owner_name=user%}">
 	{% csrf_token %}
-	<table>
+	<table id="edit_details" cellspacing="12">
 	  {{ profile_form }} 
 
 	</table>
