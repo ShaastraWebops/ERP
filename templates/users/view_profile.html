@@ -1,13 +1,25 @@
-{% extends "home.html" %}
+{% extends "new_home.html" %}
+
+  <div id="left_panel">
+    {% include "tasks/left-sidebar.html" %}
+  </div>
+
+    {% block style_stuff %}
+    <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/template_css/users/view_profile.css" />    
+    {% endblock style_stuff %}
+
+
+
 {% block body %}
+
 
 <style type="text/css">
 #username
 {
-position:absolute;
+position:relative;
 font-family:Arial;
-top:100px;
-left:370px;
+top:-50px;
+left:140px;
 font-size:200%;
 }
 
@@ -18,17 +30,16 @@ color:blue;
 
 .left
 {
-top:70px;
+top:30px;
 position:relative;
-left:420px;
 color:#616D7E;
 text-align:right;
 }
 .right
 {
-top:70px;
+top:30px;
 position:relative;
-left:440px;
+left:20px;
 color:#571B7e;
 text-align:left;
 }
@@ -36,7 +47,7 @@ text-align:left;
 {
 position:absolute;
 top:110px;
-right:10%;
+right:-60%;
 }
 
 #details_table
@@ -46,8 +57,8 @@ line-height:190%;
 #profile_pic
 {
 position:absolute;
-top:170px;
-left:200px;
+top:160px;
+left:70px;
 width:180px;
 height:185px;
 }
@@ -58,110 +69,126 @@ top:10px;
 font-size:140%;
 text-align:center;
 color:#347235;
+left:170px;
+}
+#main_box_profile
+{
+position:absolute;
+left:200px;
+}
+
+#details_table
+{
+position:relative;
+top:40px;
+left:50px;
 }
 </style>
-
+<div id="main_box_profile">
 <img id="profile_pic" src="{{photo_path}}">
 
 	<table id="details_table">
-<tr > 
-	<td>	
-	<div id="username" >
+	<tr > 
+		<td>	
+		<div id="username" >
 		{{profile.name}} 
-{% if profile.nickname %} 
-aka 
-{% endif %}
-
-		
-		
-	<span id="nickname" >
+		{% if profile.nickname %} 
+		aka 
+		{% endif %}	
+		<span id="nickname" >
 		{{profile.nickname}}
-	</span>
-	</div>
+		</span>
+		</div>
 		</td>
- </tr>
-<tr>
-<tr>
-<div id ="dept_name" >
-      {{profile.department.Dept_Name}}
-      {% if is_core %}
-      Core 
-      {% else %}
-      Coordinator 
-      {% endif %}
-</div>
-<tr>
+ 	</tr>
+ 	
+			<tr>
+			</tr>
+			<tr>
+				<td>
+				<div id ="dept_name" >
+				      {{user_dept_name}}
+				      {% if is_core %}
+				      Core 
+				      {% else %}
+				      Coordinator 
+				      {% endif %}
+				</div>
+				</td>		
+			</tr>
+		
+		<div id="complete_details">
+			<tr>
+				<td>
+				<div class ="left" >
+				Contact Number 
+				</div>
+				</td>
+				<td>
+				<div class="right" >
+				{{profile.chennai_number}}
+				</div>
+				</td>
+			</tr>
 
-<tr>
-	<td>
-	<div class ="left" >
-	Contact Number 
-	</div>
-	</td>
-	<td>
-	<div class="right" >
-	{{profile.chennai_number}}
-	</div>
-	</td>
-</tr>
-
-<tr>
-	<td>
-	<div class ="left" >
-	Summer Contact
-	</div>
-	</td>
-	<td>
-	<div class="right" >
-	{{profile.summer_number}}
-	</div>
-	</td>
-</tr>
-
-
-<tr>
-	<td>
-	<div class ="left" >
-	Summer Stay
-	</div>
-	</td>
-	<td>
-	<div class="right" >
-	{{profile.summer_stay}}
-	</div>
-	</td>
-</tr>
-
-<tr>
-	<td>
-	<div class ="left" >
-	Hostel
-	</div>
-	</td>
-	<td>
-	<div class="right" >
-	{{profile.hostel}}
-	</div>
-	</td>
-</tr>
+			<tr>
+				<td>
+				<div class ="left" >
+				Summer Contact
+				</div>
+				</td>
+				<td>
+				<div class="right" >
+				{{profile.summer_number}}
+				</div>
+				</td>
+			</tr>
 
 
-<tr>
-	<td>
-	<div class ="left" >
-	Room number
-	</div>
-	</td>
-	<td>
-	<div class="right" >
-	{{profile.room_no}}
-	</div>
-	</td>
-</tr>
+			<tr>
+				<td>
+				<div class ="left" >
+				Summer Stay
+				</div>
+				</td>
+				<td>
+				<div class="right" >
+				{{profile.summer_stay}}
+				</div>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+				<div class ="left" >
+				Hostel
+				</div>
+				</td>
+				<td>
+				<div class="right" >
+				{{profile.hostel}}
+				</div>
+				</td>
+			</tr>
 
 
+			<tr>
+				<td>
+				<div class ="left" >
+				Room number
+				</div>
+				</td>
+				<td>
+				<div class="right" >
+				{{profile.room_no}}
+				</div>
+				</td>
+			</tr>
+
+		</div>
 	</table>
 	{% if not is_visitor  %}
-<a href="{% url users.views.handle_profile owner_name=user%}"  id ="edit_profile"> Edit profile </a>
-     {% endif %}
+		<a href="{% url users.views.handle_profile owner_name=user%}"  id ="edit_profile"> Edit profile </a>
+        {% endif %}
+</div>
 {% endblock %}

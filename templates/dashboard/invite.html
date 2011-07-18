@@ -1,49 +1,69 @@
-{% extends "home.html" %}
-
+{% extends "new_home.html" %}
+    
+    
+    
 {% block body %}
+
+  <div id="left_panel">
+    {% include "tasks/left-sidebar.html" %}
+  </div>
 {{success_message}}
-<div id="mainform" >
-  <div id="main">
 
-    <form  method="POST" action="{% url users.views.invite owner_name=user%}">{% csrf_token %}
-      <table>
-	{% for field in form %}
-	<tr>
-	  <td>
-	    {{ field.label_tag }}
-	  </td>
-	  <td>
- 	    {{ field}}
- 	  </td>
-	</tr>
-	{% endfor %}
+<div id="main">
+	<div id="tabs">
+		<ul>
+			<li>
+			<a href="#tabs-1">Invite coord </a>
+			</li>
+			<li>
+			<a href="#tabs-2">Invite many </a>
+			</li>
+		</ul>
 
-</td>
-</tr>
-</table>
-<input type="submit" value="invite" id="Save"/>
-</form>
+		<div id="tabs-1">
+	
+			    <form  method="POST" action="{% url users.views.invite owner_name=user%}">{% csrf_token %}
+			      <table>
+				{% for field in form %}
+					<tr>
+						  <td>
+						    {{ field.label_tag }}
+						  </td>
+						  <td>
+					 	    {{ field}}
+					 	  </td>
+					</tr>
+				{% endfor %}
 
-<h3>Upload csv file here which contains the list of the coords you want to invite <h3>
-    <form enctype="multipart/form-data" method="POST" action="{{% url users.views.invite owner_name=user%}">{% csrf_token %}
-      <table>
-	{% for field in CsvForm %}
-	<tr>
-	  <td>
-	    {{ field.label_tag }}
-	  </td>
-	  <td>
- 	    {{ field}}
- 	  </td>
-	</tr>
-	{% endfor %}
+	
+				</table>
+			  <input type="submit" value="invite" id="Save"/>
+			</form>
+		</div>
 
-</td>
-</tr>
-</table>
-<input type="hidden" value="{{field.file_name}}" name="f">
 
-<input type="submit" value="upload and invite" id="Save"/>
-</form>
+		<div id="tabs-2">
+			<h3>Upload csv file here which contains the list of the coords you want to invite <h3>
+			    <form enctype="multipart/form-data" method="POST" action="{{% url users.views.invite owner_name=user%}">
+			    {% csrf_token %}
+			      <table>
+				{% for field in CsvForm %}
+				<tr>
+				  <td>
+				    {{ field.label_tag }}
+				  </td>
+				  <td>
+			 	    {{ field}}
+			 	  </td>
+				</tr>
+				{% endfor %}
 
+			     </table>
+				<input type="hidden" value="{{field.file_name}}" name="f">
+
+				<input type="submit" value="upload and invite" id="Save"/>
+				</form>
+		</div>
+	</div>
+</div>
 {% endblock %}

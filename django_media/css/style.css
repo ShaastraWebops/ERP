@@ -27,17 +27,24 @@ body{
 
 
 #main{
+   position:absolute;
+   top:100px;
+   left:200px;
     margin:2px auto 2px auto;
     text-align:left;
     width:800px;
     height:480px;
-    background-image:url('../images/div_bg.png');
-    background-repeat:no-repeat;
     padding:10px 0 0 25px;
     font-family:"Arial";
     font-weight:bold;
     color:#444;
-    font-size:28px;
+    font-size:18px;
+}
+#left_panel2
+{
+position:absolute;
+left:20px;
+top:100px;
 }
 
 table{
@@ -96,6 +103,7 @@ select{
 
 
 #toppage{
+    position:relative;
     height:32px;
     width:800px;
     margin:10px auto -18px auto; 
@@ -104,9 +112,11 @@ select{
 }
 
 #contacts{
+    position:relative;
     font-family:"Tahoma";
     width:800px;
     margin:0px auto 0px auto; 
+    
     background-image:url('../images/images/div_bg.png');
     background-repeat:repeat-y;
 }
@@ -117,13 +127,34 @@ select{
     background-image:url('../images/images/div_bg_bottom.png');
     background-repeat:repeat-y;
 }
+.main_contact_box{
+    position:relative;
+    left:30px;
+}
+
+
 ul{
     border-left:solid 0.5mm #888;
     list-style-type:none;
     list-style-image:urls('../images/plus.png');
 }
 
-/* For Task/Subtask creation/editing */
+li.second{
+    position:relative;
+    left:30px;
+}
+
+
+li.active{
+    position:relative;
+    left:30px;
+}
+
+
+    
+
+/* For Task/
+Subtask creation/editing */
 .delete-checkbox{
     display : none;
 }

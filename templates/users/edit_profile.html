@@ -1,8 +1,8 @@
-{% extends "home.html" %}
+{% extends "new_home.html" %}
 
 {% block title %}
 {{ block.super }} 
-Profile
+Edit Profile
 {% endblock title %}
 
 {% block style_stuff %}
@@ -52,7 +52,7 @@ top:-125px;
 
 
 <img id="profile_pic"  src="{{photo_path}}" width="190" height="195">
-<div id="update_profile_pic"><a href="{% url dashboard.views.change_profile_pic %}">Change</a></div>
+<div id="update_profile_pic"><a href="{% url dashboard.views.change_profile_pic owner_name=user%}">Change</a></div>
 
 <div id="mainform" >
   <div id="main">
@@ -66,7 +66,7 @@ top:-125px;
     </div>
 
     <div id="details">
-      <form method="POST" id="profile_form" action="{% url users.views.handle_profile %}">
+      <form method="POST" id="profile_form" action="{% url users.views.handle_profile owner_name=user%}">
 	{% csrf_token %}
 	<table>
 	  {{ profile_form }} 

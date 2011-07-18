@@ -1,12 +1,13 @@
-	{% extends "home.html" %}
+	{% extends "new_home.html" %}
+
+
 
 	{% block body %}
 	
-
-
-{% block photos_list %}
-{% include "photo_list.html" %}
-{% endblock photos_list %}
+	
+  <div id="left_panel2">
+    {% include "left-sidebar.html" %}
+  </div>
 	{{message}}
 
 
@@ -21,8 +22,8 @@
 	#place
 	{
 	    position:relative;
-	    top :20px;
-	    left:250px;
+	    top :60px;
+	    left:0px;
 
 	}
 
@@ -69,6 +70,7 @@
 		align:center;
 		text-align:left;
 		padding:5px;
+		width:600px;
 	}
 
 	#documents_top 
@@ -80,6 +82,16 @@
 		background-color:#151B8D;
 		color:#ffffff;
 	}
+	  #main_box_document
+	{
+	position:relative;
+	left:280px;
+	color:#123456;
+	width:60%;
+	height:400px;
+	}
+
+	
 </style>
 
 
@@ -95,107 +107,130 @@ function delete_data(field) {
 
 </head>
 
+
+
+<div id="main_box_document">
+<div id="tabs">
+<ul>
+
+<li>
+<a href="#tabs-2">View the files</a>
+</li>
+<li>
+<a href="#tabs-1">Upload</a>
+</li>
+
 <div id="place" >
 
 
-<form enctype="multipart/form-data" method="POST" action="{% url dashboard.views.upload_file owner_name=page_owner%}">{% csrf_token %}
-<table>
+		<div id="tabs-1">
+			<form enctype="multipart/form-data" method="POST" action="{% url dashboard.views.upload_file owner_name=page_owner%}">{% csrf_token %}
+				<table>
 
 
-{{form.as_table}}
-</td></tr>
-</table>
-<table>
-	<tr><td>
-<input type="submit" value="Upload" id="Save"/>
-</td></tr>
-</table>
-</form>
+				{{form.as_table}}
+				</td></tr>
+				</table>
+				<table>
+					<tr><td>
+				<input type="submit" value="Upload" id="Save"/>
+				</td></tr>
+				</table>
+			</form>
+		</div>
+		
+		
+		
+		<div id="tabs-2">
+			<table id="document_list">
+		
+					{% if users_documents %}
 
-{% if users_documents %}
-{{user.username}} these documents are of {{page_owner.username}}
+				<tr >
+					<td>
+					</td>
+					<td id="documents_top"  >
 
-<table id="document_list">
-<tr >
-<td>
-</td>
-<td id="documents_top"  >
-
-File name
-</td>
-<td id="documents_top"width="250px" >
-Description
-</td>
-<td id="documents_top" >
-Date
-</td>
-<tr>
-
-
-<h4> {{upload_message}} </h4>
-{% else %}
-
-{% if page_ownner.username != user.username %}
-hey ,<br> {{user.username }} no documents have been uploaded by {{page_owner.username}}
-{% else %}
-<h4>you have not uploaded any documents till now</h4>
-{% endif %}
-{% endif %}
+					File name
+					</td>
+					<td id="documents_top"width="250px" >
+					Description
+					</td>
+					<td id="documents_top" >
+					Date
+					</td>
+				</tr>
+				<tr>
 
 
+					<h4> {{upload_message}} </h4>
+					{% else %}
+
+					{% if is_visitor %}
+					<br> no documents have been uploaded by {{page_owner.username}}
+					{% else %}
+					<h4>you have not uploaded any documents till now</h4>
+					{% endif %}
+					{% endif %}
+
+				</tr>
 
 
 
-{% for field in users_documents %}
-<tr >
-	<td>
-	{{forloop.counter}}
-	<td>
-	<div  id="filename" >
-	{{field.file_name}}
-	</div>
-	</td>
- 	<td>
-	{{field.topic}}
-	</td>
+				{% for field in users_documents %}
+				<tr >
+					<td>
+					{{forloop.counter}}
+					<td>
+					<div  id="filename" >
+					{{field.file_name}}
+					</div>
+					</td>
+				 	<td>
+					{{field.topic}}
+					</td>
 
-	<td>
-	{{field.date}}
-	</td>
-	<td>
-	<a href="{{field.url}}" class="google_doc" >Download</a>
-	</td>
-	<td>
+					<td>
+					{{field.date}}
+					</td>
+					<td>
+					<a href="{{field.url}}" class="google_doc" >Download</a>
+					</td>
+					<td>
 	
-	</td>
+					</td>
 
 	
-</tr>
+				</tr>
 
-<tr>
+				<tr>
 
-	</td>
-	<td>
-	<td>
-	<div class="docs_link_2">
-	{% if not is_visitor %}
-	<a href="{% url dashboard.views.delete_file owner_name=page_owner number=field.id %}" >delete </a>
-		{% endif %}
+					</td>
+					<td>
+					<td>
+					<div class="docs_link_2">
+					{% if not is_visitor %}
+					<a href="{% url dashboard.views.delete_file owner_name=page_owner number=field.id %}" >delete </a>
+						{% endif %}
+					</div>
+					</td>
+					<td>
+					</td>
+					<td>
+					</td>
+					<td>
+					<div class="docs_link">
+					<a  href="http://docs.google.com/viewer?url={{field.url}}" target="_blank">view in google docs</a>
+					</div>
+					</td>
+				<tr>
+
+				{% endfor %}
+				
+			</table>
+			</div>
+			</form>
 	</div>
-	</td>
-	<td>
-	</td>
-	<td>
-	</td>
-	<td>
-	<div class="docs_link">
-	<a  href="http://docs.google.com/viewer?url={{field.url}}" target="_blank">view in google docs</a>
-	</div>
-	</td>
-<tr>
-
-{% endfor %}
-
 </div>
-</form>
+</div>
 {% endblock %}
