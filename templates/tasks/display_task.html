@@ -36,4 +36,13 @@ Task
 </table>
 
 {% include "tasks/comments.html" %}
+
+{% for curr_subtask in curr_task.subtask_set.all %}
+<br />
+<h2>SubTask {{ forloop.counter }} </h2>
+{% with subtask.subtaskcomment_set.all as comments %}
+{% include "tasks/subtask_template.html" %}
+{% endwith %}
+{% endfor %}
+
 {% endblock display_stuff %}
