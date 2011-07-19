@@ -3,7 +3,7 @@ $(document).ready(function(){
 	
 	
    $('#popupDatepicker').datepick();
-   $('#id_deadline').datepick();
+   $('#id_deadline').datepick({ altFormat: 'dd-mm-yy' });
 
 
     $('#contacts ul > li')

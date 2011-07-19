@@ -12,7 +12,7 @@ position:absolute;
 background-color:#ECE5B6;
 left:383px;
 top:30px;
-width:758px;
+width:482px;
 }
 
 #month_header
@@ -22,7 +22,7 @@ padding:2px;
 background-color:#2B1B17;
 top:0px;
 height:50px;
-width:752px;
+width:472px;
 
 color:#FFFFFF;
 }
@@ -32,7 +32,7 @@ color:#FFFFFF;
 position:relative;
 text-decoration:none;
 z-index:10;
-left:650px;
+left:350px;
 text-align:right;
 top:-40px;
 width:100px;
@@ -62,7 +62,7 @@ position:relative;
 top:0px;
 padding:2px;
 
-height:100px;
+height:48px;
 }
 .weekday
 {
@@ -72,8 +72,8 @@ padding:2px;
 text-align:center;
 font-size:87%;
 background-color:#747170;
-height:45px;
-width:100px;
+height:25px;
+width:59px;
 }
 
 #today_date_box
@@ -81,9 +81,9 @@ width:100px;
 position:absolute;
 left:-206px;
 top:53px;
-background-color:#FFE87C;
+background-color:#EAC117;
 width:206px;
-height:575px;
+height:373px;
 }
 
 #today_date
@@ -116,13 +116,14 @@ color:#473409;
 {
 background-color:	#D4A017;
 font-size:150%;
+
 }
 
 .date_box
 {
-width:100px;
-height:85px;
-background-color:	#6698FF;
+width:60px;
+height:55px;
+background-color:#FBB917;
 padding:2px;
 color:#E0FFFF
 }
@@ -131,7 +132,10 @@ color:#E0FFFF
 .subtasks
 {
 color:#463E41;
+
 font-size:60%;
+width:120px;
+height:20px;
 }
 // for diffrent types of tasks
 
@@ -162,6 +166,25 @@ color:#150517;
 
 
 </style>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+var id;
+$(".date > div").hover(function(){
+id =	".subtasks" + $(this).attr('id');
+//alert(id);
+$($(id)).show();
+
+},function(){
+$($(id)).hide();
+});
+});
+</script> 
+
+
+
+
 
 {% block left_side_bar %}
 {% include "left-sidebar.html" %}
@@ -196,37 +219,37 @@ color:#150517;
 	<tr>
 		<td>
 		<div class="weekday" >
-		MONDAY
+		MON
 		</div>
 		</td>
 		<td>
 		<div class="weekday" >
-		TUESDAY
+		TUE
 		</div>
 		</td>
 		<td>
 		<div class="weekday" >
-		WEDNESDAY
+		WED
 		</div>
 		</td>
 		<td>
 		<div class="weekday" >
-		THRUSDAY
+		THU
 		</div>
 		</td>
 		<td>
 		<div class="weekday" >
-		FRIDAY
+		FRI
 		</div>
 		</td>
 		<td>
 		<div class="weekday" >
-		SATURDAY
+		SAT
 		</div>
 		</td>
 		<td>
 		<div class="weekday" >
-		SUNDAY
+		SUN
 		</div>
 		</td>
 	</tr>
@@ -247,18 +270,36 @@ color:#150517;
 				<div class ="date_box" >
 
 						<div class="date">
+						<div id="{{column.date}}" >
 						{{column.date }}
 						</div>
-
-
+						</div>
+						<div class="subtasks">
+						{% if column.subtask %}
+						yes
+						
+						<div class="subtasks{{column.date}}"
+						 style="
+						 position:relative;
+						 top:-9px;
+						 left:64px;
+						 display:none; 
+						 background-color:#C7A317;
+						 width:100px;
+						 height:100px;
+						 z-index:10;
+						">
 						{% for field in column.subtask %}
-						<div class="subtasks" >
+						
 						<a href="{% url tasks.views.display_task task_id=field.id owner_name=page_owner %}">
 						{{field}}
 						</a>
-						</div>						
-
 						{% endfor %}
+						
+						</div>						
+						
+						{% endif %}
+
 				</div>
 			{% endif %}
 
