@@ -174,11 +174,24 @@ var id;
 $(".date > div").hover(function(){
 id =	".subtasks" + $(this).attr('id');
 //alert(id);
-$($(id)).show();
+//	setTimeout(function(){$(".subtasks >* ").hide();},1000);
+$(".subtasks >* ").hide();
+
+		setTimeout(function(){$($(id)).show();
+},500);
+//$($(id)).show();
 
 },function(){
-$($(id)).hide();
-});
+//$($(id)).hide();
+$($(id)).mouseenter(
+	function() {
+	$($(id)).show();
+	}).mouseleave(
+		function(){
+		setTimeout(
+			function(){$(id).hide();},1000);
+		}); 
+	});
 });
 </script> 
 
@@ -269,14 +282,19 @@ $($(id)).hide();
 			{% if column.date != 0 %}
 				<div class ="date_box" >
 
-						<div class="date">
+						<div 
+						{% if column.subtask %}
+						class="date" 
+						{% else %}
+						class="date2"
+						{% endif %}
+						>
 						<div id="{{column.date}}" >
 						{{column.date }}
 						</div>
 						</div>
 						<div class="subtasks">
 						{% if column.subtask %}
-						yes
 						
 						<div class="subtasks{{column.date}}"
 						 style="
