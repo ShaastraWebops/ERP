@@ -28,10 +28,15 @@ You are logged in Click <a href="{% url tasks.views.display_portal owner_name=us
   <p align="center"> Welcome to our site </p>
   <br />
   <br />
+
+  {# This doesn't work! #}
+  {% comment %}
   <p align="Center"> Not registered yet?
     <a href="{% url users.views.register_invite owner_name=user %}Events">Register Now</a>
     <br>
   </p>
+  {% endcomment %}
+
   <p align="Center"> Already Registered, then Click Here to Log in.
     <a href="{% url home.views.login %}">Login Now</a>
   </p>

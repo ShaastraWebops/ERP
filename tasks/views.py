@@ -292,44 +292,6 @@ def display_task (request, task_id, owner_name = None):
                               locals(),
                               context_instance = global_context (request))
 
-# Comments Part:
-# Comments for Tasks and subtasks are very similar. So they call the same function.
-
-# @needs_authentication    
-# def handle_task_comments (request, task_id, owner_name = None):
-#     """
-#     Displays all comments for Task of task_id and allows addition of a
-#     comment.
-
-#     TODO :
-#     Make sure that user is a Core. (Necessary?)
-#     """
-#     page_owner = get_page_owner (request, owner_name)
-
-#     comment_form, comment_status = handle_comment (request = request, is_task_comment = True, object_id = task_id)
-#     comments = TaskComment.objects.filter (task__id = task_id)
-#     curr_object = Task.objects.get (id = task_id)
-#     is_task_comment = True
-#     return render_to_response('tasks/comments.html',
-#                               locals(),
-#                               context_instance = global_context (request))
-
-# @needs_authentication    
-# def handle_subtask_comments (request, subtask_id, owner_name = None):
-#     """
-#     Displays all comments for SubTask of subtask_id and allows
-#     addition of a comment.
-#     """
-#     page_owner = get_page_owner (request, owner_name)
-
-#     comment_form, comment_status = handle_comment (request = request, is_task_comment = False, object_id = subtask_id)
-#     comments = SubTaskComment.objects.filter (subtask__id = subtask_id)
-#     curr_object = SubTask.objects.get (id = subtask_id)
-#     is_task_comment = False
-#     return render_to_response('tasks/comments.html',
-#                               locals(),
-#                               context_instance = global_context (request))
-
 # Adds comments to task / subtasks
 def handle_comment (request, is_task_comment, object_id, other_errors = False):
     """

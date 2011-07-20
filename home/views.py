@@ -122,9 +122,3 @@ def forgot_password(request):
         print "problem in forgot_password_view"
     form = forms.UserLoginForm ()    
     return render_to_response('home/forgot_password.html', locals(), context_instance= global_context(request))
-        
-        
-   
-   
-def test (request):
-    return render_to_response('home.html', locals(), context_instance= global_context(request))

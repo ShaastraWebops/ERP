@@ -21,6 +21,6 @@ urlpatterns = patterns('erp.dashboard.views',
 # 'home' itself is considered as a username and so an error results
 urlpatterns += patterns('erp.tasks.views',
       (r'^home/?(\w+)?$', 'display_portal'),
-      (r'^(\w+)?$', 'display_portal'),
+      (r'^$', 'display_portal'),
 )
 	

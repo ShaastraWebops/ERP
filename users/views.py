@@ -21,9 +21,9 @@ from django.conf import settings
 import os
 
 
-def register_user(request ,dept_name="Events"):
+def register_user(request, dept_name="Events", owner_name = None):
     """
-for test phase the default dept is Events
+    for test phase the default dept is Events
     """
     print "this is the deptname user belongs to ",dept_name
     department=Department.objects.filter(Dept_Name = dept_name)
@@ -74,11 +74,12 @@ for test phase the default dept is Events
       
 
 
+# WTH is this?
 
-def register_invite(request,dept_name="none" ,username="none" ,rollno="ee0b000"):
-    print "deptname :" ,dept_name
-    user_form = AddUserForm (initial={'username':rollno},)
-    return render_to_response('users/register.html' , locals() ,context_instance = global_context(request))
+# def register_invite(request,dept_name="none" ,username="none" ,rollno="ee0b000"):
+#     print "deptname :" ,dept_name
+#     user_form = AddUserForm (initial={'username':rollno},)
+#     return render_to_response('users/register.html' , locals() ,context_instance = global_context(request))
 
 
 @needs_authentication

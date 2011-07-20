@@ -3,8 +3,8 @@
 {% block top_bar %}
 {{ block.super }} 
 {% if is_visitor %}
-<br />
-<h3>You are viewing {{ po_name }}'s page.</h3>
+<!-- <br /> -->
+<h3 style="color:black">You are viewing {{ po_name }}'s page.</h3>
 {% endif %}
 
 {% endblock top_bar %}
@@ -13,7 +13,7 @@
 
 <div id="content">
   <div id="left_panel">
-    {% include "tasks/left-sidebar.html" %}
+    {% include "left-sidebar.html" %}
   </div>
 
   <div id="central_console">
@@ -36,7 +36,7 @@
     {% endblock form_stuff %}
   </div>
   <div id="right_panel">
-    {% include "tasks/right-sidebar.html" %}
+    {% include "right-sidebar.html" %}
   </div>
 </div>
 {% endblock body %}
