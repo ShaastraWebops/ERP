@@ -119,7 +119,10 @@ left:140px;
 				      Core 
 				      {% else %}
 				      Coordinator 
-				      {% endif %}
+				      {% endif %} <br>
+				      <a href="{% url tasks.views.display_portal owner_name=page_owner %}" class="button big" >
+		Dashboard
+	      </a><br>
 				</div>
 				</td>		
 			</tr>

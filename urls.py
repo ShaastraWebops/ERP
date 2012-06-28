@@ -3,12 +3,14 @@ from django.contrib import admin
 from erp.tasks.views import *
 from erp.users.views import *
 from erp.home.views import *
+from erp.create_test_data import *
 import haystack
 from haystack.views import SearchView
 from haystack.forms import ModelSearchForm
 from haystack.forms import SearchForm
 from haystack.views import search_view_factory
 haystack.autodiscover()
+
 admin.autodiscover()
 
 
@@ -16,9 +18,9 @@ admin.autodiscover()
 from django.contrib import admin
 # admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns('',(r'^createdata/', do_it_all),
 #search
-    #(r'^search/', include('haystack.urls')),
+    (r'^search/', include('haystack.urls')),
     (r'^search/', search_view_factory(
 	form_class=ModelSearchForm)),
     (r'^erp/$', include('erp.home.urls')),

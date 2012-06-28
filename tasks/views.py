@@ -1,5 +1,5 @@
 # Create your views here.
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response, redirect, HttpResponseRedirect
 # from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
@@ -77,15 +77,20 @@ def display_portal (request, owner_name = None):
     """
     page_owner = get_page_owner (request, owner_name)
 
+    if page_owner=='Invalid':
+        return HttpResponseRedirect('/erp/home/login')
     if is_core (page_owner):
         return display_core_portal (request, page_owner)
     else:
         return display_coord_portal (request, page_owner)
 
+@permissions
 def display_core_portal (request, core):
     """
     Display core's portal
     """
+# The case that a coord is trying to see a core's dashboard, which should'nt be allowed.      
+    print "it wont come here"
     display_dict = dict ()
     # Deal with the Updates part (viewing, creating) of the portal
     update_dict = handle_updates (request, core)
@@ -96,9 +101,9 @@ def display_core_portal (request, core):
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/core_portal2.html',
-                              display_dict,
-                              context_instance = global_context (request))
-
+                                  display_dict,
+                                  context_instance = global_context (request))
+    
 def display_coord_portal (request, coord):
     """
     Display coord's portal
