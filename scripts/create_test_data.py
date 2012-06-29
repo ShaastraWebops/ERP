@@ -21,7 +21,7 @@ def create_group (group_name):
         new_group = Group (name = group_name)
         new_group.save ()
         print 'Group %s created' %(group_name)
-    
+
 def create_groups ():
     """
     Create groups Cores, Coords, and Vols (if they don't already exist).
@@ -51,7 +51,7 @@ def add_user_to_group (user, group_name):
     user.groups.add (Group.objects.get (name = group_name))
     user.save ()
     print '%s - now a member of Group %s' %(user, group_name)
-    
+
 def create_user (department_name, group_name, user_dict, profile_dict):
     """
     Create a User and fill his userprofile.
@@ -63,11 +63,9 @@ def create_user (department_name, group_name, user_dict, profile_dict):
     except:
         # If it's a new user
         # Note : create_user creates an instance and saves it in the database
-
         # Delivering keyword args in user_dict
         user = User.objects.create_user(**user_dict)
         print '%s - User created' %(user_dict['username'])
-
     try:
         curr_userprofile = user.get_profile ()
         print "%s - userprofile exists" %(user_dict['username'])
@@ -100,8 +98,7 @@ def parse_user_info_list (info_list):
     department_name = info_list[0]
     group_name = info_list[1]
     user_keys = ['username', 'email', 'password']
-    profile_keys = ['nickname', 'name', 'chennai_number', 'summer_number',
-                    'summer_stay', 'hostel', 'room_no']
+    profile_keys = ['nickname', 'name', 'chennai_number', 'summer_number', 'summer_stay', 'hostel', 'room_no']
     user_values = info_list[2:5]
     profile_values = info_list[5:]
     user_dict = dict (zip (user_keys, user_values))
@@ -123,24 +120,21 @@ def create_users (users_file_name = 'users.txt'):
 
 # def create_task (task_details, subtask_list = None):
 #     """
-    
 #     Arguments:
 #     - `task_details`:
 #     - `subtask_list`:
 #     """
 #     task_keys = ["subject", "description", "creator", "deadline"]
 #     subtask_keys = ["subject", "description", "creator", "deadline"]
-    
+
 def create_tasks (n = 5, partial_subtask = False):
     """
     Create n (= 5) Tasks (with 2 SubTasks each) for each Department's
     Core, with Deadline as 15 June, 2011. One SubTask is for the
     Core's Department. The other is for a random Department.
-
     If partial_subtask = True, mark both SubTasks for other
     Departments (at random), but don't assign to their Coords.
     """
-    
     dept_names = [tup[0] for tup in DEP_CHOICES]
     if partial_subtask:
         num_other_tasks = 2
@@ -152,8 +146,6 @@ def create_tasks (n = 5, partial_subtask = False):
         task_subj_str = ' Test Task '
         subtask_subj_str_same = ' Same Dept - Do this '
         subtask_subj_str_other = ' Other Dept - Do this '
-
-
     for name in dept_names:
         curr_dept = Department.objects.get (Dept_Name = name)
         # This Department's Core
@@ -161,52 +153,48 @@ def create_tasks (n = 5, partial_subtask = False):
         curr_coord1 = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = name)[0]
         curr_coord2 = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = name)[1]
         print 'Tasks for ', curr_dept.Dept_Name
-        
-	start_date = datetime.date.today().replace(day=1, month=7).toordinal()
-	end_date = datetime.date.today().toordinal()
-
-        for i in xrange (n):
-            new_task = Task ()
-            new_task.subject = name + task_subj_str + str (i)
-            new_task.description = 'Gen Testing ' + str (i)
-            new_task.creator = curr_core
-            
-            new_task.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
-            new_task.save () 
-
+    start_date = datetime.date.today().replace(day=1, month=7).toordinal()
+    end_date = datetime.date.today().toordinal()
+    print start_date
+    print end_date
+    for i in xrange (n):
+        new_task = Task ()
+        new_task.subject = name + task_subj_str + str (i)
+        new_task.description = 'Gen Testing ' + str (i)
+        new_task.creator = curr_core
+        new_task.deadline =  datetime.date.fromordinal(random.randint(0,9))#changed
+        new_task.save () 
+        if not partial_subtask:
+            subtask1 = SubTask ()
+            subtask1.subject = name + subtask_subj_str_same + str (i)
+            subtask1.creator = curr_core
+            subtask1.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
+            subtask1.department = curr_dept
+            subtask1.task = new_task
+            # Seems the SubTask must exist before many to many
+            # relations can be added
+            subtask1.save ()
+            subtask1.coords.add (curr_coord1)
+            subtask1.coords.add (curr_coord2)
+            subtask1.save ()
+        for j in xrange (num_other_tasks):
+            subtask2 = SubTask ()
+            subtask2.creator = curr_core
+            subtask2.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
+            index = random.randint (0, 9)
+            subtask2.department = Department.objects.get (Dept_Name = dept_names[index])
+            subtask2.subject = subtask2.department.Dept_Name + subtask_subj_str_other + str (i)
+            subtask2.task = new_task
+            # Seems the SubTask must exist before many to many
+            # relations can be added
+            subtask2.save ()
             if not partial_subtask:
-                subtask1 = SubTask ()
-                subtask1.subject = name + subtask_subj_str_same + str (i)
-                subtask1.creator = curr_core
-                subtask1.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
-                subtask1.department = curr_dept
-                subtask1.task = new_task
-                # Seems the SubTask must exist before many to many
-                # relations can be added
-                subtask1.save ()
-                subtask1.coords.add (curr_coord1)
-                subtask1.coords.add (curr_coord2)
-                subtask1.save ()
-
-            for j in xrange (num_other_tasks):
-                subtask2 = SubTask ()
-                subtask2.creator = curr_core
-                subtask2.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
-                index = random.randint (0, 9)
-                subtask2.department = Department.objects.get (Dept_Name = dept_names[index])
-                subtask2.subject = subtask2.department.Dept_Name + subtask_subj_str_other + str (i)
-                subtask2.task = new_task
-                # Seems the SubTask must exist before many to many
-                # relations can be added
+                # If not a partial subtask, assign to coords
+                coord_list = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = dept_names[index])
+                subtask2.coords.add (coord_list[0])
+                subtask2.coords.add (coord_list[1])
                 subtask2.save ()
-                if not partial_subtask:
-                    # If not a partial subtask, assign to coords
-                    coord_list = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = dept_names[index])
-                    subtask2.coords.add (coord_list[0])
-                    subtask2.coords.add (coord_list[1])
-                    subtask2.save ()
-                print 'Task ', i, 'Created'
-
+            print 'Task ', i, 'Created'
 
 def finish_some_subtasks ():
     """
@@ -246,7 +234,6 @@ def create_comments ():
             new_comment.subtask = subtask
             new_comment.save ()
     print 'Core comments - Created'
-
     for coord in coords_list:
         # List of all SubTasks where coord is one of the Coords assigned
         subtask_list = SubTask.objects.filter (coords = coord)
@@ -257,6 +244,7 @@ def create_comments ():
             new_comment.subtask = subtask
             new_comment.save ()
     print 'Coord comments - Created'
+
 def create_updates ():
     """
     Create some updates for each Coord.
@@ -278,9 +266,11 @@ def create_updates ():
 def do_it_all ():
     create_groups ()
     create_depts ()
-    create_users (users_file_name = 'users.txt')
+    create_users (users_file_name = '/home/sriram/Django/erp/scripts/users.txt')
     create_tasks (n = 5, partial_subtask = False)
     create_tasks (n = 3, partial_subtask = True)
     finish_some_subtasks ()
     create_updates ()
     create_comments ()
+
+

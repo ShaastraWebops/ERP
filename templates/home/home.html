@@ -19,15 +19,15 @@
     {%endif%}
     -->
 
-{% if user.is_authenticated %}
-You are logged in Click <a href="{% url tasks.views.display_portal owner_name=user %}"> Here</a> to visit your Dashboard.     
-{% endif %}
-
 <div class="register">
   <h1 align="center"> Shaastra ERP </h1>
   <p align="center"> Welcome to our site </p>
   <br />
   <br />
+
+{% if user.is_authenticated %}
+<p align="center">You are logged in Click <a href="{% url tasks.views.display_portal owner_name=user %}"> Here</a> to visit your Dashboard.</p>
+{% else %}
 
   {# This doesn't work! #}
   {% comment %}
@@ -41,5 +41,5 @@ You are logged in Click <a href="{% url tasks.views.display_portal owner_name=us
     <a href="{% url home.views.login %}">Login Now</a>
   </p>
 </div>
-
+{% endif %}
 {% endblock body %}

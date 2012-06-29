@@ -1,206 +1,206 @@
-{% extends "base.html" %}
 
-{% block title %}
-Shaastra ERP - Login
-{% endblock title %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Shaastra | ERP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-{% block body %}
-<script language="javascript" type="text/javascript" src="{{MEDIA_URL}}js/wz_tooltip.js">
-</script>
+    <!-- Le styles -->
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+        background: #00001A;
+      }
+      
+      .span4
+      {
+      padding-top: 10px;
+      padding-left: 0px;
+      padding-bottom: 50px;
+      }
 
+      
+            
+    </style>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
 
-<!-- Validation for the form -->
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="{{ MEDIA_URL }}images/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="bootstrap/ico/apple-touch-icon-57-precomposed.png">
+  <link href="{{ MEDIA_URL }}css/bootstrap.css" rel="stylesheet" type="text/css">
+  <link href="{{ MEDIA_URL }}css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+  </head>
 
-{% if redirected %}
-<div class="errors" id="login_first">
-  <b>
-    You must login first.
-  </b>
-</div>
-{% endif %}
+  
+<body>
 
-{% if just_registered %}
-<div class="info" id="thanks_for_registering">
-  <h3>You have successfully registered with Shaastra Works ERP!<br /> You may now login.</h3>
-</div>
-{% endif %}
+    <div class="container">
 
-<div class="register">
-  <h1 align="center">
-    Login
-  </h1>
-  <p align="center">
-  </p>
-</div>
-
-<table cellspacing="30" rules="cols" cellpadding="10">
-  <tr>
-    <td>
-
-      <div class="success">
-	<h2>
-	  Create an account
-	</h2>
-	<!-- <p> -->
-	<!--   To register with the ERP, -->
-	<!--   <a href="{{SITE_URL}}/users/register_invite/Events/"> -->
-	<!--     click here -->
-	<!--   </a> -->
-	<!-- </p> -->
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+        <h1>Shaastra | ERP</h1>
+         <br/>
+        <p>Shaastra isn’t just a tech fest. To put it simply, it’s a one-year long institution of sorts. Like every other institution then, it’s governed by a hierarchy. Shaastra presents its Enterprise Resource Planner to make things more fluid.</p>
+        <div class="row">
+        <div class="span10">
+        <a class="grow" href="https://www.facebook.com/Shaastra" id="fb-social">
+	    <img id="fb-img" src = "{{ MEDIA_URL}}images/facebook.png"></a>
+		 <a class="grow" href="https://twitter.com/#!/shaastra_2011" id="tw-social">
+		    <img id="tw-img" src = "{{ MEDIA_URL}}images/twitter.png"></a>
+         <a class="grow" href="http://www.youtube.com/iitmshaastra" id="yt-social">
+            <img id="yt-img" src = "{{ MEDIA_URL}}images/youtube.png"></a>
+        <a id="shaastra-button" class="btn btn-primary btn-large pull-right" href="http://www.shaastra.org">Go to Shaastra &raquo;</a>
+        </div>
+        </div>
       </div>
 
-    </td>
-    <td width="40%">
+      <!-- Example row of columns -->
+        
+      
+     <div class = "row"> 
+        
+{% if user.is_authenticated %}
+<p align="center">You are logged in Click <a href="{% url tasks.views.display_portal owner_name=user %}"> Here</a> to visit your Dashboard.</p>
+{% endif %}
 
-      <div class="info">
-	<h2>
-	  Already have an account?
-	</h2>
-	<form action="" method="POST">{% csrf_token %}
-	  <table name="login">
+        
+        <div class="span4 offset4">
+        <form action="" method="POST" class ="form-vertical well">
+        {% csrf_token %}
 
-	    <tr>
-	      <td>
-		<div id="Username_img">
-		  {% if form.username.errors %}
-		  <img height=20 width=20 src="{{ MEDIA_URL }}images/error.png">
-		  {% endif %}
-		</div>
-	      </td>
-	      <td>{{ form.username.label_tag }}</td>
-	      <td>{{ form.username }}
-		<div id="Username_div" style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
+		{{ form.username.label_tag }} {{ form.username }}<br>
+    	<div id="Username_div" style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
 		  {% if form.username.errors %}
 		  {% for error in form.username.errors %}
 		  {{ error|escape }}
 		  {% endfor %}
 		  {% endif %}
 		</div>
-	      </td>
-	      <td>
-		<a onmouseover="Tip('{{ form.username.help_text }}')" onmouseout="UnTip()">
-		  <img height=20 width=20 src="{{ MEDIA_URL }}images/help_icon.png">
-		</a>
-	      </td>
-	    </tr>
-	    <tr />
-	    <tr />
-	    <tr />
-	    <tr />
-	    <tr />
-	    <tr />
-	    <tr>
-	      <td>
-		<div id="Password_img">
-		  {% if form.username.errors %}
-		  <img height=20 width=20 src="{{ MEDIA_URL }}images/error.png">
-		  {% endif %}
-		</div>
-	      </td>
-	      <td>{{ form.password.label_tag }}</td>
-
-	      <td>{{ form.password }}
+        <br/>
+		{{ form.password.label_tag }} {{ form.password }}<br>
 		<div id="Password_div" style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
 		  {% if form.password.errors %}
 		  {% for error in form.password.errors %}
 		  {{ error|escape }}
 		  {% endfor %}
 		  {% endif %}
-		
-	      </td></div>
-	      <td>
-	      <div id ="forgot_password">
-	      <a href = "{% url home.views.forgot_password %}" >Forgot Password ?</a> 
-	      </div>
-	      <td>
-		<a onmouseover="Tip('{{ form.password.help_text }}')" onmouseout="UnTip()">
-		  <img height=20 width=20 src="{{ MEDIA_URL }}images/help_icon.png">
-		</a>
-	      </td>
-	    </tr>
-	    <tr />
-	    <tr />
-	    <tr />
-	    <tr />
-	    <tr />
-	    <tr />
-
-	  </table>
-	  <input type="submit" value="Loginnow" />
+		</div>
+         <br/>
+		<input type = "submit" class="btn btn-primary" value="Login">
+		<a href="{% url home.views.forgot_password %}" class="pull-right">Forgot Password</a>
+		<br>
 	  {% if invalid_login %}
 	  <br />
 	  <div style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
 	    <br />
 	    Invalid username or password. Please try again.
+	    <br/>
 	  </div>
 	  {% endif %}
+		{% if redirected %}
+        <div class="errors" id="login_first">
+            <b>
+                <br/>You must login first.
+            </b>
+        </div>
+        {% endif %}
+    	<div id="login_message" style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
+        {% if invalid_login_message %}
+        {{ invalid_login_message }}
+        {% endif %}
+        </div>	
+	</div>
+
+		
 	</form>
-
-      </div>
-
-    </td>
-  </tr>
-</table>
-<div id="login_message">
-{% if invalid_login_message %}
-{{ invalid_login_message }}
-{% endif %}
-</div>
-
-<style type="text/css" >
-#login_message
-{
-position:relative;
-left:550px;
-font-size:75%;
-color:#153E7E;
-}
-#forgot_password
-{
-position:absolute;
-
-right:230px;
-}
-
-<style>
-<script type="text/javascript">
-
-  err_img='<img height=20 width=20 src="{{ MEDIA_URL }}images/error.png">';
-
-  function validateName(fld)
-  {
-  var error = "";
-  var illegalChars = /[^A-Za-z0-9_.]/; // allow letters, numbers, and underscores
+       </div>
+<hr>      
+       <ul class="thumbnails">
+    <li class="grow">
+      <a href="#">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a href="#">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a href="#">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a href="#">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a href="#">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a href="#">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a href="#">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a href="#">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a href="#">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a href="#">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a href="#">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a href="#">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a href="#"
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+</ul>
   
-  if (fld.value == "") error = "This field is required.";
-  else if (illegalChars.test(fld.value)) error = "Check your username once again."; 
+   
 
-  document.getElementById('Username_div').innerHTML= error;
-  if (error!="") {document.getElementById('Username_img').innerHTML= err_img;
-  document.getElementById('Username_div').innerHTML= error; return;}
-  document.getElementById('Username_img').innerHTML= "";
-  document.getElementById('Username_div').innerHTML="";
-  return;
-  }
 
-  function validatePassword(fld)
-  {
-  var error="";
-  if(fld.value == "")	error="This field is required.";
+    </div> <!-- /container -->
+<!-- Placed at the end of the document so the pages load faster -->
+    <script src="{{ MEDIA_URL }}js/jquery.js"></script>
+    <script src="{{ MEDIA_URL }}js/bootstrap.js"></script>
+    <script src="{{ MEDIA_URL }}js/bootstrap.min.js"></script>
 
-  document.getElementById('Password_div').innerHTML= error;
-  if (error!="") {document.getElementById('Password_img').innerHTML= err_img;
-  document.getElementById('Password_div').innerHTML= error; return;}
-  document.getElementById('Password_img').innerHTML= "";
-  document.getElementById('Password_div').innerHTML= ""; 
-  }
-  function onBlurAttribute()
-  {
-  document.getElementById("id_username").setAttribute('onblur','validateName(document.getElementById("id_username"))');
-  document.getElementById("id_password").setAttribute('onblur','validatePassword(document.getElementById("id_password"))');
-  }
-  onBlurAttribute();
-
-</script>
-
-{% endblock body %}
+  </body>
+</html>

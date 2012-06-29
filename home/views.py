@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response, redirect
-# from django.http import HttpResponse, HttpResponseRedirect
+#from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
 from django.template.loader import get_template
@@ -23,6 +23,8 @@ def home(request):
     return render_to_response('home/home.html', locals(), context_instance= global_context(request))
 
 def login(request):
+    if request.user.is_authenticated():
+        return redirect ('erp.tasks.views.display_portal', owner_name = request.user.username)
     redirected = request.session.get ("from_url", False)
     just_registered = session_get(request, "just_registered")
     form = forms.UserLoginForm ()
@@ -30,59 +32,59 @@ def login(request):
     if request.method == 'POST':
         print "in the login , it is post"
         data = request.POST.copy()
-
+    
         form =forms. UserLoginForm (data)
-	if form.is_valid():
-            user = auth.authenticate(username=form.cleaned_data['username'],
-                                     password=form.cleaned_data["password"])
-            if user is not None and user.is_active == True:
-                auth.login (request, user)
+        if form.is_valid():
+                user = auth.authenticate(username=form.cleaned_data['username'],
+                                         password=form.cleaned_data["password"])
+                if user is not None and user.is_active == True:
+                    auth.login (request, user)
+        
+        
+                    # WHERE THE HELL IS THIS USED?
+                    # url = session_get(request, "from_url")
+                    # # Handle redirection
+                    # if not url:
+                    #     url = "%s/home/"%settings.SITE_URL
+        
+        
+                    request.session['logged_in'] = True
+        
+                    try:
+                        response.set_cookie('logged_out', 0)
+                    except:
+                        pass
 
-
-                # WHERE THE HELL IS THIS USED?
-                # url = session_get(request, "from_url")
-                # # Handle redirection
-                # if not url:
-                #     url = "%s/home/"%settings.SITE_URL
-
-
-                request.session['logged_in'] = True
-
-                try:
-                    response.set_cookie('logged_out', 0)
-                except:
-                    pass
-
-                if redirected:
-                    return redirect (redirected)
+                    if redirected:
+                        return redirect (redirected)
+                    else:
+                        return redirect ('erp.tasks.views.display_portal',
+                                         owner_name = user.username)
                 else:
-                    return redirect ('erp.tasks.views.display_portal',
-                                     owner_name = user.username)
-            else:
-                invalid_login_message="The details provided by you dont match , please try again "
-                print "the user has not logged in -invalid "
-                request.session['invalid_login'] = True
-                print request.path
-                return render_to_response('home/login.html', locals(), context_instance= global_context(request))
-#                return HttpResponseRedirect (request.path)
-                invalid_login =session_get(request, "invalid_login")
-                form = forms.UserLoginForm ()
-    else:
-        pass
-
+                    invalid_login_message="Incorrect username or password. Please try again."
+                    print "the user has not logged in -invalid "
+                    request.session['invalid_login'] = True
+                    print request.path
+                    return render_to_response('home/login.html', locals(), context_instance= global_context(request))
+                    #return HttpResponseRedirect (request.path)
+                    invalid_login =session_get(request, "invalid_login")
+                    form = forms.UserLoginForm ()
+        else:
+            pass
+    
     return render_to_response('home/login.html', locals(), context_instance= global_context(request))
-
+    
 def logout (request):
     if request.user.is_authenticated():
         auth.logout (request)
-        response= redirect ('erp.home.views.home')
+        response= redirect ('erp.home.views.login')
         try:
           #  response.set_cookie('unb_User',"")
             response.set_cookie('logged_out', 1)
         except:
             pass
         return response
-    return render_to_response('home/home.html', locals(), context_instance= global_context(request))
+    return render_to_response('home/login.html', locals(), context_instance= global_context(request))
 
 def forgot_password(request):
 

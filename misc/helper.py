@@ -4,7 +4,9 @@ from django.core.mail import send_mail,EmailMessage,SMTPConnection
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 import os
+from shutil import copyfile
 from django.conf import settings
+from erp.users.models import userphoto
 
 # Temporary workaround for the fact that I don't know whether / how to
 # extend the User class with methods
@@ -56,17 +58,32 @@ def create_dir(file_name ,user_name , method=1):
     if not os.path.isdir(destdir):
         os.makedirs(destdir,0775)
     save_path=os.path.join(destdir,os.path.basename(file_name))
-            
+    
+    print destdir            
     destdir_one=os.path.join(settings.MEDIA_URL,"upload_files")
     destdir=os.path.join(destdir_one,user_name)
     print destdir , "is the destdir for the file"
-    if not os.path.isdir(destdir):
-        os.makedirs(destdir,0775)
     file_path=os.path.join(destdir,os.path.basename(file_name))
     
     return (save_path , file_path)
 
-
+def check_dir(request):
+    """
+    Checks whether the user has a upload folder for himself.
+    """
+    destdir_one=os.path.join(settings.MEDIA_ROOT,"upload_files")
+    destdir=os.path.join(destdir_one, request.user.username)
+    if not os.path.isdir(destdir):
+        os.makedirs(destdir,0775)
+        src=os.path.join(settings.MEDIA_ROOT,"images")
+        src=os.path.join(src,os.path.basename("default.jpeg"))
+        dest=os.path.join(destdir,os.path.basename("PROFILE_PIC_OF_THE_USER"))
+        copyfile(src, dest)
+        dest=os.path.join(settings.MEDIA_URL,"upload_files")
+        dest=os.path.join(dest, request.user.username)
+        dest=os.path.join(dest,os.path.basename("PROFILE_PIC_OF_THE_USER"))
+        image_object=userphoto(name=request.user, photo_path=dest)
+        image_object.save()
 
 """
 this function writes the file

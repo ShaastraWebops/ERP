@@ -145,7 +145,7 @@ def invite_inbulk(request ,self):
 
 
             
-@needs_authentication
+@profile_authentication
 def view_profile(request, owner_name=None):
     page_owner = get_page_owner (request, owner_name)
     try:

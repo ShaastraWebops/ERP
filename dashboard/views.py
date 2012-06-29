@@ -22,7 +22,7 @@ import os # upload files
 from django.conf import settings
 from django.utils import simplejson
 import csv # invite coords
-
+from create_test_data import *
 
 
 
@@ -120,7 +120,7 @@ def upload_invite_coords(request):
 personal tab- only request.user can view it
 """
 @needs_authentication
-def change_profile_pic(request):
+def change_profile_pic(request, owner_name):
     print request.user , "in change-profile-pic"
     if request.method == 'POST':
         form=change_pic(request.POST,request.FILES)      
@@ -355,7 +355,7 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
     print "month: " , month
     print "Current day: %d" % now.day
     today=now.day
-    month_arr=["Jan" ,"Feb" ,"March" ,"April" ,"May" ,"June" ,"July" ,"August" ,"September","Ocotober","November","December"]
+    month_arr=["January" ,"February" ,"March" ,"April" ,"May" ,"June" ,"July" ,"August" ,"September","Ocotober","November","December"]
     month_name=month_arr[month-1]
       
     #the calander object
@@ -389,9 +389,12 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
             complete_data[pos_to_task]['subtask'].append(sub)
   
     today_task=complete_data[today+first_week_day-1]
-    print "todays task" ,today_task
+    print "todays task" ,today_task, first_week_day
     # okay i know this is not right way to do it , but tried many ways , when i tried to initialize one element multiple element was getting initialized ,so i did it like this
     main_data=[ complete_data[0:7] ,complete_data[7:14] ,complete_data[14:21] ,complete_data[21:28] ,complete_data[28:35] ,complete_data[35:38] ]
     
     return render_to_response('dashboard/mycalendar.html',locals() ,context_instance = global_context(request))
 
+def load_data(request):
+    do_it_all()
+    return render_to_response('gen.html',locals())

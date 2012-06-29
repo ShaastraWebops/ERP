@@ -35,13 +35,13 @@ Department Portal | {{ po_dept_name }}
     <h2>Members of your Department</h2>
     <h3>Cores</h3>
     {% for core in dept_cores_list %}
-    <a href="{% url tasks.views.display_portal owner_name=core.username %}">{{ core.get_profile.name }} </a>  
+    <a href="{% url users.views.view_profile owner_name=core.username %}">{{ core.get_profile.name }} </a>  
     <br />
     {% endfor %}
 
     <h3>Coords</h3>
     {% for coord in dept_coords_list %}
-    <a href="{% url tasks.views.display_portal owner_name=coord.username %}">{{ coord.get_profile.name }} </a>  
+    <a href="{% url users.views.view_profile owner_name=coord.username %}">{{ coord.get_profile.name }} </a>  
     <br />
     {% endfor %}
   </div>

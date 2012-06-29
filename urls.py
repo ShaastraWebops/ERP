@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     #(r'^search/', include('haystack.urls')),
     (r'^search/', search_view_factory(
 	form_class=ModelSearchForm)),
-    (r'^erp/$', include('erp.home.urls')),
+    #(r'^erp/$', include('erp.home.urls')),
     (r'^erp/home/',include('erp.home.urls')),
     #(r'^erp/users/', include('erp.users.urls')),
     #(r'^erp/dashboard/',include('erp.dashboard.urls')),	
@@ -29,6 +29,11 @@ urlpatterns = patterns('',
     (r'^erp/(?P<owner_name>\w+)/users/', include('erp.users.urls')),
     (r'^erp/(?P<owner_name>\w+)/dashboard/',include('erp.dashboard.urls')),	
     (r'^erp/(?P<owner_name>\w+)/', include('erp.tasks.urls')),
+    
+    (r'^loaddata/$', 'dashboard.views.load_data'),
+    
+    (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
+    
     #(r'^now/sign.html$', sign_in, ),
     # Examples:
     # url(r'^$', 'erp.views.home', name='home'),

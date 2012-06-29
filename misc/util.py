@@ -116,10 +116,28 @@ def needs_authentication (func):
             print "path from util", request.path
             return redirect ('erp.home.views.login')
         else:
-            return func (*__args, **__kwargs)
+            if __kwargs['owner_name']:
+                if __kwargs['owner_name']==request.user.username:
+                    return func (*__args, **__kwargs)
+                else:
+                    return redirect ('erp.tasks.views.display_portal',
+                                         owner_name = request.user.username)
     return wrapper
 
-
+def profile_authentication (func):
+    # print 'In Decorator - Function Name : ', func.__name__
+    def wrapper (*__args, **__kwargs):
+        request = __args[0]
+        if not request.user.is_authenticated():
+            # Return here after logging in
+            request.session['from_url'] = request.path
+            
+            print "path from util", request.path
+            return redirect ('erp.home.views.login')
+        else:
+            return func (*__args, **__kwargs)
+    return wrapper
+    
 # For urls that can't be accessed once logged in.
 def no_login (func):
     def wrapper (*__args, **__kwargs):

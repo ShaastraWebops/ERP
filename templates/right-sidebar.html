@@ -1,18 +1,16 @@
 <div id="other_coords">
   <p>
-    <u>Also in this department</u>
+    <u>Department Members:</u>
   </p>
+  <h3>Cores</h3>
+    {% for core in dept_cores_list %}
+    <a href="{% url users.views.view_profile owner_name=core.username %}"><img src="{{MEDIA_URL}}upload_files/{{ core.username }}/PROFILE_PIC_OF_THE_USER" width="30px" height="30px" title="{{ core.get_profile.name }}"/> </a>  
+    {% endfor %}
 
-  <img src="{{MEDIA_URL}}images/default.jpeg" width="30px" height="30px"/>
-  <img src="{{MEDIA_URL}}images/default.jpeg" width="30px" height="30px"/>
-  <img src="{{MEDIA_URL}}images/default.jpeg" width="30px" height="30px"/>
-  <img src="{{MEDIA_URL}}images/default.jpeg" width="30px" height="30px"/>
-  <img src="{{MEDIA_URL}}images/default.jpeg" width="30px" height="30px"/>
-  <img src="{{MEDIA_URL}}images/default.jpeg" width="30px" height="30px"/>
-  <img src="{{MEDIA_URL}}images/default.jpeg" width="30px" height="30px"/>
-  <img src="{{MEDIA_URL}}images/default.jpeg" width="30px" height="30px"/>
-  <img src="{{MEDIA_URL}}images/default.jpeg" width="30px" height="30px"/>
-
-  <br/>
-  <a href="#">See more</a>
+    <br />
+    <h3>Coords</h3>
+    {% for coord in dept_coords_list %}
+    <a href="{% url users.views.view_profile owner_name=coord.username %}"><img src="{{MEDIA_URL}}upload_files/{{ coord.username }}/PROFILE_PIC_OF_THE_USER" width="30px" height="30px" title="{{ coord.get_profile.name }}"/></a>
+    {% endfor %}
+    <br/>
 </div>

@@ -24,7 +24,7 @@ class shout_box(models.Model):
     user = models.ForeignKey(User)
     nickname = models.CharField(max_length = 50)
     comments = models.TextField()
-    time_stamp = models.DateTimeField(editable = False)
+    time_stamp = models.DateTimeField(editable = False, blank=True, null=True)
     
     def __str__(self):
 	return '%s'%(self.comments)

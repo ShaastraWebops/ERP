@@ -12,7 +12,7 @@ import datetime
 from forms import TaskForm, SubTaskForm, TaskCommentForm, SubTaskCommentForm, UpdateForm
 from models import *
 from erp.misc.util import *
-from erp.misc.helper import is_core, is_coord, get_page_owner
+from erp.misc.helper import is_core, is_coord, get_page_owner, check_dir
 from erp.department.models import *
 from erp.settings import SITE_URL
 from erp.dashboard.forms import shout_box_form
@@ -76,7 +76,7 @@ def display_portal (request, owner_name = None):
     Display owner's portal.
     """
     page_owner = get_page_owner (request, owner_name)
-
+    check_dir(request)
     if is_core (page_owner):
         return display_core_portal (request, page_owner)
     else:
@@ -89,10 +89,17 @@ def display_core_portal (request, core):
     display_dict = dict ()
     # Deal with the Updates part (viewing, creating) of the portal
     update_dict = handle_updates (request, core)
+    department = core.get_profile ().department
     display_dict['all_Tasks'] = get_timeline (core)
     display_dict['all_unassigned_received_SubTasks'] = get_unassigned_received_subtasks (core)
     display_dict['all_requested_SubTasks'] = get_requested_subtasks (core)
     display_dict['all_completed_SubTasks'] = get_completed_subtasks (core)
+    display_dict ['dept_cores_list'] = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    display_dict ['dept_coords_list'] = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/core_portal2.html',
@@ -106,9 +113,15 @@ def display_coord_portal (request, coord):
     display_dict = dict ()
     # Deal with the Updates part (viewing, creating) of the portal
     update_dict = handle_updates (request, coord)
-
+    department = coord.get_profile ().department
     display_dict['all_Tasks'] = get_timeline (coord)
     display_dict['all_SubTasks'] = get_subtasks (coord)
+    display_dict ['dept_cores_list'] = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    display_dict ['dept_coords_list'] = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/coord_portal.html',
@@ -407,6 +420,16 @@ def display_department_portal (request, owner_name = None, department_name = Non
 
     page_owner = get_page_owner (request, owner_name)
 
+    if request.method == 'POST':
+        shout_form=shout_box_form (request.POST)            
+        if shout_form.is_valid():
+            new_shout = shout_form.save (commit = False)
+            new_shout.user=page_owner
+            new_shout.nickname=page_owner.get_profile ().nickname
+            new_shout.timestamp=datetime.datetime.now()
+            new_shout.save ()
+            shout_form = shout_box_form ()
+        
     if department_name is None:
         department = page_owner.get_profile ().department
     else:

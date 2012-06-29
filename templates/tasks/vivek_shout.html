@@ -76,12 +76,12 @@ My ShoutBox
 
 <div id="add_shoutbox">
 {% if not is_visitor %}
-<form method="POST" action="{{SITE_URL}}/dashboard/shout/">
+
+<form method="POST" action="{{SITE_URL}}/erp/{{page_owner}}/department/">
   {% csrf_token %}
-{% for field in shout_form %}
-{{field.label_tag}}
-{{field}}
-{% endfor %}
+<table>
+{{ shout_form }}
+</table>
 <input type="submit" value="Shout">
 
 </form>

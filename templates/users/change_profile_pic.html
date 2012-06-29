@@ -3,11 +3,7 @@
 {% block body %}
 
 
-
-
-
-here
-<form enctype="multipart/form-data" action="{% url dashboard.views.change_profile_pic %}" method ="POST">
+<form enctype="multipart/form-data" action="{% url dashboard.views.change_profile_pic  owner_name=user%}" method ="POST">
   {% csrf_token %}
 <br>
 {% for field in pic_form %}

@@ -58,7 +58,6 @@ top:-125px;
 
 
 <img id="profile_pic"  src="{{photo_path}}" width="190" height="195">
-<div id="update_profile_pic"><a href="{% url dashboard.views.change_profile_pic owner_name=user%}">Change</a></div>
 
   <div id="main_edit_profile">
     <div id ="heading">
@@ -78,6 +77,7 @@ top:-125px;
 
 	</table>
 <input type="submit" value="Finish Editing" name="update"  >
+<a href="{% url dashboard.views.change_profile_pic owner_name=user%}">Change Profile Picture</a>
 	</form>
       </div>
     </div>	
