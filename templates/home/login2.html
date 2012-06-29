@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}
+Shaastra ERP - Login
+{% endblock title %}
+
+{% block body %}
+<script language="javascript" type="text/javascript" src="{{MEDIA_URL}}js/wz_tooltip.js">
+</script>
+
+
+<!-- Validation for the form -->
+
+{% if redirected %}
+<div class="errors" id="login_first">
+  <b>
+    You must login first.
+  </b>
+</div>
+{% endif %}
+
+{% if just_registered %}
+<div class="info" id="thanks_for_registering">
+  <h3>You have successfully registered with Shaastra Works ERP!<br /> You may now login.</h3>
+</div>
+{% endif %}
+
+<div class="register">
+  <h1 align="center">
+    Login
+  </h1>
+  <p align="center">
+  </p>
+</div>
+
+<table cellspacing="30" rules="cols" cellpadding="10">
+  <tr>
+    <td width="40%">
+
+      <div class="info">
+	<h2>
+	  Already have an account?
+	</h2>
+	<form action="" method="POST">{% csrf_token %}
+	  <table name="login">
+
+	    <tr>
+	      <td>
+		<div id="Username_img">
+		  {% if form.username.errors %}
+		  <img height=20 width=20 src="{{ MEDIA_URL }}images/error.png">
+		  {% endif %}
+		</div>
+	      </td>
+	      <td>{{ form.username.label_tag }}</td>
+	      <td>{{ form.username }}
+		<div id="Username_div" style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
+		  {% if form.username.errors %}
+		  {% for error in form.username.errors %}
+		  {{ error|escape }}
+		  {% endfor %}
+		  {% endif %}
+		</div>
+	      </td>
+	      <td>
+		<a onmouseover="Tip('{{ form.username.help_text }}')" onmouseout="UnTip()">
+		  <img height=20 width=20 src="{{ MEDIA_URL }}images/help_icon.png">
+		</a>
+	      </td>
+	    </tr>
+	    <tr />
+	    <tr />
+	    <tr />
+	    <tr />
+	    <tr />
+	    <tr />
+	    <tr>
+	      <td>
+		<div id="Password_img">
+		  {% if form.username.errors %}
+		  <img height=20 width=20 src="{{ MEDIA_URL }}images/error.png">
+		  {% endif %}
+		</div>
+	      </td>
+	      <td>{{ form.password.label_tag }}</td>
+
+	      <td>{{ form.password }}
+		<div id="Password_div" style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
+		  {% if form.password.errors %}
+		  {% for error in form.password.errors %}
+		  {{ error|escape }}
+		  {% endfor %}
+		  {% endif %}
+		
+	      </td></div>
+	      <td>
+	      <div id ="forgot_password">
+	      <a href = "{% url home.views.forgot_password %}" >Forgot Password ?</a> 
+	      </div>
+	      <td>
+		<a onmouseover="Tip('{{ form.password.help_text }}')" onmouseout="UnTip()">
+		  <img height=20 width=20 src="{{ MEDIA_URL }}images/help_icon.png">
+		</a>
+	      </td>
+	    </tr>
+	    <tr />
+	    <tr />
+	    <tr />
+	    <tr />
+	    <tr />
+	    <tr />
+
+	  </table>
+	  <input type="submit" value="Loginnow" />
+	  {% if invalid_login %}
+	  <br />
+	  <div style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
+	    <br />
+	    Invalid username or password. Please try again.
+	  </div>
+	  {% endif %}
+	</form>
+
+      </div>
+
+    </td>
+  </tr>
+</table>
+<div id="login_message">
+{% if invalid_login_message %}
+{{ invalid_login_message }}
+{% endif %}
+</div>
+
+<style type="text/css" >
+#login_message
+{
+position:relative;
+left:550px;
+font-size:75%;
+color:#153E7E;
+}
+#forgot_password
+{
+position:absolute;
+
+right:230px;
+}
+
+<style>
+<script type="text/javascript">
+
+  err_img='<img height=20 width=20 src="{{ MEDIA_URL }}images/error.png">';
+
+  function validateName(fld)
+  {
+  var error = "";
+  var illegalChars = /[^A-Za-z0-9_.]/; // allow letters, numbers, and underscores
+  
+  if (fld.value == "") error = "This field is required.";
+  else if (illegalChars.test(fld.value)) error = "Check your username once again."; 
+
+  document.getElementById('Username_div').innerHTML= error;
+  if (error!="") {document.getElementById('Username_img').innerHTML= err_img;
+  document.getElementById('Username_div').innerHTML= error; return;}
+  document.getElementById('Username_img').innerHTML= "";
+  document.getElementById('Username_div').innerHTML="";
+  return;
+  }
+
+  function validatePassword(fld)
+  {
+  var error="";
+  if(fld.value == "")	error="This field is required.";
+
+  document.getElementById('Password_div').innerHTML= error;
+  if (error!="") {document.getElementById('Password_img').innerHTML= err_img;
+  document.getElementById('Password_div').innerHTML= error; return;}
+  document.getElementById('Password_img').innerHTML= "";
+  document.getElementById('Password_div').innerHTML= ""; 
+  }
+  function onBlurAttribute()
+  {
+  document.getElementById("id_username").setAttribute('onblur','validateName(document.getElementById("id_username"))');
+  document.getElementById("id_password").setAttribute('onblur','validatePassword(document.getElementById("id_password"))');
+  }
+  onBlurAttribute();
+
+</script>
+
+{% endblock body %}
