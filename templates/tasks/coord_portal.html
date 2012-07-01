@@ -1,63 +1,66 @@
 {% extends "base_portal.html" %}
 
-{% block title %}
-{{ block.super }} 
-Dashboard 
-{% endblock title %}
-
-{% block content-heading %}
-<div class="content-heading">
-  <h1>Dashboard</h1>
-</div>
-{% endblock content-heading %}
 
 {% block tabs %}
-<div id="tabs">
-  <ul>
-    <li>
-      <a href="#tabs-1">Core Requests</a>
-    </li>
-    <li>
-      <a href="#tabs-2">Timeline</a>
-    </li>
-    <li>
-      <a href="#tabs-3">Updates</a>
-    </li>
-  </ul>
 
-  <div id="tabs-1">
-    <h2> Core Requests </h2>
-    {% if all_SubTasks %}
-    <table>
-      <tr>
-	<th>Subject</th>
-	<th>Proposer</th>
-	<th>Deadline</th>
-	<th>Status</th>
-	<th>Comments</th>
-      </tr>
-      {% for subtask in all_SubTasks %}
-      <tr>
-	<td>
-	  <a href="{% url tasks.views.edit_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }} </a>
-	</td>
-	<td> {{ subtask.creator.get_profile.name }} </td>
-	<td> {{ subtask.deadline }} </td>
-	<td> {{ subtask.status }} </td>
-      </tr>
-      {% endfor %}
-    </table>
+
+    
+							<div class="tabbable span12">
+								<ul class="nav nav-tabs">
+									<li class="active"><a href="#tabs1-pane1" data-toggle="tab">Core Requests</a></li>
+									
+									<li><a href="#tabs1-pane3" data-toggle="tab">Updates</a></li>
+									<li><a href="#tabs1-pane4" data-toggle="tab">Timeline</a></li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane active" id="tabs1-pane1">
+										<h2> Core Requests </h2>
+                                                            {% if all_SubTasks %}
+                                                            <table class="table table-striped table-bordered span7">
+                                                            <thead>
+                                                            <tr>
+                                                            <th>Subject</th>
+                                                            <th> Proposer </th>
+                                                            <th> Deadline </th>
+                                                            <th> Status </th>
+                                                            
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            {% for subtask in all_SubTasks %}
+                                                            <tr>
+                                                            <td><a href="{% url tasks.views.edit_subtask subtask_id=subtask.id owner_name=page_owner %}"> {{ subtask.subject }} </a></td>
+                                                            <td>{{ subtask.creator.get_profile.name }}</td>
+                                                            <td>{{ subtask.deadline }}</td>
+                                                            <td>{{ subtask.status }}</td>
+                                                            
+                                                            </tr>
+                                                            {% endfor %}
+                                                            </tbody>
+                                                            </table>
+    
+    
     {% else %}
     <h4>No Requests from the Core yet.</h4>
     {% endif %}
-  </div>
-  <div id="tabs-2">
-    {% include "tasks/updates.html" %}
-  </div>
-  <div id="tabs-3">
-    {% include "tasks/timeline.html" %}
-  </div>
-</div>
+									</div>
+									
+									<div class="tab-pane" id="tabs1-pane3">
+										{% include "tasks/updates.html" %}
+									</div>
+									<div class="tab-pane" id="tabs1-pane4">
+										{% include "tasks/timeline.html" %}
+									</div>
+								</div><!-- /.tab-content -->
+							</div><!-- /.tabbable -->
+						
+
+
+
+
+
+ 
+
 {% endblock tabs %}
 
 
