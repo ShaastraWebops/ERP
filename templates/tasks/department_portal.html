@@ -12,26 +12,21 @@ Department Portal | {{ po_dept_name }}
 {% endblock content-heading %}
 
 {% block tabs %}
-<div id="tabs">
-  <ul>
-    <li>
-      <a href="#tabs-1">Timeline</a>
-    </li>
-    <li>
-      <a href="#tabs-2">Members</a>
-    </li>
-    <li>
-      <a href="#tabs-3">Updates</a>
-    </li>
-    <li>
-      <a href="#tabs-4">Shouts</a>
-    </li>
-  </ul>
+<div class="tabbable span12">
+								<ul class="nav nav-tabs">
+									<li class="active"><a href="#tabs1" data-toggle="tab">Timeline</a></li>
+									
+									<li><a href="#tabs2" data-toggle="tab">Members</a></li>
+									<li><a href="#tabs3" data-toggle="tab">Updates</a></li>
+								
+									<li><a href="#tabs4" data-toggle="tab">Shout!</a></li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane active" id="tabs1">
 
-  <div id="tabs-1">
     {% include "tasks/timeline.html" %}
   </div>
-  <div id="tabs-2">
+  <div class="tab-pane" id="tabs2">
     <h2>Members of your Department</h2>
     <h3>Cores</h3>
     {% for core in dept_cores_list %}
@@ -45,11 +40,11 @@ Department Portal | {{ po_dept_name }}
     <br />
     {% endfor %}
   </div>
-  <div id="tabs-3">
+  <div class="tab-pane" id="tabs3">
     <h2>Updates</h2>
     {% include "tasks/display_updates.html" %}
   </div>
-  <div id="tabs-4">
+  <div class="tab-pane" id="tabs4">
     <h2>shouts</h2>
     {% include "tasks/vivek_shout.html" %}
   </div>

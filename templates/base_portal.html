@@ -118,9 +118,14 @@
 									{% include "left-sidebar.html" %}
 								</ul>
 								<div class="tab-content span8">
+									{% block body %}
+									{% endblock %}
 									{% block tabs %}
 									{% endblock %}
-									And here.
+									{% block form_stuff %}
+									{% endblock %}
+									{% block display_stuff %}
+									{% endblock %}
 								</div><!-- /.tab-content -->
 							</div><!-- /.tabbable -->
 						</div><!-- /.row -->
