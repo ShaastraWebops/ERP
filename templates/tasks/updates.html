@@ -33,11 +33,11 @@
 <form class="well span6" method="POST" action="./">
   {% csrf_token %}
   <h2>Send an Update to the Core</h2>
-  
+  <form action="" method="post">
     {{ update_form }}
  
   <input type = "submit" value="Submit">
-  </table>
+  </form>
 </form>
 
 {% endif %}
