@@ -1,0 +1,29 @@
+<h2>Timeline for {{ po_dept_name }} Department</h2>
+<p>List of all Tasks in your Department</p>
+{% if all_Tasks %}
+<table>
+  <tr>
+    <th>Subject</th>
+    <th>Creator</th>
+    <th>Deadline</th>
+    <th>Status</th>
+    {% if po_is_core %}
+    <th>Comments</th>
+    {% endif %}
+  </tr>
+  {% for task in all_Tasks %}
+  <tr>
+    <td>
+      <a href="{% url tasks.views.edit_task task_id=task.id owner_name=page_owner %}">{{ task.subject }}</a>
+    </td>
+    <td> {{ task.creator.get_profile.name }} </td>
+    <td> {{ task.deadline }} </td>
+    <td> {{ task.status }} </td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<h4>No Tasks have been set in your Department yet.</h4>
+{% endif %}
+
+

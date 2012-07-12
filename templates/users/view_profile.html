@@ -1,14 +1,4 @@
-{% extends "new_home.html" %}
-
-  <div id="left_panel">
-    {% include "left-sidebar.html" %}
-  </div>
-
-    {% block style_stuff %}
-    <link rel="stylesheet" type="text/css" href="{{MEDIA_URL}}css/template_css/users/view_profile.css" />    
-    {% endblock style_stuff %}
-
-
+{% extends "base_portal.html" %}
 
 {% block body %}
 
@@ -85,9 +75,7 @@ left:140px;
 }
 </style>
 
-  <div id="left_panel2">
-    {% include "left-sidebar.html" %}
-  </div>
+  
 
 
 
@@ -119,7 +107,10 @@ left:140px;
 				      Core 
 				      {% else %}
 				      Coordinator 
-				      {% endif %}
+				      {% endif %} <br>
+				      <a href="{% url tasks.views.display_portal owner_name=page_owner %}" class="button big" >
+		Dashboard
+	      </a><br>
 				</div>
 				</td>		
 			</tr>

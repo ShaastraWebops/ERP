@@ -1,0 +1,42 @@
+{% extends "new_home.html" %}
+
+{% block top_bar %}
+{{ block.super }} 
+{% if is_visitor %}
+<!-- <br /> -->
+<h3 style="color:black">You are viewing {{ po_name }}'s page.</h3>
+{% endif %}
+
+{% endblock top_bar %}
+
+{% block body %}
+
+<div id="content">
+  <div id="left_panel">
+    {% include "left-sidebar.html" %}
+  </div>
+
+  <div id="central_console">
+    {% block content-heading %}
+    
+    {% endblock content-heading %}
+
+    {% block tabs %}
+
+    {% endblock tabs %}
+
+    <!-- For displaying of objects -->
+    {% block display_stuff %}
+
+    {% endblock display_stuff %}
+
+    <!-- For edit/create forms -->
+    {% block form_stuff %}
+
+    {% endblock form_stuff %}
+  </div>
+  <div id="right_panel">
+    {% include "right-sidebar.html" %}
+  </div>
+</div>
+{% endblock body %}

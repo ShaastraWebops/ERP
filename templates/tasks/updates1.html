@@ -23,18 +23,18 @@
 <h2>Your previous Updates</h2>
 {% endif %}
 {% endif %}
-<div class="row">
+
 {% include "tasks/display_updates.html" %}
-</div>
+
 {% if po_is_coord and not is_visitor %}
-<form class="well span6" method="POST" action="./">
+<h2>Send an Update to the Core</h2>
+<form method="POST" action="./">
   {% csrf_token %}
-  <h2>Send an Update to the Core</h2>
-  <form action="" method="post">
+  <table>
     {{ update_form }}
- 
+  </table>
   <input type = "submit" value="Submit">
-  </form>
-</div>
+</form>
+
 {% endif %}
 

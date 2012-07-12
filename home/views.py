@@ -22,6 +22,8 @@ def home(request):
     already_logged = session_get (request, "already_logged")
     return render_to_response('home/home.html', locals(), context_instance= global_context(request))
 
+# <> So Users once logged in, can't access the login page
+@no_login
 def login(request):
     if request.user.is_authenticated():
         return redirect ('erp.tasks.views.display_portal', owner_name = request.user.username)
@@ -75,9 +77,11 @@ def login(request):
     return render_to_response('home/login.html', locals(), context_instance= global_context(request))
     
 def logout (request):
+    print 'HERE'
     if request.user.is_authenticated():
         auth.logout (request)
         response= redirect ('erp.home.views.login')
+
         try:
           #  response.set_cookie('unb_User',"")
             response.set_cookie('logged_out', 1)

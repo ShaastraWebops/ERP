@@ -1,6 +1,6 @@
 # Helper functions
 from django.contrib import auth
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render_to_response, redirect, HttpResponseRedirect
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 from erp.tasks.models import Task, SubTask
@@ -266,3 +266,56 @@ def handle_existing_object (Model, object_id, curr_user,
                       'owner_name' : __kwargs.get('owner_name',
                                                   curr_user.username)}
         return redirect (*my_pos_args, **my_kw_args)
+   
+def permissions(func, *_args):
+    ''' 
+    Decides whether the current_user can view the current_page_owner's page
+    '''
+    def _dec(func):
+        def _permission(*_args,**_kwargs):
+            request=_args[0]
+            current_page_owner = _args[1]
+            if current_page_owner is None:
+                # What should we do here?
+                pass 
+            #assuming that this deco is called after auth/auth, so user will never be none
+            current_user = request.user
+            allowed = _authorize(current_user,current_page_owner)
+            if allowed:
+                return func(*_args,**_kwargs)
+            else:
+            # Best to return him to his home
+                redirect_url="/erp/"+str(request.user)
+                return HttpResponseRedirect(redirect_url)
+        return _permission         
+    
+    def _authorize(current_user, current_page_owner):
+        current_user_dept = userprofile.objects.get(user = current_user).department.Dept_Name
+        current_page_owner_dept = userprofile.objects.get(user = current_page_owner).department.Dept_Name
+        if current_user_dept == 'Webops':
+        #Everything allowed for Webops
+            return True
+        elif current_user_dept==current_page_owner_dept:
+            #Both from same department
+            if is_core(current_user):
+                #Core wants to see either coord's or fellow core's page, which is allowed   
+                return True
+            else:
+                #User is a coord, only allowed to see another coord
+                if is_core(current_page_owner):
+                    return False
+                else:
+                #Coord wants to see coord, allow
+                    return True    
+        elif current_user_dept == 'QMS':
+            #QMS core can see everyone's dashboard
+            if is_core(current_user):
+                return True
+            #working on QMS coord
+            else:
+                return True
+        else:
+            #Either the current_user and current_page owner are not in the same dept, or something went wrong.
+            return False    
+    return _dec(func)
+   

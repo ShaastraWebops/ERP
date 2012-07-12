@@ -17,7 +17,7 @@ Subtask
 <form action="" method="post">
   {% csrf_token %}
   {% if is_owner %}
-  <table>
+  <table class="table">
     <tr>
       <th>Department</th>
       <td> {{ curr_subtask.department}} </td>
@@ -38,7 +38,7 @@ Subtask
   </table>
   
   {% else %}
-  <table>
+  <table class="table">
     <tr>
       <th>Subject</th>
       <td> {{ curr_subtask.subject }} </td>

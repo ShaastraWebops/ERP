@@ -1,0 +1,61 @@
+
+  <ul>
+    <div class ="buttons_home" >
+    
+    <li>
+	      <a href="{% url tasks.views.display_portal owner_name=user %}" class="button big" >
+		Dashboard
+	      </a>
+	    </li>
+	    <li>
+	      <a href="{% url tasks.views.display_department_portal owner_name=user %}" class="button big">
+		Department
+		</a>
+	    </li>
+	    <li>
+	      <a href="{% url dashboard.views.display_contacts owner_name=user%}" class="button big">
+		Contacts
+	      </a>
+	    </li>
+	    <li>
+	      <a href="{% url users.views.invite owner_name=user%}" class="button big">
+
+		Invite
+	      </a>
+	    </li>
+	    <li>
+	      <a href="{% url users.views.view_profile owner_name=user%}" class="button big">
+		Profile
+	      </a>
+	    </li>
+	    <li>
+	      <a href="{% url dashboard.views.upload_file owner_name=user%}" class="button big">
+		Documents
+	      </a>
+	    </li>
+	    <li>
+	      <a href="{% url dashboard.views.display_calendar owner_name=user%}" class="button big">
+		My_Calendar
+	      </a>
+	    </li>
+	    {% if is_core and not is_visitor %}
+	    <li>
+	      <a href="{% url tasks.views.edit_task owner_name=user %}" class="button add-big">
+		<p>Add Task</p>
+	      </a>
+	    </li>
+	    {% endif %}
+	    <!--   
+		   <li>
+		     <a href="#">
+		       Policies
+		     </a>
+		   </li>
+	    <li>
+	      <a href="#">
+		Website
+	      </a>
+	    </li>
+	    -->
+	  </ul>
+</div>
