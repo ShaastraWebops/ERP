@@ -9,6 +9,7 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
+    <link href="{{ MEDIA_URL }}css/bootstrap.css" rel="stylesheet" type="text/css">    
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -37,7 +38,6 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="bootstrap/ico/apple-touch-icon-57-precomposed.png">
-  <link href="{{ MEDIA_URL }}css/bootstrap.css" rel="stylesheet" type="text/css">
   <link href="{{ MEDIA_URL }}css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
   </head>
 
@@ -125,82 +125,82 @@
 	</form>
        </div>
 <hr>      
+
+<div class="modal hide fade" id="myModal">
+    <div class="modal-body">
+        <center><img alt="" src="http://placehold.it/800x800"></center>
+    </div>
+</div>
+
        <ul class="thumbnails">
     <li class="grow">
-      <a href="#">
+      <a data-toggle="modal" href="#myModal">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a href="#">
+      <a data-toggle="modal" href="#myModal">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a href="#">
+      <a data-toggle="modal" href="#myModal">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a href="#">
+      <a data-toggle="modal" href="#myModal">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a href="#">
+      <a data-toggle="modal" href="#myModal">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a href="#">
+      <a data-toggle="modal" href="#myModal">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a href="#">
+      <a data-toggle="modal" href="#myModal">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a href="#">
+      <a data-toggle="modal" href="#myModal">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a href="#">
+      <a data-toggle="modal" href="#myModal">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a href="#">
+      <a data-toggle="modal" href="#myModal">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a href="#">
+      <a data-toggle="modal" href="#myModal">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a href="#">
-        <img alt="" src="http://placehold.it/70x60">
-      </a>
-    </li>
-    <li class="grow">
-      <a href="#"
+      <a data-toggle="modal" href="#myModal">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
 </ul>
-  
    
 
 
     </div> <!-- /container -->
 <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{ MEDIA_URL }}js/jquery.js"></script>
-    <script src="{{ MEDIA_URL }}js/bootstrap.js"></script>
-    <script src="{{ MEDIA_URL }}js/bootstrap.min.js"></script>
+    <script src="{{ MEDIA_URL }}js/bootstrap.js"></script><!--make it bootstrap.min.js when deployed-->
 
   </body>
 </html>

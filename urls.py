@@ -19,6 +19,7 @@ from django.contrib import admin
 urlpatterns = patterns('',
 #search
     #(r'^search/', include('haystack.urls')),
+    url(r'^$', 'erp.home.views.login', name='home'),
     (r'^search/', search_view_factory(
 	form_class=ModelSearchForm)),
     #(r'^erp/$', include('erp.home.urls')),
