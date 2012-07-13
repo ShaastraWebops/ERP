@@ -2,21 +2,23 @@
 
 {% block tabs %}
 
-<div class="tabbable span12">
+<div class="tabbable span8">
     <ul class="nav nav-tabs">
         <li class="active">
-            <a href="#tabs1-pane1" data-toggle="tab">Core Requests</a>
-        </li>
-
-        <li>
-            <a href="#tabs1-pane3" data-toggle="tab">Updates</a>
+            <a href="#tabs1" data-toggle="tab"><i class="icon-tasks"></i>  Timeline</a>
         </li>
         <li>
-            <a href="#tabs1-pane4" data-toggle="tab">Timeline</a>
+            <a href="#tabs2" data-toggle="tab"><i class="icon-check"></i> Core Requests</a>
+        </li>
+        <li>
+            <a href="#tabs3" data-toggle="tab"><i class="icon-refresh"></i> Updates</a>
         </li>
     </ul>
     <div class="tab-content">
-        <div class="tab-pane active" id="tabs1-pane1">
+        <div class="tab-pane active" id="tabs1">
+            {% include "tasks/timeline.html" %}
+        </div>
+        <div class="tab-pane" id="tabs2">
             <h2> Core Requests </h2>
             {% if all_SubTasks %}
             <table class="table table-striped table-bordered span7">
@@ -43,18 +45,25 @@
             </table>
 
             {% else %}
-            <h4>No Requests from the Core yet.</h4>
+            <p>No Requests from the Core yet.</p>
             {% endif %}
         </div>
-
-        <div class="tab-pane" id="tabs1-pane3">
+        <div class="tab-pane" id="tabs3">
             {% include "tasks/updates.html" %}
-        </div>
-        <div class="tab-pane" id="tabs1-pane4">
-            {% include "tasks/timeline.html" %}
         </div>
     </div><!-- /.tab-content -->
 </div><!-- /.tabbable -->
 
 {% endblock tabs %}
 
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_dashboard");
+    var e = document.getElementById("li_dashboard_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+{% endblock javascript%}

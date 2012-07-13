@@ -13,31 +13,31 @@ Dashboard
 
 {% block tabs %}
 
-<div class="tabbable span12">
+<div class="tabbable span8">
     <ul class="nav nav-tabs">
         <li class="active">
-            <a href="#tabs1-pane1" data-toggle="tab">Timeline</a>
+            <a href="#tabs1" data-toggle="tab"><i class="icon-tasks"></i> Timeline</a>
         </li>
 
         <li>
-            <a href="#tabs1-pane2" data-toggle="tab">Received Requests</a>
+            <a href="#tabs2" data-toggle="tab"><i class="icon-arrow-down"></i>Received Requests</a>
         </li>
         <li>
-            <a href="#tabs1-pane3" data-toggle="tab">Sent Requests</a>
+            <a href="#tabs3" data-toggle="tab"><i class="icon-arrow-up"></i>Sent Requests</a>
         </li>
         <li>
-            <a href="#tabs1-pane4" data-toggle="tab">Completed Subtasks</a>
+            <a href="#tabs4" data-toggle="tab"><i class="icon-ok"></i> Completed Subtasks</a>
         </li>
         <li>
-            <a href="#tabs1-pane5" data-toggle="tab">Updates</a>
+            <a href="#tabs5" data-toggle="tab"><i class="icon-refresh"></i> Updates</a>
         </li>
     </ul>
     <div class="tab-content">
-        <div class="tab-pane active" id="tabs1-pane1">
+        <div class="tab-pane active" id="tabs1">
             {% include "tasks/timeline.html" %}
 
         </div>
-        <div class="tab-pane" id="tabs1-pane2">
+        <div class="tab-pane" id="tabs2">
             <h2> Requests from other Departments and Unassigned SubTasks</h2>
             {% if all_unassigned_received_SubTasks %}
 
@@ -63,12 +63,12 @@ Dashboard
                 </tr>
                 {% endfor %}
             </table>
-        </div>
+
         {% else %}
         <h4>No Requests or Unassigned SubTasks for your Department.</h4>
         {% endif %}
-
-        <div class="tab-pane" id="tabs1-pane3">
+        </div>
+        <div class="tab-pane" id="tabs3">
             <h2> Requests sent to other Departments </h2>
             <p>
                 SubTasks you've sent to other Departments
@@ -97,7 +97,7 @@ Dashboard
             <h4>You haven't sent any requests to other departments yet.</h4>
             {% endif %}
         </div>
-        <div class="tab-pane" id="tabs1-pane4">
+        <div class="tab-pane" id="tabs4">
             <h2> Completed SubTasks</h2>
             <p>
                 SubTasks completed by your Coords
@@ -130,11 +130,22 @@ Dashboard
             <h4>There have been no completed SubTasks in your department yet.</h4>
             {% endif %}
         </div>
-        <div class="tab-pane" id="tabs1-pane5">
+        <div class="tab-pane" id="tabs5">
             {% include "tasks/updates.html" %}
         </div>
     </div>
 </div>
 
     {% endblock tabs %}
-
+    
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_dashboard");
+    var e = document.getElementById("li_dashboard_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+{% endblock javascript%}

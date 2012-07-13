@@ -182,7 +182,17 @@ Edit Task
 </div>
 {% endblock form_stuff %}
 
-{% block javascript_stuff %}
-<script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js">
+{% block javascript %}
+{{ block.super }}
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_task");
+    var e = document.getElementById("li_task_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
 </script>
-{% endblock javascript_stuff %}
+{% endblock javascript %}

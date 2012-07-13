@@ -13,21 +13,16 @@ Department Portal | {{ po_dept_name }}
 
 {% block tabs %}
 
-<div class="tabbable span12">
+<div class="tabbable span8">
     <ul class="nav nav-tabs">
         <li class="active">
-            <a href="#tabs1" data-toggle="tab">Timeline</a>
-        </li>
-
-        <li>
-            <a href="#tabs2" data-toggle="tab">Members</a>
+            <a href="#tabs1" data-toggle="tab"><i class="icon-tasks"></i> Timeline</a>
         </li>
         <li>
-            <a href="#tabs3" data-toggle="tab">Updates</a>
+            <a href="#tabs2" data-toggle="tab"><i class="icon-refresh"></i> Updates</a>
         </li>
-
         <li>
-            <a href="#tabs4" data-toggle="tab">Shout!</a>
+            <a href="#tabs3" data-toggle="tab"><i class="icon-comment"></i> Shout!</a>
         </li>
     </ul>
     <div class="tab-content">
@@ -36,27 +31,24 @@ Department Portal | {{ po_dept_name }}
             {% include "tasks/timeline.html" %}
         </div>
         <div class="tab-pane" id="tabs2">
-            <h2>Members of your Department</h2>
-            <h3>Cores</h3>
-            {% for core in dept_cores_list %}
-            <a href="{% url users.views.view_profile owner_name=core.username %}">{{ core.get_profile.name }} </a>
-            <br />
-            {% endfor %}
-
-            <h3>Coords</h3>
-            {% for coord in dept_coords_list %}
-            <a href="{% url users.views.view_profile owner_name=coord.username %}">{{ coord.get_profile.name }} </a>
-            <br />
-            {% endfor %}
-        </div>
-        <div class="tab-pane" id="tabs3">
-            <h3>Updates</h3>
+            <h2>Updates</h2>
             {% include "tasks/display_updates.html" %}
         </div>
-        <div class="tab-pane" id="tabs4">
-            <h3>Shouts</h3>
+        <div class="tab-pane" id="tabs3" style="overflow:hidden;">
             {% include "tasks/vivek_shout.html" %}
         </div>
     </div>
 
-    {% endblock tabs %}
+{% endblock tabs %}
+    
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_department");
+    var e = document.getElementById("li_department_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+{% endblock javascript%}

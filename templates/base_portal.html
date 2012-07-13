@@ -21,6 +21,10 @@
 				padding-left: 0px;
 				padding-bottom: 50px;
 			}
+			
+			#logo {
+			    color: #ffffff;
+			}
         </style>
         <link href="{{ MEDIA_URL }}css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -52,15 +56,14 @@
                 <div class="container">
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
                     <ul class="nav">
-                        <li class="divider-vertical"></li>
-                        <li class="active">
-                            <a class="brand" href="#"><i class="icon-globe icon-white"></i> ERP</a>
+                        <li>
+                            <a class="brand" href="{% url tasks.views.display_portal owner_name=user %}" id="logo"><i class="icon-globe icon-white" style="margin-top:5px;"></i> ERP</a>
                         </li>
                     </ul>
 
                     <ul class=" nav pull-right">
                         <li>
-                            <a href="#"><i class="icon-off icon-white"></i> Sign Out</a>
+                            <a href="{% url home.views.logout %}"><i class="icon-off icon-white"></i> Sign Out</a>
                         </li>
                     </ul>
                     <!--
@@ -79,16 +82,15 @@
                     -->
                     <div class="nav-collapse">
                         <ul class="nav">
-                            <li class="active">
-                                <a href="#"><i class="icon-home icon-white"></i> Home</a>
+                            <li id="nav_home">
+                                <a href="{% url tasks.views.display_portal owner_name=user %}"><i class="icon-home icon-white"></i> Home</a>
                             </li>
-                            <li>
-                                <a href="#about"><i class="icon-user icon-white"></i> Profile</a>
+                            <li id="nav_profile">
+                                <a href="{% url users.views.view_profile owner_name=page_owner%}"><i class="icon-user icon-white"></i> Profile</a>
                             </li>
-                            <li>
-                                <a href="#contact"><i class="icon-wrench icon-white"></i> Contact</a>
+                            <li id="nav_contact">
+                                <a href="#"><i class="icon-wrench icon-white"></i> Contact</a>
                             </li>
-                            <li class="divider-vertical"></li>
 
                         </ul>
                         <ul class="nav">
@@ -122,8 +124,10 @@
                 <div class="tabbable span12">
                     <ul class="nav nav-pills nav-stacked span2" id="myTab">
                         {% include "left-sidebar.html" %}
+                        <hr>
+                        {% include "right-sidebar.html" %}
                     </ul>
-                    <div class="tab-content span8">
+                    <div class="tab-content span9">
                         {% block body %}
                         {% endblock %}
                         {% block tabs %}
@@ -139,9 +143,22 @@
         </div>
         <!-- ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
+        {% block javascript %}
         <script src="{{ MEDIA_URL }}js/jquery.js"></script>
         <script src="{{ MEDIA_URL }}js/bootstrap.js"></script>
         <script src="{{ MEDIA_URL }}js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            function showMembers() {
+                var d = document.getElementById("department_members_icon");
+                if(d.className=="icon-plus-sign") {
+                    d.className = "icon-minus-sign";
+                    }
+                else {
+                    d.className = "icon-plus-sign";
+                    }
+            }
+        </script>
+        {% endblock %}
     </body>
 
 </html>

@@ -6,90 +6,106 @@ Contacts
 {% endblock title %}
 
 {% block body %}
-<style type="text/css">
-  #heading1
-  {
-  position:absolute;
-  top :100px;
-  left :400px;
-  }
-  #add_details
-  {
-  position:relative;
-  top :30px;
-  left :135px;
-  }
-  #success_message
-  {
-  position:relative;
-  top :30px;
-  left :435px;
-  }
+<style>
+.accordion-group {
+    border:0px;
+}
 </style>
-<div id="contacts-master">
-  <div id="toppage">
-  </div>
-  <div id="contacts">
-    <span style="font-family:Arial; font-size:30px; font-weight:bold; color:#333;">&nbsp;&nbsp;&nbsp;&nbsp;Contacts</span>
-    <ul id="accordion" style="border:none;">
+
+<div class="accordion" id="contact_accordion">
       {% for dept_name, core_profiles, coord_profiles in contacts %}
+<div class="accordion-group">
+    <div class="accordion-heading">
+        <a class="accordion-toggle" href="#contact_{{ dept_name }}" data-parent="contact_accordion" data-toggle="collapse" onclick=showContacts("{{dept_name}}");><i class="icon-plus-sign" id="{{ dept_name }}_icon" style="margin-top:1px;"></i> {{ dept_name }}</a>
+    </div>
+    
+    <style>
+    #contact_{{ dept_name }} {
+        margin-left:30px;
+    }
+    #contact_{{ dept_name }} table{
+        margin-left:30px;
+    }
+    </style>
 
-      <li class="active">
-	<img id="plus" src="media/images/plus.png" style="margin-left:-7px; margin-bottom:-3px;"/>&nbsp;<span style="font-size:22px; ">{{ dept_name }} </span>
-	<ul>
-	  <li class="second">
-	    <h3>Cores</h3>
-	    <ul>
-	      <li>
-		    <table>
-		        <tr style="color:#111; font-size:18px;">
-		            <th style="width:250px; padding-left:-10px;">Name</td>
-        		    <th style="width:100px;">Phone</td>
-        		    <th style="width:150px;">Summer No.</td>
-                </tr>
-		        {% for core_profile in core_profiles %}
-		        <tr>
-		            <td style="width:209px; padding-left:-10px;"> 
-		                <a href="{% url users.views.view_profile core_profile.user.username %}">{{ core_profile.name }}</a> 
-		            </td>
-		            <td style="width:100px;">{{ core_profile.chennai_number }} </td>
-		            <td style="width:150px;">{{ core_profile.summer_number }} </td>
-		        </tr>
-		        {% endfor %}
-		    </table>
-	      </li>
-	    </ul>
-	  </li>
-	  <li class="second">
-	    <h3>Coords</h3>
-	    <ul>
-	      <li>
-		<table>
-		  <tr style="color:#111; font-size:18px;">
-		    <th style="width:250px; padding-left:-10px;">Name</td>
-		    <th style="width:100px;">Phone</td>
-		    <th style="width:150px;">Summer No.</td>
-		  </tr>
-		  {% for coord_profile in coord_profiles %}
-		  <tr>
-		    <td style="width:209px; padding-left:-10px;">
-		      <a href="{% url users.views.view_profile coord_profile.user.username %}">{{ coord_profile.name }}</a>
-		    </td>
-		    <td style="width:100px;">{{ coord_profile.chennai_number }} </td>
-		    <td style="width:150px;">{{ coord_profile.summer_number }} </td>
-		  </tr>
-		  {% endfor %}
-		</table>
-	      </li>
-	    </ul>
-	  </li>
-
-	</ul>
-      </li>
+    <div id="contact_{{ dept_name }}" class="accordion-body collapse">
+        <div class="accordion" id="contact_{{ dept_name }}_accordion">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" href="#contact_{{ dept_name }}_cores" data-parent="contact_accordion" data-toggle="collapse" onclick=showContacts("{{dept_name}}_core");>
+                        <i class="icon-plus-sign" id="{{ dept_name }}_core_icon" style="margin-top:1px;"></i> Cores
+                    </a>
+                </div>
+	            <div id="contact_{{ dept_name }}_cores" class="accordion-body collapse">
+		            <table class="table table-bordered table-striped span8">
+        		        <tr style="color:#111; font-size:18px;">
+        		            <th style="width:250px; padding-left:-10px;">Name</td>
+                		    <th style="width:100px;">Phone</td>
+                		    <th style="width:150px;">Summer No.</td>
+                        </tr>
+        		        {% for core_profile in core_profiles %}
+        		        <tr>
+        		            <td style="width:209px; padding-left:-10px;"> 
+    		                    <a href="{% url users.views.view_profile core_profile.user.username %}">{{ core_profile.name }}</a> 
+        		            </td>
+        		            <td style="width:100px;">{{ core_profile.chennai_number }} </td>
+        		            <td style="width:150px;">{{ core_profile.summer_number }} </td>
+        		        </tr>
+        		        {% endfor %}
+        		    </table>
+        	    </div>
+        	</div>
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" href="#contact_{{ dept_name }}_coords" data-parent="contact_accordion" data-toggle="collapse" onclick=showContacts("{{dept_name}}_coord");>
+                        <i class="icon-plus-sign" id="{{ dept_name }}_coord_icon" style="margin-top:1px;"></i> Coordinators
+                    </a>
+                </div>
+	            <div id="contact_{{ dept_name }}_coords" class="accordion-body collapse">
+                	<table class="table table-bordered table-striped span8">
+		                <tr style="color:#111; font-size:18px;">
+                		    <th style="width:250px; padding-left:-10px;">Name</td>
+                		    <th style="width:100px;">Phone</td>
+		                    <th style="width:150px;">Summer No.</td>
+                		</tr>
+                        {% for coord_profile in coord_profiles %}
+                        <tr>
+                            <td style="width:209px; padding-left:-10px;">
+                                <a href="{% url users.views.view_profile coord_profile.user.username %}">{{ coord_profile.name }}</a>
+                		    </td>
+                		    <td style="width:100px;">{{ coord_profile.chennai_number }} </td>
+                		    <td style="width:150px;">{{ coord_profile.summer_number }} </td>
+                        </tr>
+            		  {% endfor %}
+            		</table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
       {% endfor %}
-    </ul> 
-  </div>
-  <div id="bottom">
-  </div>
 </div>
 {% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_contact");
+    var e = document.getElementById("li_contact_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+<script type="text/javascript">
+function showContacts(dept_name) {
+    var d = document.getElementById(dept_name+"_icon");
+    if(d.className=="icon-plus-sign") {
+        d.className = "icon-minus-sign";
+    }
+    else {
+        d.className = "icon-plus-sign";
+    }
+}
+</script>
+{% endblock javascript%}

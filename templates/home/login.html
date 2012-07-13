@@ -10,6 +10,11 @@
 
     <!-- Le styles -->
     <link href="{{ MEDIA_URL }}css/bootstrap.css" rel="stylesheet" type="text/css">    
+
+<link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap.min.css">
+<!--[if lt IE 7]><link rel="stylesheet" href="http://blueimp.github.com/cdn/css/bootstrap-ie6.min.css"><![endif]-->
+<link rel="stylesheet" href="{{ MEDIA_URL }}css/bootstrap-image-gallery.min.css">
+
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -32,6 +37,7 @@
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 
+
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="{{ MEDIA_URL }}images/favicon.ico">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png">
@@ -39,6 +45,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="bootstrap/ico/apple-touch-icon-57-precomposed.png">
   <link href="{{ MEDIA_URL }}css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+
   </head>
 
   
@@ -126,81 +133,98 @@
        </div>
 <hr>      
 
-<div class="modal hide fade" id="myModal">
-    <div class="modal-body">
-        <center><img alt="" src="http://placehold.it/800x800"></center>
-    </div>
-</div>
-
-       <ul class="thumbnails">
+<div id="gallery" data-toggle="modal-gallery" data-target="#modal-gallery">
+<ul class="thumbnails">
     <li class="grow">
-      <a data-toggle="modal" href="#myModal">
+      <a href="http://placehold.it/100x800" title="Placeholder 1" rel="gallery">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a data-toggle="modal" href="#myModal">
+      <a href="http://placehold.it/200x800" title="Placeholder 2" rel="gallery">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a data-toggle="modal" href="#myModal">
+      <a href="http://placehold.it/300x800" title="Placeholder 3" rel="gallery">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a data-toggle="modal" href="#myModal">
+      <a href="http://placehold.it/400x800" title="Placeholder 4" rel="gallery">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a data-toggle="modal" href="#myModal">
+      <a href="http://placehold.it/500x800" title="Placeholder 5" rel="gallery">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a data-toggle="modal" href="#myModal">
+      <a href="http://placehold.it/600x800" title="Placeholder 6" rel="gallery">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a data-toggle="modal" href="#myModal">
+      <a href="http://placehold.it/700x800" title="Placeholder 7" rel="gallery">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a data-toggle="modal" href="#myModal">
+      <a href="http://placehold.it/800x800" title="Placeholder 8" rel="gallery">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a data-toggle="modal" href="#myModal">
+      <a href="http://placehold.it/800x700" title="Placeholder 9" rel="gallery">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a data-toggle="modal" href="#myModal">
+      <a href="http://placehold.it/800x600" title="Placeholder 10" rel="gallery">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a data-toggle="modal" href="#myModal">
+      <a href="http://placehold.it/800x500" title="Placeholder 11" rel="gallery">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
     <li class="grow">
-      <a data-toggle="modal" href="#myModal">
+      <a href="http://placehold.it/800x400" title="Placeholder 12" rel="gallery">
         <img alt="" src="http://placehold.it/70x60">
       </a>
     </li>
 </ul>
-   
-
-
+</div>   
+<!-- modal-gallery is the modal dialog used for the image gallery -->
+<div id="modal-gallery" class="modal modal-gallery hide fade">
+    <div class="modal-body"><div class="modal-image"></div></div>
+    <div class="modal-footer">
+        <center>
+        <a class="btn btn-success modal-play modal-slideshow" data-slideshow="5000">
+            <i class="icon-play icon-white"></i>
+            <span>Slideshow</span>
+        </a>
+        <a class="btn btn-info modal-prev">
+            <i class="icon-arrow-left icon-white"></i>
+            <span>Previous</span>
+        </a>
+        <a class="btn btn-primary modal-next">
+            <span>Next</span>
+            <i class="icon-arrow-right icon-white"></i>
+        </a>
+        </center>
+    </div>
+</div>
     </div> <!-- /container -->
 <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{ MEDIA_URL }}js/jquery.js"></script>
     <script src="{{ MEDIA_URL }}js/bootstrap.js"></script><!--make it bootstrap.min.js when deployed-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="http://blueimp.github.com/cdn/js/bootstrap.min.js"></script>
+<script src="http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"></script>
+<script src="{{ MEDIA_URL }}js/bootstrap-image-gallery.min.js"></script>
 
   </body>
 </html>

@@ -1,5 +1,12 @@
+<style>
+#id_comment_string {
+    width: 350px;
+    height: 30px;
+}
+</style>
+<div class="row">
 {% if updates %}
-<table class="table bordered span8">
+<table class="table bordered span6">
   <tr>
     <th>Message</th>
     <th>Time</th>
@@ -9,10 +16,10 @@
   </tr>
   {% for update in updates %}
   <tr>
-    <td> {{ update.comment_string }} </td>
-    <td> {{ update.time_stamp }} </td>
+    <td>{{ update.comment_string }}</td>
+    <td>{{ update.time_stamp }}</td>
     {% if po_is_core %}
-    <td> {{ update.author.get_profile.name }} </td>
+    <td>{{ update.author.get_profile.name }}</td>
     {% endif %}
   </tr>
   {% endfor %}
@@ -20,3 +27,4 @@
 {% else %}
 <h4>No Updates Yet</h4>
 {% endif %}
+</div>

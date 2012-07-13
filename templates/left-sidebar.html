@@ -1,31 +1,22 @@
 
-<li>
-    <a href="{% url tasks.views.display_portal owner_name=user %}"> Dashboard </a>
+<li id="li_dashboard">
+    <a href="{% url tasks.views.display_portal owner_name=user %}"><i class="icon-star" id="li_dashboard_icon"></i> Dashboard </a>
 </li>
-<li>
-    <a href="{% url tasks.views.display_department_portal owner_name=user %}"> Department </a>
+<li id="li_department">
+    <a href="{% url tasks.views.display_department_portal owner_name=user %}"><i class="icon-bullhorn" id="li_department_icon"></i> Department </a>
 </li>
-<li>
-    <a href="{% url dashboard.views.display_contacts owner_name=user%}" class="button big"> Contacts </a>
+<li id="li_contact">
+    <a href="{% url dashboard.views.display_contacts owner_name=user%}"><i class="icon-th-list" id="li_contact_icon"></i> Contact Details </a>
 </li>
-<li>
-    <a href="{% url users.views.invite owner_name=user%}" class="button big"> Invite </a>
+<li id="li_files">
+    <a href="{% url dashboard.views.upload_file owner_name=page_owner%}"><i class="icon-folder-close" id="li_files_icon"></i> Files </a>
 </li>
-<li>
-    <a href="{% url users.views.view_profile owner_name=page_owner%}" class="button big"> Profile </a>
-</li>
-<li>
-    <a href="{% url dashboard.views.upload_file owner_name=page_owner%}" class="button big"> Documents </a>
-</li>
-<li>
-    <a href="{% url dashboard.views.display_calendar owner_name=page_owner%}" class="button big"> My_Calendar </a>
+<li id="li_calendar">
+    <a href="{% url dashboard.views.display_calendar owner_name=page_owner%}"><i class="icon-calendar" id="li_calendar_icon"></i> My Calendar </a>
 </li>
 {% if is_core and not is_visitor %}
-<li>
-    <a href="{% url tasks.views.edit_task owner_name=user %}" class="button add-big">
-    <p>
-        Add Task
-    </p> </a>
+<li id="li_task">
+    <a href="{% url tasks.views.edit_task owner_name=user %}"><i class="icon-plus" id="li_task_icon"></i> Add Task </a>
 </li>
 {% endif %}
 <!--

@@ -1,55 +1,44 @@
 <style type="text/css">
 	#shoutbox {
-
-		border-style: solid;
-		border-width: 2px;
 		position: relative;
 		top: 10px;
-		right: 10px;
-		overflow-y: scroll;
-		width: 400px;
-		height: 370px;
-		left: 100px;
-		background-color: #F3E2A9;
-	}
+		overflow: auto;
+		height: 320px;
+    }
 	#shoutbox_heading {
 		position: relative;
-		left: 60px;
 		font-family: Arial;
 		font-size: 28px;
 	}
 	#add_shoutbox {
 		position: relative;
 		top: 20px;
-		right: 30px;
 	}
 
 	#nickname {
-		font-family: serif;
-		font-style: oblique;
 		font-weight: 800;
-		color: #FF4000;
-		font-size: 98%
+		font-size: 98%;
 	}
 
 	#comment {
-		font-family: "Cambria";
-		font-style: oblique;
 		font-weight: 300;
-		color: #58ACFA;
 		font-size: 88%
+	}
+	
+	#id_comments {
+	    height:30px;
+	    width:350px;
 	}
 </style>
 
-<div id="shoutbox" >
+<h2>Shouts</h2>
+<div class="row">
+<div id="shoutbox" class="well span6">
 
-    <div id="shoutbox_heading" >
-        My ShoutBox
-    </div>
     <table>
         {% for field in shouts %}
         <tr>
-            <td id="shouterts name"><span id="nickname" >{{field.nickname}}- </span> &nbsp; </td>
+            <td id="shouterts name"><span id="nickname" ><a href="{% url users.views.view_profile owner_name=field.user%}">{{field.nickname}}</a>: </span> &nbsp; </td>
             <td><span id="comment" >{{field.comments}}</span></td>
             <td></td>
         </tr>
@@ -57,18 +46,18 @@
 
     </table>
 </div>
-
-<div id="add_shoutbox">
+</div>
+<div class="row">
+<div id="add_shoutbox" class="span6">
 {% if not is_visitor %}
 
 <form method="POST" action="{{SITE_URL}}/erp/{{page_owner}}/department/">
   {% csrf_token %}
-<table>
+
 {{ shout_form }}
-</table>
-<input type="submit" value="Shout">
+<input type="submit" class="btn btn-primary btn-large" value="Shout">
 
 </form>
 {% endif %}
 </div>
-
+</div>
