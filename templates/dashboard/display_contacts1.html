@@ -1,0 +1,87 @@
+{% extends "base_portal.html" %}
+    
+{% block title %}
+{{ block.super }} 
+Contacts
+{% endblock title %}
+
+{% block body %}
+<div id="contacts-master">
+  <div id="toppage">
+  </div>
+  <div id="contacts">
+    <span style="font-family:Arial; font-size:30px; font-weight:bold; color:#333;">&nbsp;&nbsp;&nbsp;&nbsp;Contacts</span>
+    <ul id="accordion" style="border:none;">
+      {% for dept_name, core_profiles, coord_profiles in contacts %}
+
+      <li class="active">
+	<img id="plus" src="media/images/plus.png" style="margin-left:-7px; margin-bottom:-3px;"/>&nbsp;<span style="font-size:22px; ">{{ dept_name }} </span>
+	<ul>
+	  <li class="second">
+	    <h3>Cores</h3>
+	    <ul>
+	      <li>
+		    <table>
+		        <tr style="color:#111; font-size:18px;">
+		            <th style="width:250px; padding-left:-10px;">Name</td>
+        		    <th style="width:100px;">Phone</td>
+        		    <th style="width:150px;">Summer No.</td>
+                </tr>
+		        {% for core_profile in core_profiles %}
+		        <tr>
+		            <td style="width:209px; padding-left:-10px;"> 
+		                <a href="{% url users.views.view_profile core_profile.user.username %}">{{ core_profile.name }}</a> 
+		            </td>
+		            <td style="width:100px;">{{ core_profile.chennai_number }} </td>
+		            <td style="width:150px;">{{ core_profile.summer_number }} </td>
+		        </tr>
+		        {% endfor %}
+		    </table>
+	      </li>
+	    </ul>
+	  </li>
+	  <li class="second">
+	    <h3>Coords</h3>
+	    <ul>
+	      <li>
+		<table>
+		  <tr style="color:#111; font-size:18px;">
+		    <th style="width:250px; padding-left:-10px;">Name</td>
+		    <th style="width:100px;">Phone</td>
+		    <th style="width:150px;">Summer No.</td>
+		  </tr>
+		  {% for coord_profile in coord_profiles %}
+		  <tr>
+		    <td style="width:209px; padding-left:-10px;">
+		      <a href="{% url users.views.view_profile coord_profile.user.username %}">{{ coord_profile.name }}</a>
+		    </td>
+		    <td style="width:100px;">{{ coord_profile.chennai_number }} </td>
+		    <td style="width:150px;">{{ coord_profile.summer_number }} </td>
+		  </tr>
+		  {% endfor %}
+		</table>
+	      </li>
+	    </ul>
+	  </li>
+
+	</ul>
+      </li>
+      {% endfor %}
+    </ul> 
+  </div>
+  <div id="bottom">
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_contact");
+    var e = document.getElementById("li_contact_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+{% endblock javascript%}

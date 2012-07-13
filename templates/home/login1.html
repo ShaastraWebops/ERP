@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Shaastra | ERP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="{{ MEDIA_URL }}css/bootstrap.css" rel="stylesheet" type="text/css">    
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+        background: #00001A;
+      }
+      
+      .span4
+      {
+      padding-top: 10px;
+      padding-left: 0px;
+      padding-bottom: 50px;
+      }
+
+      
+            
+    </style>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="{{ MEDIA_URL }}images/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="bootstrap/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="bootstrap/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="bootstrap/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="bootstrap/ico/apple-touch-icon-57-precomposed.png">
+  <link href="{{ MEDIA_URL }}css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+  </head>
+
+  
+<body>
+
+    <div class="container">
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+        <h1>Shaastra | ERP</h1>
+         <br/>
+        <p>Shaastra isn’t just a tech fest. To put it simply, it’s a one-year long institution of sorts. Like every other institution then, it’s governed by a hierarchy. Shaastra presents its Enterprise Resource Planner to make things more fluid.</p>
+        <div class="row">
+        <div class="span10">
+        <a class="grow" href="https://www.facebook.com/Shaastra" id="fb-social">
+	    <img id="fb-img" src = "{{ MEDIA_URL}}images/facebook.png"></a>
+		 <a class="grow" href="https://twitter.com/#!/shaastra_2011" id="tw-social">
+		    <img id="tw-img" src = "{{ MEDIA_URL}}images/twitter.png"></a>
+         <a class="grow" href="http://www.youtube.com/iitmshaastra" id="yt-social">
+            <img id="yt-img" src = "{{ MEDIA_URL}}images/youtube.png"></a>
+        <a id="shaastra-button" class="btn btn-primary btn-large pull-right" href="http://www.shaastra.org">Go to Shaastra &raquo;</a>
+        </div>
+        </div>
+      </div>
+
+      <!-- Example row of columns -->
+        
+      
+     <div class = "row"> 
+        
+{% if user.is_authenticated %}
+<p align="center">You are logged in Click <a href="{% url tasks.views.display_portal owner_name=user %}"> Here</a> to visit your Dashboard.</p>
+{% endif %}
+
+        
+        <div class="span4 offset4">
+        <form action="" method="POST" class ="form-vertical well">
+        {% csrf_token %}
+
+		{{ form.username.label_tag }} {{ form.username }}<br>
+    	<div id="Username_div" style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
+		  {% if form.username.errors %}
+		  {% for error in form.username.errors %}
+		  {{ error|escape }}
+		  {% endfor %}
+		  {% endif %}
+		</div>
+        <br/>
+		{{ form.password.label_tag }} {{ form.password }}<br>
+		<div id="Password_div" style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
+		  {% if form.password.errors %}
+		  {% for error in form.password.errors %}
+		  {{ error|escape }}
+		  {% endfor %}
+		  {% endif %}
+		</div>
+         <br/>
+		<input type = "submit" class="btn btn-primary" value="Login">
+		<a href="{% url home.views.forgot_password %}" class="pull-right">Forgot Password</a>
+		<br>
+	  {% if invalid_login %}
+	  <br />
+	  <div style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
+	    <br />
+	    Invalid username or password. Please try again.
+	    <br/>
+	  </div>
+	  {% endif %}
+		{% if redirected %}
+        <div class="errors" id="login_first">
+            <b>
+                <br/>You must login first.
+            </b>
+        </div>
+        {% endif %}
+    	<div id="login_message" style="font-family:verdana;color:red;font-size:10px;line-height:1em;vertical-align:top">
+        {% if invalid_login_message %}
+        {{ invalid_login_message }}
+        {% endif %}
+        </div>	
+	</div>
+
+		
+	</form>
+       </div>
+<hr>      
+
+<div class="modal hide fade" id="myModal">
+    <div class="modal-body">
+        <center><img alt="" src="http://placehold.it/800x800"></center>
+    </div>
+</div>
+
+       <ul class="thumbnails">
+    <li class="grow">
+      <a data-toggle="modal" href="#myModal">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a data-toggle="modal" href="#myModal">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a data-toggle="modal" href="#myModal">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a data-toggle="modal" href="#myModal">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a data-toggle="modal" href="#myModal">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a data-toggle="modal" href="#myModal">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a data-toggle="modal" href="#myModal">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a data-toggle="modal" href="#myModal">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a data-toggle="modal" href="#myModal">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a data-toggle="modal" href="#myModal">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a data-toggle="modal" href="#myModal">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+    <li class="grow">
+      <a data-toggle="modal" href="#myModal">
+        <img alt="" src="http://placehold.it/70x60">
+      </a>
+    </li>
+</ul>
+   
+
+
+    </div> <!-- /container -->
+<!-- Placed at the end of the document so the pages load faster -->
+    <script src="{{ MEDIA_URL }}js/jquery.js"></script>
+    <script src="{{ MEDIA_URL }}js/bootstrap.js"></script><!--make it bootstrap.min.js when deployed-->
+
+  </body>
+</html>
