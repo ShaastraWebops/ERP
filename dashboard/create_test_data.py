@@ -65,8 +65,6 @@ def create_user (department_name, group_name, user_dict, profile_dict):
         # Note : create_user creates an instance and saves it in the database
         # Delivering keyword args in user_dict
         user = User.objects.create_user(**user_dict)
-	user.setpassword("shaastraerp")
-	user.save()
         print '%s - User created' %(user_dict['username'])
     try:
         curr_userprofile = user.get_profile ()
