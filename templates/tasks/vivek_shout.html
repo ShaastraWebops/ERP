@@ -51,7 +51,7 @@
 <div id="add_shoutbox" class="span6">
 {% if not is_visitor %}
 
-<form method="POST" action="{{SITE_URL}}/erp/{{page_owner}}/department/">
+<form method="POST" action="./">
   {% csrf_token %}
 
 {{ shout_form }}
