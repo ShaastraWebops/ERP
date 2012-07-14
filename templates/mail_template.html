@@ -1,0 +1,10 @@
+<html>
+<body>
+	<h4>Hi {{name}},</h4>
+	{% for subtask in subtasks %}
+		{% if subtask.status != 'C' %}
+			<p><b>subject:</b> {{subtask.subject}} </br> <b>Deadline:</b> {{subtask.deadline}}</br></br></p>
+		{% endif %}
+	{% endfor %}
+</body>
+</html>

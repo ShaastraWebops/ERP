@@ -17,8 +17,13 @@ from erp.department.models import *
 from erp.settings import SITE_URL
 from erp.dashboard.forms import shout_box_form
 from erp.dashboard.models import shout_box
-
 from django import forms
+from django.core.mail import *
+from users.models import *
+from django.template.loader import get_template
+from django.template import Context
+from django.core import mail
+from django.http import HttpResponse
 
 # Fields to be excluded in the SubTask forms during Task editing
 subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
@@ -452,3 +457,29 @@ def display_department_portal (request, owner_name = None, department_name = Non
     return render_to_response('tasks/department_portal.html',
                               display_dict,
                               context_instance = global_context (request))
+
+
+def remainder(request):
+	users=userprofile.objects.all()
+	t=get_template('mail_template.html')
+	
+	datatuple=()
+	for user1 in users:	
+		if is_coord(user1.user):
+			subtasks=user1.user.subtask_set.all()
+			if subtasks:
+				work_pending=False
+				for subtask in subtasks:
+					if subtask.status != 'C':
+							work_pending=True
+				if work_pending:
+					body=t.render(Context({'name':user1.user.username ,'subtasks':subtasks}))
+					msg=EmailMessage('Remainder',body,'noreply@shaastra.org',[user1.user.email])
+					msg.content_subtype="html"
+					datatuple+= (
+					(msg),
+					)
+	connection=mail.get_connection()
+	connection.send_messages(datatuple)	
+	#send_mail('hi','how are you, its working','rsdjjana@gmail.com',['rsdjjana@gmail.com'],fail_silently=False)	
+	return HttpResponse("remainder sent!")

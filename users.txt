@@ -27,4 +27,5 @@ Publicity Coords ee09b026 publicitycoordone@gmail.com password nickname publicit
 Publicity Coords ee09b027 publicitycoordtwo@gmail.com password nickname publicitycoordtwo 9999999999 9999999999 HomeSweetHome Ganga 420
 Design Cores ee09b028 designcore@gmail.com password nickname designcore 9999999999 9999999999 HomeSweetHome Ganga 420
 Design Coords ee09b029 designcoordone@gmail.com password nickname designcoordone 9999999999 9999999999 HomeSweetHome Ganga 420
-Design Coords ee09b030 designcoordtwo@gmail.com password nickname designcoordtwo 9999999999 9999999999 HomeSweetHome Ganga 420
+Design Coords ee09b030 rsdjjana@gmail.com password nickname designcoordtwo 9999999999 9999999999 HomeSweetHome Ganga 420
+Design Coords ee11b022 rsdjjana@gmail.com password nickname designcoordthree 9999999999 9999999999 HomeSweetHome Ganga 420
