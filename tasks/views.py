@@ -25,7 +25,7 @@ from django.template import Context
 from django.core import mail
 from django.http import HttpResponse
 from datetime import * 
-from dateutil.relativedelta import *
+#from dateutil.relativedelta import *
 
 # Fields to be excluded in the SubTask forms during Task editing
 subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
@@ -459,16 +459,16 @@ def display_department_portal (request, owner_name = None, department_name = Non
     return render_to_response('tasks/department_portal.html',
                               display_dict,
                               context_instance = global_context (request))
-
+"""
 
 def remainder(request):
-	"""
+	
 		Here we check if the user is a coord, who has subtasks assigned. 
 		If so we check if any of the subtask has a status other than "completed".
 		Then we save all the subtasks which are only 3 days away from overdue. 
 		If it is the case we send them a mail, stating the subject of the subtask which is not yet completed and only 3 days from overdue along with its deadline and status
 		This is automated using cron and calling the respective url of this view everday.
-	"""
+	
 	users=userprofile.objects.all()
 	t=get_template('mail_template.html')
 	today=date.today()
@@ -494,3 +494,4 @@ def remainder(request):
 	connection=mail.get_connection()
 	connection.send_messages(datatuple)	
 	return HttpResponse("remainder sent!")
+"""
