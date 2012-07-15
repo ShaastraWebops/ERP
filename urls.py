@@ -45,6 +45,6 @@ urlpatterns = patterns('',(r'^createdata/', do_it_all),
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-	url(r'^remainder/$', 'erp.tasks.views.remainder', name='remainder'),
+	url(r'^task/remainder/email/$', 'erp.tasks.views.remainder', name='remainder'),
 )
 

@@ -460,6 +460,12 @@ def display_department_portal (request, owner_name = None, department_name = Non
 
 
 def remainder(request):
+	"""
+		Here we check if the user is a coord, who has subtasks assigned. 
+		If so we check if any of the subtask has a status other than "completed".
+		If it is the case we send them a mail, stating the subject of the subtask which is not yet completed along with its deadline
+		This is automated using cron and calling the respective url of this view at regular interval,say once a week
+	"""
 	users=userprofile.objects.all()
 	t=get_template('mail_template.html')
 	

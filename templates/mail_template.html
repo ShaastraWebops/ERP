@@ -1,10 +1,14 @@
 <html>
 <body>
 	<h4>Hi {{name}},</h4>
+	<center><h4>Subtasks assigned to you, which are yet to be completed</h4></center>
 	{% for subtask in subtasks %}
 		{% if subtask.status != 'C' %}
-			<p><b>subject:</b> {{subtask.subject}} </br> <b>Deadline:</b> {{subtask.deadline}}</br></br></p>
+			<b>subject:</b> {{subtask.subject}}  <b>Deadline:</b> {{subtask.deadline}}</br></br><hr>
 		{% endif %}
 	{% endfor %}
+
+	<p> Please finish the above tasks as soon as possible </p>
+
 </body>
 </html>
