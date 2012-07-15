@@ -473,7 +473,7 @@ def remainder(request):
 	t=get_template('mail_template.html')
 	today=date.today()
 	datatuple=()
-	remaind_subtask=()
+	remaind_subtask=[]
 	for user1 in users:	
 		if is_coord(user1.user):
 			subtasks=user1.user.subtask_set.all()
@@ -482,7 +482,7 @@ def remainder(request):
 				for subtask in subtasks:
 					if subtask.status != 'C':
 						if today+relativedelta(days=+3) == subtask.deadline:
-							remaind_subtask+=( (subtask),)
+							remaind_subtask+=[subtask]
 							work_pending=True
 				if work_pending:
 					body=t.render(Context({'name':user1.user.username ,'subtasks':remaind_subtask}))
