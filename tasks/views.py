@@ -111,6 +111,11 @@ def display_core_portal (request, core):
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
+    qms_core=False
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    if str(department) == 'QMS':
+		print "hello"
+		display_dict['qms_core']=True
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/core_portal2.html',

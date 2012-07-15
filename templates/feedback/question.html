@@ -1,0 +1,23 @@
+{% extends "base_portal.html" %}
+{% block body %}
+<center><h1>Add Question </h1></center>
+<form class="well" action="" method="POST">
+	{% csrf_token %}
+	<table>
+		{{questionform.as_table}}
+	</table>
+	<input type="submit" value="Save"/>
+    </form>
+{% if question_added %}
+<p><h4> Question added successfully, you can add another now!</h4></p>
+{% endif %}
+{% if error %}
+<p><h4> Error: Please check your data</h4></p>
+{% endif %}
+{% endblock %}
+{% block tabs %}
+{% endblock %}
+{% block form_stuff %}
+{% endblock %}
+{% block display_stuff %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base_portal.html" %}
+{% block body %}
+{% for coord in coord_profiles %}
+	<h4>{{coord.name}}</h4>
+	{% for question in questions %}
+		<p>{{question}}</p>
+	{% endfor %}
+	</hr>
+{% endfor %}
+
+{% endblock %}
+{% block tabs %}
+{% endblock %}
+{% block form_stuff %}
+{% endblock %}
+{% block display_stuff %}
+{% endblock %}

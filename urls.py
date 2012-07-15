@@ -3,6 +3,7 @@ from django.contrib import admin
 from erp.tasks.views import *
 from erp.users.views import *
 from erp.home.views import *
+from erp.feedback.views import *
 from erp.create_test_data import *
 import haystack
 from haystack.views import SearchView
@@ -12,7 +13,6 @@ from haystack.views import search_view_factory
 haystack.autodiscover()
 
 admin.autodiscover()
-
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -29,6 +29,7 @@ urlpatterns = patterns('',(r'^createdata/', do_it_all),
     #(r'^erp/users/', include('erp.users.urls')),
     #(r'^erp/dashboard/',include('erp.dashboard.urls')),	
     # Make the above 2 URLConfs look like these 2 below
+	(r'^erp/feedback/', include('erp.feedback.urls')),
     (r'^erp/(?P<owner_name>\w+)/users/', include('erp.users.urls')),
     (r'^erp/(?P<owner_name>\w+)/dashboard/',include('erp.dashboard.urls')),	
     (r'^erp/(?P<owner_name>\w+)/', include('erp.tasks.urls')),

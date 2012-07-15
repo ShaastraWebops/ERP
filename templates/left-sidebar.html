@@ -19,6 +19,15 @@
     <a href="{% url tasks.views.edit_task owner_name=user %}"><i class="icon-plus" id="li_task_icon"></i> Add Task </a>
 </li>
 {% endif %}
+<li id="li_feedback">
+    <a href="{% url feedback.views.answer  %}"><i class="icon-plus" id="li_task_icon"></i> Feedback </a>
+</li>
+
+{% if qms_core %}
+	<li id="li_questions">
+    <a href="{% url feedback.views.add_question  %}"><i class="icon-plus" id="li_task_icon"></i> Questions for Feedback </a>
+</li>
+{% endif %}
 <!--
 <li>
 <a href="#">
