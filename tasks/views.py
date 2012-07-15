@@ -487,5 +487,4 @@ def remainder(request):
 					)
 	connection=mail.get_connection()
 	connection.send_messages(datatuple)	
-	#send_mail('hi','how are you, its working','rsdjjana@gmail.com',['rsdjjana@gmail.com'],fail_silently=False)	
 	return HttpResponse("remainder sent!")
