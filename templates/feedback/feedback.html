@@ -1,20 +1,7 @@
 {% extends "base_portal.html" %}
 {% block body %}
 {% for coord in coord_profiles %}
-	{{coord.name}}<br>
-
-{% for question in questions %}
-<a href="{% url feedback.views.rate coord_name=coord.name question_id=question.id %}">{{question}}</a>---
-{% for answer in answers %}
-    {% ifequal answer.question question %}
-        {% ifequal answer.owner coord %}
-            {{answer.rating}}
-        {% endifequal %}
-    {% endifequal %}
-{% endfor %}
-<br>
-{% endfor %}
-<br>
+	<a href="{% url feedback.views.display_questions coord_id=coord.id %}">{{coord.name}}</a></br></br>
 {% endfor %}
 
 {% endblock %}

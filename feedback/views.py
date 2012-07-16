@@ -75,10 +75,79 @@ def add_question(request):
     else:
         raise Http404   
 
+def display_questions(request,coord_id):
+	curr_user=request.user
+	curr_userprofile=userprofile.objects.get(user=request.user)
+	owner_name=None
+	page_owner = get_page_owner (request, owner_name)
+	curr_department=curr_userprofile.department
+	curr_coord_userprofile=userprofile.objects.get(id=coord_id)
+	if is_core(curr_user):
+		if str(curr_userprofile.department) == "QMS":
+			is_core1=True
+			is_visitor1=False
+			qms_core=True
+		questions=Question.objects.filter(departments=curr_department).exclude(answered_by='Coord').exclude(answered_by='Vol')
+		answers=Answer.objects.filter(creator=curr_userprofile)
+		
+	
+	if is_coord(curr_user):
+		questions=Question.objects.filter(departments=curr_department).exclude(answered_by='Core').exclude(answered_by='Vol')
+		answers=Answer.objects.filter(creator=curr_userprofile)
 
+	return render_to_response('feedback/display_questions.html',locals(),context_instance=RequestContext(request))
 
+def answer_questions(request,coord_id,question_id):
+	curr_user=request.user
+	curr_userprofile=userprofile.objects.get(user=request.user)
+	owner_name=None
+	is_core1=False
+	qms_core=False
+	page_owner = get_page_owner (request, owner_name)
+	curr_department=curr_userprofile.department
+	answers=Answer.objects.filter(creator=curr_userprofile)
+	question1=Question.objects.filter(id=question_id)
+	if question1:
+		question2=Question.objects.get(id=question_id)
+	curr_coord_userprofile=userprofile.objects.get(id=coord_id)
+	if is_core(curr_user):
+		if str(curr_userprofile.department) == "QMS":
+			is_core1=True
+			is_visitor1=False
+			qms_core=True
+		questions=Question.objects.filter(departments=curr_department).exclude(answered_by='Coord').exclude(answered_by='Vol')
+		if request.method == 'POST':
+			answer=Answer.objects.filter(question = question2).filter(creator=curr_userprofile).filter(owner=curr_coord_userprofile)
+			if answer:
+				for answer1 in answer:
+					answerform=AnswerForm(request.POST, instance=answer1)
+					if answerform.is_valid():
+						answerform.save()
+			else:
+				answerform=AnswerForm(request.POST)
+				if answerform.is_valid():
+					answer1=Answer(rating=request.POST['rating'],question=question2,owner=curr_coord_userprofile,creator=curr_userprofile,answered=True)
+					answer1.save()
 
-
+	
+	if is_coord(curr_user):
+		questions=Question.objects.filter(departments=curr_department).exclude(answered_by='Core').exclude(answered_by='Vol')
+		if request.method=='POST':
+			answer=Answer.objects.filter(question=question2).filter(creator=curr_userprofile).filter(owner=curr_coord_userprofile)
+			if answer:
+				for answer1 in answer:
+					answerform=AnswerForm(request.POST, instance=answer1)
+					if answerform.is_valid():
+						answerform.save()
+			else:
+				answerform=AnswerForm(request.POST)
+				if answerform.is_valid():
+					answer1=Answer(rating=request.POST['rating'],question=question2,owner=curr_coord_userprofile,creator=curr_userprofile,answered=True)
+					answer1.save()
+				
+	answerform=AnswerForm()
+	return render_to_response('feedback/answer_questions.html',locals(),context_instance=RequestContext(request))
+"""
 def rate(request, coord_name, question_id):
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
@@ -182,7 +251,9 @@ def rate(request, coord_name, question_id):
 
         else:
             raise Http404
+"""
 
+"""
 def edit(request, coord_name, question_id, answer_id):
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
@@ -263,7 +334,7 @@ def edit(request, coord_name, question_id, answer_id):
        raise Http404
        
 
-
+"""
         
 def delete_question(request, question_id):
     if is_core(request.user):

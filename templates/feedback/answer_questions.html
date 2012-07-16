@@ -1,0 +1,30 @@
+{% extends "base_portal.html" %}
+{% block body %}
+{% for question in questions %}
+	
+<form class="well" action="{% url feedback.views.answer_questions coord_id=coord_id question_id=question.id %}" method="POST">
+	{% csrf_token %}
+	<b>{{question.question}}</b><br>
+	{% for answer in answers %}
+			{% if answer.question == question %}
+				{% if answer.creator == curr_userprofile %}
+					{% if answer.owner == curr_coord_userprofile %}
+						Present Rating:<b> {{answer.rating}}</b>
+					{% endif %}
+				{% endif %}
+			{% endif %}
+	{% endfor %}
+	<table>
+		{{answerform.as_table}}
+	</table>
+	<input type="submit" value="rate"/>
+</form>
+{% endfor %}
+
+{% endblock %}
+{% block tabs %}
+{% endblock %}
+{% block form_stuff %}
+{% endblock %}
+{% block display_stuff %}
+{% endblock %}	

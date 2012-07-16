@@ -23,7 +23,7 @@ class Answer(models.Model):
     question = models.ForeignKey(Question)
     owner = models.ForeignKey(userprofile, related_name='answer_owner')
     creator = models.ForeignKey(userprofile, related_name='answer_creator')
-    rating = models.DecimalField(max_digits=2, decimal_places=0)
+    rating = models.IntegerField()
     answered = models.BooleanField(default=False)
     submitted = models.BooleanField(default=False)
 

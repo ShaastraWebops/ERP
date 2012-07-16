@@ -1,0 +1,25 @@
+{% extends "base_portal.html" %}
+{% block body %}
+	{% for question in questions %}
+		{{question.question}}</br>
+		{% for answer in answers %}
+			{% if answer.question == question %}
+				{% if answer.creator == curr_userprofile %}
+					{% if answer.owner == curr_coord_userprofile %}
+						{{answer.rating}}
+					{% endif %}
+				{% endif %}
+			{% endif %}
+		{% endfor %}
+	</br>
+	{% endfor %}
+
+<a href="{% url feedback.views.answer_questions coord_id=coord_id question_id=0 %}"><button class="btn">Edit</button></a>
+
+{% endblock %}
+{% block tabs %}
+{% endblock %}
+{% block form_stuff %}
+{% endblock %}
+{% block display_stuff %}
+{% endblock %}	
