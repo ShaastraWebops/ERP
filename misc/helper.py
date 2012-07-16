@@ -6,7 +6,7 @@ from django.template.context import Context, RequestContext
 import os
 from shutil import copyfile
 from django.conf import settings
-from erp.users.models import userphoto
+from erp.users.models import *
 
 # Temporary workaround for the fact that I don't know whether / how to
 # extend the User class with methods
@@ -45,6 +45,13 @@ def get_page_owner (request, owner_name):
             return 'Invalid'
     request.session['page_owner'] = page_owner
     return page_owner
+    
+def get_department(request):
+    try:
+        print request.user
+        return userprofile.objects.get(user = request.user).department.Dept_Name
+    except:
+        return None
 
 """
 this function creates the directory which will store infromation about the user
