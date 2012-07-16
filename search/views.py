@@ -27,9 +27,11 @@ def search(request, search_term=None):
     results = handle_search(request,search_term)
     spelling_suggestion = spelling(search_term)
     print results
+    print results.get('subtasks')
     print spelling_suggestion
     tasks = results['tasks']
     users = results['users']
+    subtasks = results['subtasks']
     return render_to_response('search/search.html', locals(),RequestContext(request))
             
     

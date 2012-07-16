@@ -8,7 +8,8 @@ def handle_search(request,search_term):
     tasks = search_results.filter(content = search_term).models(Task)
     users = search_results.filter(content = search_term).models(userprofile)
     subtasks = search_results.filter(content = search_term).models(SubTask)
-    results = {'tasks':tasks, 'users':users }
+    
+    results = {'tasks':tasks, 'users':users, 'subtasks':subtasks }
     return results
     
 def spelling(search_term):

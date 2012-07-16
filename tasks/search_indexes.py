@@ -18,5 +18,6 @@ class SubTaskIndex(RealTimeSearchIndex):
     subject     =CharField(model_attr='subject', null=True)
     description =CharField(model_attr='description', null=True)
     status      =CharField(model_attr='status', null=True)
+    department  =CharField(model_attr='department')
 
 site.register(SubTask, SubTaskIndex)

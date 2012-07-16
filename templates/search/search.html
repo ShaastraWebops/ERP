@@ -2,20 +2,102 @@
 
 {%block body%}
 
-<html>
+
 <form action="" method ="POST">
 {% csrf_token %}
 <input type = "text" name="searchbar" id="s" placeholder="seach for something">
 <input type = "submit" value="Search">
 </form>
+<h2> Search Results </h2>
+<div class="tabbable span8">
+    <ul class="nav nav-pills">
+        <li class="active">
+            <a href="#tabs1" data-toggle="tab"><i class="icon-tasks"></i>Tasks</a>
+        </li>
+        <li>
+            <a href="#tabs2" data-toggle="tab"><i class="icon-check"></i>Subtasks</a>
+        </li>
+        <li>
+            <a href="#tabs3" data-toggle="tab"><i class="icon-refresh"></i>People</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tabs1">
+        <table class="table">
+        <tr>
+        
+        {% for task in tasks %}
+        
+        <td>
+        {{ task.object.subject }}
+        </td>
+        <td>
+        {{ task.object.description }}
+        </td>
+        <td>
+        {{ task.object.creator }}
+        </td>       
+        </tr>
+        {% endfor %}
+        
+        </table>
+        </div>
+        <div class="tab-pane" id="tabs2">
+        
+        {% for subtask in subtasks %}
+        <table class="table">
+        <tr>
+        
+        {% for subtask in subtasks %}
+        
+        <td>
+        {{ subtask.object.subject }}
+        </td>
+        <td>
+        {{ subtask.object.description }}
+        </td>
+        <td>
+        {{ subtask.object.creator }}
+        </td>       
+        <td>
+        {{ subtask.object.department }}
+        </td>       
+        </tr>
+        {% endfor %}
+        
+        </table>
+        {% endfor %}
+        </div>
+        <div class="tab-pane" id="tabs3">
+        
+        {% for user in users %}
+        <tr>       
+        <td>
+        {{ object.room_no }}
+        </td>       
+        <td>
+        {{ object.user.get_full_name }}
+        </td>       
+        <td>
+        {{ object.department.Dept_name }}
+        </td>       
+        <td>
+        {{ object.summer_stay }}
+        </td>       
+        <td>
+        {{ object.name }}
+        </td>       
+        <td>
+        {{ object.hostel }}
+        </td>       
+        <td>
+        {{ object.nickname }}
+        </td>       
+        </tr>
+        {% endfor %}
+        </div>
+     </div>
+ </div>       
 
-{% for task in tasks %}
-{{ task.object.name }}
-{{ task.object.subject }}
-{{ task.object.creator }}
-{{ task.object.get_absolute_url }}
-{% endfor %}
-
-</html>
 
 {%endblock%}
