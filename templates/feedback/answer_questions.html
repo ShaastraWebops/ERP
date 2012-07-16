@@ -3,7 +3,7 @@
 <h3>Feedback for {{curr_coord_userprofile.name}}</h3>
 {% for question in questions %}
 	
-<form class="well" action="{% url feedback.views.answer_questions coord_id=coord_id question_id=question.id %}" method="POST">
+<form action="{% url feedback.views.answer_questions coord_id=coord_id question_id=question.id %}" method="POST">
 	{% csrf_token %}
 	<b>{{question.question}}</b><br>
 	{% for answer in answers %}
@@ -15,9 +15,7 @@
 				{% endif %}
 			{% endif %}
 	{% endfor %}
-	<table>
-		{{answerform.as_table}}
-	</table>
+	{{answerform}}
 	<input type="submit" value="rate"/>
 </form>
 {% endfor %}
