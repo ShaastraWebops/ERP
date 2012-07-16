@@ -224,6 +224,11 @@ def edit_task (request, task_id = None, owner_name = None):
         is_task_comment = True,
         object_id = task_id,
         other_errors = other_errors)
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
     return render_to_response('tasks/edit_task.html',
                               locals(),
                               context_instance = global_context (request))
@@ -461,6 +466,9 @@ def display_department_portal (request, owner_name = None, department_name = Non
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
+    if is_core(request.user):
+		if str(department) == 'QMS':
+			display_dict['qms_core']=True
     return render_to_response('tasks/department_portal.html',
                               display_dict,
                               context_instance = global_context (request))

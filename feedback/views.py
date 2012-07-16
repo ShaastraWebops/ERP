@@ -18,8 +18,8 @@ def answer(request):
     owner_name=None
     page_owner = get_page_owner (request, owner_name)
     if is_core(curr_user):
-#        is_core=True
-        is_visitor=False
+        is_core1=True
+        is_visitor1=False
         if str(curr_userprofile.department) == "QMS":
             qms_core=True    
         curr_department=curr_userprofile.department
@@ -41,8 +41,8 @@ def display(request):
     page_owner = get_page_owner (request, owner_name)
     if is_core(curr_user):
         if str(curr_userprofile.department) == "QMS":
-#            is_core=True
-            is_visitor=False
+            is_core1=True
+            is_visitor1=False
             qms_core=True
             questions=Question.objects.all()
         else:
@@ -57,8 +57,8 @@ def add_question(request):
         owner_name=None
         page_owner = get_page_owner (request, owner_name)
         if str(curr_userprofile.department) == "QMS":
-#            is_core=True
-            is_visitor=False
+            is_core1=True
+            is_visitor1=False
             qms_core=True
             if request.method == 'POST':
                 questionform=QuestionForm(request.POST)
@@ -73,11 +73,16 @@ def add_question(request):
         else:
             raise Http404
     else:
-        raise Http404    
-    	
+        raise Http404   
+
+
+
+
+
 def rate(request, coord_name, question_id):
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
+	
     users_profile=userprofile.objects.all()
     owner_name=None
     page_owner = get_page_owner (request, owner_name)
@@ -88,13 +93,13 @@ def rate(request, coord_name, question_id):
 #   curr_answer=Answer.objects.get(Q(question=curr_question),Q(owner=curr_coord_userprofile))
     try:
         curr_answer=Answer.objects.get(Q(question=curr_question),Q(owner=curr_coord_userprofile))
-        return HttpResponseRedirect('/erp/feedback/edit/'+str(curr_userprofile.name)+'/'+str(curr_question.id)+'/'+str(curr_answer.id)+'/')
+        return HttpResponseRedirect('/erp/feedback/edit/'+str(curr_coord_userprofile.name)+'/'+str(curr_question.id)+'/'+str(curr_answer.id)+'/')
     except Answer.DoesNotExist:    
         if curr_userprofile.department == curr_coord_userprofile.department:
         #Lot of repitition of code, use or statement etc. Just for checking case by case that it is foolproof
             if is_core(request.user):
-#                is_core=True
-                is_visitor=False
+                is_core1=True
+                is_visitor1=False
                 if str(curr_userprofile.department) == "QMS":
                     qms_core=True
                 if curr_question.answered_by == 'Core':       
@@ -116,8 +121,8 @@ def rate(request, coord_name, question_id):
     
         
             if is_core(request.user):
-#                is_core=True
-                is_visitor=False
+                is_core1=True
+                is_visitor1=False
                 if str(curr_userprofile.department) == "QMS":
                     qms_core=True
                 if curr_question.answered_by == 'All':       
@@ -192,8 +197,8 @@ def edit(request, coord_name, question_id, answer_id):
     if curr_userprofile.department == curr_coord_userprofile.department:
         #Lot of repitition of code, use or statement etc. Just for checking case by case that it is foolproof
         if is_core(request.user):
-#            is_core=True
-            is_visitor=False
+            is_core1=True
+            is_visitor1=False
             if str(curr_userprofile.department) == "QMS":
                 qms_core=True
             if curr_question.answered_by == 'Core':       
@@ -210,8 +215,8 @@ def edit(request, coord_name, question_id, answer_id):
     
         
         if is_core(request.user):
-#            is_core=True
-            is_visitor=False
+            is_core1=True
+            is_visitor1=False
             if str(curr_userprofile.department) == "QMS":
                 qms_core=True
             if curr_question.answered_by == 'All':       
