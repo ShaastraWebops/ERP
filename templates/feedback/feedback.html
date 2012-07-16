@@ -1,7 +1,7 @@
 {% extends "base_portal.html" %}
 {% block body %}
 {% for coord in coord_profiles %}
-	<a href="{% url feedback.views.display_questions coord_id=coord.id %}">{{coord.name}}</a></br></br>
+	<a href="{% url feedback.views.answer_questions coord_id=coord.id question_id=0 rating=20 %}">{{coord.name}}</a></br></br>
 {% endfor %}
 
 {% endblock %}

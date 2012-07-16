@@ -1,23 +1,48 @@
 {% extends "base_portal.html" %}
 {% block body %}
+
+
 <h3>Feedback for {{curr_coord_userprofile.name}}</h3>
 {% for question in questions %}
 	
-<form action="{% url feedback.views.answer_questions coord_id=coord_id question_id=question.id %}" method="POST">
-	{% csrf_token %}
+
 	<b>{{question.question}}</b><br>
+{% for question1 in question_no_answer %}
+	{% if question == question1 %}
+		<div class="btn-group">
+	
+			{% for i in rating_choice %}
+				<a  class="btn " href="{% url feedback.views.answer_questions coord_id=coord_id question_id=question.id rating=i %}" >{{i}}</a>
+			{% endfor %}
+		</div>
+	{% endif %}
+{% endfor %}
+
 	{% for answer in answers %}
 			{% if answer.question == question %}
 				{% if answer.creator == curr_userprofile %}
 					{% if answer.owner == curr_coord_userprofile %}
-						Present Rating:<b> {{answer.rating}}</b>
+						
+						<div class="btn-group">
+							{% for i in rating_choice %}
+								{% if i == answer.rating %}
+									<a  class="btn btn-info" href="{% url feedback.views.answer_questions coord_id=coord_id question_id=question.id rating=i %}" >{{i}}</a>
+								{% else %}
+									<a  class="btn " href="{% url feedback.views.answer_questions coord_id=coord_id question_id=question.id rating=i %}" >{{i}}</a>
+								{% endif %}
+							{% endfor %}
+						</div>
 					{% endif %}
 				{% endif %}
+			{% else %}
 			{% endif %}
 	{% endfor %}
-	{{answerform}}
-	<input type="submit" value="rate"/>
-</form>
+
+
+
+</br>
+	
+
 {% endfor %}
 
 {% endblock %}

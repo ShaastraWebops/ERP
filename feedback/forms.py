@@ -17,7 +17,7 @@ class QuestionForm (ModelForm):
         model = Question
         
 class AnswerForm (ModelForm):
-    rating = forms.ChoiceField(choices=RATING_CHOICES,widget=forms.RadioSelect(renderer=HorizontalRadioRenderer))
+    rating = forms.ChoiceField(choices=RATING_CHOICES,widget=forms.RadioSelect)
     class Meta:
         model = Answer
         fields = ('rating',)
