@@ -1,11 +1,19 @@
 {% extends "base_portal.html" %}
 {% block body %}
 {% for coord in coord_profiles %}
-	<h4>{{coord.name}}</h4>
-	{% for question in questions %}
-		<p>{{question}}</p>
-	{% endfor %}
+	<h3>{{coord.name}}</h3><br>
 	</hr>
+{% for question in questions %}
+<a href="{% url feedback.views.rate coord_name=coord.name question_id=question.id %}">{{question}}</a>---
+{% for answer in answers %}
+    {% ifequal answer.question question %}
+        {% ifequal answer.owner coord %}
+            {{answer.rating}}
+        {% endifequal %}
+    {% endifequal %}
+{% endfor %}
+<br>
+{% endfor %}
 {% endfor %}
 
 {% endblock %}
@@ -13,5 +21,19 @@
 {% endblock %}
 {% block form_stuff %}
 {% endblock %}
+{% block javascript %}
+{{ block.super }}
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_feedback");
+    var e = document.getElementById("li_feedback_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+{% endblock javascript %}
 {% block display_stuff %}
 {% endblock %}

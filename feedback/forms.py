@@ -6,3 +6,11 @@ from django import forms
 class QuestionForm (ModelForm):
     class Meta:
         model = Question
+        
+class AnswerForm (ModelForm):
+    class Meta:
+        model = Answer
+        fields = ('rating',)
+
+        
+        

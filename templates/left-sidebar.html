@@ -20,12 +20,12 @@
 </li>
 {% endif %}
 <li id="li_feedback">
-    <a href="{% url feedback.views.answer  %}"><i class="icon-plus" id="li_task_icon"></i> Feedback </a>
+    <a href="{% url feedback.views.answer  %}"><i class="icon-comment" id="li_feedback_icon"></i> Feedback </a>
 </li>
 
 {% if qms_core %}
 	<li id="li_questions">
-    <a href="{% url feedback.views.add_question  %}"><i class="icon-plus" id="li_task_icon"></i> Questions for Feedback </a>
+    <a href="{% url feedback.views.add_question  %}"><i class="icon-question-sign" id="li_questions_icon"></i> Add Feedback Questions </a>
 </li>
 {% endif %}
 <!--
