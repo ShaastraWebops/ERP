@@ -16,8 +16,6 @@ from erp.misc.util import *
 
 @login_required(login_url='/erp/', redirect_field_name=None)
 def search(request, search_term=None):  
-    print 'SEARCH'
-    print search_term
     print request.method
     page_owner = get_page_owner (request, None)                               
     if request.method == "POST":
@@ -28,10 +26,8 @@ def search(request, search_term=None):
     if not search_term:
             return render_to_response('search/search.html', locals(),RequestContext(request))     
     results = handle_search(request,search_term)
-    spelling_suggestion = spelling(search_term)
-    print results
-    print results.get('subtasks')
-    print spelling_suggestion
+    if spelling(search_term) is not '':
+        spelling_suggestion = spelling(search_term)
     tasks = results['tasks']
     users = results['users']
     subtasks = results['subtasks']

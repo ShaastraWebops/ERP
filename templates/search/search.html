@@ -2,13 +2,11 @@
 
 {%block body%}
 
-
-<form action="" method ="POST">
-{% csrf_token %}
-<input type = "text" name="searchbar" id="s" placeholder="seach for something">
-<input type = "submit" value="Search">
-</form>
 <h2> Search Results </h2>
+<h4>{% if spelling_suggestion %}
+Maybe you meant {{spelling_suggestion}}?<br><br>
+{%endif%}
+</h4>
 <div class="tabbable span8">
     <ul class="nav nav-pills">
         <li class="active">
