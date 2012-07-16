@@ -45,6 +45,12 @@
     e.preventDefault();
     $(this).tab('show');
     })
+    
+    function searchterm()
+    {
+        return document.getElementById('searchbar').value
+        
+    }
         </script>
 
     </head>
@@ -97,10 +103,11 @@
                             <li>
 
                                 <div class="input-append">
-                                    <form class="navbar-search">
+                                    <form action="/search/" class="navbar-search" method="POST">
+                                        {%csrf_token%}
                                         <div class="input-append">
-                                            <input type="text" class="input-xlarge search-query" placeholder="Search for tasks">
-                                            <a href="#"><i class="icon-search icon-white"></i></a>
+                                            <input type="text" class="input-xlarge search-query" placeholder="Search for tasks" name="searchbar">
+                                            <input class = "btn btn-inverse" type="submit" value="Search">
                                         </div>
                                     </form>
                                 </div>

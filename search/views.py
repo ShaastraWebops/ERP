@@ -16,6 +16,9 @@ from erp.misc.util import *
 
 @login_required(login_url='/erp/', redirect_field_name=None)
 def search(request, search_term=None):  
+    print 'SEARCH'
+    print search_term
+    print request.method
     page_owner = get_page_owner (request, None)                               
     if request.method == "POST":
         query = request.POST['searchbar']
