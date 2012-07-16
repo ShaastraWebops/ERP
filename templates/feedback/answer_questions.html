@@ -1,5 +1,6 @@
 {% extends "base_portal.html" %}
 {% block body %}
+<h3>Feedback for {{curr_coord_userprofile.name}}</h3>
 {% for question in questions %}
 	
 <form class="well" action="{% url feedback.views.answer_questions coord_id=coord_id question_id=question.id %}" method="POST">
