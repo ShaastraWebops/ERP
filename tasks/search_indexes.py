@@ -4,11 +4,19 @@ from haystack import site
 from erp.tasks.models import *
 
 
-class taskindex(SearchIndex):
+class taskindex(RealTimeSearchIndex):
     text        =CharField(document=True,use_template=True)
-    subject     =CharField(model_attr='subject')
-    description =CharField(model_attr='description')
-    status      =CharField(model_attr='status')
+    subject     =CharField(model_attr='subject',null=True)
+    description =CharField(model_attr='description',null=True)
+    status      =CharField(model_attr='status',null=True)
 
 
 site.register(Task,taskindex)
+
+class SubTaskIndex(RealTimeSearchIndex):
+    text        =CharField(document=True,use_template=True)
+    subject     =CharField(model_attr='subject', null=True)
+    description =CharField(model_attr='description', null=True)
+    status      =CharField(model_attr='status', null=True)
+
+site.register(SubTask, SubTaskIndex)

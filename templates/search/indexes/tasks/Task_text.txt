@@ -1,3 +1,0 @@
-{{ object.subject }}
-{{ object.description }}
-{{ object.status }}
