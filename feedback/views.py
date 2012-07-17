@@ -53,8 +53,8 @@ def display(request):
 
     if is_coord(curr_user):
         if str(curr_userprofile.department) == "QMS":
-			qms_coord=True
-			questions=Question.objects.all()
+            qms_coord=True
+            questions=Question.objects.all()
                     
     return render_to_response('feedback/display.html',locals(),context_instance=RequestContext(request))
 
