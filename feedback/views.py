@@ -50,8 +50,12 @@ def display(request):
             questions=Question.objects.all()
         else:
             raise Http404
-    else:
-        raise Http404            
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == "QMS":
+			qms_coord=True
+			questions=Question.objects.all()
+                    
     return render_to_response('feedback/display.html',locals(),context_instance=RequestContext(request))
 
 def add_question(request):
