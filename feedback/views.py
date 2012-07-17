@@ -52,7 +52,6 @@ def display(request):
             raise Http404
 
     if is_coord(curr_user):
-		print "hello"
 		if str(curr_userprofile.department) == "QMS":
 			qms_coord=True
 			questions=Question.objects.all()
