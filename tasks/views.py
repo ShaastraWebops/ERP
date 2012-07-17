@@ -484,13 +484,12 @@ def display_department_portal (request, owner_name = None, department_name = Non
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
-<<<<<<< HEAD
         
-=======
+
     if is_core(request.user):
 		if str(department) == 'QMS':
 			display_dict['qms_core']=True
->>>>>>> a9994e0dcaa3e3d449bac9e42b006fcaef336bcd
+
     return render_to_response('tasks/department_portal.html',
                               display_dict,
                               context_instance = global_context (request))
