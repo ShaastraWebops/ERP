@@ -24,6 +24,8 @@ from django.template.loader import get_template
 from django.template import Context
 from django.core import mail
 from django.http import HttpResponse
+from datetime import * 
+from dateutil.relativedelta import *
 
 # Fields to be excluded in the SubTask forms during Task editing
 subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
@@ -111,6 +113,12 @@ def display_core_portal (request, core):
         groups__name = 'Coords',
         userprofile__department = department)
         
+    qms_core=False
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    if str(department) == 'QMS':
+		print "hello"
+		display_dict['qms_core']=True
+    
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/core_portal2.html',
@@ -232,6 +240,11 @@ def edit_task (request, task_id = None, owner_name = None):
         is_task_comment = True,
         object_id = task_id,
         other_errors = other_errors)
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
     return render_to_response('tasks/edit_task.html',
                               locals(),
                               context_instance = global_context (request))
@@ -471,25 +484,37 @@ def display_department_portal (request, owner_name = None, department_name = Non
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
+<<<<<<< HEAD
         
+=======
+    if is_core(request.user):
+		if str(department) == 'QMS':
+			display_dict['qms_core']=True
+>>>>>>> a9994e0dcaa3e3d449bac9e42b006fcaef336bcd
     return render_to_response('tasks/department_portal.html',
                               display_dict,
                               context_instance = global_context (request))
 
 
 def remainder(request):
+	"""
+		Here we check if the user is a coord. 
+		Then we get all the subtasks assigned to the coord which are only 3 days away from overdue. 
+		If it is the case we send them a mail, stating the subject of the subtask which is not yet completed and only 3 days from overdue along with its deadline and status
+		This is automated using cron and calling the respective url of this view everday.
+	"""
 	users=userprofile.objects.all()
 	t=get_template('mail_template.html')
-	
+	today=date.today()
 	datatuple=()
 	for user1 in users:	
 		if is_coord(user1.user):
-			subtasks=user1.user.subtask_set.all()
+			subtasks=SubTask.objects.filter(coords=user1.user).filter(deadline=today+relativedelta(days=+3))
 			if subtasks:
 				work_pending=False
 				for subtask in subtasks:
 					if subtask.status != 'C':
-							work_pending=True
+						work_pending=True
 				if work_pending:
 					body=t.render(Context({'name':user1.user.username ,'subtasks':subtasks}))
 					msg=EmailMessage('Remainder',body,'noreply@shaastra.org',[user1.user.email])
@@ -499,5 +524,5 @@ def remainder(request):
 					)
 	connection=mail.get_connection()
 	connection.send_messages(datatuple)	
-	#send_mail('hi','how are you, its working','rsdjjana@gmail.com',['rsdjjana@gmail.com'],fail_silently=False)	
 	return HttpResponse("remainder sent!")
+

@@ -65,6 +65,11 @@ def display_contacts (request , owner_name=None):#this will be a common tab
 
     for dum in contacts:
 	print dum
+	curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
     return render_to_response('dashboard/display_contacts.html',locals() ,context_instance = global_context(request))
 
 
@@ -231,6 +236,11 @@ def upload_file(request ,owner_name=None):
         form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"short description of the file" ,'file_name':"if left blank , the original name will be used",})
 
     print "can _edit form views" ,request.session.get('is_visitor','True')
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
 
 
@@ -404,7 +414,11 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
     print "todays task" ,today_task, first_week_day
     # okay i know this is not right way to do it , but tried many ways , when i tried to initialize one element multiple element was getting initialized ,so i did it like this
     main_data=[ complete_data[0:7] ,complete_data[7:14] ,complete_data[14:21] ,complete_data[21:28] ,complete_data[28:35] ,complete_data[35:38] ]
-    
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
     return render_to_response('dashboard/mycalendar.html',locals() ,context_instance = global_context(request))
 
 def load_data(request):
