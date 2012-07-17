@@ -51,7 +51,7 @@
 <div id="add_shoutbox" class="span6">
 {% if not is_visitor %}
 
-<form method="POST" action="./">
+<form method="POST" action="Dajaxice.tasks.dajax(Dajax.process)"><!--change the action to submit it with dajax-->
   {% csrf_token %}
 
 {{ shout_form }}
