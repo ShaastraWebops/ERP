@@ -68,8 +68,11 @@ def add_question(request):
                 questionform=QuestionForm(request.POST)
                 question_added=False
                 if questionform.is_valid():
-                    questionform.save()
-                    question_added= True
+					questionform1=questionform.save(commit=False)
+					questionform1.creator=curr_userprofile
+					questionform1.save()
+					questionform.save_m2m()
+					question_added= True
                 else:
                 	error=True
             questionform=QuestionForm()
@@ -87,8 +90,11 @@ def add_question(request):
 				questionform=QuestionForm(request.POST)
 				question_added=False
 				if questionform.is_valid():
-					questionform.save()
-					question_added=True
+					questionform1=questionform.save(commit=False)
+					questionform1.creator=curr_userprofile
+					questionform1.save()
+					questionform.save_m2m()
+					question_added= True
 				else:
 					error=True
 			questionform=QuestionForm()
@@ -404,6 +410,9 @@ def review(request):
     curr_department=curr_userprofile.department
     owner_name=None
     page_owner = get_page_owner (request, owner_name)
+    if is_coord(request.user):
+		if str(curr_userprofile.department) == "QMS":
+			qms_coord=True
     questions=Question.objects.filter(departments=curr_department)
     owner_answers=Answer.objects.filter(owner=curr_userprofile)
     curr_averages = Answeravg.objects.filter(owner=curr_userprofile)
