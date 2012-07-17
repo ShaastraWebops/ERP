@@ -1,0 +1,24 @@
+{% extends "base_portal.html" %}
+{% block body %}
+<h4>YOUR REVIEW AS RATED BY {{curr_department}} </h4><br>
+{% for q in questions %}
+    {{q.question}}---
+        {% for a in averages %}
+            {% ifequal a.question q %}
+
+                    {{a.avg}}
+
+            {% endifequal %}
+
+        {% endfor %}
+<br>
+{% endfor %}
+
+
+{% endblock %}
+{% block tabs %}
+{% endblock %}
+{% block form_stuff %}
+{% endblock %}
+{% block display_stuff %}
+{% endblock %}	

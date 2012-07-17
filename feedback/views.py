@@ -7,7 +7,7 @@ from feedback.forms import *
 from erp.users.models import *
 from django.http import Http404
 from erp.feedback.models import *
-from django.db.models import Q
+from django.db.models import Avg
 from django.core.urlresolvers import reverse
 
 
@@ -365,11 +365,55 @@ def delete_question(request, question_id):
         if str(curr_userprofile.department) == "QMS":
             q = Question.objects.get(id=question_id)
             answers = q.answer_set.all()
+            answeraverages = q.answeravg_set.all()
             for ans in answers:
                 ans.delete()
+            for avg in answeraverages:
+                avg.delete()    
             q.delete()    
             return HttpResponseRedirect("/erp/feedback/display")
         else:
             raise Http404
     else:
         raise Http404
+        
+def review(request):
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    curr_department=curr_userprofile.department
+    owner_name=None
+    page_owner = get_page_owner (request, owner_name)
+    questions=Question.objects.filter(departments=curr_department)
+    owner_answers=Answer.objects.filter(owner=curr_userprofile)
+    curr_averages = Answeravg.objects.filter(owner=curr_userprofile)
+    if is_coord(request.user):
+        for q in questions:
+            answers = Answer.objects.filter(owner=curr_userprofile).filter(question=q)
+            if answers:
+                existing = Answeravg.objects.filter(owner=curr_userprofile).filter(question=q)
+                if existing:
+                    for i in existing:
+                        curr_id = i.id
+                    existing_average = Answeravg.objects.get(id=curr_id)
+                    add=0
+                    number=0.0
+                    for a in answers:
+                        number +=1.0
+                        add += a.rating
+                    average=add/number 
+                    existing_average.avg = average
+                    existing_average.num = number
+                    existing_average.save()                                    
+        
+                else:
+                    add=0
+                    number=0.0
+                    for a in answers:
+                        number +=1.0
+                        add += a.rating
+                    average=add/number            
+                    saveavg = Answeravg(question=q,owner=curr_userprofile,avg=average, num=number)
+                    saveavg.save()
+        averages = Answeravg.objects.filter(owner=curr_userprofile)        
+    else:
+        raise Http404    
+    return render_to_response('feedback/review.html',locals(),context_instance=RequestContext(request))

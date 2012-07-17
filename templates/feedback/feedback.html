@@ -1,5 +1,9 @@
 {% extends "base_portal.html" %}
 {% block body %}
+{% if not is_core1 %}<h6><a href="{% url feedback.views.review %}">SEE WHAT THE OTHERS HAVE TO TELL ABOUT ME!</a></h6>{% endif %}
+<br>
+<br>
+<h4>GIVE FEEDBACK FOR THE COORDINATORS IN YOUR DEPARTMENT</h4><br>
 {% for coord in coord_profiles %}
 	<a href="{% url feedback.views.answer_questions coord_id=coord.id question_id=0 rating=20 %}">{{coord.name}}</a></br></br>
 {% endfor %}

@@ -29,3 +29,12 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.rating      
+        
+class Answeravg(models.Model):
+    question = models.ForeignKey(Question)
+    owner = models.ForeignKey(userprofile)
+    num = models.DecimalField(max_digits=6, decimal_places=2)
+    avg = models.DecimalField(max_digits=6, decimal_places=2)
+
+    def __str__(self):
+        return self.avg
