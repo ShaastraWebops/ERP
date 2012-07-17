@@ -24,6 +24,8 @@ from django.template.loader import get_template
 from django.template import Context
 from django.core import mail
 from django.http import HttpResponse
+from datetime import * 
+from dateutil.relativedelta import *
 
 # Fields to be excluded in the SubTask forms during Task editing
 subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
@@ -81,7 +83,6 @@ def display_portal (request, owner_name = None):
     Display owner's portal.
     """
     page_owner = get_page_owner (request, owner_name)
-    check_dir(request)
 
     if is_core (page_owner):
         return display_core_portal (request, page_owner)
@@ -103,12 +104,20 @@ def display_core_portal (request, core):
     display_dict['all_unassigned_received_SubTasks'] = get_unassigned_received_subtasks (core)
     display_dict['all_requested_SubTasks'] = get_requested_subtasks (core)
     display_dict['all_completed_SubTasks'] = get_completed_subtasks (core)
+    
+    #Get Department Members' image thumbnails
     display_dict ['dept_cores_list'] = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
+        
+    qms_core=False
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    if str(department) == 'QMS':
+		display_dict['qms_core']=True
+    
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/core_portal2.html',
@@ -125,12 +134,17 @@ def display_coord_portal (request, coord):
     department = coord.get_profile ().department
     display_dict['all_Tasks'] = get_timeline (coord)
     display_dict['all_SubTasks'] = get_subtasks (coord)
+    
+    #Get Department Members' image thumbnails
     display_dict ['dept_cores_list'] = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
+    if str(department) == 'QMS':
+		display_dict['qms_coord']=True
+        
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/coord_portal.html',
@@ -168,6 +182,16 @@ def edit_task (request, task_id = None, owner_name = None):
     # curr_object = Task.objects.get (id = task_id)
     is_task_comment = True
     other_errors = False
+
+    #Get Department Members' image thumbnails
+    display_dict = dict ()
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
 
     SubTaskFormSet = inlineformset_factory (Task,
                                             SubTask,
@@ -217,6 +241,15 @@ def edit_task (request, task_id = None, owner_name = None):
         is_task_comment = True,
         object_id = task_id,
         other_errors = other_errors)
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
     return render_to_response('tasks/edit_task.html',
                               locals(),
                               context_instance = global_context (request))
@@ -444,16 +477,28 @@ def display_department_portal (request, owner_name = None, department_name = Non
     else:
         department = Department.objects.get (department_name)
     display_dict = dict ()
-    display_dict['shouts']=shouts#by vivek
-    display_dict['shout_form']=shout_form#by vivek
+    display_dict['shouts']=shouts
+    display_dict['shout_form']=shout_form
     display_dict['all_Tasks'] = get_timeline (page_owner)
     display_dict['updates'] = get_all_updates (department)
+    
+    #Get Department Members' image thumbnails
     display_dict ['dept_cores_list'] = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
+        
+    qms_core=False
+    if is_core(request.user):
+		if str(department) == 'QMS':
+			display_dict['qms_core']=True
+    qms_coord=False
+    if is_coord(request.user):
+		if str(department) == 'QMS':
+			display_dict['qms_coord']=True
+
     return render_to_response('tasks/department_portal.html',
                               display_dict,
                               context_instance = global_context (request))
@@ -461,23 +506,23 @@ def display_department_portal (request, owner_name = None, department_name = Non
 
 def remainder(request):
 	"""
-		Here we check if the user is a coord, who has subtasks assigned. 
-		If so we check if any of the subtask has a status other than "completed".
-		If it is the case we send them a mail, stating the subject of the subtask which is not yet completed along with its deadline
-		This is automated using cron and calling the respective url of this view at regular interval,say once a week
+		Here we check if the user is a coord. 
+		Then we get all the subtasks assigned to the coord which are only 3 days away from overdue. 
+		If it is the case we send them a mail, stating the subject of the subtask which is not yet completed and only 3 days from overdue along with its deadline and status
+		This is automated using cron and calling the respective url of this view everday.
 	"""
 	users=userprofile.objects.all()
 	t=get_template('mail_template.html')
-	
+	today=date.today()
 	datatuple=()
 	for user1 in users:	
 		if is_coord(user1.user):
-			subtasks=user1.user.subtask_set.all()
+			subtasks=SubTask.objects.filter(coords=user1.user).filter(deadline=today+relativedelta(days=+3))
 			if subtasks:
 				work_pending=False
 				for subtask in subtasks:
 					if subtask.status != 'C':
-							work_pending=True
+						work_pending=True
 				if work_pending:
 					body=t.render(Context({'name':user1.user.username ,'subtasks':subtasks}))
 					msg=EmailMessage('Remainder',body,'noreply@shaastra.org',[user1.user.email])
@@ -488,3 +533,4 @@ def remainder(request):
 	connection=mail.get_connection()
 	connection.send_messages(datatuple)	
 	return HttpResponse("remainder sent!")
+

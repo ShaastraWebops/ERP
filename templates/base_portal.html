@@ -118,10 +118,10 @@
                             <li>
 
                                 <div class="input-append">
-                                    <form class="navbar-search">
+                                    <form class="navbar-search" id="search">
                                         <div class="input-append">
                                             <input type="text" class="input-xlarge search-query" placeholder="Search for tasks">
-                                            <a href="#"><i class="icon-search icon-white"></i></a>
+                                            <a href="#" id="search-icon"><i class="icon-search icon-white"></i></a> 
                                         </div>
                                     </form>
                                 </div>
@@ -178,6 +178,11 @@
                     d.className = "icon-plus-sign";
                     }
             }
+        </script>
+        <script type="text/javascript">        
+        $('#search-icon').click(function() {
+            $('#search').submit();
+        });
         </script>
         {% endblock %}
     </body>

@@ -9,6 +9,7 @@ from erp import settings
 from erp.users import models
 from erp.department.models import Department, DEP_CHOICES
 from erp.tasks.models import Task, SubTask, DEFAULT_STATUS, TaskComment, SubTaskComment, Update
+from erp.misc.helper import check_dir
 import random ,datetime
 
 def create_group (group_name):
@@ -77,6 +78,8 @@ def create_user (department_name, group_name, user_dict, profile_dict):
         curr_userprofile = models.userprofile (**profile_dict)
         curr_userprofile.save ()
         print "%s - userprofile created" %(user_dict['username'])
+    check_dir(user)
+    print "%s - personal directory created" %(user_dict['username'])
     add_user_to_group (user, group_name)
 
 def parse_user_info_list (info_list):

@@ -1,12 +1,13 @@
 <html>
 <body>
 	<h4>Hi {{name}},</h4>
-	<center><h4>Subtasks assigned to you, which are yet to be completed.</h4></center>
+	<center><h4>Three more days for overdue.</h4></center>
 	<table border='1'>
 		<tr>
 			<th>Subject</th>
 			<th>Proposer</th>
 			<th>Deadline</th>
+			<th>Status</th>
 		</tr>
 	{% for subtask in subtasks %}
 		{% if subtask.status != 'C' %}
@@ -14,12 +15,13 @@
 				<td>{{subtask.subject}}</td>
 				<td>{{subtask.creator}}</td> 
 				<td>{{subtask.deadline}}</td>
+				<td>{{subtask.status}}</td>
 			</tr>
 		{% endif %}
 	{% endfor %}
 	</table>
 
-	<p> Please finish the above tasks as soon as possible </p>
+	<p> Please finish the above task(s) as soon as possible. </p>
 
 </body>
 </html>

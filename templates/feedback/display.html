@@ -1,0 +1,18 @@
+{% extends "base_portal.html" %}
+{% block body %}
+
+{% for q in questions %}
+{{q.question}}<a href="{% url feedback.views.delete_question question_id=q.id %}">Delete</a>
+
+
+<br>
+{% endfor %}
+<h6>Beware! It will be permanently deleted</h6>
+
+{% endblock %}
+{% block tabs %}
+{% endblock %}
+{% block form_stuff %}
+{% endblock %}
+{% block display_stuff %}
+{% endblock %}

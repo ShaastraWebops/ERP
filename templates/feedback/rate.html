@@ -1,0 +1,23 @@
+
+	
+{% extends "base_portal.html" %}
+{% block body %}
+	<h4>You are now giving feedback for {{coord_name}}</a></h4><br>
+	</hr>
+    <form class="well" action="" method="POST">
+	{% csrf_token %}
+	<h5>Question : {{curr_question.question}}<h5>
+		{{answerform}}<br>
+	<input type="submit" value="Save"/>
+	</form>
+   	
+{% if error %}
+<p><h4> Error: Please check your data</h4></p>
+{% endif %}
+{% endblock %}
+{% block tabs %}
+{% endblock %}
+{% block form_stuff %}
+{% endblock %}
+{% block display_stuff %}
+{% endblock %}	
