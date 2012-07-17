@@ -51,6 +51,18 @@ def display_contacts (request , owner_name=None):#this will be a common tab
         coord_profiles = userprofile.objects.filter (department__Dept_Name = dept_name,
                                                      user__groups__name = 'Coords')
         contacts.append ((dept_name, core_profiles, coord_profiles))
+
+    #Get Department Members' image thumbnails
+    display_dict = dict ()
+    page_owner = get_page_owner (request, owner_name=None)
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
     for dum in contacts:
 	print dum
 	curr_user=request.user
