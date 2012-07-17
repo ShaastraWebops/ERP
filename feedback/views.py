@@ -9,6 +9,7 @@ from django.http import Http404
 from erp.feedback.models import *
 from django.db.models import Avg
 from django.core.urlresolvers import reverse
+from decimal import Decimal
 
 
 def answer(request):
