@@ -410,7 +410,7 @@ def review(request):
                     for a in answers:
                         number +=1.0
                         add += a.rating
-                    average=add/number            
+                    average=str(add/number)            
                     saveavg = Answeravg(question=q,owner=curr_userprofile,avg=average, num=number)
                     saveavg.save()
         averages = Answeravg.objects.filter(owner=curr_userprofile)        
