@@ -67,12 +67,12 @@ def create_dir(file_name ,user_name , method=1):
     
     return (save_path , file_path)
 
-def check_dir(request):
+def check_dir(user):
     """
     Checks whether the user has a upload folder for himself.
     """
     destdir_one=os.path.join(settings.MEDIA_ROOT,"upload_files")
-    destdir=os.path.join(destdir_one, request.user.username)
+    destdir=os.path.join(destdir_one, user.username)
     if not os.path.isdir(destdir):
         os.makedirs(destdir,0775)
         src=os.path.join(settings.MEDIA_ROOT,"images")
@@ -80,9 +80,9 @@ def check_dir(request):
         dest=os.path.join(destdir,os.path.basename("PROFILE_PIC_OF_THE_USER"))
         copyfile(src, dest)
         dest=os.path.join(settings.MEDIA_URL,"upload_files")
-        dest=os.path.join(dest, request.user.username)
+        dest=os.path.join(dest, user.username)
         dest=os.path.join(dest,os.path.basename("PROFILE_PIC_OF_THE_USER"))
-        image_object=userphoto(name=request.user, photo_path=dest)
+        image_object=userphoto(name=user, photo_path=dest)
         image_object.save()
 
 """

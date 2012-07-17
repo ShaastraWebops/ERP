@@ -81,7 +81,6 @@ def display_portal (request, owner_name = None):
     Display owner's portal.
     """
     page_owner = get_page_owner (request, owner_name)
-    check_dir(request)
 
     if is_core (page_owner):
         return display_core_portal (request, page_owner)
@@ -103,12 +102,15 @@ def display_core_portal (request, core):
     display_dict['all_unassigned_received_SubTasks'] = get_unassigned_received_subtasks (core)
     display_dict['all_requested_SubTasks'] = get_requested_subtasks (core)
     display_dict['all_completed_SubTasks'] = get_completed_subtasks (core)
+    
+    #Get Department Members' image thumbnails
     display_dict ['dept_cores_list'] = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
+        
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/core_portal2.html',
@@ -125,12 +127,15 @@ def display_coord_portal (request, coord):
     department = coord.get_profile ().department
     display_dict['all_Tasks'] = get_timeline (coord)
     display_dict['all_SubTasks'] = get_subtasks (coord)
+    
+    #Get Department Members' image thumbnails
     display_dict ['dept_cores_list'] = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
+        
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/coord_portal.html',
@@ -168,6 +173,16 @@ def edit_task (request, task_id = None, owner_name = None):
     # curr_object = Task.objects.get (id = task_id)
     is_task_comment = True
     other_errors = False
+
+    #Get Department Members' image thumbnails
+    display_dict = dict ()
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
 
     SubTaskFormSet = inlineformset_factory (Task,
                                             SubTask,
@@ -444,16 +459,19 @@ def display_department_portal (request, owner_name = None, department_name = Non
     else:
         department = Department.objects.get (department_name)
     display_dict = dict ()
-    display_dict['shouts']=shouts#by vivek
-    display_dict['shout_form']=shout_form#by vivek
+    display_dict['shouts']=shouts
+    display_dict['shout_form']=shout_form
     display_dict['all_Tasks'] = get_timeline (page_owner)
     display_dict['updates'] = get_all_updates (department)
+    
+    #Get Department Members' image thumbnails
     display_dict ['dept_cores_list'] = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
+        
     return render_to_response('tasks/department_portal.html',
                               display_dict,
                               context_instance = global_context (request))
