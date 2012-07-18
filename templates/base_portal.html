@@ -26,22 +26,22 @@
 			    color: #ffffff;
 			}	
 			#id_description {
-			    width:500px; 
+			    width:350px; 
 			    height:80px;
 			    
 			}
 			#id_subject {
-			    width:500px; 
+			    width:350px; 
 			    
 			}
 			#id_deadline {
-			    width:500px;
+			    width:350px;
 			}
 			#id_status {
-			    width:100px;
+			    width:350px;
 			}
 			#id_comment_string {
-			    width:400px;
+			    width:350px;
 			    height:40px;
 			}
 			 		
@@ -67,7 +67,10 @@
     $(this).tab('show');
     })
         </script>
-
+        {% block extrahead %}
+        {% endblock %}
+        {% block extrastyle %}
+        {% endblock %}
     </head>
 
     <body>
@@ -140,7 +143,7 @@
             <div class="page-header white">
                 <h2>Welcome, {{user}}</h2>
             </div>
-
+            
             <div class="row">
                 <div class="tabbable span12">
                     <ul class="nav nav-pills nav-stacked span2" id="myTab">
