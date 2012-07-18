@@ -414,6 +414,11 @@ def review(request):
     curr_department=curr_userprofile.department
     owner_name=None
     page_owner = get_page_owner (request, owner_name)
+    qms_core=False
+    if str(curr_department) == "QMS" and is_core(request.user):
+        all_departments=Department.objects.all()
+        qms_core=True
+        return render_to_response('feedback/review.html',locals(),context_instance=RequestContext(request))    
     if is_coord(request.user):
 		if str(curr_userprofile.department) == "QMS":
 			qms_coord=True
@@ -434,7 +439,7 @@ def review(request):
                     for a in answers:
                         number +=1.0
                         add += a.rating
-                    average=add/number 
+                    average=Decimal(add/number)
                     existing_average.avg = average
                     existing_average.num = number
                     existing_average.save()                                    
@@ -452,3 +457,47 @@ def review(request):
     else:
         raise Http404    
     return render_to_response('feedback/review.html',locals(),context_instance=RequestContext(request))
+    
+def qms_review(request, dept_id):
+    owner_name=None
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    core_department=curr_userprofile.department
+    all_departments=Department.objects.all()
+    page_owner = get_page_owner (request, owner_name)
+    curr_department = Department.objects.get(id=dept_id)
+    if str(core_department) == "QMS" and is_core(request.user):
+        qms_core=True
+        coord_profiles = userprofile.objects.filter (department= curr_department,user__groups__name = 'Coords')
+        questions=Question.objects.filter(departments=curr_department)
+        for coord in coord_profiles:
+            for q in questions:
+                answers = Answer.objects.filter(owner=coord).filter(question=q)
+                if answers:
+                    existing = Answeravg.objects.filter(owner=coord).filter(question=q)
+                    if existing:
+                        for i in existing:
+                            curr_id = i.id
+                        existing_average = Answeravg.objects.get(id=curr_id)
+                        add=0
+                        number=0.0
+                        for a in answers:
+                            number +=1.0
+                            add += a.rating
+                        average=Decimal(add/number)
+                        existing_average.avg = average
+                        existing_average.num = number
+                        existing_average.save()                                    
+            
+                    else:
+                        add=0
+                        number=0.0
+                        for a in answers:
+                            number +=1.0
+                            add += a.rating
+                        average=Decimal(add/number)
+                        saveavg = Answeravg(question=q,owner=coord,avg=average, num=number)
+                        saveavg.save()
+        averages = Answeravg.objects.all()
+    else:
+        raise Http404
+    return render_to_response('feedback/qms_review.html',locals(),context_instance=RequestContext(request))    

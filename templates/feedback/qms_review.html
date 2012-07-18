@@ -1,0 +1,33 @@
+{% extends "base_portal.html" %}
+{% block body %}
+{% if qms_core %}
+
+    {% for d in all_departments %}
+        {% ifnotequal d curr_department %}
+            <b><a href="{% url feedback.views.qms_review dept_id=d.id %}">{{d}}</a></b>
+        {% endifnotequal %}
+    {% endfor %}<br>
+
+    {% for coord in coord_profiles %}
+    <br><h6>{{coord}}</h6><br>
+        {% for q in questions %}
+        {{q.question}} ---
+            {% for a in averages %}    
+                {% ifequal a.owner coord %}
+                    {% ifequal a.question q %}
+                        {{a.avg}}   
+                    {% endifequal %}      
+                {% endifequal %}
+            {% endfor %}<br>
+        {% endfor %}
+    {% endfor %}
+     
+{% endif %}
+
+{% endblock %}
+{% block tabs %}
+{% endblock %}
+{% block form_stuff %}
+{% endblock %}
+{% block display_stuff %}
+{% endblock %}	
