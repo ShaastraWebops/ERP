@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 import sha,random,datetime
-from django.core.mail import send_mail,EmailMessage,SMTPConnection
+from django.core.mail import send_mail,EmailMessage
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 import os
