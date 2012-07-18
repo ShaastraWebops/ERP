@@ -1,6 +1,7 @@
 {% extends "base_portal.html" %}
 {% block body %}
 {% if not is_core1 %}<h6><a href="{% url feedback.views.review %}">SEE WHAT THE OTHERS HAVE TO TELL ABOUT ME!</a></h6>{% endif %}
+{% if qms_core %}<h6><a href="{% url feedback.views.review %}">SEE COORD REVIEWS!</a></h6>{% endif %}
 <br>
 <br>
 <h4>GIVE FEEDBACK FOR THE COORDINATORS IN YOUR DEPARTMENT</h4><br>
