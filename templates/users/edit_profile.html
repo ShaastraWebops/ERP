@@ -1,86 +1,62 @@
-{% extends "new_home.html" %}
-
-{% block title %}
-{{ block.super }} 
-Edit Profile
-{% endblock title %}
-
-{% block style_stuff %}
-
-<style type="text/css">
-  #heading
-  {
-  position:relative;
-  top :8px;
-  left:200px;
-  font-size:180%;
-
-  }
-  #details
-  {
-  position:relative;
-   width:450px;
-  left:9%;
-  cellspacing:
-  }
-#profile_pic
-{
-position:relative;
-left:69%;
-top:175px;
-}
-#update_profile_pic
-{
-position:relative;
-left:865px;
-top:190px;
-}
-
-#update	
-{
-position:absolute;
-align:center;
-left:40%;
-top:-125px;
-}
-</style>
-{% endblock style_stuff %}
+{% extends "base_portal.html" %}
 
 {% block body %}
-
-  <div id="left_panel2">
-    {% include "left-sidebar.html" %}
-  </div>
 
 {% if profile_changed %}
 <h3>Your profile has been updated successfully.</h3>
 {% endif %}
 
+<div class="row">
+    <div class="span3 offset1">
+        <ul class="thumbnails">
+            <li class="span3">
+                <br>
+                <br>
+                <a href="#" class="thumbnail"> <img id="profile_pic"  src="{{photo_path}}"></a>
+            </li>
+        </ul>
 
-<img id="profile_pic"  src="{{photo_path}}" width="190" height="195">
-
-  <div id="main_edit_profile">
-    <div id ="heading">
-      {{department_name}}
-      {% if is_core %}
-      Core Details
-      {% else %}
-      Coordinator Details
-      {% endif %}
+        <center>
+            <b><a href="{% url dashboard.views.change_profile_pic owner_name=user%}">Change Profile Picture</a></b>
+        </center>
     </div>
+    <div class="span5">
+        <div id="main_edit_profile">
+            <div id ="heading">
+                <center>
+                    <h3>{{department_name}}
+                    {% if is_core %}
+                    Core Details
+                    {% else %}
+                    Coordinator Details
+                    {% endif %} </h3><br>
+                </center>
+            </div>
 
-    <div id="details">
-      <form method="POST" id="profile_form" action="{% url users.views.handle_profile owner_name=user%}">
-	{% csrf_token %}
-	<table id="edit_details" cellspacing="12">
-	  {{ profile_form }} 
+            <div>
+                <form class="well" method="POST" id="profile_form" action="{% url users.views.handle_profile owner_name=user%}">
+                    {% csrf_token %}
+                    <table id="edit_details" cellspacing="12">
+                        {{ profile_form }}
 
-	</table>
-<input type="submit" value="Finish Editing" name="update"  >
-<a href="{% url dashboard.views.change_profile_pic owner_name=user%}">Change Profile Picture</a>
-	</form>
-      </div>
-    </div>	
-  </div>
+                    </table>
+                    <input type="submit" value="Finish Editing" name="update"  >
 
-  {% endblock %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("nav_profile");
+    d.className = "active";
+ });
+</script>
+{% endblock javascript%}
+

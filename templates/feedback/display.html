@@ -1,13 +1,34 @@
 {% extends "base_portal.html" %}
 {% block body %}
-
+<table class="table table-striped table-bordered table-condensed">
+	<thead>
+		<tr>
+			<th>Question</th>
+			<th>Answered by</th>
+			<th>Departments</th>
+			<th>Creator</th>
+			{% if qms_core %}
+			<th>Action</th>
+			{% endif %}
+		</tr>
+	</thead>
+	<tbody>
 {% for q in questions %}
-{{q.question}}<a href="{% url feedback.views.delete_question question_id=q.id %}">Delete</a>
-
-
-<br>
+		<tr>
+<td>{{q.question}}</td>
+<td>{{q.answered_by}}</td>
+<td>{% for department in q.departments.all %} {{department.Dept_Name}}{% if forloop.last %}.{% else %},{% endif %}{% endfor %}</td>
+<td>{{q.creator.name}}</td>
+{% if qms_core %}
+<td><a href="{% url feedback.views.delete_question question_id=q.id %}">Delete</a></td>
+{% endif %}
+		</tr>
 {% endfor %}
+</tbody>
+</table>
+{% if qms_core %}
 <h6>Beware! It will be permanently deleted</h6>
+{% endif %}
 
 {% endblock %}
 {% block tabs %}

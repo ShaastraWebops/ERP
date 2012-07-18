@@ -16,6 +16,7 @@ class Question(models.Model):
     question = models.CharField(max_length=200)
     departments = models.ManyToManyField(Department)
     answered_by = models.CharField(max_length=5,choices=STAT_CHOICES,default = 'All')
+    creator=models.ForeignKey(userprofile,related_name='question_creator',blank=True,null=True)
     def __str__(self):
         return self.question
         

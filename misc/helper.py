@@ -82,6 +82,7 @@ def check_dir(user):
         dest=os.path.join(settings.MEDIA_URL,"upload_files")
         dest=os.path.join(dest, user.username)
         dest=os.path.join(dest,os.path.basename("PROFILE_PIC_OF_THE_USER"))
+        print dest
         image_object=userphoto(name=user, photo_path=dest)
         image_object.save()
 

@@ -78,7 +78,7 @@ def create_user (department_name, group_name, user_dict, profile_dict):
         curr_userprofile = models.userprofile (**profile_dict)
         curr_userprofile.save ()
         print "%s - userprofile created" %(user_dict['username'])
-    check_dir(user)
+        check_dir(user)
     print "%s - personal directory created" %(user_dict['username'])
     add_user_to_group (user, group_name)
 

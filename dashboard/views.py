@@ -70,6 +70,10 @@ def display_contacts (request , owner_name=None):#this will be a common tab
     if is_core(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
     return render_to_response('dashboard/display_contacts.html',locals() ,context_instance = global_context(request))
 
 
@@ -238,9 +242,23 @@ def upload_file(request ,owner_name=None):
     print "can _edit form views" ,request.session.get('is_visitor','True')
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
+    
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
     if is_core(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
 
 
@@ -419,6 +437,10 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
     if is_core(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
     return render_to_response('dashboard/mycalendar.html',locals() ,context_instance = global_context(request))
 
 def load_data(request):

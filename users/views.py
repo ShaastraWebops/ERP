@@ -152,10 +152,20 @@ def view_profile(request, owner_name=None):
         image=userphoto.objects.get(name=page_owner)
         photo_path =image.photo_path
     except:
-        photo_path=settings.MEDIA_URL+"/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
+        photo_path=settings.MEDIA_URL+"upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
     profile = userprofile.objects.get(user=page_owner)
     print profile.nickname
     print profile.name
+
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
     return render_to_response('users/view_profile.html',locals(),context_instance = global_context(request))
     	
 
