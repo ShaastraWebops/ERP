@@ -14,7 +14,7 @@ STAT_CHOICES= (
 
 FOR_CHOICES=(
         ('Core','Core')
-        ('Coord',
+        ('Coord','Coordinator'))
 
 class Question(models.Model):
     question = models.CharField(max_length=200)
