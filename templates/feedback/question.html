@@ -1,7 +1,7 @@
 {% extends "base_portal.html" %}
 {% block body %}
 {% if qms_core %}
-<a class="pull-right" href="{% url feedback.views.display %}">See all questions</a>
+<a class="pull-right" href="{% url feedback.views.display question_for=question_for %}">See all questions</a>
 {% endif %}
 
 {% if qms_coord %}

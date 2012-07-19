@@ -2,6 +2,7 @@ from django.conf.urls.defaults import *
 from django.views.generic.simple import *
 from django.contrib import admin
 from erp.tasks.views import *
+from django.conf.urls import *
 
 # TODO
 # Caution : Any non-matched url goes straight to display_portal and
