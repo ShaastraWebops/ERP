@@ -16,7 +16,7 @@ from erp.dashboard.forms import *
 from django.contrib.auth.models import Group,Permission
 import sha,random,datetime
 from erp.users.forms import *
-from django.core.mail import send_mail,EmailMessage,SMTPConnection
+from django.core.mail import send_mail,EmailMessage,get_connection
 from django.conf import settings
 import os
 
