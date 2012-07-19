@@ -159,7 +159,7 @@ $(document).ready(function() {
 
         // Adding bootstrap datepicker
         $("#id_" + form_prefix + "-" + formCount + "-deadline").val("01/08/2012");
-	    $("#id_" + form_prefix + "-" + formCount + "-deadline").datepicker({
+        $("#id_" + form_prefix + "-" + formCount + "-deadline").datepicker({
             format: 'dd/mm/yyyy'
         });
 
