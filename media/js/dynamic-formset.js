@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function() { 
     // Code adapted from http://djangosnippets.org/snippets/1389/
 
     // Django's default for formsets
@@ -193,5 +193,6 @@ $(document).ready(function() {
     // Highlight all deleted forms at the beginning (in case form had
     // errors and is being redisplayed)
     highlightDeletedForms ();
+    
 
 });

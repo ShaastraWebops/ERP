@@ -1,0 +1,11 @@
+{% extends "base_portal.html" %}
+{% block body %}
+<a href="{% url feedback.views.add_question question_for=Core %}" >Feedback for Core</a>
+<a href="{% url feedback.views.add_question question_for=Coord %}" >Feedback for Coord</a>
+{% endblock %}
+{% block tabs %}
+{% endblock %}
+{% block form_stuff %}
+{% endblock %}
+{% block display_stuff %}
+{% endblock %}	

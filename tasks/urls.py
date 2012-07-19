@@ -1,11 +1,13 @@
 from django.conf.urls.defaults import *
 from django.views.generic.simple import *
 from django.contrib import admin
+from erp.tasks.views import *
+from django.conf.urls import *
 
 # TODO
 # Caution : Any non-matched url goes straight to display_portal and
 # gives an error since a user of that name would not be found.
-urlpatterns = patterns('erp.tasks.views',
+urlpatterns = patterns('',
       (r'^$', 'display_portal'),
       (r'^search/', include('haystack.urls')),
 

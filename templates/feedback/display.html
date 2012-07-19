@@ -4,7 +4,9 @@
 	<thead>
 		<tr>
 			<th>Question</th>
+{% if question_for_coord %}
 			<th>Answered by</th>
+{% endif %}
 			<th>Departments</th>
 			<th>Creator</th>
 			{% if qms_core %}
@@ -16,7 +18,9 @@
 {% for q in questions %}
 		<tr>
 <td>{{q.question}}</td>
+{% if question_for_coord %}
 <td>{{q.answered_by}}</td>
+{% endif %}
 <td>{% for department in q.departments.all %} {{department.Dept_Name}}{% if forloop.last %}.{% else %},{% endif %}{% endfor %}</td>
 <td>{{q.creator.name}}</td>
 {% if qms_core %}
@@ -26,6 +30,9 @@
 {% endfor %}
 </tbody>
 </table>
+{% if question_for_core %}
+<h6>All these questions will be answered by coords under the respective cores</h6>
+{% endif %}
 {% if qms_core %}
 <h6>Beware! It will be permanently deleted</h6>
 {% endif %}

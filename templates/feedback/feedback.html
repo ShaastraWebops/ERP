@@ -3,6 +3,12 @@
 {% if not is_core1 %}<h6><a href="{% url feedback.views.review %}">SEE WHAT THE OTHERS HAVE TO TELL ABOUT ME!</a></h6>{% endif %}
 {% if qms_core %}<h6><a href="{% url feedback.views.review %}">SEE COORD REVIEWS!</a></h6>{% endif %}
 <br>
+{% if user_coord %}
+<h4>GIVE FEEDBACK FOR THE CORES OF YOUR DEPARTMENT</h4><br>
+{% for core in core_profiles %}
+	<a href="{% url feedback.views.answer_questions userprofile_id=core.id question_id=0 rating=20 %}">{{core.name}}</a></br></br>
+{% endfor %}
+{% endif %}
 <br>
 <h4>GIVE FEEDBACK FOR THE COORDINATORS IN YOUR DEPARTMENT</h4><br>
 {% for coord in coord_profiles %}

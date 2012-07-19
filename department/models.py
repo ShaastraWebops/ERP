@@ -20,4 +20,7 @@ class Department(models.Model):
     Dept_Name= models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
     def __str__(self):
         return self.Dept_Name
+        
+    def __unicode__(self):
+        return self.Dept_Name
 
