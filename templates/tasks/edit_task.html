@@ -11,6 +11,7 @@ Edit Task
 {% endblock title %}
 
 {% block form_stuff %}
+<link href="{{ MEDIA_URL }}css/datepicker.css" rel="stylesheet">
 <div align="center">
   <div class="rbroundbox"> 
     <div class="rbtop">
@@ -193,6 +194,19 @@ $(document).ready(function() {
     var e = document.getElementById("li_task_icon");
     d.className = "active";
     e.className = e.className + " icon-white";
+    
+    var date = document.getElementById("id_deadline");
+    date.value="01/08/2012";
  });
+</script>
+<script src="js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+$(function(){
+    window.prettyPrint && prettyPrint();
+    $('#id_deadline').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+});
 </script>
 {% endblock javascript %}

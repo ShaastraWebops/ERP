@@ -22,8 +22,7 @@ urlpatterns = patterns('',(r'^createdata/', do_it_all),
 
     #(r'^search/', include('haystack.urls')),
     url(r'^$', 'erp.home.views.login', name='home'),
-    (r'^search/', search_view_factory(
-	form_class=ModelSearchForm)),
+    (r'^search/', include('erp.search.urls')),
     #(r'^erp/$', include('erp.home.urls')),
     (r'^erp/home/',include('erp.home.urls')),
     #(r'^erp/users/', include('erp.users.urls')),

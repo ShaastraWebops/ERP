@@ -66,6 +66,12 @@
     e.preventDefault();
     $(this).tab('show');
     })
+    
+    function searchterm()
+    {
+        return document.getElementById('searchbar').value
+        
+    }
         </script>
 
     </head>
@@ -118,10 +124,11 @@
                             <li>
 
                                 <div class="input-append">
-                                    <form class="navbar-search" id="search">
+                                    <form class="navbar-search" id="search" action="/search/" method="POST">
+                                        {%csrf_token%}
                                         <div class="input-append">
-                                            <input type="text" class="input-xlarge search-query" placeholder="Search for tasks">
-                                            <a href="#" id="search-icon"><i class="icon-search icon-white"></i></a> 
+                                            <input type="text" class="input-xlarge search-query" placeholder="Search for tasks" name="searchbar">
+                                            <a href="#" id="search-icon"><i class="icon-search icon-white" style="margin-top:2px;"></i></a> 
                                         </div>
                                     </form>
                                 </div>
@@ -179,6 +186,21 @@
                     }
             }
         </script>
+        <script type="text/javascript">
+            function showComments(tab, task_id) {
+                var d = document.getElementById(tab + "_comments_" + task_id + "_icon");
+                var e = document.getElementById(tab + "_comments_" + task_id + "_text");
+                if(d.className=="icon-plus-sign") {
+                    d.className = "icon-minus-sign";
+                    e.innerHTML="Hide";
+                    }
+                else {
+                    d.className = "icon-plus-sign";
+                    e.innerHTML="Show";
+                    }
+            }
+        </script>
+
         <script type="text/javascript">        
         $('#search-icon').click(function() {
             $('#search').submit();

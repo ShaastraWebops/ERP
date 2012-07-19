@@ -58,8 +58,24 @@ Dashboard
                     <td> {{ subtask.creator.get_profile.name }} </td>
                     <td> {{ subtask.deadline }} </td>
                     <td> {{ subtask.status }} </td>
-                    <!-- The comments for each subtask are still not working -->
-                    <td> {{subtask.comments}}</td>
+                    <td>
+                    <div class="accordion" id="subtasks_comments_{{ subtask.id }}_accordion">
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" href="#subtasks_comments_{{ subtask.id }}" data-parent="contact_accordion" data-toggle="collapse" onclick=showComments("subtasks","{{subtask.id}}");>
+                                    <i class="icon-plus-sign" id="subtasks_comments_{{ subtask.id }}_icon" style="margin-top:1px;"></i> <span id="subtasks_comments_{{ subtask.id }}_text">Show</span>
+                                </a>
+                            </div>
+                            <div id="subtasks_comments_{{ subtask.id }}" class="accordion-body collapse">
+                            {% for comment in subtask.subtaskcomment_set.all %}
+                            <ul>
+                            <li>"{{ comment.comment_string }}"<br/>- <a href="{% url users.views.view_profile owner_name=comment.author.username %}">{{ comment.author.get_profile.name }}</a></li>
+                            </ul>    
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    </td>
                 </tr>
                 {% endfor %}
             </table>
@@ -88,8 +104,24 @@ Dashboard
                     <td><a href="{% url tasks.views.edit_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a></td>
                     <td> {{ subtask.deadline }} </td>
                     <td> {{ subtask.status }} </td>
-                    <!-- The comments for each subtask are still not working -->
-                    <td> {{subtask.comments}}</td>
+                    <td>
+                    <div class="accordion" id="requested_comments_{{ subtask.id }}_accordion">
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" href="#requested_comments_{{ subtask.id }}" data-parent="contact_accordion" data-toggle="collapse" onclick=showComments("requested","{{subtask.id}}");>
+                                    <i class="icon-plus-sign" id="requested_comments_{{ subtask.id }}_icon" style="margin-top:1px;"></i> <span id="requested_comments_{{ subtask.id }}_text">Show</span>
+                                </a>
+                            </div>
+                            <div id="requested_comments_{{ subtask.id }}" class="accordion-body collapse">
+                            {% for comment in subtask.subtaskcomment_set.all %}
+                            <ul>
+                            <li>"{{ comment.comment_string }}"<br/>- <a href="{% url users.views.view_profile owner_name=comment.author.username %}">{{ comment.author.get_profile.name }}</a></li>
+                            </ul>    
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    </td>
                 </tr>
                 {% endfor %}
             </table>

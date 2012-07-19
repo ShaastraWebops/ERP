@@ -78,7 +78,7 @@ def add_question(request):
 					questionform.save_m2m()
 					question_added= True
                 else:
-                	error=True
+                    error=True
             questionform=QuestionForm()
             return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
         else:
@@ -100,11 +100,11 @@ def add_question(request):
 					questionform.save_m2m()
 					question_added= True
 				else:
-					error=True
+				    error=True
 			questionform=QuestionForm()
 			return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request)) 
 		else:
-			raise Http404
+		    raise Http404
 def display_questions(request,coord_id):
 	curr_user=request.user
 	curr_userprofile=userprofile.objects.get(user=request.user)
@@ -163,8 +163,8 @@ def answer_questions(request,coord_id,question_id,rating=None):
 					answer1.rating=rating
 					answer1.save()
 			else:
-				answer1=Answer(rating=rating,question=question2,owner=curr_coord_userprofile,creator=curr_userprofile,answered=True)
-				answer1.save()
+			    answer1=Answer(rating=rating,question=question2,owner=curr_coord_userprofile,creator=curr_userprofile,answered=True)
+			    answer1.save()
 		for question_one in questions:
 			answer_present=False
 			for answer_one in answers:
@@ -187,8 +187,8 @@ def answer_questions(request,coord_id,question_id,rating=None):
 					answer1.rating=rating
 					answer1.save()
 			else:
-				answer1=Answer(rating=rating,question=question2,owner=curr_coord_userprofile,creator=curr_userprofile,answered=True)
-				answer1.save()
+			    answer1=Answer(rating=rating,question=question2,owner=curr_coord_userprofile,creator=curr_userprofile,answered=True)
+			    answer1.save()
 				
 		for question_one in questions:
 			answer_present=False

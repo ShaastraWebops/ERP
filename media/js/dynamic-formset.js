@@ -142,7 +142,7 @@ $(document).ready(function() {
 		.hide()
 		.insertBefore("#add")
 		.slideDown(300);
-
+        
 	    // Add an event handler for the delete form link
 	    $(currForm).find(".delete").click(function() {
 		return deleteForm(this);
@@ -156,6 +156,12 @@ $(document).ready(function() {
 
 	    // Update the total form count
 	    $("#id_" + form_prefix + "-TOTAL_FORMS").val(formCount + 1);
+
+        // Adding bootstrap datepicker
+        $("#id_" + form_prefix + "-" + formCount + "-deadline").val("01/08/2012");
+	    $("#id_" + form_prefix + "-" + formCount + "-deadline").datepicker({
+            format: 'dd/mm/yyyy'
+        });
 
 	} // End if
 	else {
