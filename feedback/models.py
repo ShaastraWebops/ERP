@@ -43,5 +43,5 @@ class Answeravg(models.Model):
     num = models.DecimalField(max_digits=6, decimal_places=2)
     avg = models.DecimalField(max_digits=6, decimal_places=2)
 
-            def __str__(self):
-            return self.avg
+    def __str__(self):
+        return self.avg
