@@ -12,8 +12,8 @@ STAT_CHOICES= (
         ('All','All'),
         )
 
-FOR_CHOICES=(
-        ('Core','Core')
+FOR_CHOICES= (
+        ('Core','Core'),
         ('Coord','Coordinator'),
         )
 
