@@ -6,7 +6,8 @@ from erp.dashboard.models import *
 from erp.dashboard.forms import *
 
 @dajaxice_register
-def shout(request):
+def shout(request, shout=None):
+    print "HERE", "THIS is", shout, 'NOW'
     dajax=Dajax()
     shout_form=shout_box_form()
     shouts=shout_box.objects.all()
