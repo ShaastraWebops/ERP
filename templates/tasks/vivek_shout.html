@@ -3,7 +3,7 @@
 		position: relative;
 		top: 10px;
 		overflow: auto;
-		height: 320px;
+		height: 350px;
     }
 	#shoutbox_heading {
 		position: relative;
@@ -12,7 +12,6 @@
 	}
 	#add_shoutbox {
 		position: relative;
-		top: 20px;
 	}
 
 	#nickname {
@@ -31,7 +30,6 @@
 	}
 </style>
 {% load dajaxice_templatetags %}
-<h2>Shouts</h2>
 <div class="row">
 <div id="shoutbox" class="well span6">
 <!--We have to reload this area-->
@@ -39,7 +37,7 @@
     <table>
         {% for field in shouts %}
         <tr>
-            <td id="shouterts name"><span id="nickname" ><a href="{% url users.views.view_profile owner_name=field.user%}">{{field.nickname}}</a>: </span> &nbsp; </td>
+            <td id="shouterts name"><span id="nickname" ><a href="{% url users.views.view_profile owner_name=field.user%}">{{field.user}}</a>: </span> &nbsp; </td>
             <td><span id="comment" >{{field.comments}}</span></td>
             <td></td>
         </tr>
@@ -53,16 +51,26 @@
 </div>
 <div class="row">
 <div id="add_shoutbox" class="span6">
-<button onclick="shout">CLick!HOOBA</button>
+<script type="text/javascript">
+
+    function shout(){
+        shout_text=document.getElementById("id_comments").value
+        alert(shout_text)
+        document.getElementById("id_comments").value = 'Loading'
+        Dajaxice.tasks.shout(Dajax.process,{'shout':shout_text});
+    }
+    
+</script>
+
+
 {% if not is_visitor %}
 
-<form method="POST" action="Dajaxice.tasks.shout(Dajax.process,{'shout':document.getElementById('id_comment').value})"><!--change the action to submit it with dajax-->
-  {% csrf_token %}
-
-{{ shout_form }}
-<input type="submit" class="btn btn-primary btn-large" value="Shout">
+<textarea id="id_comments" rows="10" cols="40" name="comments"></textarea>
+<button class = "btn btn-inverse btn-large" onclick="shout();">Shout!</button>
+<!--<input type="submit" class="btn btn-primary btn-large" value="Shout">-->
 
 </form>
 {% endif %}
 </div>
 </div>
+
