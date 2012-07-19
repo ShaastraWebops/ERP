@@ -61,7 +61,7 @@ def display(request,question_for):
     if is_coord(curr_user):
         if str(curr_userprofile.department) == "QMS":
             qms_coord=True
-            if question_for=='Core'
+            if question_for=='Core':
                 question_for_core=True
                 questions=Question.objects.filter(question_for='Core')
             else:
