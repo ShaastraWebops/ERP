@@ -49,7 +49,7 @@ def display(request,question_for):
             is_core1=True
             is_visitor1=False
             qms_core=True
-            if question_for=='Core'
+            if question_for=='Core':
                 question_for_core=True
                 questions=Question.objects.filter(question_for='Core')
             else:
