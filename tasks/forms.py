@@ -34,7 +34,7 @@ class SubTaskForm (ModelForm):
     class Meta:
         model = SubTask
         exclude = ['creator', 'description', 'department', 'task']
-        widgets = {'department':chosenforms.widgets.ChosenSelect(),'coords': chosenforms.widgets.ChosenSelectMultiple()}
+        widgets = {'department':chosenforms.widgets.ChosenSelect(),'coords': chosenforms.widgets.ChosenSelectMultiple(),'status': chosenforms.widgets.ChosenSelect()}
         
 #hack if these fields need to be formatted        
 #    def __init__(self, *args, **kwargs):

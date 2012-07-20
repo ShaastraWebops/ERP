@@ -1,0 +1,355 @@
+
+
+{% block body %}
+
+
+<style ="text/css" >
+
+
+  #main_pos
+  {
+  position:absolute;
+  background-color:#ECE5B6;
+  left:383px;
+  top:30px;
+  width:482px;
+  }
+
+  #month_header
+  {
+  position:relative;
+  padding:2px;
+  background-color:#2B1B17;
+  top:0px;
+  height:50px;
+  width:472px;
+
+  color:#FFFFFF;
+  }
+
+  #next_month
+  {
+  position:relative;
+  text-decoration:none;
+  z-index:10;
+  left:350px;
+  text-align:right;
+  top:-40px;
+  width:100px;
+  }
+
+  #prev_month
+  {
+  top:30px;
+  position:relative;
+  width:100px;
+  text-decoration:none;
+  text-align:left;
+  z-index:10;
+  }
+  #month_name
+  {
+
+  font-size:200%;
+  text-align:center;
+  position:relative;
+  top:-30px;
+  }
+
+  #weekday_header
+  {
+  position:relative;
+  top:0px;
+  padding:2px;
+
+  height:48px;
+  }
+  .weekday
+  {
+  position:relative;
+  top:5px;
+  padding:2px;
+  text-align:center;
+  font-size:87%;
+  background-color:#747170;
+  height:25px;
+  width:59px;
+  }
+
+  #today_date_box
+  {
+  position:absolute;
+  left:-206px;
+  top:53px;
+  background-color:#EAC117;
+  width:206px;
+  height:373px;
+  }
+
+  #today_date
+  {
+  position:relative;
+  top:40px;
+  left:30px;
+  font-size:700%
+  }
+  #today_word
+  {
+  position:relative;
+  top:20px;
+  left:50px;
+  font-size:200%;
+  color:#FF0000;
+
+  }
+
+  #no_task_pending
+  {
+  position:relative;
+  top:100px;
+  font-size:130%;
+  text-align:center;
+  color:#473409;
+  }
+
+  .date
+  {
+  background-color:	#D4A017;
+  font-size:150%;
+
+  }
+
+  .date_box
+  {
+  width:60px;
+  height:55px;
+  background-color:#FBB917;
+  padding:2px;
+  color:#E0FFFF
+  }
+
+
+  .subtasks
+  {
+  color:#463E41;
+
+  font-size:60%;
+  width:120px;
+  height:20px;
+  }
+  // for diffrent types of tasks
+
+  .open_task
+  {
+  color:#FFFFFF;
+
+  }
+
+
+  .completed_task
+  {
+  background-color:#4AA02C;
+  }
+
+  .overdue_task
+  {
+
+  color:#150517;
+
+  }
+
+
+  .almost_task
+  {
+
+  }
+
+
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js">
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+  var id;
+  $(".date > div").hover(function(){
+  id =	".subtasks" + $(this).attr('id');
+  //alert(id);
+  //	setTimeout(function(){$(".subtasks >* ").hide();},1000);
+  $(".subtasks >* ").hide();
+
+  setTimeout(function(){$($(id)).show();
+  },500);
+  //$($(id)).show();
+
+  },function(){
+  //$($(id)).hide();
+  $($(id)).mouseenter(
+  function() {
+  $($(id)).show();
+  }).mouseleave(
+  function(){
+  setTimeout(
+  function(){$(id).hide();},1000);
+  }); 
+  });
+  });
+</script> 
+
+
+
+
+
+{% block left_side_bar %}
+{% include "left-sidebar.html" %}
+{% endblock left_side_bar %}
+<div id="main_pos">
+  <div id="month_header">
+    <div id="month_name">
+      <div id="prev_month" >
+	<a href="{% url dashboard.views.display_calendar owner_name=page_owner%}{{prev_month}}/{{prev_year}}" >
+	  Prev 
+	</a>
+      </div>
+      
+      
+
+      {{month_name}} ,{{year}}
+      
+      
+      <div id="next_month" >
+
+	<a href="{% url dashboard.views.display_calendar owner_name=page_owner%}{{next_month}}/{{next_year}}" >
+	  Next
+	</a>
+      </div>
+    </div>
+    
+    
+  </div>
+
+  <div id="weekday_header" >
+    <table >
+      <tr>
+	<td>
+	  <div class="weekday" >
+	    MON
+	  </div>
+	</td>
+	<td>
+	  <div class="weekday" >
+	    TUE
+	  </div>
+	</td>
+	<td>
+	  <div class="weekday" >
+	    WED
+	  </div>
+	</td>
+	<td>
+	  <div class="weekday" >
+	    THU
+	  </div>
+	</td>
+	<td>
+	  <div class="weekday" >
+	    FRI
+	  </div>
+	</td>
+	<td>
+	  <div class="weekday" >
+	    SAT
+	  </div>
+	</td>
+	<td>
+	  <div class="weekday" >
+	    SUN
+	  </div>
+	</td>
+      </tr>
+    </table>
+
+
+  </div>	
+
+
+  <table>
+
+    {% for row in main_data %}
+    <tr>
+      {% for column in row %}
+
+      <td>					
+	{% if column.date != 0 %}
+	<div class ="date_box" >
+
+	  <div 
+	     {% if column.subtask %}
+	     class="date" 
+	     {% else %}
+	     class="date2"
+	     {% endif %}
+	     >
+	    <div id="{{column.date}}" >
+	      {{column.date }}
+	    </div>
+	  </div>
+	  <div class="subtasks">
+	    {% if column.subtask %}
+	    
+	    <div class="subtasks{{column.date}}"
+		 style="
+			position:relative;
+			top:-9px;
+			left:64px;
+			display:none; 
+			background-color:#C7A317;
+			width:100px;
+			height:100px;
+			z-index:10;
+			">
+	      {% for field in column.subtask %}
+	      
+	      <a href="{% url tasks.views.display_task task_id=field.id owner_name=page_owner %}">
+		{{field}}
+	      </a>
+	      {% endfor %}
+	      
+	    </div>						
+	    
+	    {% endif %}
+
+	  </div>
+	  {% endif %}
+
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+
+
+  <div id="today_date_box">
+    <div id="today_word" >
+      Today
+    </div>
+    <div id="today_date">
+      {{today}}
+    </div>	
+    {% if today_task.subtask %}
+    
+    {% for field in today_task.subtask %}
+    <div id="no_task_pending">
+      {{field}}
+    </div>
+    {% endfor %}
+    
+    {% else %}
+    <div id="no_task_pending">
+      No task pending today
+    </div>
+    {% endif %}
+  </div>
+  </div>
+
+  {% endblock %}
