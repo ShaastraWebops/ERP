@@ -31,7 +31,19 @@ Task
   </tr>
   <tr>
     <th>Status</th>
-    <td> {{ curr_task.status }} </td>
+	{% if curr_task.status == "O" %}
+		<td><span class="label label-warning">Open</span></td>
+	{% endif %}
+	{% if curr_task.status == "C" %}
+		<td><span class="label label-success">Completed</span></td>	
+	{% endif %}
+	{% if curr_task.status == "L" %}
+		<td><span class="label label-important">Overdue</span></td>
+	{% endif %}
+	{% if curr_task.status == "N" %}
+		<td><span class="label label-info">Almost</span></td>
+	{% endif %}
+
   </tr>
 </table>
 

@@ -21,7 +21,19 @@
     </td>
     <td> {{ task.creator.get_profile.name }} </td>
     <td> {{ task.deadline }} </td>
-    <td> {{ task.status }} </td>
+	{% if task.status == "O" %}
+	<td><span class="label label-warning">Open</span></td>
+	{% endif %}
+	{% if task.status == "C" %}
+	<td><span class="label label-success">Completed</span></td>
+	{% endif %}
+	{% if task.status == "L" %}
+	<td><span class="label label-important">Overdue</span></td>
+	{% endif %}
+	{% if task.status == "N" %}
+	<td><span class="label label-info">Almost</span></td>
+	{% endif %}
+
     {% if po_is_core %}
     
         <td>

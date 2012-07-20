@@ -57,7 +57,19 @@ Dashboard
                     <td><a href="{% url tasks.views.edit_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a></td>
                     <td> {{ subtask.creator.get_profile.name }} </td>
                     <td> {{ subtask.deadline }} </td>
-                    <td> {{ subtask.status }} </td>
+                    {% if subtask.status == "O" %}
+					<td><span class="label label-warning">Open</span></td>
+					{% endif %}
+					{% if subtask.status == "C" %}
+					<td><span class="label label-success">Completed</span></td>	
+
+					{% endif %}
+					{% if subtask.status == "L" %}
+					<td><span class="label label-important">Overdue</span></td>
+					{% endif %}
+					{% if subtask.status == "N" %}
+					<td><span class="label label-info">Almost</span></td>
+					{% endif %}
                     <td>
                     <div class="accordion" id="subtasks_comments_{{ subtask.id }}_accordion">
                         <div class="accordion-group">
@@ -103,7 +115,19 @@ Dashboard
                     <td><a href="{% url tasks.views.edit_task task_id=subtask.task.id owner_name=page_owner %}">{{ subtask.task.subject }}</a></td>
                     <td><a href="{% url tasks.views.edit_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a></td>
                     <td> {{ subtask.deadline }} </td>
-                    <td> {{ subtask.status }} </td>
+                    {% if subtask.status == "O" %}
+					<td><span class="label label-warning">Open</span></td>
+					{% endif %}
+					{% if subtask.status == "C" %}
+					<td><span class="label label-success">Completed</span></td>	
+
+					{% endif %}
+					{% if subtask.status == "L" %}
+					<td><span class="label label-important">Overdue</span></td>
+					{% endif %}
+					{% if subtask.status == "N" %}
+					<td><span class="label label-info">Almost</span></td>
+					{% endif %}
                     <td>
                     <div class="accordion" id="requested_comments_{{ subtask.id }}_accordion">
                         <div class="accordion-group">
