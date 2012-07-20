@@ -24,7 +24,6 @@ from django.template.loader import get_template
 from django.template import Context
 from django.core import mail
 from django.http import HttpResponse
-from datetime import * 
 from dateutil.relativedelta import *
 
 # Fields to be excluded in the SubTask forms during Task editing
