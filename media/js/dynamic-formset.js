@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function() { 
     // Code adapted from http://djangosnippets.org/snippets/1389/
 
     // Django's default for formsets
@@ -156,7 +156,11 @@ $(document).ready(function() {
 
 	    // Update the total form count
 	    $("#id_" + form_prefix + "-TOTAL_FORMS").val(formCount + 1);
-
+	    $("#id_" + form_prefix + "-" + formCount + "-department").chosen();
+	    $("#id_" + form_prefix + "-" + formCount + "-department").trigger("liszt:updated");
+	    $("#id_" + form_prefix + "-" + formCount + "-coords").chosen();
+	    $("#id_" + form_prefix + "-" + formCount + "-coords").trigger("liszt:updated");
+	    
 	} // End if
 	else {
 	    alert("Sorry, you can only enter a maximum of " + (max_num_forms - 1) + " Subtasks.");
@@ -193,5 +197,6 @@ $(document).ready(function() {
     // Highlight all deleted forms at the beginning (in case form had
     // errors and is being redisplayed)
     highlightDeletedForms ();
+    
 
 });

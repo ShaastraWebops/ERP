@@ -14,6 +14,12 @@
 <br>
 {% endfor %}
 
+{% if qms_core %}
+<h4>CHOOSE DEPARTMENT </h4><br>
+    {% for d in all_departments %}
+    <h4><a href="{% url feedback.views.qms_review dept_id=d.id %}">{{d}}</a></h4>
+    {% endfor %}
+{% endif %}
 
 {% endblock %}
 {% block tabs %}

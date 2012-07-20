@@ -162,7 +162,7 @@ Edit Task
 
     {% endfor %}
     
-    <a href="#" id="add">Add a SubTask</a>
+    <a href=# id="add">Add a SubTask</a>
 
     <table>
       <tr>
@@ -186,7 +186,9 @@ Edit Task
 {{ block.super }}
 
 <script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
-
+<script type="text/javascript">
+    $('#id_status').chosen();
+</script>
 <script type="text/javascript">
 $(document).ready(function() {
     var d = document.getElementById("li_task");

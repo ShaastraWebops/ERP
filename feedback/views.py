@@ -28,10 +28,12 @@ def answer(request):
         questions=Question.objects.filter(departments=curr_department).exclude(answered_by='Coord').exclude(answered_by='Vol')
         answers=Answer.objects.filter(creator=curr_userprofile)
     if is_coord(curr_user):
-        curr_department=curr_userprofile.department
-        coord_profiles = userprofile.objects.filter (department= curr_department,user__groups__name = 'Coords').exclude(user=request.user)
-        questions=Question.objects.filter(departments=curr_department).exclude(answered_by='Core').exclude(answered_by='Vol')
-        answers=Answer.objects.filter(creator=curr_userprofile)           
+		if str(curr_userprofile.department) == "QMS":
+			qms_coord=True
+		curr_department=curr_userprofile.department
+		coord_profiles = userprofile.objects.filter (department= curr_department,user__groups__name = 'Coords').exclude(user=request.user)
+		questions=Question.objects.filter(departments=curr_department).exclude(answered_by='Core').exclude(answered_by='Vol')
+		answers=Answer.objects.filter(creator=curr_userprofile)           
     return render_to_response('feedback/feedback.html',locals(),context_instance=RequestContext(request))
 
 def display(request):
@@ -48,11 +50,16 @@ def display(request):
             questions=Question.objects.all()
         else:
             raise Http404
-    else:
-        raise Http404            
+
+    if is_coord(curr_user):
+        if str(curr_userprofile.department) == "QMS":
+            qms_coord=True
+            questions=Question.objects.all()
+                    
     return render_to_response('feedback/display.html',locals(),context_instance=RequestContext(request))
 
 def add_question(request):
+	
     if is_core(request.user):
         curr_userprofile=userprofile.objects.get(user=request.user)
         owner_name=None
@@ -65,17 +72,39 @@ def add_question(request):
                 questionform=QuestionForm(request.POST)
                 question_added=False
                 if questionform.is_valid():
-                    questionform.save()
-                    question_added= True
+					questionform1=questionform.save(commit=False)
+					questionform1.creator=curr_userprofile
+					questionform1.save()
+					questionform.save_m2m()
+					question_added= True
                 else:
-                    error=True
+                	error=True
             questionform=QuestionForm()
             return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
         else:
             raise Http404
-    else:
-        raise Http404   
-
+	
+    if is_coord(request.user):
+		owner_name=None
+		page_owner = get_page_owner (request, owner_name)
+		curr_userprofile=userprofile.objects.get(user=request.user)
+		if str(curr_userprofile.department) == "QMS":
+			qms_coord=True
+			if request.method== 'POST':
+				questionform=QuestionForm(request.POST)
+				question_added=False
+				if questionform.is_valid():
+					questionform1=questionform.save(commit=False)
+					questionform1.creator=curr_userprofile
+					questionform1.save()
+					questionform.save_m2m()
+					question_added= True
+				else:
+					error=True
+			questionform=QuestionForm()
+			return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request)) 
+		else:
+			raise Http404
 def display_questions(request,coord_id):
 	curr_user=request.user
 	curr_userprofile=userprofile.objects.get(user=request.user)
@@ -147,6 +176,8 @@ def answer_questions(request,coord_id,question_id,rating=None):
 
 	
 	if is_coord(curr_user):
+		if str(curr_userprofile.department) == "QMS":
+			qms_coord=True
 		question_no_answer=[]
 		questions=Question.objects.filter(departments=curr_department).exclude(answered_by='Core').exclude(answered_by='Vol')
 		if rating != None:
@@ -383,6 +414,14 @@ def review(request):
     curr_department=curr_userprofile.department
     owner_name=None
     page_owner = get_page_owner (request, owner_name)
+    qms_core=False
+    if str(curr_department) == "QMS" and is_core(request.user):
+        all_departments=Department.objects.all()
+        qms_core=True
+        return render_to_response('feedback/review.html',locals(),context_instance=RequestContext(request))    
+    if is_coord(request.user):
+		if str(curr_userprofile.department) == "QMS":
+			qms_coord=True
     questions=Question.objects.filter(departments=curr_department)
     owner_answers=Answer.objects.filter(owner=curr_userprofile)
     curr_averages = Answeravg.objects.filter(owner=curr_userprofile)
@@ -400,7 +439,7 @@ def review(request):
                     for a in answers:
                         number +=1.0
                         add += a.rating
-                    average=add/number 
+                    average=Decimal(add/number)
                     existing_average.avg = average
                     existing_average.num = number
                     existing_average.save()                                    
@@ -411,10 +450,54 @@ def review(request):
                     for a in answers:
                         number +=1.0
                         add += a.rating
-                    average=Decimal(str(add/number))            
+                    average=Decimal(add/number)            
                     saveavg = Answeravg(question=q,owner=curr_userprofile,avg=average, num=number)
                     saveavg.save()
         averages = Answeravg.objects.filter(owner=curr_userprofile)        
     else:
         raise Http404    
     return render_to_response('feedback/review.html',locals(),context_instance=RequestContext(request))
+    
+def qms_review(request, dept_id):
+    owner_name=None
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    core_department=curr_userprofile.department
+    all_departments=Department.objects.all()
+    page_owner = get_page_owner (request, owner_name)
+    curr_department = Department.objects.get(id=dept_id)
+    if str(core_department) == "QMS" and is_core(request.user):
+        qms_core=True
+        coord_profiles = userprofile.objects.filter (department= curr_department,user__groups__name = 'Coords')
+        questions=Question.objects.filter(departments=curr_department)
+        for coord in coord_profiles:
+            for q in questions:
+                answers = Answer.objects.filter(owner=coord).filter(question=q)
+                if answers:
+                    existing = Answeravg.objects.filter(owner=coord).filter(question=q)
+                    if existing:
+                        for i in existing:
+                            curr_id = i.id
+                        existing_average = Answeravg.objects.get(id=curr_id)
+                        add=0
+                        number=0.0
+                        for a in answers:
+                            number +=1.0
+                            add += a.rating
+                        average=Decimal(add/number)
+                        existing_average.avg = average
+                        existing_average.num = number
+                        existing_average.save()                                    
+            
+                    else:
+                        add=0
+                        number=0.0
+                        for a in answers:
+                            number +=1.0
+                            add += a.rating
+                        average=Decimal(add/number)
+                        saveavg = Answeravg(question=q,owner=coord,avg=average, num=number)
+                        saveavg.save()
+        averages = Answeravg.objects.all()
+    else:
+        raise Http404
+    return render_to_response('feedback/qms_review.html',locals(),context_instance=RequestContext(request))    

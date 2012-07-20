@@ -3,190 +3,112 @@
 {% block body %}
 
 
-<style type="text/css">
-#username
-{
-position:relative;
-font-family:Arial;
-top:-50px;
-left:140px;
-font-size:200%;
-}
+<div class="row">
+    <div id="username" class="span3 offset3">
+        <center>
+            <h2>{{profile.name}}</h2>
 
-#nickname
-{
-color:blue;
-}
+            {% if profile.nickname %}
+            <br>
+            {% endif %}
 
-.left
-{
-top:30px;
-position:relative;
-color:#616D7E;
-text-align:right;
-}
-.right
-{
-top:30px;
-position:relative;
-left:20px;
-color:#571B7e;
-text-align:left;
-}
-#edit_profile
-{
-position:absolute;
-top:110px;
-right:-60%;
-}
+            <h3>{{profile.nickname}}<h3>
+        </center>
+<br>
+    </div>
+    <div class="row">
+        <div class="span3 offset1">
+            <ul class="thumbnails">
+                <li class="span3">
+                    <br>
+                    <br>
+                    <a href="#" class="thumbnail"> <img id="profile_pic" src="{{photo_path}}"> </a>
+                </li>
+            </ul>
 
-#details_table
-{
-line-height:190%;
-}
-#profile_pic
-{
-position:absolute;
-top:160px;
-left:130px;
-width:180px;
-height:185px;
-}
-#dept_name
-{
-position:relative;
-top:10px;
-font-size:140%;
-text-align:center;
-color:#347235;
-left:220px;
-}
-#main_box_profile
-{
-position:absolute;
-left:200px;
-}
+        </div>
+        <div class="span5">
+            <center>
+                <h3>{{user_dept_name}}
+                {% if is_core %}
+                Core
+                {% else %}
+                Coordinator
+                {% endif %}<h3>
+            </center>
+            {% if is_core %}
+            <center>
+                <h6><a href="{% url tasks.views.display_portal owner_name=page_owner %}" class="button big" > Dashboard </a></h6>
+            </center>
+            {%endif%}
+            <table class="table table-striped" id="details_table">
 
-#details_table
-{
-position:relative;
-top:40px;
-left:140px;
-}
-</style>
+                <br>
 
-  
+                <div id="complete_details">
+                    <tr>
+                        <td>
+                        <div class ="left" >
+                            Contact Number
+                        </div></td>
+                        <td>
+                        <div class="right" >
+                            {{profile.chennai_number}}
+                        </div></td>
+                    </tr>
 
+                    <tr>
+                        <td>
+                        <div class ="left" >
+                            Summer Contact
+                        </div></td>
+                        <td>
+                        <div class="right" >
+                            {{profile.summer_number}}
+                        </div></td>
+                    </tr>
 
+                    <tr>
+                        <td>
+                        <div class ="left" >
+                            Summer Stay
+                        </div></td>
+                        <td>
+                        <div class="right" >
+                            {{profile.summer_stay}}
+                        </div></td>
+                    </tr>
 
-<div id="main_box_profile">
-<img id="profile_pic" src="{{photo_path}}">
+                    <tr>
+                        <td>
+                        <div class ="left" >
+                            Hostel
+                        </div></td>
+                        <td>
+                        <div class="right" >
+                            {{profile.hostel}}
+                        </div></td>
+                    </tr>
 
-	<table id="details_table">
-	<tr > 
-		<td>	
-		<div id="username" >
-		{{profile.name}} 
-		{% if profile.nickname %} 
-		aka 
-		{% endif %}	
-		<span id="nickname" >
-		{{profile.nickname}}
-		</span>
-		</div>
-		</td>
- 	</tr>
- 	
-			<tr>
-			</tr>
-			<tr>
-				<td>
-				<div id ="dept_name" >
-				      {{user_dept_name}}
-				      {% if is_core %}
-				      Core 
-				      {% else %}
-				      Coordinator 
-				      {% endif %} <br>
-				      <a href="{% url tasks.views.display_portal owner_name=page_owner %}" class="button big" >
-		Dashboard
-	      </a><br>
-				</div>
-				</td>		
-			</tr>
-		
-		<div id="complete_details">
-			<tr>
-				<td>
-				<div class ="left" >
-				Contact Number 
-				</div>
-				</td>
-				<td>
-				<div class="right" >
-				{{profile.chennai_number}}
-				</div>
-				</td>
-			</tr>
+                    <tr>
+                        <td>
+                        <div class ="left" >
+                            Room number
+                        </div></td>
+                        <td>
+                        <div class="right" >
+                            {{profile.room_no}}
+                        </div></td>
+                    </tr>
 
-			<tr>
-				<td>
-				<div class ="left" >
-				Summer Contact
-				</div>
-				</td>
-				<td>
-				<div class="right" >
-				{{profile.summer_number}}
-				</div>
-				</td>
-			</tr>
-
-
-			<tr>
-				<td>
-				<div class ="left" >
-				Summer Stay
-				</div>
-				</td>
-				<td>
-				<div class="right" >
-				{{profile.summer_stay}}
-				</div>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-				<div class ="left" >
-				Hostel
-				</div>
-				</td>
-				<td>
-				<div class="right" >
-				{{profile.hostel}}
-				</div>
-				</td>
-			</tr>
-
-
-			<tr>
-				<td>
-				<div class ="left" >
-				Room number
-				</div>
-				</td>
-				<td>
-				<div class="right" >
-				{{profile.room_no}}
-				</div>
-				</td>
-			</tr>
-
-		</div>
-	</table>
-	{% if not is_visitor  %}
-		<a href="{% url users.views.handle_profile owner_name=user%}"  id ="edit_profile"> Edit profile </a>
-        {% endif %}
-</div>
-{% endblock %}
+                </div>
+            </table>
+            {% if not is_visitor  %}
+            <center>
+                <a href="{% url users.views.handle_profile owner_name=user%}"  id ="edit_profile"> Edit profile </a>
+            </center>
+            {% endif %}
+        </div>
+        {% endblock %}
+</div> 
+ 

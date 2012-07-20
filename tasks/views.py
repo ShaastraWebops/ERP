@@ -94,8 +94,7 @@ def display_core_portal (request, core):
     """
     Display core's portal
     """
-# The case that a coord is trying to see a core's dashboard, which should'nt be allowed.      
-    print "it wont come here"
+
     display_dict = dict ()
     # Deal with the Updates part (viewing, creating) of the portal
     update_dict = handle_updates (request, core)
@@ -104,6 +103,7 @@ def display_core_portal (request, core):
     display_dict['all_unassigned_received_SubTasks'] = get_unassigned_received_subtasks (core)
     display_dict['all_requested_SubTasks'] = get_requested_subtasks (core)
     display_dict['all_completed_SubTasks'] = get_completed_subtasks (core)
+    
     
     #Get Department Members' image thumbnails
     display_dict ['dept_cores_list'] = User.objects.filter (
@@ -116,7 +116,6 @@ def display_core_portal (request, core):
     qms_core=False
     curr_userprofile=userprofile.objects.get(user=request.user)
     if str(department) == 'QMS':
-		print "hello"
 		display_dict['qms_core']=True
     
     # Include the key-value pairs in update_dict
@@ -143,6 +142,8 @@ def display_coord_portal (request, coord):
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
+    if str(department) == 'QMS':
+		display_dict['qms_coord']=True
         
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
@@ -245,6 +246,10 @@ def edit_task (request, task_id = None, owner_name = None):
     if is_core(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
     return render_to_response('tasks/edit_task.html',
                               locals(),
                               context_instance = global_context (request))
@@ -484,10 +489,15 @@ def display_department_portal (request, owner_name = None, department_name = Non
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
-
+        
+    qms_core=False
     if is_core(request.user):
 		if str(department) == 'QMS':
 			display_dict['qms_core']=True
+    qms_coord=False
+    if is_coord(request.user):
+		if str(department) == 'QMS':
+			display_dict['qms_coord']=True
 
     return render_to_response('tasks/department_portal.html',
                               display_dict,

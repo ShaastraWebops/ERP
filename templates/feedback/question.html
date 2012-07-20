@@ -1,6 +1,12 @@
 {% extends "base_portal.html" %}
 {% block body %}
+{% if qms_core %}
 <a class="pull-right" href="{% url feedback.views.display %}">See all questions</a>
+{% endif %}
+
+{% if qms_coord %}
+<a class="pull-right" href="{% url feedback.views.display %}">See all questions</a>
+{% endif %}
 <center><h1>Add Question </h1></center>
 <form class="well" action="" method="POST">
 	{% csrf_token %}
