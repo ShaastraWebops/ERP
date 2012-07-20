@@ -1,7 +1,8 @@
 <div class="subtask-heading">
   Subtask {% if forloop %} {{ forloop.counter }} {% else %} 0 {% endif %} 
 </div>
-<table>
+<div class="well">
+<table cellpadding="5">
   <!-- {% comment %} -->
   <!-- {{ form.as_table }} -->
   <!-- {% endcomment %} -->
@@ -59,6 +60,8 @@
   {% endif %}
   
 </table>
+
 <p>
   <a href="#" class="delete">Delete this SubTask</a>
 </p>
+</div>

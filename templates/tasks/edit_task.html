@@ -74,7 +74,8 @@ Edit Task
       </div>
       <div class="rbcontentwrap"> 
 	<div class="rbcontent"> 
-	  <table>
+<div class="well">
+	  <table cellpadding="4">
 	    {% if is_new_task %}
 	    <tr>
 	      <th>Department: </th>
@@ -96,6 +97,7 @@ Edit Task
 	    {% endif %}
 	    {{ task_form.as_table }}
 	  </table>
+</div>
 	</div>
       </div>
       <!-- /rbcontent --> 
@@ -107,8 +109,9 @@ Edit Task
       </div> 
     </div>
     <!-- /rbroundbox --> 
-
+<div class="well">
     {% include "tasks/comments.html" %}
+</div>
 
     <div class="rbroundbox"> 
       <div class="rbtop">

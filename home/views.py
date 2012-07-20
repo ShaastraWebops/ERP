@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 from django.utils.translation import ugettext as _
-from django.core.mail import send_mail,EmailMessage,SMTPConnection
+from django.core.mail import send_mail,EmailMessage
 from django.contrib.sessions.models import Session
 from erp.home.forms import *
 from erp.misc.helper import *
