@@ -7,9 +7,9 @@ from django.conf.urls import *
 # TODO
 # Caution : Any non-matched url goes straight to display_portal and
 # gives an error since a user of that name would not be found.
-urlpatterns = patterns('',
+urlpatterns = patterns('erp.tasks.views',
       (r'^$', 'display_portal'),
-      (r'^search/', include('haystack.urls')),
+      #(r'^search/', include('haystack.urls')),
 
       (r'^create', 'edit_task'),
       (r'^task/(?P<task_id>[0-9]+)', 'edit_task'),
