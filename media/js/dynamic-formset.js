@@ -158,9 +158,9 @@ $(document).ready(function() {
 	    $("#id_" + form_prefix + "-TOTAL_FORMS").val(formCount + 1);
 
         // Adding bootstrap datepicker
-        $("#id_" + form_prefix + "-" + formCount + "-deadline").val("01/08/2012");
+        $("#id_" + form_prefix + "-" + formCount + "-deadline").val("08/01/2012");
         $("#id_" + form_prefix + "-" + formCount + "-deadline").datepicker({
-            format: 'dd/mm/yyyy'
+            format: 'mm/dd/yyyy'
         });
 
 	} // End if
