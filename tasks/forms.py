@@ -3,9 +3,11 @@ from django.forms import ModelForm
 from models import *
 from django import forms
 class TaskCommentForm (ModelForm):
-    class Meta:
-        model = TaskComment
+	comment_string=forms.CharField(label='Comments',widget=forms.Textarea)
+	class Meta:
+		model = TaskComment
         exclude = ('author', 'task')
+	
 
 class SubTaskCommentForm (ModelForm):
     class Meta:
