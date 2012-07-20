@@ -6,25 +6,27 @@ from erp.users.models import userprofile
 from erp.misc.helper import is_core, is_coord, get_page_owner
 
 STAT_CHOICES= (
-    ('Core','Core'),
-    ('Coord','Coordinator'),
-    ('Vol','Volunteer'),
-    ('All','All'),
-)
+        ('Core','Core'),
+        ('Coord','Coordinator'),
+        ('Vol','Volunteer'),
+        ('All','All'),
+        )
 
-FOR_CHOICES=(
-	('Core','Core')
-	('Coord',
+FOR_CHOICES= (
+        ('Core','Core'),
+        ('Coord','Coordinator'),
+        )
 
 class Question(models.Model):
     question = models.CharField(max_length=200)
     departments = models.ManyToManyField(Department)
     answered_by = models.CharField(max_length=5,choices=STAT_CHOICES,default = 'All')
     creator=models.ForeignKey(userprofile,related_name='question_creator',blank=True,null=True)
-	feedback_for=models.CharField(max_length=5,choices=FOR_CHOICES,blank=True,null=True)
+    feedback_for=models.CharField(max_length=5,choices=FOR_CHOICES,blank=True,null=True)
+            
     def __str__(self):
         return self.question
-        
+
 class Answer(models.Model):
     question = models.ForeignKey(Question)
     owner = models.ForeignKey(userprofile, related_name='answer_owner')
@@ -35,7 +37,7 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.rating      
-        
+
 class Answeravg(models.Model):
     question = models.ForeignKey(Question)
     owner = models.ForeignKey(userprofile)

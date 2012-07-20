@@ -75,16 +75,16 @@ def check_dir(user):
     destdir=os.path.join(destdir_one, user.username)
     if not os.path.isdir(destdir):
         os.makedirs(destdir,0775)
-        src=os.path.join(settings.MEDIA_ROOT,"images")
-        src=os.path.join(src,os.path.basename("default.jpeg"))
-        dest=os.path.join(destdir,os.path.basename("PROFILE_PIC_OF_THE_USER"))
-        copyfile(src, dest)
-        dest=os.path.join(settings.MEDIA_URL,"upload_files")
-        dest=os.path.join(dest, user.username)
-        dest=os.path.join(dest,os.path.basename("PROFILE_PIC_OF_THE_USER"))
-        print dest
-        image_object=userphoto(name=user, photo_path=dest)
-        image_object.save()
+    src=os.path.join(settings.MEDIA_ROOT,"images")
+    src=os.path.join(src,os.path.basename("default.jpeg"))
+    dest=os.path.join(destdir,os.path.basename("PROFILE_PIC_OF_THE_USER"))
+    copyfile(src, dest)
+    dest=os.path.join(settings.MEDIA_URL,"upload_files")
+    dest=os.path.join(dest, user.username)
+    dest=os.path.join(dest,os.path.basename("PROFILE_PIC_OF_THE_USER"))
+    print dest
+    image_object=userphoto(name=user, photo_path=dest)
+    image_object.save()
 
 """
 this function writes the file
