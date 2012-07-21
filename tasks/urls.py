@@ -17,8 +17,9 @@ urlpatterns = patterns('erp.tasks.views',
       (r'^display_subtask/(?P<subtask_id>[0-9]+)?', 'display_subtask'),
       (r'^department/(?P<department_name>$\w+)?$', 'display_department_portal'),
       # (r'^(\w+)?$', 'display_portal'),
-),
-      patterns('erp.tasks.pdfMakeViews',
+)
+
+urlpatterns +=patterns('erp.tasks.pdfMakeViews',
       (r'^report/$', 'ReportGen'),
-),
+)
 
