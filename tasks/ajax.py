@@ -6,6 +6,8 @@ from erp.dashboard.models import *
 from erp.misc.helper import *
 from erp.misc.util import *
 from erp.tasks.render import *
+from django.template import Template, Context
+from django.template.loader import get_template
 import datetime
 
 
@@ -15,11 +17,10 @@ def shout(request, shout=None):
     dajax=Dajax()
     if shout is not None:
         new_shout=add_shout(request, shout)
-    markup=render_markup(request)
-    markup_code=""
-    for code in markup:
-        markup_code=markup_code+code  
-    dajax.assign('#markup','innerHTML', markup_code)
+    shouts = shout_box.objects.all()
+    template = get_template('tasks/shoutbox.html')
+    html = template.render(Context({'shouts':shouts}))
+    dajax.assign('#markup','innerHTML', html)
     dajax.assign('#shout_button','innerHTML', 'Shout!')
     return dajax.json()
           
