@@ -5,7 +5,7 @@
 {% endif %}
 
 {% if qms_coord %}
-<a class="pull-right" href="{% url feedback.views.display %}">See all questions</a>
+<a class="pull-right" href="{% url feedback.views.display question_for=question_for %}">See all questions</a>
 {% endif %}
 <center><h1>Add Question </h1></center>
 <form class="well" action="" method="POST">
