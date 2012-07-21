@@ -17,7 +17,7 @@
 	{% endfor %}
 </div>
 
-<a href="{% url feedback.views.answer_questions coord_id=coord_id question_id=0 rating=0 %}"><button class="btn">Edit</button></a>
+<a href="{% url feedback.views.answer_questions userprofile_id=coord_id question_id=0 rating=0 %}"><button class="btn">Edit</button></a>
 
 {% endblock %}
 {% block tabs %}

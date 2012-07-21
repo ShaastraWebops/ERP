@@ -12,7 +12,7 @@
 		<div class="btn-group">
 	
 			{% for i in rating_choice %}
-				<a  class="btn " href="{% url feedback.views.answer_questions coord_id=coord_id question_id=question.id rating=i %}" >{{i}}</a>
+				<a  class="btn " href="{% url feedback.views.answer_questions userprofile_id=coord_id question_id=question.id rating=i %}" >{{i}}</a>
 			{% endfor %}
 		</div>
 	{% endif %}
@@ -26,9 +26,9 @@
 						<div class="btn-group">
 							{% for i in rating_choice %}
 								{% if i == answer.rating %}
-									<a  class="btn btn-info" href="{% url feedback.views.answer_questions coord_id=coord_id question_id=question.id rating=i %}" >{{i}}</a>
+									<a  class="btn btn-info" href="{% url feedback.views.answer_questions userprofile_id=coord_id question_id=question.id rating=i %}" >{{i}}</a>
 								{% else %}
-									<a  class="btn " href="{% url feedback.views.answer_questions coord_id=coord_id question_id=question.id rating=i %}" >{{i}}</a>
+									<a  class="btn " href="{% url feedback.views.answer_questions userprofile_id=coord_id question_id=question.id rating=i %}" >{{i}}</a>
 								{% endif %}
 							{% endfor %}
 						</div>
