@@ -23,13 +23,14 @@ class AbstractBaseTask(models.Model):
     * Draft saving
     * QMS Manager for the Task
     """
-    subject       = models.CharField(max_length=100 , null=True)
-    description   = models.TextField(null=True , blank=True)
-    creator       = models.ForeignKey(User, related_name = '%(app_label)s_%(class)s_creator')
-    creation_date = models.DateTimeField (auto_now = True, editable = False)
-    deadline      = models.DateField(null=True , blank=True)
-    status        = models.CharField(max_length=1,choices=STAT_CHOICES,default = DEFAULT_STATUS)	
-
+    subject         = models.CharField(max_length=100 , null=True)
+    description     = models.TextField(null=True , blank=True)
+    creator         = models.ForeignKey(User, related_name = '%(app_label)s_%(class)s_creator')
+    creation_date   = models.DateTimeField (auto_now = True, editable = False)
+    deadline        = models.DateField(null=True , blank=True)
+    status          = models.CharField(max_length=1,choices=STAT_CHOICES,default = DEFAULT_STATUS)	
+    completion_date = models.DateField(null=True , blank=True)
+    feedback        = models.TextField(null=True, blank=True)
     class Meta:
         abstract = True
         
