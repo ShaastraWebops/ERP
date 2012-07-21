@@ -362,7 +362,7 @@ def weekday(arr):
     return 7        
     
     
-def display_calendar(request ,owner_name=None , month=0 ,year=0):
+def display_calendar1(request ,owner_name=None , month=0 ,year=0):
     print "my calendar fucntion"
     month=int(month)
     year=int(year)
@@ -421,13 +421,14 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
         for col in row:
     	    complete_data[n]['date']=col
     	    n +=1
-    	
+    print complete_data	
     #adding subtask in complete_data
     for sub in user_tasks:
         pos_to_task=int(sub.deadline.day+first_week_day)-1
 	if  sub.deadline.month==month:
             complete_data[pos_to_task]['subtask'].append(sub)
   
+    print complete_data
     today_task=complete_data[today+first_week_day-1]
     print "todays task" ,today_task, first_week_day
     # okay i know this is not right way to do it , but tried many ways , when i tried to initialize one element multiple element was getting initialized ,so i did it like this
@@ -442,6 +443,26 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_coord= True
     return render_to_response('dashboard/mycalendar.html',locals() ,context_instance = global_context(request))
+
+def display_calendar(request ,owner_name=None , month=0 ,year=0):
+    page_owner=get_page_owner(request ,owner_name=owner_name)
+    if is_core(page_owner):
+        user_tasks=Task.objects.filter(creator = page_owner)
+    else:
+        user_tasks=SubTask.objects.filter(coords=page_owner.id)
+    
+    complete_data={}
+    complete_data["subtasks"]=[]
+    if is_core(page_owner):
+        for sub in user_tasks:
+            complete_data["subtasks"].append({"subject": str(sub.subject), "task_id": str(sub.id), "creation_date": str(sub.creation_date), "deadline": str(sub.deadline), "status": str(sub.status)})
+    else:
+        for sub in user_tasks:
+            complete_data["subtasks"].append({"subject": str(sub.subject), "task_id": str(sub.task.id), "creation_date": str(sub.creation_date), "deadline": str(sub.deadline), "status": str(sub.status)})
+    
+    return render_to_response('dashboard/mycalendar.html',locals() ,context_instance = global_context(request))
+  
+    
 
 def load_data(request):
     do_it_all()
