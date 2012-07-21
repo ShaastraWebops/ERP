@@ -96,7 +96,7 @@ def ShowTask(request,elements,position_on_page,sno,task):
            need to fetch the SubTask given to this task''' 
         
             assigner_string = str(task.creator.get_profile())
-            assignee_string = SubTask.objects.get(task = task).department.Dept_Name
+            assignee_string = ''
         elif request.user.get_profile().department == task.department :
             ''' In this case it is a task as the user belongs to the recieving department. So assigner is the creator - the guy from that
                 department and this core's department is the assignee'''
