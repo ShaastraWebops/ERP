@@ -198,8 +198,26 @@ $(document).ready(function() {
     d.className = "active";
     e.className = e.className + " icon-white";
     
-    var date = document.getElementById("id_deadline");
-    date.value="08/01/2012";
+    $('#id_subtask_set-TOTAL_FORMS').val(($('[id^=id_subtask_set]')   //'#id_subtask_set-TOTAL_FORMS' value doesn't reset on page refresh, messing up subtask numbering for the formset.
+                                    .filter('[id$=subject]')          //This code corrects it.
+                                    .filter(function(){
+                                        if ($(this).val()) {
+                                            return true;
+                                        }})
+                                    .length));                       //end of '#id_subtask_set-TOTAL_FORMS' correction code.
+    
+    $('[id$=deadline]').each(function() {
+        if ($(this).val()) //django default format of year-month-date
+        { 
+            if ($(this).val().indexOf("/")==-1)                //following code must execute only if date isn't of mm/dd/yyyy format
+            {
+                var splitdate = $(this).val().split("-");
+                $(this).val(splitdate[1] + "/" + splitdate[2] + "/" + splitdate[0]); //display in datepicker format of month/date/year
+            }
+        }
+        else
+            $(this).val("08/01/2012"); //Date set: Aug 1st, 2012. Set a date close to usage date for easier navigation
+    });
  });
 </script>
 <script src="js/google-code-prettify/prettify.js"></script>
@@ -207,8 +225,8 @@ $(document).ready(function() {
 <script type="text/javascript">
 $(function(){
     window.prettyPrint && prettyPrint();
-    $('#id_deadline').datepicker({
-        format: 'mm/dd/yyyy'
+    $('[id$=deadline]').datepicker({
+        format: 'mm/dd/yyyy' //save mm dd yyyy format as django takes first bit as month and next as date
     });
 });
 </script>

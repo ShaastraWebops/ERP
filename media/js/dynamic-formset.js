@@ -158,7 +158,7 @@ $(document).ready(function() {
 	    $("#id_" + form_prefix + "-TOTAL_FORMS").val(formCount + 1);
 
         // Adding bootstrap datepicker
-        $("#id_" + form_prefix + "-" + formCount + "-deadline").val("08/01/2012");
+        $("#id_" + form_prefix + "-" + formCount + "-deadline").val("08/01/2012"); //Date set: Aug 1st, 2012. Set a date close to usage date for easier navigation
         $("#id_" + form_prefix + "-" + formCount + "-deadline").datepicker({
             format: 'mm/dd/yyyy'
         });
