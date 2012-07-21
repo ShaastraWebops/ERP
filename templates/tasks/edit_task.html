@@ -195,4 +195,14 @@ $(document).ready(function() {
     e.className = e.className + " icon-white";
  });
 </script>
+
+<script type="text/javascript">  //initialise django-chosen
+{% for form in subtaskfs.forms %}
+val={{ forloop.counter }}-1;
+$("#id_subtask_set-" + val + "-department").chosen();
+$("#id_subtask_set-" + val + "-coords").chosen();
+{% endfor %}
+</script>
+
+
 {% endblock javascript %}
