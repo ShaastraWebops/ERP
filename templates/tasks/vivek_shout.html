@@ -14,10 +14,6 @@
 		position: relative;
 	}
 
-	#nickname {
-		font-weight: 800;
-		font-size: 98%;
-	}
 
 	#comment {
 		font-weight: 300;
@@ -34,7 +30,7 @@
 <div id="shoutbox" class="well span6">
 <!--We have to reload this area-->
     
-    <table>
+    <table id="markup">
         {% for field in shouts %}
         <tr>
             <td id="shouterts name"><span id="nickname" ><a href="{% url users.views.view_profile owner_name=field.user%}">{{field.user}}</a>: </span> &nbsp; </td>
@@ -55,8 +51,13 @@
 
     function shout(){
         shout_text=document.getElementById("id_comments").value
-        alert(shout_text)
-        document.getElementById("id_comments").value = 'Loading'
+        if(document.getElementById("id_comments").value == '')
+        {
+            alert('Please type something!')
+            exit
+        }
+        document.getElementById("id_comments").value = ''
+        document.getElementById("shout_button").innerHTML = 'Shouting...'
         Dajaxice.tasks.shout(Dajax.process,{'shout':shout_text});
     }
     
@@ -66,7 +67,7 @@
 {% if not is_visitor %}
 
 <textarea id="id_comments" rows="10" cols="40" name="comments"></textarea>
-<button class = "btn btn-inverse btn-large" onclick="shout();">Shout!</button>
+<button id ="shout_button" class = "btn btn-inverse btn-large" onclick="shout();">Shout!</button>
 <!--<input type="submit" class="btn btn-primary btn-large" value="Shout">-->
 
 </form>

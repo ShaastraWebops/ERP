@@ -16,8 +16,11 @@ def shout(request, shout=None):
     if shout is not None:
         new_shout=add_shout(request, shout)
     markup=render_markup(request)
-    dajax.assign('#shoutbox','innerHTML', markup)
-    print markup
+    markup_code=""
+    for code in markup:
+        markup_code=markup_code+code  
+    dajax.assign('#markup','innerHTML', markup_code)
+    dajax.assign('#shout_button','innerHTML', 'Shout!')
     return dajax.json()
           
     
