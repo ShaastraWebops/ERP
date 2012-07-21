@@ -12,11 +12,17 @@ STAT_CHOICES= (
     ('All','All'),
 )
 
+FOR_CHOICES=(
+	('Core','Core'),
+	('Coord','Coordinator'),
+)
 class Question(models.Model):
     question = models.CharField(max_length=200)
     departments = models.ManyToManyField(Department)
     answered_by = models.CharField(max_length=5,choices=STAT_CHOICES,default = 'All')
     creator=models.ForeignKey(userprofile,related_name='question_creator',blank=True,null=True)
+    edited_last=models.ForeignKey(userprofile,related_name='question_edited',blank=True,null=True)
+    feedback_for=models.CharField(max_length=5,choices=FOR_CHOICES,blank=True,null=True)
     def __str__(self):
         return self.question
         
@@ -39,3 +45,11 @@ class Answeravg(models.Model):
 
     def __str__(self):
         return self.avg
+
+class OpenFeedback(models.Model):
+    feedback= models.BooleanField(default=False) 
+    
+class OpenReview(models.Model):
+    review= models.BooleanField(default=False)        
+    
+    
