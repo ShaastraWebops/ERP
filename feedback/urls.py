@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import *
 from django.views.generic.simple import *
+from django.conf.urls import *
 
 urlpatterns = patterns('erp.feedback.views',
     (r'^toggle/$', 'toggle'),

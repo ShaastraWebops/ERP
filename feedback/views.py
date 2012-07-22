@@ -10,10 +10,15 @@ from erp.feedback.models import *
 from django.db.models import Avg
 from django.core.urlresolvers import reverse
 from decimal import Decimal
+
+
+
+
 """
 Toggle function is solely for the qms core to open/close the feedback feature
 """
 def toggle(request):
+    print "hello"
     curr_userprofile=userprofile.objects.get(user=request.user)
     if is_core(request.user) and str(curr_userprofile.department) == "QMS":
         openfeedback=OpenFeedback.objects.filter(id=1)
@@ -26,12 +31,12 @@ def toggle(request):
         if curr_feedback.feedback==False:
             curr_feedback.feedback=True
             curr_feedback.save() 
-            return redirect('erp.feedback.views.answer', permanent=True)
+            return redirect('erp.feedback.views.answer', )
     
         if curr_feedback.feedback==True:
             curr_feedback.feedback=False
             curr_feedback.save()
-            return redirect('erp.feedback.views.answer', permanent=True)        
+            return redirect('erp.feedback.views.answer', )        
     else:
         raise Http404  
         
@@ -61,18 +66,19 @@ def togglereview(request):
             if curr_feedback.feedback==True:
                 curr_feedback.feedback=False
                 curr_feedback.save()             
-            return redirect('erp.feedback.views.answer', permanent=True)
+            return redirect('erp.feedback.views.answer', )
     
         if curr_review.review==True:
             curr_review.review=False
             curr_review.save()
-            return redirect('erp.feedback.views.answer', permanent=True)        
+            return redirect('erp.feedback.views.answer', )        
     else:
         raise Http404                          
 """
 Answer and answer_questions and review are open to all members, with different permissions.
 """
 def answer(request):
+    print "in answer"
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
     users_profile=userprofile.objects.all()

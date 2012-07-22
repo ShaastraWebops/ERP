@@ -32,7 +32,7 @@ users <span style="color: rgb(255,0,0);">cannot</span> view their own review.
 </h6><br>
 {% if not curr_feedback.feedback %}
 <div class="well"><h6 style="color: rgb(255,0,0);">Click on 'open feedback' to enable Shaastra 2013 team members to give feedback by rating on a scale of 1-10 (10 being the best). They will be able to see the questions that your department has set.</h6><br>
-<h4><a class="btn btn-danger" href="{% url feedback.views.toggle %}">OPEN FEEDBACK</a></h4><br></div>
+<h4><a class="btn btn-danger" href="{% url feedback.views.toggle %}">OPEN FEEDBACK </a></h4><br></div>
 {% endif %}
 
 {% if curr_review.review %}
