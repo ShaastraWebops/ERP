@@ -4,7 +4,6 @@ from erp.tasks.views import *
 from erp.users.views import *
 from erp.home.views import *
 from erp.feedback.views import *
-from erp.create_test_data import *
 import haystack
 from haystack.views import SearchView
 from haystack.forms import ModelSearchForm
@@ -19,7 +18,7 @@ admin.autodiscover()
 from django.contrib import admin
 # admin.autodiscover()
 
-urlpatterns = patterns('',(r'^createdata/', do_it_all),
+urlpatterns = patterns('',
 
     #(r'^search/', include('haystack.urls')),
     url(r'^$', 'erp.home.views.login', name='home'),
