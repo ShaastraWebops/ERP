@@ -1,34 +1,54 @@
 {% extends "base_portal.html" %}
 {% block body %}
+
+{% if question_for_core %}
+<h6>All these questions will be answered by coords under the respective cores</h6>
+{% endif %}
+{% if qms_core %}
+<h6 style="color: rgb(255,0,0);"><i class="icon-warning-sign"></i>Core, only you have the permission to delete questions. Beware! It will be permanently deleted.</h6>
+{% endif %}
+<br>
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
 			<th>Question</th>
+{% if question_for_coord %}
 			<th>Answered by</th>
+{% endif %}
 			<th>Departments</th>
 			<th>Creator</th>
-			{% if qms_core %}
+			<th>Edited last by</th>			
 			<th>Action</th>
-			{% endif %}
 		</tr>
 	</thead>
 	<tbody>
 {% for q in questions %}
 		<tr>
 <td>{{q.question}}</td>
+{% if question_for_coord %}
 <td>{{q.answered_by}}</td>
+{% endif %}
 <td>{% for department in q.departments.all %} {{department.Dept_Name}}{% if forloop.last %}.{% else %},{% endif %}{% endfor %}</td>
 <td>{{q.creator.name}}</td>
-{% if qms_core %}
-<td><a href="{% url feedback.views.delete_question question_id=q.id %}">Delete</a></td>
+<td>{{q.edited_last.name}}</td>
+{% if question_for_coord %}
+    <td><a href="{% url feedback.views.edit_question question_id=q.id question_for=Coord %}">Edit</a></td>
+    {% if qms_core %}
+    <td><a href="{% url feedback.views.delete_question question_id=q.id question_for=Coord %}">Delete</a></td>
+    {% endif %}
 {% endif %}
-		</tr>
+{% if question_for_core %}
+    <td><a href="{% url feedback.views.edit_question question_id=q.id question_for=Core %}">Edit</a></td>    
+    {% if qms_core %}
+    <td><a href="{% url feedback.views.delete_question question_id=q.id question_for=Core %}">Delete</a></td>
+    {% endif %}
+{% endif %}    
+
+	</tr>
 {% endfor %}
 </tbody>
 </table>
-{% if qms_core %}
-<h6>Beware! It will be permanently deleted</h6>
-{% endif %}
+
 
 {% endblock %}
 {% block tabs %}
@@ -37,3 +57,4 @@
 {% endblock %}
 {% block display_stuff %}
 {% endblock %}
+

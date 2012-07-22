@@ -10,6 +10,7 @@ from haystack.views import SearchView
 from haystack.forms import ModelSearchForm
 from haystack.forms import SearchForm
 from haystack.views import search_view_factory
+from django.conf.urls import *
 haystack.autodiscover()
 
 admin.autodiscover()

@@ -1,26 +1,217 @@
 {% extends "base_portal.html" %}
 {% block body %}
-{% if qms_core %}
 
-    {% for d in all_departments %}
-        {% ifnotequal d curr_department %}
-            <b><a href="{% url feedback.views.qms_review dept_id=d.id %}">{{d}}</a></b>
-        {% endifnotequal %}
-    {% endfor %}<br>
-
-    {% for coord in coord_profiles %}
-    <br><h6>{{coord}}</h6><br>
-        {% for q in questions %}
-        {{q.question}} ---
-            {% for a in averages %}    
-                {% ifequal a.owner coord %}
-                    {% ifequal a.question q %}
-                        {{a.avg}}   
-                    {% endifequal %}      
-                {% endifequal %}
-            {% endfor %}<br>
+{% if qms_dept %}
+    <ul class="nav nav-pills">
+        {% for d in all_departments %}
+                <li {% ifequal d curr_department %}class="active"{% endifequal %}><a href="{% url feedback.views.qms_review dept_id=d.id is_all=no%}">{{d}}</a></li>
         {% endfor %}
-    {% endfor %}
+    </ul>
+<h6>Feedback on a scale of 1-10, 10 being the best<h6>
+{% ifequal is_all "yes" %}
+<h6><a href="{% url feedback.views.qms_review dept_id=curr_department.id is_all=no %}">GO BACK TO COLLAPSED VIEW!</a></h6><br>
+<h5 style="font-size:16px; line-height: 25px; color: rgb(50,50,50);">CORES</h5>
+            {% for core in core_profiles %}
+           <h6>{{core}}</h6>
+              
+                    <table class="table table-striped table-bordered table-condensed">
+            	    <thead>
+    	    	    <tr>
+    	                <th>Question</th>
+        		    	<th>Feedback</th>
+        		    	<th>Answered By</th>
+	    		    </tr>
+	                </thead>
+	    
+	                <tbody>
+                        {% for q in questions %}
+            	    	<tr>
+            	    	{% ifequal q.feedback_for "Core" %}
+                            <td>{{q.question}}</td>
+                            <td>{% for a in averages %}    
+                                {% ifequal a.owner core %}
+                                {% ifequal a.question q %}
+                                    {{a.avg}}   
+                                {% endifequal %}      
+                                {% endifequal %}
+                                {% endfor %}</td>
+                            <td>{% for b in averages %}    
+                                {% ifequal b.owner core %}
+                                {% ifequal b.question q %}
+                                    {{b.num}}   
+                                {% endifequal %}      
+                                {% endifequal %}
+                                {% endfor %}</td>                                
+                         {% endifequal %}                   
+                        </tr> 
+                         {% endfor %}   
+                    </tbody>
+                    </table>
+
+           {% endfor %}
+<br><h5 style="font-size:16px; line-height: 25px; color: rgb(50,50,50);">COORDINATORS</h5><br>           
+{% for coord in coord_profiles %}
+<h6>{{coord}}</h6>
+                
+                    <table class="table table-striped table-bordered table-condensed">
+            	    <thead>
+    	    	    <tr>
+    	                <th>Question</th>
+        		    	<th>Feedback</th>
+        		    	<th>Answered By</th>
+	    		    </tr>
+	                </thead>
+	    
+	                <tbody>
+                        {% for q in questions %}
+            	    	<tr>
+            	    	{% ifequal q.feedback_for "Coord" %}
+                            <td>{{q.question}}</td>
+                            <td>{% for a in averages %}    
+                                {% ifequal a.owner coord %}
+                                {% ifequal a.question q %}
+                                    {{a.avg}}   
+                                {% endifequal %}      
+                                {% endifequal %}
+                                {% endfor %}</td>
+                            <td>{% for b in averages %}    
+                                {% ifequal b.owner coord %}
+                                {% ifequal b.question q %}
+                                    {{b.num}}   
+                                {% endifequal %}      
+                                {% endifequal %}
+                                {% endfor %}</td>                                
+                         {% endifequal %}                   
+                        </tr> 
+                         {% endfor %}   
+                    </tbody>
+                    </table>
+                {% endfor %}           
+{% endifequal %}
+
+{% ifequal is_all "no" %}
+<br>
+<br><h6>Choose cores/coordinators and click on the names to see reviews one by one. To see all reviews at once, click <a href="{% url feedback.views.qms_review dept_id=curr_department.id is_all=yes %}">SEE ALL REVIEWS!</a></h6>
+<div class="accordion" id="review_accordion">
+      
+<div class="accordion-group">
+    <div class="accordion-heading">
+        <a class="accordion-toggle" href="#core" data-parent="review_accordion" data-toggle="collapse" onclick=showType('core'); ><h5 style="font-size:13px; line-height: 22px; color: rgb(50,50,50);">CORE REVIEWS</h5></a>
+    </div>
+
+    <div id="core" class="accordion-body collapse">
+        <div class="accordion" id="core">
+            {% for core in core_profiles %}
+            <div class="accordion-group">
+                
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" href="#{{core.id}}" data-parent="contact_accordion" data-toggle="collapse" onclick=showCoreReview();>{{core}}
+                    </a>
+                </div>
+              
+                <div id="{{core.id}}" class="accordion-body collapse">
+	            
+                
+                    <table class="table table-striped table-bordered table-condensed">
+            	    <thead>
+    	    	    <tr>
+    	                <th>Question</th>
+        		    	<th>Feedback</th>
+        		    	<th>Answered By</th>
+	    		    </tr>
+	                </thead>
+	    
+	                <tbody>
+                        {% for q in questions %}
+            	    	<tr>
+            	    	{% ifequal q.feedback_for "Core" %}
+                            <td>{{q.question}}</td>
+                            <td>{% for a in averages %}    
+                                {% ifequal a.owner core %}
+                                {% ifequal a.question q %}
+                                    {{a.avg}}   
+                                {% endifequal %}      
+                                {% endifequal %}
+                                {% endfor %}</td>
+                            <td>{% for b in averages %}    
+                                {% ifequal b.owner core %}
+                                {% ifequal b.question q %}
+                                    {{b.num}}   
+                                {% endifequal %}      
+                                {% endifequal %}
+                                {% endfor %}</td>                                
+                         {% endifequal %}                   
+                        </tr> 
+                         {% endfor %}   
+                    </tbody>
+                    </table>
+                     
+        	    
+        	        </div>
+            
+            </div>
+                {% endfor %}
+        </div>
+    </div>
+    <div class="accordion-heading">
+        <a class="accordion-toggle" href="#coord" data-parent="review_accordion" data-toggle="collapse" onclick=showType('coord');><h5 style="font-size:13px; line-height: 22px; color: rgb(50,50,50);">COORDINATOR REVIEWS</h5></a>
+    </div>
+    <div id="coord" class="accordion-body collapse">
+        <div class="accordion" id="coord">
+            {% for coord in coord_profiles %}
+            <div class="accordion-group">
+                
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" href="#{{coord.id}}" data-parent="contact_accordion" data-toggle="collapse" onclick=showCoordReview();>{{coord}}
+                    </a>
+                </div>
+                
+                <div id="{{coord.id}}" class="accordion-body collapse">
+	            
+                
+                    <table class="table table-striped table-bordered table-condensed">
+            	    <thead>
+    	    	    <tr>
+    	                <th>Question</th>
+        		    	<th>Feedback</th>
+	    		    </tr>
+	                </thead>
+	    
+	                <tbody>
+                        {% for q in questions %}
+            	    	<tr>
+            	    	{% ifequal q.feedback_for "Coord" %}
+                            <td>{{q.question}}</td>
+                            <td>{% for a in averages %}    
+                                {% ifequal a.owner coord %}
+                                {% ifequal a.question q %}
+                                    {{a.avg}}   
+                                {% endifequal %}      
+                                {% endifequal %}
+                                {% endfor %}</td>
+                            <td>{% for b in averages %}    
+                                {% ifequal b.owner coord %}
+                                {% ifequal b.question q %}
+                                    {{b.num}}   
+                                {% endifequal %}      
+                                {% endifequal %}
+                                {% endfor %}</td>                                
+                         {% endifequal %}                   
+                        </tr> 
+                         {% endfor %}   
+                    </tbody>
+                    </table>
+                     
+        	    
+        	        </div>
+            
+            </div>
+                {% endfor %}
+        </div>
+    </div>
+</div>
+</div>
+{% endifequal %}
      
 {% endif %}
 
