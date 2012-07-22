@@ -93,8 +93,7 @@ def display_core_portal (request, core):
     """
     Display core's portal
     """
-# The case that a coord is trying to see a core's dashboard, which should'nt be allowed.      
-    print "it wont come here"
+
     display_dict = dict ()
     # Deal with the Updates part (viewing, creating) of the portal
     update_dict = handle_updates (request, core)
@@ -103,6 +102,7 @@ def display_core_portal (request, core):
     display_dict['all_unassigned_received_SubTasks'] = get_unassigned_received_subtasks (core)
     display_dict['all_requested_SubTasks'] = get_requested_subtasks (core)
     display_dict['all_completed_SubTasks'] = get_completed_subtasks (core)
+    
     
     #Get Department Members' image thumbnails
     display_dict ['dept_cores_list'] = User.objects.filter (

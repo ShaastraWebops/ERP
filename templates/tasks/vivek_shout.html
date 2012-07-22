@@ -34,7 +34,8 @@
 <h2>Shouts</h2>
 <div class="row">
 <div id="shoutbox" class="well span6">
-
+<!--We have to reload this area-->
+    
     <table>
         {% for field in shouts %}
         <tr>
@@ -45,13 +46,15 @@
         {% endfor %}
 
     </table>
+
+<!--We have to reload this area-->
 </div>
 </div>
 <div class="row">
 <div id="add_shoutbox" class="span6">
 {% if not is_visitor %}
 
-<form method="POST" action="./">
+<form method="POST" action="Dajaxice.tasks.shout(Dajax.process)"><!--change the action to submit it with dajax-->
   {% csrf_token %}
 
 {{ shout_form }}

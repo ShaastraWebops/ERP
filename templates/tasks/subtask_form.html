@@ -17,7 +17,7 @@
     <th>{{ field.label_tag }}</th>
     <td>
       {{ field.errors }}
-      {{ field }} 
+      {{ field }}
     </td>
   </tr>
   {% else %}
@@ -29,7 +29,7 @@
   {% endfor %}
 
   {% for field in form.hidden_fields %}
-  {{ field }} 
+  {{ field }}
   {% endfor %}
 
   {% endwith %}
@@ -43,7 +43,7 @@
     <th>{{ field.label_tag }}</th>
     <td>
       {{ field.errors }}
-      {{ field }} 
+      {{ field }}
     </td>
   </tr>
   {% else %}
@@ -55,10 +55,9 @@
   {% endfor %}
 
   {% for field in form.hidden_fields %}
-  {{ field }} 
+  {{ field }}
   {% endfor %}
   {% endif %}
-  
 </table>
 
 <p>

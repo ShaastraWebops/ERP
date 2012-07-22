@@ -1,5 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
+from dajaxice.core import dajaxice_autodiscover
+from django.conf import settings
 from erp.tasks.views import *
 from erp.users.views import *
 from erp.home.views import *
@@ -12,6 +14,9 @@ from haystack.views import search_view_factory
 from django.conf.urls import *
 haystack.autodiscover()
 
+
+haystack.autodiscover()
+dajaxice_autodiscover()
 admin.autodiscover()
 
 # Uncomment the next two lines to enable the admin:
@@ -19,7 +24,7 @@ from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-
+    (r'^dajaxice/', include('dajaxice.urls')),
     #(r'^search/', include('haystack.urls')),
     url(r'^$', 'erp.home.views.login', name='home'),
     (r'^search/', include('erp.search.urls')),
