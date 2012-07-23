@@ -1,7 +1,6 @@
+{% extends "base_portal.html" %}
 
-
-
-{% block body %}
+{%block body%}
 
 <link href="{{ MEDIA_URL }}css/fullcalendar.css" rel="stylesheet" type="text/css" />
 <style ="text/css" >
@@ -219,15 +218,7 @@
   });
 </script> 
 
-
-
-
-
-{% block left_side_bar %}
-{% include "left-sidebar.html" %}
-{% endblock left_side_bar %}
-
-<div id="main_pos">
+<!--<div id="main_pos">
 <div id="fullcal"></div>  
 <table>
 
@@ -239,7 +230,7 @@
 	{% if column.date != 0 %}
 	<div class ="date_box" >
 
-	  <div 
+	  <div>
 	     {% if column.subtask %}
 	     class="date" 
 	     {% else %}
@@ -305,6 +296,8 @@
     </div>
     {% endif %}
   </div>
-  </div>
+  </div>-->
+<div>
 {{ complete_data }}
-  {% endblock %}
+</div>
+ {% endblock %}

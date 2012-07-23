@@ -455,10 +455,12 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
     complete_data["subtasks"]=[]
     if is_core(page_owner):
         for sub in user_tasks:
-            complete_data["subtasks"].append({"subject": str(sub.subject), "task_id": str(sub.id), "creation_date": str(sub.creation_date), "deadline": str(sub.deadline), "status": str(sub.status)})
+            creation_date=str(sub.creation_date).split(' ')[0]
+            complete_data["subtasks"].append({"subject": str(sub.subject), "task_id": str(sub.id), "creation_date": creation_date, "deadline": str(sub.deadline), "status": str(sub.status)})
     else:
         for sub in user_tasks:
-            complete_data["subtasks"].append({"subject": str(sub.subject), "task_id": str(sub.task.id), "creation_date": str(sub.creation_date), "deadline": str(sub.deadline), "status": str(sub.status)})
+            creation_date=str(sub.creation_date).split(' ')[0]
+            complete_data["subtasks"].append({"subject": str(sub.subject), "task_id": str(sub.task.id), "creation_date": creation_date, "deadline": str(sub.deadline), "status": str(sub.status)})
     
     return render_to_response('dashboard/mycalendar.html',locals() ,context_instance = global_context(request))
   
