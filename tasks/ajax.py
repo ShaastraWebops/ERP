@@ -3,24 +3,35 @@ from dajax.core import Dajax
 from models import *
 from forms import *
 from erp.dashboard.models import *
-from erp.dashboard.forms import *
+from erp.misc.helper import *
+from erp.misc.util import *
+from erp.tasks.render import *
+from django.template import Template, Context
+from django.template.loader import get_template
+import datetime
+
 
 @dajaxice_register
-def shout(request):
+def shout(request, shout=None):
+    print request.user, 'just shouted', shout, 'at', datetime.datetime.now()
     dajax=Dajax()
-    shout_form=shout_box_form()
-    shouts=shout_box.objects.all()
-    shout_form=shout_box_form(request.POST)            
-    if shout_form.is_valid():
-        new_shout = shout_form.save (commit = False)
-        new_shout.user=request.user
-        new_shout.nickname=page_owner.get_profile ().nickname
-        new_shout.timestamp=datetime.datetime.now()
-        new_shout.save ()
-        shout_form = shout_box_form ()
-        
-    #call function to render html or return Json
+    if shout is not None:
+        new_shout=add_shout(request, shout)
+    shouts = shout_box.objects.all()
+    template = get_template('tasks/shoutbox.html')
+    html = template.render(Context({'shouts':shouts}))
+    dajax.assign('#markup','innerHTML', html)
+    dajax.assign('#shout_button','innerHTML', 'Shout!')
+    return dajax.json()
+          
     
- 
+def add_shout(request,shout):
+    new_shout=shout_box()   
+    new_shout.user = request.user
+    new_shout.nickname = request.user.get_profile().nickname
+    new_shout.comments = shout
+    new_shout.timestamp = datetime.datetime.now()
+    new_shout.save()
+    print 'saved', new_shout 
         
     
