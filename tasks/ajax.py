@@ -45,7 +45,6 @@ def comment(request, object_url=None, comment=None):
     template = get_template('tasks/comment_table.html')
     html = template.render(Context({'comments':comments}))    
     dajax.assign('#comments_table', 'innerHTML', html)
-    dajax.assign('#comment_button', 'innerHTML', 'Comment')
     return dajax.json()
    
 def add_task_comment(request, task_id, comment):
@@ -58,6 +57,10 @@ def add_task_comment(request, task_id, comment):
     taskcomment.save()
     print 'saved', taskcomment
 
+
+
+# This was the Previous addcomment handler. Delete when cleaning code. Currently present so that Subtask Comments dont throw an exception
+# TODO: Subtask Comments
 
 def handle_comment (request, is_task_comment, object_id, other_errors = False):
     """
@@ -113,4 +116,3 @@ def handle_comment (request, is_task_comment, object_id, other_errors = False):
         comment_form = curr_modelform ()
     return (comments, comment_form, 'Blank')
         
-    

@@ -9,14 +9,13 @@
 <script type="text/javascript">
 
     function comment(){
-        comment = $('#comments_field').val()
-        if ($('#comments_field').val()=='')
+        var comment = $('#comments_field').val()
+        if (comment=='')
         {
             $("#comments_alert").show()
             exit
         }
         $('#comments_field').val('')
-        $('#comment_button').val("Commenting..")
         Dajaxice.tasks.comment(Dajax.process, {
                     'object_url' : document.URL,
                     'comment' : comment
@@ -27,11 +26,12 @@
 
 <h2>Add a comment</h2>
 <textarea class='comment' id="comments_field" placeholder="enter comment"></textarea>
-<button class="btn btn-primary" onclick="comment();" id="comment_button">Comment</button>
-<center>
+<div class="well">
+<button class="btn btn-primary" onclick="comment()" id="comment_button">Comment</button>
+</div>
             <div class="alert alert-error span2 offset1 hide" id="comments_alert">
                 <center>
                     <strong> Your comment is blank! </strong>
                 </center>
             </div>
-        </center>
+  
