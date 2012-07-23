@@ -17,6 +17,12 @@ if DEBUG:
     MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
     MIDDLEWARE_CLASSES.append('debug_toolbar.middleware.DebugToolbarMiddleware')
     MIDDLEWARE_CLASSES = tuple(MIDDLEWARE_CLASSES)
+
+
+    #Kabhi = 117.192.179.42
+    #Serup = 117.193.5.17
+
+    #Please add you name and ip as comment before adding to this tuple
     INTERNAL_IPS = ('127.0.0.1','117.192.179.42','117.193.5.17')
 
     DATABASE_ENGINE = 'mysql'
