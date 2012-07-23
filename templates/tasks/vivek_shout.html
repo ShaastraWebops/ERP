@@ -43,7 +43,8 @@
 					$(".alert").show();
 					exit
 				}
-				$("#shout_button").innerHTML = 'Shouting...'
+				$("#shout_button").html('Shouting...')
+				$("#id_comments").val('')
 				Dajaxice.tasks.shout(Dajax.process, {
 					'shout' : shout_text
 				});
@@ -66,7 +67,7 @@
                 </center>
             </div>
         </center>
-        <!--<input type="submit" class="btn btn-primary btn-large" value="Shout">-->
+     
 
         </form>
         {% endif %}
