@@ -175,6 +175,26 @@ def change_profile_pic(request, owner_name):
 
 	return view_profile(request )
     pic_form=change_pic()
+
+    #Get Department Members' image thumbnails
+    page_owner = get_page_owner (request, owner_name=None)
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)    
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
     
     return render_to_response('users/change_profile_pic.html',locals(),context_instance = global_context(request))
 
@@ -462,6 +482,25 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
             creation_date=str(sub.creation_date).split(' ')[0]
             complete_data["subtasks"].append({"subject": str(sub.subject), "task_id": str(sub.task.id), "creation_date": creation_date, "deadline": str(sub.deadline), "status": str(sub.status)})
     
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+    
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)    
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
+
     return render_to_response('dashboard/mycalendar.html',locals() ,context_instance = global_context(request))
   
     

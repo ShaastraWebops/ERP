@@ -44,7 +44,7 @@ Dashboard
             <p>
                 Click to assign these to your Coords.
             </p>
-            <table class="table span7">
+            <table class="table table-striped table-bordered span7">
                 <tr>
                     <th>Subject</th>
                     <th>Proposer</th>
@@ -71,6 +71,7 @@ Dashboard
 					<td><span class="label label-info">Almost</span></td>
 					{% endif %}
                     <td>
+                    {% if subtask.subtaskcomment_set.all %}
                     <div class="accordion" id="subtasks_comments_{{ subtask.id }}_accordion">
                         <div class="accordion-group">
                             <div class="accordion-heading">
@@ -87,6 +88,9 @@ Dashboard
                             </div>
                         </div>
                     </div>
+                    {% else %}
+                        <p>There are no comments present.</p>
+                    {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
@@ -102,7 +106,7 @@ Dashboard
                 SubTasks you've sent to other Departments
             </p>
             {% if all_requested_SubTasks %}
-            <table class="table table-striped span7">
+            <table class="table table-striped table-bordered span7">
                 <tr>
                     <th>Task Subject</th>
                     <th>SubTask Subject</th>
@@ -129,6 +133,7 @@ Dashboard
 					<td><span class="label label-info">Almost</span></td>
 					{% endif %}
                     <td>
+                    {% if subtask.subtaskcomment_set.all %}
                     <div class="accordion" id="requested_comments_{{ subtask.id }}_accordion">
                         <div class="accordion-group">
                             <div class="accordion-heading">
@@ -145,6 +150,9 @@ Dashboard
                             </div>
                         </div>
                     </div>
+                    {% else %}
+                        <p>There are no comments present.</p>
+                    {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
@@ -160,7 +168,7 @@ Dashboard
             </p>
             {% if all_completed_SubTasks %}
 
-            <table class="table table-striped span6">
+            <table class="table table-striped table-bordered span7">
                 <tr>
                     <th>Subject</th>
                     <th>Completed By</th>
@@ -183,7 +191,7 @@ Dashboard
                 {% endfor %}
             </table>
             {% else %}
-            <h4>There have been no completed SubTasks in your department yet.</h4>
+                <h4>There have been no completed SubTasks in your department yet.</h4>
             {% endif %}
         </div>
         <div class="tab-pane" id="tabs5">

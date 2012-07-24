@@ -301,3 +301,15 @@
 {{ complete_data }}
 </div>
  {% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_calendar");
+    var e = document.getElementById("li_calendar_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+{% endblock javascript%}

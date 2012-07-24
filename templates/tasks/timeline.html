@@ -37,6 +37,7 @@
     {% if po_is_core %}
     
         <td>
+        {% if task.taskcomment_set.all %}
         <div class="accordion" id="timeline_comments_{{ task.id }}_accordion">
             <div class="accordion-group">
                 <div class="accordion-heading">
@@ -53,6 +54,9 @@
                 </div>
             </div>
         </div>
+        {% else %}
+            <p>There are no comments present.</p>
+        {% endif %}
         </td>
             
     {% endif %}
