@@ -173,9 +173,7 @@ Edit Task
 {% else %}
 <div class="row">
     <div class="span4">
-        <div class="comments" id="comment_space">
-            {% include "tasks/comments.html" %}
-        </div>
+            {% include "tasks/task_comments.html" %}
     </div>
 </div>
 {% endif %}
@@ -183,6 +181,12 @@ Edit Task
 
 {% block javascript %}
 {{ block.super }}
+
+<!--include for comments -->
+<script type="text/javascript" src="{{ MEDIA_URL }}js/comments.js"></script>
+{% load dajaxice_templatetags %}
+{% dajaxice_js_import %}
+<!--include for comments -->
 
 <script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
 

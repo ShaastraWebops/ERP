@@ -36,15 +36,23 @@ def add_shout(request,shout):
     print 'saved', new_shout 
     
 @dajaxice_register
-def comment(request, object_url=None, comment=None):
-    print "Comment at", object_url, comment
-    task_id = object_url.split('/')[-1]
-    add_task_comment(request, task_id, comment)
-    comments = TaskComment.objects.filter(task__id = task_id)
+def comment(request, object_id=None, comment=None, is_task=True, elementid=None):
+    print "Comment at", object_id, 'Comment', comment, 'Is task', is_task, 'ELEM', elementid
     dajax = Dajax()
-    template = get_template('tasks/comment_table.html')
-    html = template.render(Context({'comments':comments}))    
-    dajax.assign('#comments_table', 'innerHTML', html)
+    if is_task=='True':
+        task_id = object_id
+        add_task_comment(request, task_id, comment)
+        comments = TaskComment.objects.filter(task__id = task_id)
+        template = get_template('tasks/task_comment_table.html')
+    else:
+        subtask_id = object_id
+        add_subtask_comment(request, subtask_id, comment)
+        comments = SubTaskComment.objects.filter(subtask__id = subtask_id)
+        template = get_template('tasks/subtask_comment_table.html')
+    
+    html = template.render(Context({'comments':comments}))
+    print html    
+    dajax.assign(elementid, 'innerHTML', html)
     return dajax.json()
    
 def add_task_comment(request, task_id, comment):
@@ -55,8 +63,16 @@ def add_task_comment(request, task_id, comment):
     taskcomment.comment_string = comment
     taskcomment.time_stamp = datetime.datetime.now()
     taskcomment.save()
-    print 'saved', taskcomment
+    print 'saved', taskcomment, 'excuse'
 
+def add_subtask_comment(request, subtask_id, comment):
+    subtaskcomment = SubTaskComment()
+    subtaskcomment.subtask = SubTask.objects.filter(id = subtask_id)[0]    
+    subtaskcomment.author = request.user
+    subtaskcomment.comment_string = comment
+    subtaskcomment.time_stamp = datetime.datetime.now()
+    subtaskcomment.save()
+    print 'saved', subtaskcomment.comment_string
 
 
 # This was the Previous addcomment handler. Delete when cleaning code. Currently present so that Subtask Comments dont throw an exception
