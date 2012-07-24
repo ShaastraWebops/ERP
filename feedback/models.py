@@ -40,7 +40,7 @@ class Answer(models.Model):
 class Answeravg(models.Model):
     question = models.ForeignKey(Question)
     owner = models.ForeignKey(userprofile)
-    num = models.DecimalField(max_digits=6, decimal_places=0)
+    num = models.IntegerField()
     avg = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):

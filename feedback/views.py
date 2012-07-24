@@ -1,4 +1,5 @@
 # Create your views here.
+from __future__ import division
 from django.http import *
 from django.shortcuts import *
 from django.template import *
@@ -617,9 +618,9 @@ def review(request):
                             curr_id = i.id
                         existing_average = Answeravg.objects.get(id=curr_id)
                         add=0
-                        number=0.0
+                        number=0
                         for a in answers:
-                            number +=1.0
+                            number +=1
                             add += a.rating
                         average=Decimal(add/number)
                         existing_average.avg = average
@@ -627,9 +628,9 @@ def review(request):
                         existing_average.save()                                    
                     else:
                         add=0
-                        number=0.0
+                        number=0
                         for a in answers:
-                            number +=1.0
+                            number +=1
                             add += a.rating
                         average=Decimal(add/number)            
                         saveavg = Answeravg(question=q,owner=curr_userprofile,avg=average, num=number)
@@ -683,9 +684,9 @@ def qms_review(request, dept_id, is_all):
                             curr_id = i.id
                         existing_average = Answeravg.objects.get(id=curr_id)
                         add=0
-                        number=0.0
+                        number=0
                         for a in answers:
-                            number +=1.0
+                            number +=1
                             add += a.rating
                         average=Decimal(add/number)
                         existing_average.avg = average
@@ -694,9 +695,9 @@ def qms_review(request, dept_id, is_all):
 
                     else:
                         add=0
-                        number=0.0
+                        number=0
                         for a in answers:
-                            number +=1.0
+                            number +=1
                             add += a.rating
                         average=Decimal(add/number)
                         saveavg = Answeravg(question=q,owner=coord,avg=average, num=number)
@@ -713,9 +714,9 @@ def qms_review(request, dept_id, is_all):
                             curr_id = i.id
                         existing_average = Answeravg.objects.get(id=curr_id)
                         add=0
-                        number=0.0
+                        number=0
                         for a in answers:
-                            number +=1.0
+                            number +=1
                             add += a.rating
                         average=Decimal(add/number)
                         existing_average.avg = average
@@ -724,9 +725,9 @@ def qms_review(request, dept_id, is_all):
 
                     else:
                         add=0
-                        number=0.0
+                        number=0
                         for a in answers:
-                            number +=1.0
+                            number +=1
                             add += a.rating
                         average=Decimal(add/number)
                         saveavg = Answeravg(question=q,owner=core,avg=average, num=number)
