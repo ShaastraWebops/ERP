@@ -43,12 +43,12 @@ def comment(request, object_id=None, comment=None, is_task=True, elementid=None)
         task_id = object_id
         add_task_comment(request, task_id, comment)
         comments = TaskComment.objects.filter(task__id = task_id)
-        template = get_template('tasks/task_comment_table.html')
+        template = get_template('tasks/comments/task_comment_table.html')
     else:
         subtask_id = object_id
         add_subtask_comment(request, subtask_id, comment)
         comments = SubTaskComment.objects.filter(subtask__id = subtask_id)
-        template = get_template('tasks/subtask_comment_table.html')
+        template = get_template('tasks/comments/subtask_comment_table.html')
     
     html = template.render(Context({'comments':comments}))
     print html    
