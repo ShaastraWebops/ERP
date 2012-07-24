@@ -204,6 +204,19 @@
                     e.innerHTML="Show";
                     }
             }
+            function showSubtasks(tab, task_id) {
+                var d = document.getElementById(tab + "_subtask_" + task_id + "_icon");
+                var e = document.getElementById(tab + "_subtask_" + task_id + "_text");
+                if(d.className=="icon-plus-sign") {
+                    d.className = "icon-minus-sign";
+                    e.innerHTML="Hide";
+                    }
+                else {
+                    d.className = "icon-plus-sign";
+                    e.innerHTML="Show";
+                    }
+            }
+
         </script>
 
         <script type="text/javascript">

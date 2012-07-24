@@ -13,7 +13,9 @@
   </tr>
   <tr>
     <th>Proposed by</th>
-    <td> {{ curr_subtask.creator.get_profile.name }} </td>
+    <td>
+        <a href="{% url users.views.view_profile owner_name=curr_subtask.creator.username %}">{{ curr_subtask.creator.get_profile.name }}</a>
+    </td>
   </tr>
   <tr>
     <th>Proposing Dept </th>
