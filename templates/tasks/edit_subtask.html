@@ -13,6 +13,12 @@ Subtask
 <h3>The SubTask has successfully been updated.</h3>
 {% endif %}
 
+<!--include for comments -->
+<script type="text/javascript" src="{{ MEDIA_URL }}js/comments.js"></script>
+{% load dajaxice_templatetags %}
+{% dajaxice_js_import %}
+<!--include for comments -->
+
 <a href="{% url tasks.views.edit_task task_id=curr_subtask.task.id owner_name=page_owner %}">Go to Task</a>
 <form action="" method="post">
   {% csrf_token %}
@@ -73,8 +79,8 @@ Subtask
     </tr>
   </table>
   {% endif %}
-  {% include "tasks/comments.html" %}
-  <input type="submit" value="Submit">
+  
+  <input class="btn btn-inverse" type="submit" value="Submit">
 </form>
-
+{% include "tasks/subtask_comments.html" %}
 {% endblock form_stuff %}

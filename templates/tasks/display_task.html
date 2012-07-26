@@ -6,6 +6,13 @@ Task
 {% endblock title %}
 
 {% block display_stuff %}
+
+<!--include for comments -->
+<script type="text/javascript" src="{{ MEDIA_URL }}js/comments.js"></script>
+{% load dajaxice_templatetags %}
+{% dajaxice_js_import %}
+<!--include for comments -->
+
 <center><h1>Task</h1></center>
 
 <table class="table table-striped table-bordered">
@@ -35,12 +42,12 @@ Task
   </tr>
 </table>
 
-{% include "tasks/comments.html" %}
+{% include "tasks/task_comments.html" %}
 
 {% for curr_subtask in curr_task.subtask_set.all %}
 <br />
 <center><h2>SubTask {{ forloop.counter }} </h2></center>
-{% with subtask.subtaskcomment_set.all as comments %}
+{% with curr_subtask.subtaskcomment_set.all as comments %}
 {% include "tasks/subtask_template.html" %}
 {% endwith %}
 {% endfor %}

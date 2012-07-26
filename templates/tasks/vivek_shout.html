@@ -3,8 +3,8 @@
 		position: relative;
 		top: 10px;
 		overflow: auto;
-		height: 320px;
-    }
+		height: 350px;
+	}
 	#shoutbox_heading {
 		position: relative;
 		font-family: Arial;
@@ -12,52 +12,65 @@
 	}
 	#add_shoutbox {
 		position: relative;
-		top: 20px;
-	}
-
-	#nickname {
-		font-weight: 800;
-		font-size: 98%;
 	}
 
 	#comment {
 		font-weight: 300;
 		font-size: 88%
 	}
-	
+
 	#id_comments {
-	    height:30px;
-	    width:350px;
+		height: 30px;
+		width: 350px;
 	}
 </style>
-
-<h2>Shouts</h2>
+{% load dajaxice_templatetags %}
 <div class="row">
-<div id="shoutbox" class="well span6">
+    <div id="shoutbox" class="well span6">
+        <!--We have to reload this area-->
 
-    <table>
-        {% for field in shouts %}
-        <tr>
-            <td id="shouterts name"><span id="nickname" ><a href="{% url users.views.view_profile owner_name=field.user%}">{{field.nickname}}</a>: </span> &nbsp; </td>
-            <td><span id="comment" >{{field.comments}}</span></td>
-            <td></td>
-        </tr>
-        {% endfor %}
-
-    </table>
-</div>
+        {% include "tasks/shoutbox.html" %}
+        <!--We have to reload this area-->
+    </div>
+    {% dajaxice_js_import %}
 </div>
 <div class="row">
-<div id="add_shoutbox" class="span6">
-{% if not is_visitor %}
+    <div id="add_shoutbox" class="span6">
+        <script type="text/javascript">
+			function shout() {
+				shout_text = $("#id_comments").val()
+				if (shout_text == '') {
+					$(".alert").show();
+					exit
+				}
+				$("#shout_button").html('Shouting...')
+				$("#id_comments").val('')
+				Dajaxice.tasks.shout(Dajax.process, {
+					'shout' : shout_text
+				});
+			}
 
-<form method="POST" action="./">
-  {% csrf_token %}
+        </script>
 
-{{ shout_form }}
-<input type="submit" class="btn btn-primary btn-large" value="Shout">
+        {% if not is_visitor %}
+        <center>
+            <textarea id="id_comments" rows="10" cols="40" name="comments"></textarea>
+            <button id ="shout_button" class = "btn btn-inverse btn-large" onclick="shout();">
+                Shout!
+            </button>
+        </center>
 
-</form>
-{% endif %}
+        <center>
+            <div class="alert alert-error span2 offset1 hide">
+                <center>
+                    <strong> Your shout is blank! </strong>
+                </center>
+            </div>
+        </center>
+     
+
+        </form>
+        {% endif %}
+    </div>
 </div>
-</div>
+

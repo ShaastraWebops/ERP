@@ -24,8 +24,12 @@ from django.template.loader import get_template
 from django.template import Context
 from django.core import mail
 from django.http import HttpResponse
+
 from datetime import * 
 from dateutil.relativedelta import *
+
+from ajax import *
+
 
 # Fields to be excluded in the SubTask forms during Task editing
 subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
@@ -210,10 +214,10 @@ def edit_task (request, task_id = None, owner_name = None):
             curr_task.save()
             print 'Task : ', curr_task
 
-            comments, comment_form, comment_status = handle_comment (
-                request = request,
-                is_task_comment = True,
-                object_id = task_id)
+#            comments, comment_form, comment_status = handle_comment (
+#                request = request,
+#                is_task_comment = True,
+#                object_id = task_id)
 
             # Only the filled forms will be stored in subtasks
             # Also, subtasks marked for deletion are deleted here.
@@ -326,7 +330,6 @@ def display_subtask (request, subtask_id, owner_name = None):
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
     comments = SubTaskComment.objects.filter (subtask__id = subtask_id)
-
     return render_to_response('tasks/display_subtask.html',
                               locals(),
                               context_instance = global_context (request))
@@ -347,61 +350,7 @@ def display_task (request, task_id, owner_name = None):
                               locals(),
                               context_instance = global_context (request))
 
-# Adds comments to task / subtasks
-def handle_comment (request, is_task_comment, object_id, other_errors = False):
-    """
-    Return a tuple : (comments, comment form, status).
 
-    comments : Comments for that object, if it exists. Else, None.
-    other_errors : Whether the rest of the Task / SubTask form has
-    errors. In that case, just keep the comment form content as is.
-
-    If the form was POSTed, then save the comment and return comments,
-    empty form, status = 'Success'.
-
-    If the form data is invalid (ie. if it is blank) or if
-    other_errors is True, then return status as 'Error'
-
-    Else, return blank form and status = 'Blank'
-
-    If is_task_comment is True, treat it as a TaskComment.
-    Else, treat it as a SubTaskComment.
-    """    
-    success = False
-    not_found = True
-    user = request.user
-
-
-    if is_task_comment:
-        curr_modelform = TaskCommentForm
-        curr_model = Task
-        comments = TaskComment.objects.filter (task__id = object_id)
-    else:
-        curr_modelform = SubTaskCommentForm
-        curr_model = SubTask
-        comments = SubTaskComment.objects.filter (subtask__id = object_id)
-
-    if request.method == 'POST':
-        comment_form = curr_modelform (request.POST)            
-        if not other_errors and comment_form.is_valid():
-            new_comment = comment_form.save (commit = False)
-            curr_object = curr_model.objects.get (id = object_id)
-            success = True
-            new_comment.author = user
-            if is_task_comment:
-                new_comment.task = curr_object
-            else:
-                new_comment.subtask = curr_object
-            new_comment.save ()
-            # Blank the form
-            comment_form = curr_modelform ()
-            return (comments, comment_form, 'Success')
-        else:
-            return (comments, comment_form, 'Error')
-    else:
-        # Blank form
-        comment_form = curr_modelform ()
-    return (comments, comment_form, 'Blank')
 
 def handle_updates (request, owner_name = None):
     """
