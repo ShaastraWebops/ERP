@@ -29,7 +29,7 @@
 </table>
 <br/>
 <br/>
-<a class="btn btn-primary btn-large pull-right", href="{% url tasks.pdfMakeViews.ReportGen %}" >Create PDF Report</a>
+<a class="btn btn-primary btn-large pull-right", href="{% url tasks.pdfMakeViews.ReportGen owner_name=page_owner %}" >Create PDF Report</a>
 {% else %}
 <h4>No Tasks have been set in your Department yet.</h4>
 {% endif %}

@@ -1,5 +1,4 @@
 try:
-
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
@@ -210,7 +209,7 @@ def ShowTask(request,elements,position_on_page,sno,task):
     return position_on_page,sno
      
 
-def ReportGen(request):
+def ReportGen(request, owner_name):
     buff=StringIO()      
     response = HttpResponse(mimetype='application/pdf')
     response['Content-Disposition'] = 'attachment; filename=ReportOnShaastra.pdf'

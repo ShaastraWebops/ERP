@@ -269,7 +269,7 @@ def create_updates ():
 def do_it_all ():
     create_groups ()
     create_depts ()
-    create_users (users_file_name = '/home/sriram/Django/erp/scripts/users.txt')
+    create_users (users_file_name = '/home/swapnil/erp_host/erp/users.txt')
     create_tasks (n = 5, partial_subtask = False)
     create_tasks (n = 3, partial_subtask = True)
     finish_some_subtasks ()
