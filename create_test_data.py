@@ -141,6 +141,11 @@ def create_tasks (n = 5, partial_subtask = False):
     Departments (at random), but don't assign to their Coords.
     """
     
+    
+    start_date = datetime.date.today().replace(day=1, month=7).toordinal()
+    end_date   = datetime.date.today().toordinal()
+    post_date  = datetime.date.today().replace(day = 21, month=12).toordinal()
+
     dept_names = [tup[0] for tup in DEP_CHOICES]
     if partial_subtask:
         num_other_tasks = 2
@@ -162,22 +167,23 @@ def create_tasks (n = 5, partial_subtask = False):
         curr_coord2 = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = name)[1]
         print 'Tasks for ', curr_dept.Dept_Name
         
-	start_date = datetime.date.today().replace(day=1, month=7).toordinal()
-	end_date = datetime.date.today().toordinal()
-
         for i in xrange (n):
             new_task = Task ()
             new_task.subject = name + task_subj_str + str (i)
             new_task.description = 'Gen Testing ' + str (i)
             new_task.creator = curr_core
-            
-            #new_task.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
+            new_task.feedback = 'Arbit Feedback'
+            new_task.creation_date = datetime.date.fromordinal(random.randint(start_date, end_date))
+            new_task.deadline =  datetime.date.fromordinal(random.randint(end_date, post_date))
             new_task.save () 
 
             if not partial_subtask:
                 subtask1 = SubTask ()
                 subtask1.subject = name + subtask_subj_str_same + str (i)
                 subtask1.creator = curr_core
+                subtask1.feedback = 'Misc Testing'
+                subtask1.creation_date = datetime.date.fromordinal(random.randint(start_date, end_date))
+                subtask1.deadline =  datetime.date.fromordinal(random.randint(end_date, post_date))
                 #subtask1.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
                 subtask1.department = curr_dept
                 subtask1.task = new_task
@@ -193,6 +199,9 @@ def create_tasks (n = 5, partial_subtask = False):
                 subtask2.creator = curr_core
                 #subtask2.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
                 index = random.randint (0, 9)
+                subtask2.feedback = 'Misc Testing'
+                subtask2.creation_date = datetime.date.fromordinal(random.randint(start_date, end_date))
+                subtask2.deadline =  datetime.date.fromordinal(random.randint(end_date, post_date))
                 subtask2.department = Department.objects.get (Dept_Name = dept_names[index])
                 subtask2.subject = subtask2.department.Dept_Name + subtask_subj_str_other + str (i)
                 subtask2.task = new_task
@@ -218,8 +227,10 @@ def finish_some_subtasks ():
         # The SubTask must not be a partial SubTask (for the sake of testing)
         try:
             curr_subtask = SubTask.objects.filter (~Q (coords = None), department__Dept_Name = name)[0]
+            curr_subtask.feedback = 'Finished Misc Testing'
+            curr_subtask.completion_date = datetime.date.fromordinal(random.randint(curr_subtask.creation_date, curr_subtask.deadline))
             curr_subtask.status = 'C'
-            print curr_subtask
+            print curr_subtasko
             curr_subtask.save ()
         except:
             pass
@@ -284,4 +295,4 @@ def do_it_all (request):
     finish_some_subtasks ()
     create_updates ()
     create_comments ()
-    return render_to_response('login.html')
+    return render_to_response('home/login.html')

@@ -3,6 +3,7 @@ try:
 except ImportError:
     from StringIO import StringIO
 import textwrap
+import datetime
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm,inch
 from reportlab.lib.styles import ParagraphStyle as PS
@@ -72,8 +73,10 @@ standard = PS(name = 'Usual Text',
        )
 
 def DateString(date):
-    return "%s/%s/%s" %(date.day,date.month,date.year)
-
+    if date is not None :
+        return "%s/%s/%s" % ( date.day,date.month,date.year)
+    else :
+        return 'Yet to be completed'
 def FillToHalf(length):
     s=''
     i=0
@@ -172,11 +175,23 @@ def ShowTask(request,elements,position_on_page,sno,task):
         elements.append(Paragraph('<b>Creation Date</b> : %s %s<b>Completion Date</b> : %s' 
                                     %(DateString(task.creation_date),FillToHalf(len(DateString(task.creation_date))+16)
                                       ,DateString(task.completion_date)),standard)) 
-        elements.append(small_spacer)                                 
-        elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
-                                    % (str(task.creator.get_profile()) , FillToHalf(len(str(task.creator))+6) ,
-                                        str(request.user.get_profile())),standard))
-        elements.append(small_spacer)       
+        elements.append(small_spacer)  
+        if coord_subtask == 0 :
+            elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
+                                    % (assigner_string , FillToHalf(len(str(task.creator))+6) ,
+                                        assignee_string),standard))
+            elements.append(small_spacer)
+        else : 
+            elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
+                                    % (assigner_string , FillToHalf(len(str(task.creator))+6) ,
+                                        str(assignee_list[0])),standard))
+            elements.append(small_spacer)
+            i=1
+            while i<len(assignee_list):
+                    elements.append(Paragraph('%s' 
+                                    % (assigner_string , FillToHalf(0) ,
+                                        str(assignee_list[i])),standard))
+                    elements.append(small_spacer)    
         elements.append(Paragraph('<b>Feedback : </b>',standard))
         elements.append(P)
         elements.append(PageBreak())
@@ -194,10 +209,22 @@ def ShowTask(request,elements,position_on_page,sno,task):
                                     %(DateString(task.creation_date),FillToHalf(len(DateString(task.creation_date))+16)
                                       ,DateString(task.completion_date)),standard))  
         elements.append(small_spacer)                         
-        elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
-                                    % (str(task.creator.get_profile()) , FillToHalf(len(str(task.creator))+6) ,
-                                        str(request.user.get_profile())),standard))
-        elements.append(small_spacer)       
+        if coord_subtask == 0 :
+            elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
+                                    % (assigner_string , FillToHalf(len(str(task.creator))+6) ,
+                                        assignee_string),standard))
+            elements.append(small_spacer)
+        else : 
+            elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
+                                    % (assigner_string , FillToHalf(len(str(task.creator))+6) ,
+                                        str(assignee_list[0])),standard))
+            elements.append(small_spacer)
+            i=1
+            while i<len(assignee_list):
+                    elements.append(Paragraph('%s' 
+                                    % (assigner_string , FillToHalf(0) ,
+                                        str(assignee_list[i])),standard))
+                    elements.append(small_spacer)
         elements.append(Paragraph('<b>Feedback : </b>',standard)) 
         elements.append(P)        
         elements.append(spacer)
@@ -248,17 +275,18 @@ def ReportGen(request, owner_name):
     
 
     position_on_page=PAGE_HEIGHT-FRAME_BORDER
-    elements.append(big_spacer)
     
     sno=1
     if is_core(request.user):
         subtasks=SubTask.objects.filter(creator__in = users_in_department).order_by('creation_date')        
         elements.append(Paragraph('Sub-Tasks given to your coords',h1))
+        elements.append(big_spacer)
         position_on_page = position_on_page - h1.fontSize - big_spacer_height          
         
     if is_coord(request.user):         
         subtasks=SubTask.objects.filter(coords__contains = request.user ).order_by('creation_date')        
         elements.append(Paragraph('Sub-Tasks given to you',h1))
+        elements.append(big_spacer)
         position_on_page = position_on_page - h1.fontSize - big_spacer_height
     for subtask in subtasks:
         position_on_page,sno=ShowTask(request,elements,position_on_page,sno,subtask)
