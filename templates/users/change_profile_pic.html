@@ -14,10 +14,18 @@
     
 
 {% endfor %}</br>
-<input type="submit" value ="change ">
+<input type="submit" value ="Change ">
 </form>
 
-
-
-
 {% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("nav_profile");
+    d.className = "active";
+ });
+</script>
+{% endblock javascript%}
+

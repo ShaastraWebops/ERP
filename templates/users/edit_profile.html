@@ -49,3 +49,14 @@
 </div>
 
 {% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("nav_profile");
+    d.className = "active";
+ });
+</script>
+{% endblock javascript%}
+

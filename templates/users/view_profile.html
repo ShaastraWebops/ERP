@@ -12,9 +12,9 @@
             <br>
             {% endif %}
 
-            <h3>{{profile.nickname}}<h3>
+            <h3>({{profile.nickname}})</h3>
         </center>
-<br>
+<br/>
     </div>
     <div class="row">
         <div class="span3 offset1">
@@ -34,7 +34,7 @@
                 Core
                 {% else %}
                 Coordinator
-                {% endif %}<h3>
+                {% endif %}</h3>
             </center>
             {% if is_core %}
             <center>
@@ -43,7 +43,7 @@
             {%endif%}
             <table class="table table-striped" id="details_table">
 
-                <br>
+                <br/>
 
                 <div id="complete_details">
                     <tr>
@@ -109,6 +109,15 @@
             </center>
             {% endif %}
         </div>
-        {% endblock %}
-</div> 
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("nav_profile");
+    d.className = "active";
+ });
+</script>
+{% endblock javascript%}
  

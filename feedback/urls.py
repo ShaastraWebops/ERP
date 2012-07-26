@@ -3,8 +3,8 @@ from django.views.generic.simple import *
 
 urlpatterns = patterns('erp.feedback.views',
         (r'^answer/$', 'answer'),
-        (r'^question_for/(?P<question_for\w+)/$','question_for'),
-        (r'^add_question/$', 'add_question'),
+        (r'^question_for/$','question_for'),
+        (r'^add_question/(?P<question_for>\w+)/$', 'add_question'),
         (r'^display/(?P<question_for>\w+)/$', 'display'),
         (r'^review/$', 'review'),
         (r'^qms_review/(?P<dept_id>\d+)/$', 'qms_review'),  

@@ -242,6 +242,16 @@ def upload_file(request ,owner_name=None):
     print "can _edit form views" ,request.session.get('is_visitor','True')
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
+    
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
     if is_core(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True

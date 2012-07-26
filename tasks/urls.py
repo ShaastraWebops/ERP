@@ -1,7 +1,6 @@
 from django.conf.urls.defaults import *
 from django.views.generic.simple import *
 from django.contrib import admin
-from erp.tasks.views import *
 from django.conf.urls import *
 
 # TODO
@@ -18,5 +17,9 @@ urlpatterns = patterns('erp.tasks.views',
       (r'^display_subtask/(?P<subtask_id>[0-9]+)?', 'display_subtask'),
       (r'^department/(?P<department_name>$\w+)?$', 'display_department_portal'),
       # (r'^(\w+)?$', 'display_portal'),
+)
+
+urlpatterns +=patterns('erp.tasks.pdfMakeViews',
+      (r'^report/$', 'ReportGen'),
 )
 
