@@ -1,7 +1,7 @@
 {% extends "base_portal.html" %}
 
 {% block title %}
-{{ block.super }} 
+{{ block.super }}
 
 {% if is_new_task %}
 Create a New Task
@@ -13,185 +13,188 @@ Edit Task
 {% block form_stuff %}
 <link href="{{ MEDIA_URL }}css/datepicker.css" rel="stylesheet">
 <div align="center">
-  <div class="rbroundbox"> 
-    <div class="rbtop">
-      <div>
-	<div>
-	</div>
-      </div>
-    </div>
-    <div class="rbcontentwrap"> 
-      <div class="rbcontent"> 
-	{% if is_new_task %}
-	<h2>Create a New Task</h2>
-	{% else %}
-	<h2>Edit Task</h2>
-	{% endif %}
-      </div>
-    </div>
-    <!-- /rbcontent --> 
-    <div class="rbbot">
-      <div>
-	<div>
-	</div>
-      </div>
-    </div> 
-  </div>
-  <!-- /rbroundbox --> 
-
-  {# The Template Form (hidden) #}
-  <div class="template-form">   
     <div class="rbroundbox">
-      <div class="rbtop">
-    	<div>
-    	  <div>
-    	  </div>
-    	</div>
-      </div>
-      <div class="rbcontentwrap">
-    	<div class="rbcontent">
-	  {% include "tasks/subtask_form.html" %}
-    	</div>
-      </div>
-      <!-- /rbcontent -->
-      <div class="rbbot">
-    	<div>
-    	  <div>
-    	  </div>
-    	</div>
-      </div>
+        <div class="rbtop">
+            <div>
+                <div></div>
+            </div>
+        </div>
+        <div class="rbcontentwrap">
+            <div class="rbcontent">
+                {% if is_new_task %}
+                <h2>Create a New Task</h2>
+                {% else %}
+                <h2>Edit Task</h2>
+                {% endif %}
+            </div>
+        </div>
+        <!-- /rbcontent -->
+        <div class="rbbot">
+            <div>
+                <div></div>
+            </div>
+        </div>
     </div>
-    <!-- /rbroundbox --> 
-  </div>
-  <form action="" method="post">
-    {% csrf_token %}
-    <div class="rbroundbox"> 
-      <div class="rbtop">
-	<div>
-	  <div>
-	  </div>
-	</div>
-      </div>
-      <div class="rbcontentwrap"> 
-	<div class="rbcontent"> 
-<div class="well">
-	  <table cellpadding="4">
-	    {% if is_new_task %}
-	    <tr>
-	      <th>Department: </th>
-	      <td>{{ user_dept_name }} </td>
-	    </tr>
-	    <tr>
-	      <th>Creator: </th>
-	      <td>{{ user_name }} </td>
-	    </tr>
-	    {% else %}
-	    <tr>
-	      <th>Department: </th>
-	      <td>{{ curr_task.creator.get_profile.department.Dept_Name }} </td>
-	    </tr>
-	    <tr>
-	      <th>Creator: </th>
-	      <td>{{ curr_task.creator.get_profile.name }} </td>
-	    </tr>
-	    {% endif %}
-	    {{ task_form.as_table }}
-	  </table>
-</div>
-	</div>
-      </div>
-      <!-- /rbcontent --> 
-      <div class="rbbot">
-	<div>
-	  <div>
-	  </div>
-	</div>
-      </div> 
-    </div>
-    <!-- /rbroundbox --> 
-<div class="well">
-    {% include "tasks/comments.html" %}
-</div>
 
-    <div class="rbroundbox"> 
-      <div class="rbtop">
-	<div>
-	  <div>
-	  </div>
-	</div>
-      </div>
-      <div class="rbcontentwrap"> 
-	<div class="rbcontent"> 
-	  <h2>Subtasks</h2>
-	  <!-- <p>Fill as many Subtasks as you want</p> -->
-	</div>
-      </div>
-      <!-- /rbcontent --> 
-      <div class="rbbot">
-	<div>
-	  <div>
-	  </div>
-	</div>
-      </div> 
-    </div>    
     <!-- /rbroundbox -->
 
-    {{ subtaskfs.management_form }}
-    {% for form in subtaskfs.forms %}
-
-    <div class="visible-form">   
-      <div class="rbroundbox">
-	<div class="rbtop">
-    	  <div>
-    	    <div>
-    	    </div>
-    	  </div>
-	</div>
-
-	<div class="rbcontentwrap">
-    	  <div class="rbcontent">
-	    {% include "tasks/subtask_form.html" %}
-    	  </div>
-	</div>
-	<!-- /rbcontent -->
-	<div class="rbbot">
-    	  <div>
-    	    <div>
-    	    </div>
-    	  </div>
-	</div>
-      </div>
-      <!-- /rbroundbox --> 
+    {# The Template Form (hidden) #}
+    <div class="template-form">
+        <div class="rbroundbox">
+            <div class="rbtop">
+                <div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="rbcontentwrap">
+                <div class="rbcontent">
+                    {% include "tasks/subtask_form.html" %}
+                </div>
+            </div>
+            <!-- /rbcontent -->
+            <div class="rbbot">
+                <div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <!-- /rbroundbox -->
     </div>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="rbroundbox">
+            <div class="rbtop">
+                <div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="rbcontentwrap">
+                <div class="rbcontent">
+                    <table>
+                        {% if is_new_task %}
+                        <tr>
+                            <th>Department: </th>
+                            <td>{{ user_dept_name }} </td>
+                        </tr>
+                        <tr>
+                            <th>Creator: </th>
+                            <td>{{ user_name }} </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <th>Department: </th>
+                            <td>{{ curr_task.creator.get_profile.department.Dept_Name }} </td>
+                        </tr>
+                        <tr>
+                            <th>Creator: </th>
+                            <td>{{ curr_task.creator.get_profile.name }} </td>
+                        </tr>
+                        {% endif %}
+                        {{ task_form.as_table }}
+                    </table>
+                </div>
+            </div>
+            <!-- /rbcontent -->
+            <div class="rbbot">
+                <div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <!-- /rbroundbox -->
+        {% if is_new_task %} <!-- heard that 1.4 does not allow not inside template conditions -->
+        {% else %}
+       
+        {% endif %}
+        <div class="rbroundbox">
+            <div class="rbtop">
+                <div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="rbcontentwrap">
+                <div class="rbcontent">
+                    <h2>Subtasks</h2>
+                    <!-- <p>Fill as many Subtasks as you want</p> -->
+                </div>
+            </div>
+            <!-- /rbcontent -->
+            <div class="rbbot">
+                <div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <!-- /rbroundbox -->
 
-    {% endfor %}
-    
-    <a href="#" id="add">Add a SubTask</a>
+        {{ subtaskfs.management_form }}
+        {% for form in subtaskfs.forms %}
 
-    <table>
-      <tr>
-	<td>
-	  {% if is_new_task %}
-	  <input type="submit" name = "Create" value="Create" />
-	  {% else %}
-	  <input type="submit" name = "Edit" value= "Submit" />
-	  {% endif %}
-	</td>
-	<td>
-	  <input type="hidden" name="next" value="../../home" />
-	</td>
-      </tr>
-    </table>
-  </form>
+
+        <div class="visible-form">
+            <div class="rbroundbox">
+                <div class="rbtop">
+                    <div>
+                        <div></div>
+                    </div>
+                </div>
+
+                <div class="rbcontentwrap">
+                    <div class="rbcontent">
+                        {% include "tasks/subtask_form.html" %}
+                    </div>
+                </div>
+                <!-- /rbcontent -->
+                <div class="rbbot">
+                    <div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            <!-- /rbroundbox -->
+        </div>
+
+        {% endfor %}
+
+        <a href="#" id="add">Add a SubTask</a>
+
+        <table>
+            <tr>
+                <td> {% if is_new_task %}
+                <input type="submit" name = "Create" value="Create" />
+                {% else %}
+                <input type="submit" name = "Edit" value= "Submit" />
+                {% endif %} </td>
+                <td>
+                <input type="hidden" name="next" value="../../home" />
+                </td>
+            </tr>
+        </table>
+    </form>
 </div>
+{% if is_new_task %}
+{% else %}
+<div class="row">
+    <div class="span4">
+            {% include "tasks/task_comments.html" %}
+    </div>
+</div>
+{% endif %}
 {% endblock form_stuff %}
 
 {% block javascript %}
 {{ block.super }}
 
+<!--include for comments -->
+<script type="text/javascript" src="{{ MEDIA_URL }}js/comments.js"></script>
+{% load dajaxice_templatetags %}
+{% dajaxice_js_import %}
+<!--include for comments -->
+
 <script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
 
 <script type="text/javascript">
+
 $(document).ready(function() {
     var d = document.getElementById("li_task");
     var e = document.getElementById("li_task_icon");
@@ -219,6 +222,7 @@ $(document).ready(function() {
             $(this).val("08/01/2012"); //Date set: Aug 1st, 2012. Set a date close to usage date for easier navigation
     });
  });
+
 </script>
 <script src="js/google-code-prettify/prettify.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}js/bootstrap-datepicker.js"></script>

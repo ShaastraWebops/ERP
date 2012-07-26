@@ -1,0 +1,21 @@
+<div id="comments_table_subtask_{{curr_subtask.id}}">
+{% if comments %}
+
+<table class="table table-bordered" >
+    <tr>
+        <th>Author</th>
+        <th>Comment</th>
+        <th>Time</th>
+    </tr>
+    {% for comment in comments %}
+    <tr>
+        <td>{{ comment.author.get_profile.name }}</td>
+        <td>{{ comment.comment_string }}</td>
+        <td>{{ comment.time_stamp }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<h4>There are no Comments yet.</h4>
+{% endif %}
+</div>

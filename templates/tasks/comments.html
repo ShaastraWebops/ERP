@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% comment %}
 {% if is_task_comment %}
 <h2>Task - {{ curr_object.subject }}</h2>
@@ -28,25 +29,52 @@
 {% else %}
 There are no Comments yet.
 {% endif %}
+=======
+>>>>>>> dajax2
 
+<div id="comments_table">
+    {% include "tasks/comment_table.html" %}
+</div>
 {# Comment Form #}
-{% if not is_visitor and comment_form %}
-{% if comment_status == 'Success' %}
-<h4> Comment Successfully Added </h4>
-{% endif %}
 
-{% comment %}
-{% if comment_status == 'Not Found' %}
-{% if is_task_comment %}
-<h2> No Such Task Exists </h2>
-{% else %}
-<h2> No Such Subtask Exists </h2>
-{% endif %}
-{% endif %}
-{% endcomment %}
+{% load dajaxice_templatetags %}
+{% dajaxice_js_import %}
+<script type="text/javascript">
 
+    function comment(){
+        var comment = $('#comments_field').val()
+        if (comment=='')
+        {
+            $("#comments_alert").show()
+            exit
+        }
+        $('#comments_field').val('')
+        Dajaxice.tasks.comment(Dajax.process, {
+                    'object_url' : document.URL,
+                    'comment' : comment
+                });
+    }
+      
+</script>
+
+<<<<<<< HEAD
 <h3>Add a comment</h3>
 <table cellpadding="4">
   {{ comment_form }}
 </table>
 {% endif %}
+=======
+<h2>Add a comment</h2>
+<textarea class='comment' id="comments_field" placeholder="enter comment"></textarea>
+<div class="well">
+<button class="btn btn-primary" type = "button" onclick="comment()" id="comment_button">Comment</button>
+
+
+</div>
+            <div class="alert alert-error span2 offset1 hide" id="comments_alert">
+                <center>
+                    <strong> Your comment is blank! </strong>
+                </center>
+            </div>
+  
+>>>>>>> dajax2
