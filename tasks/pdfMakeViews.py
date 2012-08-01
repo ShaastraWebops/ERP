@@ -76,7 +76,7 @@ def DateString(date):
     if date is not None :
         return "%s/%s/%s" % ( date.day,date.month,date.year)
     else :
-        return 'Yet to be completed'
+        return 'Unfinished'
 def FillToHalf(length):
     s=''
     i=0
@@ -87,36 +87,38 @@ def FillToHalf(length):
 
 
 def ShowTask(request,elements,position_on_page,sno,task):
+    print DateString(task.creation_date)
     '''When cores get something from another deprtment it's a task. When they give something to another department, it's
        a subtask. Nomenclature is pretty bad'''
     styles=getSampleStyleSheet()["Normal"]  
     coord_subtask = 0 
+    is_task = 0
     if is_core(request.user):
         if task.creator.get_profile().department == request.user.get_profile().department:  
             '''If your department made the task , creator is assigner and the department is the assignee, as the model has no field for
            assignee, just his/her department.Technically this is a sub-task as the user gave the task to another department. Hence we 
            need to fetch the SubTask given to this task''' 
-        
-            assigner_string = str(task.creator.get_profile())
+            is_task = 1
+            assigner_string = task.creator.get_profile().name
             assignee_string = ''
         elif request.user.get_profile().department == task.department :
             ''' In this case it is a task as the user belongs to the recieving department. So assigner is the creator - the guy from that
                 department and this core's department is the assignee'''
-            assigner_string = str(task.creator.get_profile())
+            assigner_string = str(task.creator.get_profile().name)
             assignee_string = task.department.Dept_Name
         else : 
             ''' This is when the core tries to find the SubTasks given to his coords. Assigner is creator and a list of coords is the
                 assignee'''
             coord_subtask = 1
-            assigner_string = str(task.creator.get_profile())
-            assignee_list = task.coords 
+            assigner_string = str(task.creator.get_profile().name)
+            assignee_list = task.coords.all()
     
     else : 
-            ''' This is when the core tries to find the SubTasks given to his coords. Assigner is creator and a list of coords is the 
+            ''' This is when the coord tries to find the SubTasks given to his coords. Assigner is creator and a list of coords is the 
                 assignee'''
             coord_subtask = 1
-            assigner_string = str(task.creator.get_profile())
-            assignee_list = task.coords         
+            assigner_string = str(task.creator.get_profile().name)
+            assignee_list = task.coords.all()         
 
     aW = PAGE_WIDTH-2*FRAME_BORDER                                 # available width and height
     aH = position_on_page+FRAME_BORDER
@@ -125,9 +127,9 @@ def ShowTask(request,elements,position_on_page,sno,task):
     if coord_subtask == 0 :                                                               # find required space  
         h= h+h2.fontSize+4*small_spacer_height+3*standard.fontSize 
     else :
-        h= h+h2.fontSize+(3+len(assignee_list))*small_spacer_height+(len(assignee_list)+2)*standard.fontSize 
+        h= h+h2.fontSize+(3+assignee_list.count())*small_spacer_height+(assignee_list.count()+2)*standard.fontSize 
+        len=assignee_list.count()
     
-
     nH=h+spacer_height
     if nH<=aH:
         
@@ -138,33 +140,36 @@ def ShowTask(request,elements,position_on_page,sno,task):
         elements.append(small_spacer)
         
         elements.append(Paragraph('<b>Creation Date</b> : %s %s<b>Completion Date</b> : %s' 
-                                    %(DateString(task.creation_date),FillToHalf(len(DateString(task.creation_date))+16)
+                                    %(DateString(task.creation_date),FillToHalf(DateString(task.creation_date).__len__()-1+22)
                                       ,DateString(task.completion_date)),standard)) 
         elements.append(small_spacer)               
         if coord_subtask == 0 :
-            elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
-                                    % (assigner_string , FillToHalf(len(str(task.creator))+6) ,
+            if is_task == 1:
+                elements.append(Paragraph('<b>Creator</b> : %s ' 
+                                    % (assigner_string),standard))
+            else :
+                elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
+                                    % (assigner_string , FillToHalf(.25*str(assigner_string).__len__()+6+15) ,
                                         assignee_string),standard))
             elements.append(small_spacer)
         else : 
             elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
-                                    % (assigner_string , FillToHalf(len(str(task.creator))+6) ,
-                                        str(assignee_list[0])),standard))
+                                    % (assigner_string , FillToHalf(.25*str(assigner_string).__len__()+6+15) ,
+                                       str(assignee_list[0].get_profile().name)),standard))
             elements.append(small_spacer)
             i=1
-            while i<len(assignee_list):
-                    elements.append(Paragraph('%s' 
-                                    % (assigner_string , FillToHalf(0) ,
-                                        str(assignee_list[i])),standard))
+            while i<assignee_list.__len__()-1:
+                    elements.append(Paragraph('%s %s' 
+                                    % (FillToHalf(-59+22) ,
+                                       str(assignee_list[i].get_profile().name)),standard))
                     elements.append(small_spacer)
+                    i=i+1
                   
         elements.append(Paragraph('<b>Feedback : </b>',standard))
         elements.append(P)
         elements.append(spacer)  
         position_on_page = position_on_page - nH                  # reduce the available height   
-        print 3    
     elif nH>aH and h<=aH:        
-        print 4     
         
         elements.append(Paragraph('<b>%d. %s </b>' % (sno,task.subject),h2))  
         
@@ -173,25 +178,30 @@ def ShowTask(request,elements,position_on_page,sno,task):
         elements.append(Paragraph('<b>Deadline</b> : %s ' %DateString(task.deadline),standard))
         elements.append(small_spacer)
         elements.append(Paragraph('<b>Creation Date</b> : %s %s<b>Completion Date</b> : %s' 
-                                    %(DateString(task.creation_date),FillToHalf(len(DateString(task.creation_date))+16)
-                                      ,DateString(task.completion_date)),standard)) 
+                                    %(DateString(task.creation_date),FillToHalf(DateString(task.creation_date).__len__()-1+22)
+                                      ,DateString(task.completion_date)),standard))
         elements.append(small_spacer)  
         if coord_subtask == 0 :
-            elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
-                                    % (assigner_string , FillToHalf(len(str(task.creator))+6) ,
+            if is_task == 1:
+                elements.append(Paragraph('<b>Creator</b> : %s ' 
+                                    % (assigner_string),standard))
+            else :
+                elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
+                                    % (assigner_string , FillToHalf(.25*str(assigner_string).__len__()+6+15) ,
                                         assignee_string),standard))
             elements.append(small_spacer)
         else : 
             elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
-                                    % (assigner_string , FillToHalf(len(str(task.creator))+6) ,
-                                        str(assignee_list[0])),standard))
+                                    % (assigner_string , FillToHalf(.25*str(assigner_string).__len__()+6+15) ,
+                                        str(assignee_list[0].get_profile().name)),standard))
             elements.append(small_spacer)
             i=1
-            while i<len(assignee_list):
-                    elements.append(Paragraph('%s' 
-                                    % (assigner_string , FillToHalf(0) ,
-                                        str(assignee_list[i])),standard))
-                    elements.append(small_spacer)    
+            while i<assignee_list.__len__():
+                    elements.append(Paragraph('%s %s'  
+                                    % (FillToHalf(-59+22) ,
+                                        str(assignee_list[i].get_profile().name)),standard))
+                    elements.append(small_spacer)
+                    i=i+1    
         elements.append(Paragraph('<b>Feedback : </b>',standard))
         elements.append(P)
         elements.append(PageBreak())
@@ -206,29 +216,33 @@ def ShowTask(request,elements,position_on_page,sno,task):
         elements.append(Paragraph('<b>Deadline</b> : %s ' %DateString(task.deadline),standard))
         elements.append(small_spacer)
         elements.append(Paragraph('<b>Creation Date</b> : %s %s<b>Completion Date</b> : %s' 
-                                    %(DateString(task.creation_date),FillToHalf(len(DateString(task.creation_date))+16)
+                                    %(DateString(task.creation_date),FillToHalf(DateString(task.creation_date).__len__()-1+22)
                                       ,DateString(task.completion_date)),standard))  
         elements.append(small_spacer)                         
         if coord_subtask == 0 :
-            elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
-                                    % (assigner_string , FillToHalf(len(str(task.creator))+6) ,
+            if is_task == 1:
+                elements.append(Paragraph('<b>Creator</b> : %s ' 
+                                    % (assigner_string),standard))
+            else :
+                elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
+                                    % (assigner_string , FillToHalf(.25*str(assigner_string).__len__()+6+15),
                                         assignee_string),standard))
             elements.append(small_spacer)
         else : 
             elements.append(Paragraph('<b>Creator</b> : %s %s<b>Assigned To</b> : %s' 
-                                    % (assigner_string , FillToHalf(len(str(task.creator))+6) ,
-                                        str(assignee_list[0])),standard))
+                                    % (assigner_string , FillToHalf(.25*str(assigner_string).__len__()+6+15) ,
+                                        str(assignee_list[0].get_profile().name)),standard))
             elements.append(small_spacer)
             i=1
-            while i<len(assignee_list):
-                    elements.append(Paragraph('%s' 
-                                    % (assigner_string , FillToHalf(0) ,
-                                        str(assignee_list[i])),standard))
-                    elements.append(small_spacer)
+            while i<assignee_list.__len__():
+                    elements.append(Paragraph('%s %s' 
+                                    % (FillToHalf(-59+22) ,
+                                        str(assignee_list[i].get_profile().name)),standard))
+                    elements.append(small_spacer)   
+                    i=i+1
         elements.append(Paragraph('<b>Feedback : </b>',standard)) 
         elements.append(P)        
         elements.append(spacer)
-        print 5
         position_on_page = position_on_page - nH                 # reduce the available height
     
    # print '%d - %d' % ( sno , position_on_page-FRAME_BORDER)    
@@ -278,16 +292,18 @@ def ReportGen(request, owner_name):
     
     sno=1
     if is_core(request.user):
-        subtasks=SubTask.objects.filter(creator__in = users_in_department).order_by('creation_date')        
+        subtasks=SubTask.objects.filter(creator__in = users_in_department).order_by('creation_date')  
+      
         elements.append(Paragraph('Sub-Tasks given to your coords',h1))
         elements.append(big_spacer)
         position_on_page = position_on_page - h1.fontSize - big_spacer_height          
         
-    if is_coord(request.user):         
-        subtasks=SubTask.objects.filter(coords__contains = request.user ).order_by('creation_date')        
+    elif is_coord(request.user):         
+        subtasks = request.user.subtask_set.all().order_by('creation_date')         
         elements.append(Paragraph('Sub-Tasks given to you',h1))
         elements.append(big_spacer)
         position_on_page = position_on_page - h1.fontSize - big_spacer_height
+       
     for subtask in subtasks:
         position_on_page,sno=ShowTask(request,elements,position_on_page,sno,subtask)
             
