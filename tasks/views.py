@@ -182,6 +182,11 @@ def edit_task (request, task_id = None, owner_name = None):
         # New Task
         curr_task = Task (creator = user)
         is_new_task = True
+    if(curr_task.status=='C'):
+        closed_task=1                     # The SubTask Was closed prior to editing
+    else:
+        closed_task=0                     # The SubTask is not closed prior to editing
+
 
     # curr_object = Task.objects.get (id = task_id)
     is_task_comment = True
@@ -211,6 +216,11 @@ def edit_task (request, task_id = None, owner_name = None):
         task_form = TaskForm (request.POST, instance = curr_task)
         if task_form.is_valid () and subtaskfs.is_valid ():
             curr_task = task_form.save (commit = False)
+            
+            if(curr_task.status=='C')and(closed_task == 0):
+                curr_task.completion_date=datetime.date.today()                    
+            elif(closed_task == 1):
+                curr_task.completion_date=None
             curr_task.save()
             print 'Task : ', curr_task
 
@@ -279,13 +289,16 @@ def edit_subtask (request, subtask_id, owner_name = None):
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
     curr_subtask_form = SubTaskForm (instance = curr_subtask)
-
     if curr_subtask.is_owner (user):
         is_owner = True
     else:
         # User is a Coord
         is_owner = False
 
+    if(curr_subtask.status=='C'):
+        closed_task=1                     # The SubTask Was closed prior to editing
+    else:
+        closed_task=0                     # The SubTask is not closed prior to editing
     has_updated = False
     other_errors = False
     if request.method == 'POST':
@@ -293,6 +306,11 @@ def edit_subtask (request, subtask_id, owner_name = None):
             # Let the Core save the SubTask
             curr_subtask_form = SubTaskForm (request.POST, instance = curr_subtask)
             if curr_subtask_form.is_valid ():
+                if 'status' in request.POST:                
+                    if(curr_subtask_form.cleaned_data['status']=='C')and(closed_task == 0):
+                        curr_subtask_form.completion_date=datetime.date.today()                    
+                    elif(closed_task == 1):
+                        curr_subtask_form.completion_date=None
                 curr_subtask_form.save ()
                 has_updated = True
             else:
@@ -300,6 +318,10 @@ def edit_subtask (request, subtask_id, owner_name = None):
         elif 'status' in request.POST:
             # Coord - allowed to change only the status
             curr_subtask.status = request.POST.get ('status', 'O') 
+            if(curr_subtask.status=='C')and(closed_task == 0):
+                curr_subtask.completion_date=datetime.date.today()                    
+            elif(closed_task == 1):
+                curr_subtask.completion_date=None
             curr_subtask.save ()
             has_updated = True
             # Reinstantiate the form
