@@ -50,8 +50,7 @@ def comment(request, object_id=None, comment=None, is_task=True, elementid=None)
         comments = SubTaskComment.objects.filter(subtask__id = subtask_id)
         template = get_template('tasks/comments/subtask_comment_table.html')
     
-    html = template.render(Context({'comments':comments}))
-    print html    
+    html = template.render(Context({'comments':comments}))  
     dajax.assign(elementid, 'innerHTML', html)
     return dajax.json()
    
@@ -63,7 +62,7 @@ def add_task_comment(request, task_id, comment):
     taskcomment.comment_string = comment
     taskcomment.time_stamp = datetime.datetime.now()
     taskcomment.save()
-    print 'saved', taskcomment, 'excuse'
+    print 'saved', taskcomment
 
 def add_subtask_comment(request, subtask_id, comment):
     subtaskcomment = SubTaskComment()
