@@ -182,6 +182,10 @@ def edit_task (request, task_id = None, owner_name = None):
     is_task_comment = True
     other_errors = False
 
+    #Get all subtasks for task, if task exists
+    if task_id:
+        curr_subtasks = SubTask.objects.filter(task = curr_task)
+        
     #Get Department Members' image thumbnails
     display_dict = dict ()
     department = page_owner.get_profile ().department      

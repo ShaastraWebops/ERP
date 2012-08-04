@@ -109,10 +109,80 @@ Edit Task
       </div> 
     </div>
     <!-- /rbroundbox --> 
-<div class="well">
-    {% include "tasks/comments.html" %}
-</div>
 
+{% if not is_new_task %}  
+    
+<div class="accordion" id="task_accordion">
+<div class="accordion-group">
+    <!--Comments-->
+    <div class="accordion-heading">
+        <a class="accordion-toggle" href="#comments" data-parent="task_accordion" data-toggle="collapse"><h3 style="color: rgb(50,50,50);">Comments</h3></a>
+    </div>
+
+    <div id="comments" class="accordion-body collapse">
+        <div class="accordion" id="comments">
+
+{% endif %}
+
+            <div class="well">
+                {% include "tasks/comments.html" %}
+            </div> 
+            
+{% if not is_new_task %}                   
+        </div>
+    </div>        
+    <!--End of Comments-->
+
+{% endif %}
+
+{% if not is_new_task %}  
+    <!--Subtasks-->
+    <div class="accordion-heading">
+        <a class="accordion-toggle" href="#subtasks" data-parent="task_accordion" data-toggle="collapse" ><h3 style="color: rgb(50,50,50);">Edit Subtasks</h3></a>
+    </div>
+
+    <div id="subtasks" class="accordion-body collapse">
+        <div class="accordion" id="subtasks">
+
+{# Display existing subtasks for convenience #}
+
+{% if curr_subtasks %}
+<br />
+<table class="table table-bordered" >
+  <tr>
+    <th>Subject</th>
+    <th>Creation Date</th>
+    <th>Department</th>    
+    <th>Deadline</th>
+    <th>Status</th>    
+  </tr>
+  {% for curr_subtask in curr_subtasks %}
+  <tr>
+    <td> {{ curr_subtask.subject }} </td>
+    <td> {{ curr_subtask.creation_date }} </td>    
+    <td> {{ curr_subtask.department}} </td>
+    <td> {{ curr_subtask.deadline }} </td>
+    {% if curr_subtask.status == "O" %}
+		<td><span class="label label-warning">Open</span></td>
+	{% endif %}
+	{% if curr_subtask.status == "C" %}
+		<td><span class="label label-success">Completed</span></td>	
+	{% endif %}
+	{% if curr_subtask.status == "L" %}
+		<td><span class="label label-important">Overdue</span></td>
+	{% endif %}
+	{% if curr_subtask.status == "N" %}
+		<td><span class="label label-info">Almost</span></td>
+	{% endif %}    
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+There are no subtasks for this task yet.
+{% endif %}
+
+{% endif %}
+    
     <div class="rbroundbox"> 
       <div class="rbtop">
 	<div>
@@ -122,7 +192,7 @@ Edit Task
       </div>
       <div class="rbcontentwrap"> 
 	<div class="rbcontent"> 
-	  <h2>Subtasks</h2>
+    {% if is_new_task %}<h2>Subtasks</h2>{% endif %}
 	  <!-- <p>Fill as many Subtasks as you want</p> -->
 	</div>
       </div>
@@ -135,7 +205,7 @@ Edit Task
       </div> 
     </div>    
     <!-- /rbroundbox -->
-
+<br>
     {{ subtaskfs.management_form }}
     {% for form in subtaskfs.forms %}
 
@@ -165,8 +235,15 @@ Edit Task
     </div>
 
     {% endfor %}
-    
+
+
     <a href="#" id="add">Add a SubTask</a>
+
+{% if not is_new_task %}                   
+        </div>
+    </div>        
+    <!--End of Subtasks-->
+{% endif %}     
 
     <table>
       <tr>
