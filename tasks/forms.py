@@ -10,9 +10,8 @@ from erp.users.models import *
 class TaskCommentForm (ModelForm):
 	comment_string=forms.CharField(label='Comments',widget=forms.Textarea)
 	class Meta:
-		model = TaskComment
-        exclude = ('author', 'task')
-	
+		model=TaskComment
+		exclude=('author','task')	
 
 class SubTaskCommentForm (ModelForm):
     class Meta:
