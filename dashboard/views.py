@@ -292,6 +292,8 @@ this function needs lots of changes but one sinle thing isnt working so waiting 
 @needs_authentication
 def delete_file(request,owner_name=None ,number=0  ):
     page_owner = get_page_owner (request, owner_name)
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)    
     users_documents=upload_documents.objects.filter(user=page_owner)    
     form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"short description of the file"})   
     try:
@@ -309,6 +311,14 @@ def delete_file(request,owner_name=None ,number=0  ):
         delete_file.delete()
     except:
         print "no file"
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True         
+        
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
     
 
