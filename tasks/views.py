@@ -9,6 +9,7 @@ from django.forms.models import modelformset_factory, inlineformset_factory
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import datetime
+from datetime import date
 from forms import TaskForm, SubTaskForm, TaskCommentForm, SubTaskCommentForm, UpdateForm
 from models import *
 from erp.misc.util import *
