@@ -501,7 +501,7 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_coord= True
 
-    return render_to_response('dashboard/mycalendar.html',locals() ,context_instance = global_context(request))
+    return render_to_response('Calendar/Calendar.html',locals() ,context_instance = global_context(request))
   
     
 

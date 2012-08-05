@@ -1,0 +1,96 @@
+{% include "base_portal.html"%}
+{% block body %}
+
+<!-- Core CSS File. The CSS code needed to make eventCalendar works -->
+<link rel="stylesheet" href="{{ MEDIA_URL }}css/eventCalendar.css">
+
+<!-- Theme CSS file: it makes eventCalendar nicer -->
+<link rel="stylesheet" href="{{ MEDIA_URL }}css/eventCalendar_theme_responsive.css">
+
+<div id="eventCalendarInline" class="span6"></div>
+<script>
+	$(document).ready(function() {
+		var eventsInline = [{
+			"date" : "1337594400000",
+			"type" : "meeting",
+			"title" : "Project A meeting",
+			"description" : "Lorem Ipsum dolor set",
+			"url" : "http://www.event1.com/"
+		}, {
+			"date" : "1337677200000",
+			"type" : "demo",
+			"title" : "Project B demo",
+			"description" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+			"url" : "http://www.event2.com/"
+		}, {
+			"date" : "1338897600000",
+			"type" : "meeting",
+			"title" : "Project A meeting",
+			"description" : "Lorem Ipsum dolor set",
+			"url" : "http://www.event1.com/"
+		}, {
+			"date" : "1338885237000",
+			"type" : "demo",
+			"title" : "Project B demo",
+			"description" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+			"url" : "http://www.event2.com/"
+		}, {
+			"date" : "1341750647000",
+			"type" : "meeting",
+			"title" : "Project A meeting",
+			"description" : "Lorem Ipsum dolor set",
+			"url" : "http://www.event1.com/"
+		}, {
+			"date" : "1342614647000",
+			"type" : "demo",
+			"title" : "Project B demo",
+			"description" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+			"url" : "http://www.event2.com/"
+		}, {
+			"date" : "1344515447000",
+			"type" : "meeting",
+			"title" : "Project A meeting",
+			"description" : "Lorem Ipsum dolor set",
+			"url" : "http://www.event1.com/"
+		}, {
+			"date" : "1345033847000",
+			"type" : "demo",
+			"title" : "Project B demo",
+			"description" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+			"url" : "http://www.event2.com/"
+		}, {
+			"date" : "1347712247000",
+			"type" : "meeting",
+			"title" : "Project A meeting",
+			"description" : "Lorem Ipsum dolor set",
+			"url" : "http://www.event1.com/"
+		}, {
+			"date" : "1348230647000",
+			"type" : "demo",
+			"title" : "Project B demo",
+			"description" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+			"url" : "http://www.event2.com/"
+		}, {
+			"date" : "1349094647000",
+			"type" : "meeting",
+			"title" : "Project A meeting",
+			"description" : "Lorem Ipsum dolor set",
+			"url" : "http://www.event1.com/"
+		}, {
+			"date" : "1351600247",
+			"type" : "demo",
+			"title" : "Project B demo",
+			"description" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+			"url" : "http://www.event2.com/"
+		}];
+
+		$("#eventCalendarInline").eventCalendar({
+			jsonData : eventsInline,
+			moveSpeed : 200,
+			moveOpacity : 1,
+		});
+	}); 
+</script>
+<script src="{{ MEDIA_URL }}js/jquery.eventCalendar.js" type="text/javascript"></script>
+{% endblock %}
+    
