@@ -13,7 +13,11 @@ Task
 {% dajaxice_js_import %}
 <!--include for comments -->
 
-<center><h1>Task</h1></center>
+<center><h1>Task
+{% if is_core %}
+<a class="btn btn-primary btn-large pull-right" href="{% url erp.tasks.views.edit_task task_id=curr_task.id owner_name=page_owner %}">Edit Task &raquo;</a>
+{% endif %}
+</h1></center><br/>
 
 <table class="table table-striped table-bordered">
   <tr>
@@ -26,7 +30,9 @@ Task
   </tr>
   <tr>
     <th>Proposer</th>
-    <td> {{ curr_task.creator.get_profile.name }} </td>
+    <td>
+        <a href="{% url users.views.view_profile owner_name=curr_task.creator.username %}">{{ curr_task.creator.get_profile.name }}</a>
+    </td>
   </tr>
   <tr>
     <th>Creation Date</th>
@@ -38,7 +44,19 @@ Task
   </tr>
   <tr>
     <th>Status</th>
-    <td> {{ curr_task.status }} </td>
+	{% if curr_task.status == "O" %}
+		<td><span class="label label-warning">Open</span></td>
+	{% endif %}
+	{% if curr_task.status == "C" %}
+		<td><span class="label label-success">Completed</span></td>	
+	{% endif %}
+	{% if curr_task.status == "L" %}
+		<td><span class="label label-important">Overdue</span></td>
+	{% endif %}
+	{% if curr_task.status == "N" %}
+		<td><span class="label label-info">Almost</span></td>
+	{% endif %}
+
   </tr>
 </table>
 

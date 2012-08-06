@@ -6,12 +6,14 @@ from erp.tasks.views import *
 from erp.users.views import *
 from erp.home.views import *
 from erp.feedback.views import *
-from erp.create_test_data import *
 import haystack
 from haystack.views import SearchView
 from haystack.forms import ModelSearchForm
 from haystack.forms import SearchForm
 from haystack.views import search_view_factory
+from django.conf.urls import *
+haystack.autodiscover()
+
 
 haystack.autodiscover()
 dajaxice_autodiscover()
@@ -23,11 +25,9 @@ from django.contrib import admin
 
 urlpatterns = patterns('',
     (r'^dajaxice/', include('dajaxice.urls')),
-    (r'^createdata/', do_it_all),
     #(r'^search/', include('haystack.urls')),
     url(r'^$', 'erp.home.views.login', name='home'),
-    (r'^search/', search_view_factory(
-	form_class=ModelSearchForm)),
+    (r'^search/', include('erp.search.urls')),
     #(r'^erp/$', include('erp.home.urls')),
     (r'^erp/home/',include('erp.home.urls')),
     #(r'^erp/users/', include('erp.users.urls')),

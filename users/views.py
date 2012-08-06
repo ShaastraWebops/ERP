@@ -16,7 +16,7 @@ from erp.dashboard.forms import *
 from django.contrib.auth.models import Group,Permission
 import sha,random,datetime
 from erp.users.forms import *
-from django.core.mail import send_mail,EmailMessage,SMTPConnection
+from django.core.mail import send_mail,EmailMessage
 from django.conf import settings
 import os
 
@@ -152,16 +152,36 @@ def view_profile(request, owner_name=None):
         image=userphoto.objects.get(name=page_owner)
         photo_path =image.photo_path
     except:
-        photo_path=settings.MEDIA_URL+"/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
+        photo_path=settings.MEDIA_URL+"upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
     profile = userprofile.objects.get(user=page_owner)
     print profile.nickname
     print profile.name
+
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)    
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
+
     return render_to_response('users/view_profile.html',locals(),context_instance = global_context(request))
     	
 
 
 @needs_authentication
-def handle_profile (request  , owner_name):
+def handle_profile (request, owner_name):
     print request.user.id , "is the id of the user"
 
     user = request.user
@@ -181,5 +201,26 @@ def handle_profile (request  , owner_name):
         print photo_path
     except:
         photo_path=settings.MEDIA_URL+"/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
+
+    #Get Department Members' image thumbnails
+    page_owner = get_page_owner (request, owner_name=None)
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)    
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
+
     return render_to_response('users/edit_profile.html',locals(),context_instance = global_context(request))
 

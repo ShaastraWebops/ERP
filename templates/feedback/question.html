@@ -1,6 +1,12 @@
 {% extends "base_portal.html" %}
 {% block body %}
-<a class="pull-right" href="{% url feedback.views.display %}">See all questions</a>
+{% if qms_core %}
+<a class="pull-left" href="{% url feedback.views.display question_for=question_for %}">SEE ALL QUESTIONS</a><br>
+{% endif %}
+
+{% if qms_coord %}
+<a class="pull-left" href="{% url feedback.views.display question_for=question_for%}">SEE ALL QUESTIONS</a><br>
+{% endif %}
 <center><h1>Add Question </h1></center>
 <form class="well" action="" method="POST">
 	{% csrf_token %}
@@ -36,4 +42,5 @@ $(document).ready(function() {
 {% endblock javascript %}
 {% block display_stuff %}
 {% endblock %}
+
 

@@ -78,7 +78,7 @@ def create_user (department_name, group_name, user_dict, profile_dict):
         curr_userprofile = models.userprofile (**profile_dict)
         curr_userprofile.save ()
         print "%s - userprofile created" %(user_dict['username'])
-    check_dir(user)
+        check_dir(user)
     print "%s - personal directory created" %(user_dict['username'])
     add_user_to_group (user, group_name)
 
@@ -269,7 +269,7 @@ def create_updates ():
 def do_it_all ():
     create_groups ()
     create_depts ()
-    create_users (users_file_name = '/home/sriram/Django/erp/scripts/users.txt')
+    create_users (users_file_name = 'users.txt')
     create_tasks (n = 5, partial_subtask = False)
     create_tasks (n = 3, partial_subtask = True)
     finish_some_subtasks ()

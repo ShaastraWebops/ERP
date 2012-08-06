@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 from django.utils.translation import ugettext as _
-from django.core.mail import send_mail,EmailMessage,SMTPConnection
+from django.core.mail import send_mail,EmailMessage
 from django.contrib.sessions.models import Session
 from erp.dashboard.models import *
 from erp.dashboard.forms import *
@@ -70,6 +70,10 @@ def display_contacts (request , owner_name=None):#this will be a common tab
     if is_core(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
     return render_to_response('dashboard/display_contacts.html',locals() ,context_instance = global_context(request))
 
 
@@ -171,6 +175,26 @@ def change_profile_pic(request, owner_name):
 
 	return view_profile(request )
     pic_form=change_pic()
+
+    #Get Department Members' image thumbnails
+    page_owner = get_page_owner (request, owner_name=None)
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)    
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
     
     return render_to_response('users/change_profile_pic.html',locals(),context_instance = global_context(request))
 
@@ -238,9 +262,23 @@ def upload_file(request ,owner_name=None):
     print "can _edit form views" ,request.session.get('is_visitor','True')
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
+    
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
     if is_core(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
 
 
@@ -254,6 +292,8 @@ this function needs lots of changes but one sinle thing isnt working so waiting 
 @needs_authentication
 def delete_file(request,owner_name=None ,number=0  ):
     page_owner = get_page_owner (request, owner_name)
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)    
     users_documents=upload_documents.objects.filter(user=page_owner)    
     form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"short description of the file"})   
     try:
@@ -271,6 +311,14 @@ def delete_file(request,owner_name=None ,number=0  ):
         delete_file.delete()
     except:
         print "no file"
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True         
+        
     return render_to_response('dashboard/upload.html',locals() ,context_instance = global_context(request))
     
 
@@ -344,7 +392,7 @@ def weekday(arr):
     return 7        
     
     
-def display_calendar(request ,owner_name=None , month=0 ,year=0):
+def display_calendar1(request ,owner_name=None , month=0 ,year=0):
     print "my calendar fucntion"
     month=int(month)
     year=int(year)
@@ -403,13 +451,14 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
         for col in row:
     	    complete_data[n]['date']=col
     	    n +=1
-    	
+    print complete_data	
     #adding subtask in complete_data
     for sub in user_tasks:
         pos_to_task=int(sub.deadline.day+first_week_day)-1
 	if  sub.deadline.month==month:
             complete_data[pos_to_task]['subtask'].append(sub)
   
+    print complete_data
     today_task=complete_data[today+first_week_day-1]
     print "todays task" ,today_task, first_week_day
     # okay i know this is not right way to do it , but tried many ways , when i tried to initialize one element multiple element was getting initialized ,so i did it like this
@@ -419,7 +468,52 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
     if is_core(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
     return render_to_response('dashboard/mycalendar.html',locals() ,context_instance = global_context(request))
+
+def display_calendar(request ,owner_name=None , month=0 ,year=0):
+    page_owner=get_page_owner(request ,owner_name=owner_name)
+    if is_core(page_owner):
+        user_tasks=Task.objects.filter(creator = page_owner)
+    else:
+        user_tasks=SubTask.objects.filter(coords=page_owner.id)
+    
+    complete_data={}
+    complete_data["subtasks"]=[]
+    if is_core(page_owner):
+        for sub in user_tasks:
+            creation_date=str(sub.creation_date).split(' ')[0]
+            complete_data["subtasks"].append({"subject": str(sub.subject), "task_id": str(sub.id), "creation_date": creation_date, "deadline": str(sub.deadline), "status": str(sub.status)})
+    else:
+        for sub in user_tasks:
+            creation_date=str(sub.creation_date).split(' ')[0]
+            complete_data["subtasks"].append({"subject": str(sub.subject), "task_id": str(sub.task.id), "creation_date": creation_date, "deadline": str(sub.deadline), "status": str(sub.status)})
+    
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+    
+    curr_user=request.user
+    curr_userprofile=userprofile.objects.get(user=request.user)    
+    if is_core(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_core= True
+
+    if is_coord(curr_user):
+		if str(curr_userprofile.department) == 'QMS':
+			qms_coord= True
+
+    return render_to_response('dashboard/mycalendar.html',locals() ,context_instance = global_context(request))
+  
+    
 
 def load_data(request):
     do_it_all()

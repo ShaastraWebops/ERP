@@ -1,19 +1,66 @@
 {% extends "base_portal.html" %}
 {% block body %}
-<h4>YOUR REVIEW AS RATED BY {{curr_department}} </h4><br>
-{% for q in questions %}
-    {{q.question}}---
-        {% for a in averages %}
-            {% ifequal a.question q %}
+<h4>YOUR REVIEW AS RATED BY <span style=" text-transform: uppercase;">{{curr_department}}</span> DEPARTMENT</h4><br>
 
-                    {{a.avg}}
-
-            {% endifequal %}
-
-        {% endfor %}
-<br>
-{% endfor %}
-
+                    {% if is_core1 %}
+                    <table class="table table-striped table-bordered table-condensed">
+            	    <thead>
+    	    	    <tr>
+    	                <th>Question</th>
+        		    	<th>Feedback</th>
+	    		    </tr>
+	    		    
+	                </thead>
+	    
+	                <tbody>
+                        {% for q in questions %}
+            	    	<tr>
+            	    	
+            	    	{% ifequal q.feedback_for "Core" %}
+                            <td>{{q.question}}</td>
+                            <td>{% for a in averages %}    
+                                {% ifequal a.question q %}
+                                    {{a.avg}}   
+                                {% endifequal %}      
+                                {% endfor %}</td>
+                         {% endifequal %}
+                                            
+                        </tr> 
+                         {% endfor %}   
+                    </tbody>
+                    {% endif %}
+                    
+                    
+                    {% if is_coord1 %}
+                    </table>
+                            <table class="table table-striped table-bordered table-condensed">
+            	    <thead>
+    	    	    <tr>
+    	                <th>Question</th>
+        		    	<th>Feedback</th>
+	    		    </tr>
+	    		    
+	                </thead>
+	    
+	                <tbody>
+                        {% for q in questions %}
+            	    	<tr>
+            	    	
+            	    	{% ifequal q.feedback_for "Coord" %}
+                            <td>{{q.question}}</td>
+                            <td>{% for a in averages %}    
+                                {% ifequal a.question q %}
+                                    {{a.avg}}   
+                                {% endifequal %}      
+                                {% endfor %}</td>
+                         {% endifequal %}
+                                            
+                        </tr> 
+                         {% endfor %}   
+                    </tbody>
+                    </table>
+                    {% endif %}
+        
 
 {% endblock %}
 {% block tabs %}

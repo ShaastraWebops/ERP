@@ -12,9 +12,16 @@ class HorizontalRadioRenderer(forms.RadioSelect.renderer):
 RATING_CHOICES= [(i,i) for i in range(11)]
 
 
-class QuestionForm (ModelForm):
+class QuestionFormCoord (ModelForm):
     class Meta:
-        model = Question
+		model = Question
+		fields= ('question','answered_by','departments',)
+
+
+class QuestionFormCore (ModelForm):
+    class Meta:
+		model = Question
+		fields= ('question','departments',)
         
 class AnswerForm (ModelForm):
     rating = forms.ChoiceField(choices=RATING_CHOICES,widget=forms.RadioSelect)
@@ -24,3 +31,4 @@ class AnswerForm (ModelForm):
 
         
         
+

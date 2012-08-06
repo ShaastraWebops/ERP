@@ -1,7 +1,8 @@
 <div class="subtask-heading">
   Subtask {% if forloop %} {{ forloop.counter }} {% else %} 0 {% endif %} 
 </div>
-<table>
+<div class="well">
+<table cellpadding="5">
   <!-- {% comment %} -->
   <!-- {{ form.as_table }} -->
   <!-- {% endcomment %} -->
@@ -16,7 +17,7 @@
     <th>{{ field.label_tag }}</th>
     <td>
       {{ field.errors }}
-      {{ field }} 
+      {{ field }}
     </td>
   </tr>
   {% else %}
@@ -28,7 +29,7 @@
   {% endfor %}
 
   {% for field in form.hidden_fields %}
-  {{ field }} 
+  {{ field }}
   {% endfor %}
 
   {% endwith %}
@@ -42,7 +43,7 @@
     <th>{{ field.label_tag }}</th>
     <td>
       {{ field.errors }}
-      {{ field }} 
+      {{ field }}
     </td>
   </tr>
   {% else %}
@@ -54,11 +55,12 @@
   {% endfor %}
 
   {% for field in form.hidden_fields %}
-  {{ field }} 
+  {{ field }}
   {% endfor %}
   {% endif %}
-  
 </table>
+
 <p>
   <a href="#" class="delete">Delete this SubTask</a>
 </p>
+</div>

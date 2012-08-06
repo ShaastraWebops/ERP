@@ -44,7 +44,7 @@ Dashboard
             <p>
                 Click to assign these to your Coords.
             </p>
-            <table class="table span7">
+            <table class="table table-striped table-bordered span7">
                 <tr>
                     <th>Subject</th>
                     <th>Proposer</th>
@@ -57,9 +57,41 @@ Dashboard
                     <td><a href="{% url tasks.views.edit_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a></td>
                     <td> {{ subtask.creator.get_profile.name }} </td>
                     <td> {{ subtask.deadline }} </td>
-                    <td> {{ subtask.status }} </td>
-                    <!-- The comments for each subtask are still not working -->
-                    <td> {{subtask.comments}}</td>
+                    {% if subtask.status == "O" %}
+					<td><span class="label label-warning">Open</span></td>
+					{% endif %}
+					{% if subtask.status == "C" %}
+					<td><span class="label label-success">Completed</span></td>	
+
+					{% endif %}
+					{% if subtask.status == "L" %}
+					<td><span class="label label-important">Overdue</span></td>
+					{% endif %}
+					{% if subtask.status == "N" %}
+					<td><span class="label label-info">Almost</span></td>
+					{% endif %}
+                    <td>
+                    {% if subtask.subtaskcomment_set.all %}
+                    <div class="accordion" id="subtasks_comments_{{ subtask.id }}_accordion">
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" href="#subtasks_comments_{{ subtask.id }}" data-parent="contact_accordion" data-toggle="collapse" onclick=showComments("subtasks","{{subtask.id}}");>
+                                    <i class="icon-plus-sign" id="subtasks_comments_{{ subtask.id }}_icon" style="margin-top:1px;"></i> <span id="subtasks_comments_{{ subtask.id }}_text">Show</span>
+                                </a>
+                            </div>
+                            <div id="subtasks_comments_{{ subtask.id }}" class="accordion-body collapse">
+                            {% for comment in subtask.subtaskcomment_set.all %}
+                            <ul>
+                            <li>"{{ comment.comment_string }}"<br/>- <a href="{% url users.views.view_profile owner_name=comment.author.username %}">{{ comment.author.get_profile.name }}</a></li>
+                            </ul>    
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                        <p>There are no comments present.</p>
+                    {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </table>
@@ -74,7 +106,7 @@ Dashboard
                 SubTasks you've sent to other Departments
             </p>
             {% if all_requested_SubTasks %}
-            <table class="table table-striped span7">
+            <table class="table table-striped table-bordered span7">
                 <tr>
                     <th>Task Subject</th>
                     <th>SubTask Subject</th>
@@ -87,9 +119,41 @@ Dashboard
                     <td><a href="{% url tasks.views.edit_task task_id=subtask.task.id owner_name=page_owner %}">{{ subtask.task.subject }}</a></td>
                     <td><a href="{% url tasks.views.edit_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a></td>
                     <td> {{ subtask.deadline }} </td>
-                    <td> {{ subtask.status }} </td>
-                    <!-- The comments for each subtask are still not working -->
-                    <td> {{subtask.comments}}</td>
+                    {% if subtask.status == "O" %}
+					<td><span class="label label-warning">Open</span></td>
+					{% endif %}
+					{% if subtask.status == "C" %}
+					<td><span class="label label-success">Completed</span></td>	
+
+					{% endif %}
+					{% if subtask.status == "L" %}
+					<td><span class="label label-important">Overdue</span></td>
+					{% endif %}
+					{% if subtask.status == "N" %}
+					<td><span class="label label-info">Almost</span></td>
+					{% endif %}
+                    <td>
+                    {% if subtask.subtaskcomment_set.all %}
+                    <div class="accordion" id="requested_comments_{{ subtask.id }}_accordion">
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" href="#requested_comments_{{ subtask.id }}" data-parent="contact_accordion" data-toggle="collapse" onclick=showComments("requested","{{subtask.id}}");>
+                                    <i class="icon-plus-sign" id="requested_comments_{{ subtask.id }}_icon" style="margin-top:1px;"></i> <span id="requested_comments_{{ subtask.id }}_text">Show</span>
+                                </a>
+                            </div>
+                            <div id="requested_comments_{{ subtask.id }}" class="accordion-body collapse">
+                            {% for comment in subtask.subtaskcomment_set.all %}
+                            <ul>
+                            <li>"{{ comment.comment_string }}"<br/>- <a href="{% url users.views.view_profile owner_name=comment.author.username %}">{{ comment.author.get_profile.name }}</a></li>
+                            </ul>    
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                        <p>There are no comments present.</p>
+                    {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </table>
@@ -104,7 +168,7 @@ Dashboard
             </p>
             {% if all_completed_SubTasks %}
 
-            <table class="table table-striped span6">
+            <table class="table table-striped table-bordered span7">
                 <tr>
                     <th>Subject</th>
                     <th>Completed By</th>
@@ -127,7 +191,7 @@ Dashboard
                 {% endfor %}
             </table>
             {% else %}
-            <h4>There have been no completed SubTasks in your department yet.</h4>
+                <h4>There have been no completed SubTasks in your department yet.</h4>
             {% endif %}
         </div>
         <div class="tab-pane" id="tabs5">

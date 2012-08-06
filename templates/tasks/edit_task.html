@@ -11,6 +11,7 @@ Edit Task
 {% endblock title %}
 
 {% block form_stuff %}
+<link href="{{ MEDIA_URL }}css/datepicker.css" rel="stylesheet">
 <div align="center">
     <div class="rbroundbox">
         <div class="rbtop">
@@ -150,7 +151,6 @@ Edit Task
             </div>
             <!-- /rbroundbox -->
         </div>
-
         {% endfor %}
 
         <a href="#" id="add">Add a SubTask</a>
@@ -191,11 +191,51 @@ Edit Task
 <script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		var d = document.getElementById("li_task");
-		var e = document.getElementById("li_task_icon");
-		d.className = "active";
-		e.className = e.className + " icon-white";
-	}); 
+$(document).ready(function() {
+    var d = document.getElementById("li_task");
+    var e = document.getElementById("li_task_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+    
+    $('#id_subtask_set-TOTAL_FORMS').val(($('[id^=id_subtask_set]')   //'#id_subtask_set-TOTAL_FORMS' value doesn't reset on page refresh, messing up subtask numbering for the formset.
+                                    .filter('[id$=subject]')          //This code corrects it.
+                                    .filter(function(){
+                                        if ($(this).val()) {
+                                            return true;
+                                        }})
+                                    .length));                       //end of '#id_subtask_set-TOTAL_FORMS' correction code.
+    
+    $('[id$=deadline]').each(function() {
+        if ($(this).val()) //django default format of year-month-date
+        { 
+            if ($(this).val().indexOf("/")==-1)                //following code must execute only if date isn't of mm/dd/yyyy format
+            {
+                var splitdate = $(this).val().split("-");
+                $(this).val(splitdate[1] + "/" + splitdate[2] + "/" + splitdate[0]); //display in datepicker format of month/date/year
+            }
+        }
+        else
+            $(this).val("08/01/2012"); //Date set: Aug 1st, 2012. Set a date close to usage date for easier navigation
+    });
+ });
 </script>
+<script src="js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+$(function(){
+    window.prettyPrint && prettyPrint();
+    $('[id$=deadline]').datepicker({
+        format: 'mm/dd/yyyy' //save mm dd yyyy format as django takes first bit as month and next as date
+    });
+});
+</script>
+
+<script type="text/javascript">  //initialise django-chosen
+{% for form in subtaskfs.forms %}
+val={{ forloop.counter }}-1;
+$("#id_subtask_set-" + val + "-department").chosen();
+$("#id_subtask_set-" + val + "-coords").chosen();
+{% endfor %}
+</script>
+
 {% endblock javascript %}

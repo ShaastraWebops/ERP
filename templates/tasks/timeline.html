@@ -5,6 +5,7 @@
   <thead>
   <tr>
     <th>Subject</th>
+    <th>Subtasks</th>
     <th>Creator</th>
     <th>Deadline</th>
     <th>Status</th>
@@ -17,11 +18,74 @@
   {% for task in all_Tasks %}
   <tr>
     <td>
-      <a href="{% url tasks.views.edit_task task_id=task.id owner_name=page_owner %}">{{ task.subject }}</a>
+      <a href="{% url tasks.views.display_task task_id=task.id owner_name=page_owner %}">{{ task.subject }}</a>
     </td>
-    <td> {{ task.creator.get_profile.name }} </td>
+    <td>
+    {% if task.subtask_set.all %}
+        <div class="accordion" id="timeline_subtask_{{ task.id }}_accordion">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" href="#timeline_subtask_{{ task.id }}" data-parent="timeline_subtask_{{ task.id }}_accordion" data-toggle="collapse" onclick=showSubtasks("timeline","{{task.id}}");>
+                        <i class="icon-plus-sign" id="timeline_subtask_{{ task.id }}_icon" style="margin-top:1px;"></i> <span id="timeline_subtask_{{ task.id }}_text">Show</span>
+                    </a>
+                </div>
+                <div id="timeline_subtask_{{ task.id }}" class="accordion-body collapse" style="margin-left:20px;">
+                {% for subtask in task.subtask_set.all %}
+                <ul>
+                <li><a href="{% url tasks.views.edit_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a></li>
+                </ul>    
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>There are no subtasks present.</p>
+    {% endif %}
+    </td>
+    <td>
+        <a href="{% url users.views.view_profile owner_name=task.creator.username %}">{{ task.creator.get_profile.name }}</a>
+    </td>
     <td> {{ task.deadline }} </td>
-    <td> {{ task.status }} </td>
+	{% if task.status == "O" %}
+	<td><span class="label label-warning">Open</span></td>
+	{% endif %}
+	{% if task.status == "C" %}
+	<td><span class="label label-success">Completed</span></td>
+	{% endif %}
+	{% if task.status == "L" %}
+	<td><span class="label label-important">Overdue</span></td>
+	{% endif %}
+	{% if task.status == "N" %}
+	<td><span class="label label-info">Almost</span></td>
+	{% endif %}
+
+    {% if po_is_core %}
+    
+        <td>
+        {% if task.taskcomment_set.all %}
+        <div class="accordion" id="timeline_comments_{{ task.id }}_accordion">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" href="#timeline_comments_{{ task.id }}" data-parent="timeline_comments_{{ task.id }}_accordion" data-toggle="collapse" onclick=showComments("timeline","{{task.id}}");>
+                        <i class="icon-plus-sign" id="timeline_comments_{{ task.id }}_icon" style="margin-top:1px;"></i> <span id="timeline_comments_{{ task.id }}_text">Show</span>
+                    </a>
+                </div>
+                <div id="timeline_comments_{{ task.id }}" class="accordion-body collapse">
+                {% for comment in task.taskcomment_set.all %}
+                <ul>
+                <li>"{{ comment.comment_string }}"<br/>- <a href="{% url users.views.view_profile owner_name=comment.author.username %}">{{ comment.author.get_profile.name }}</a></li>
+                </ul>    
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+            <p>There are no comments present.</p>
+        {% endif %}
+        </td>
+            
+    {% endif %}
+
   </tr>
   {% endfor %}
   </tbody>

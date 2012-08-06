@@ -84,3 +84,35 @@ Subtask
 </form>
 {% include "tasks/subtask_comments.html" %}
 {% endblock form_stuff %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('[id$=deadline]').each(function() {
+        if ($(this).val()) //django default format of year-month-date
+        { 
+            if ($(this).val().indexOf("/")==-1)                //following code must execute only if date isn't of mm/dd/yyyy format
+            {
+                var splitdate = $(this).val().split("-");
+                $(this).val(splitdate[1] + "/" + splitdate[2] + "/" + splitdate[0]); //display in datepicker format of month/date/year
+            }
+        }
+        else
+            $(this).val("08/01/2012"); //Date set: Aug 1st, 2012. Set a date close to usage date for easier navigation
+    });
+ });
+</script>
+
+<script src="js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+$(function(){
+    window.prettyPrint && prettyPrint();
+    $('[id$=deadline]').datepicker({
+        format: 'mm/dd/yyyy' //save mm dd yyyy format as django takes first bit as month and next as date
+    });
+});
+</script>
+
+{% endblock javascript %}

@@ -1,24 +1,31 @@
 
-{% extends "home.html" %}
+{% extends "base_portal.html" %}
 {% block body %}
 
 
 <form enctype="multipart/form-data" action="{% url dashboard.views.change_profile_pic  owner_name=user%}" method ="POST">
   {% csrf_token %}
-<br>
+
 {% for field in pic_form %}
 {{field.label_tag}}
-<br>
+
     {{field}}
-    <br>
+    
     
 
-{% endfor %}
-<input type="submit" value ="change ">
-</forms>
-
-
-</body>
-</html>
+{% endfor %}</br>
+<input type="submit" value ="Change ">
+</form>
 
 {% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("nav_profile");
+    d.className = "active";
+ });
+</script>
+{% endblock javascript%}
+

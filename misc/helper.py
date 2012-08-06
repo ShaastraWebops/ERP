@@ -1,12 +1,12 @@
 from django.contrib.auth.models import User
 import sha,random,datetime
-from django.core.mail import send_mail,EmailMessage,SMTPConnection
+from django.core.mail import send_mail,EmailMessage
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 import os
 from shutil import copyfile
 from django.conf import settings
-from erp.users.models import userphoto
+from erp.users.models import *
 
 # Temporary workaround for the fact that I don't know whether / how to
 # extend the User class with methods
@@ -45,6 +45,13 @@ def get_page_owner (request, owner_name):
             return 'Invalid'
     request.session['page_owner'] = page_owner
     return page_owner
+    
+def get_department(request):
+    try:
+        print request.user
+        return userprofile.objects.get(user = request.user).department.Dept_Name
+    except:
+        return None
 
 """
 this function creates the directory which will store infromation about the user
@@ -82,6 +89,7 @@ def check_dir(user):
         dest=os.path.join(settings.MEDIA_URL,"upload_files")
         dest=os.path.join(dest, user.username)
         dest=os.path.join(dest,os.path.basename("PROFILE_PIC_OF_THE_USER"))
+        print dest
         image_object=userphoto(name=user, photo_path=dest)
         image_object.save()
 
