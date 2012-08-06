@@ -107,6 +107,56 @@ Edit Task
         {% else %}
        
         {% endif %}
+        
+        {% if not is_new_task %}  
+    <!--Subtasks-->
+    <div class="accordion-heading">
+        <a class="accordion-toggle" href="#subtasks" data-parent="task_accordion" data-toggle="collapse" ><h3 style="color: rgb(50,50,50);">Edit Subtasks</h3></a>
+    </div>
+
+    <div id="subtasks" class="accordion-body collapse">
+        <div class="accordion" id="subtasks">
+
+{# Display existing subtasks for convenience #}
+
+{% if curr_subtasks %}
+<br />
+<table class="table table-bordered" >
+  <tr>
+    <th>Subject</th>
+    <th>Creation Date</th>
+    <th>Department</th>    
+    <th>Deadline</th>
+    <th>Status</th>    
+  </tr>
+  {% for curr_subtask in curr_subtasks %}
+  <tr>
+    <td><a href="{% url tasks.views.edit_subtask subtask_id=curr_subtask.id owner_name=page_owner %}">{{ curr_subtask.subject }}</a></td>
+    <td> {{ curr_subtask.creation_date }} </td>    
+    <td> {{ curr_subtask.department}} </td>
+    <td> {{ curr_subtask.deadline }} </td>
+    {% if curr_subtask.status == "O" %}
+		<td><span class="label label-warning">Open</span></td>
+	{% endif %}
+	{% if curr_subtask.status == "C" %}
+		<td><span class="label label-success">Completed</span></td>	
+	{% endif %}
+	{% if curr_subtask.status == "L" %}
+		<td><span class="label label-important">Overdue</span></td>
+	{% endif %}
+	{% if curr_subtask.status == "N" %}
+		<td><span class="label label-info">Almost</span></td>
+	{% endif %}    
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+There are no subtasks for this task yet.
+{% endif %}
+
+{% endif %}
+
+        
         <div class="rbroundbox">
             <div class="rbtop">
                 <div>
@@ -157,12 +207,18 @@ Edit Task
 
         <a href="#" id="add">Add a SubTask</a>
 
+{% if not is_new_task %}                   
+        </div>
+    </div>        
+    <!--End of Subtasks-->
+{% endif %} 
+
         <table>
             <tr>
                 <td> {% if is_new_task %}
-                <input type="submit" name = "Create" value="Create" />
+                <input type="submit" name = "Create" value="Create" class="btn btn-inverse"/>
                 {% else %}
-                <input type="submit" name = "Edit" value= "Submit" />
+                <input type="submit" name = "Edit" value= "Submit" class="btn btn-inverse"/>
                 {% endif %} </td>
                 <td>
                 <input type="hidden" name="next" value="../../home" />
@@ -170,7 +226,6 @@ Edit Task
             </tr>
         </table>
     </form>
-</div>
 {% if is_new_task %}
 {% else %}
 <div class="accordion" id="task_accordion">
@@ -188,6 +243,7 @@ Edit Task
     </div>
 </div>
 {% endif %}
+</div>
 {% endblock form_stuff %}
 
 {% block javascript %}
