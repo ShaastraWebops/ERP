@@ -69,7 +69,8 @@ Edit Task
             </div>
             <div class="rbcontentwrap">
                 <div class="rbcontent">
-                    <table>
+                <div class="well">
+                    <table cellpadding="4">
                         {% if is_new_task %}
                         <tr>
                             <th>Department: </th>
@@ -77,7 +78,7 @@ Edit Task
                         </tr>
                         <tr>
                             <th>Creator: </th>
-                            <td>{{ user_name }} </td>
+                            <td><a href="{% url users.views.view_profile owner_name=user %}">{{ user_name }}</a></td>
                         </tr>
                         {% else %}
                         <tr>
@@ -86,11 +87,12 @@ Edit Task
                         </tr>
                         <tr>
                             <th>Creator: </th>
-                            <td>{{ curr_task.creator.get_profile.name }} </td>
+                            <td><a href="{% url users.views.view_profile owner_name=curr_task.creator.username %}">{{ curr_task.creator.get_profile.name }}</a></td>
                         </tr>
                         {% endif %}
                         {{ task_form.as_table }}
                     </table>
+                </div>
                 </div>
             </div>
             <!-- /rbcontent -->
@@ -171,9 +173,18 @@ Edit Task
 </div>
 {% if is_new_task %}
 {% else %}
-<div class="row">
-    <div class="span4">
+<div class="accordion" id="task_accordion">
+<div class="accordion-group">
+    <!--Comments-->
+    <div class="accordion-heading">
+        <a class="accordion-toggle" href="#comments" data-parent="task_accordion" data-toggle="collapse"><h3 style="color: rgb(50,50,50);">Comments</h3></a>
+    </div>
+
+    <div id="comments" class="accordion-body collapse">
+        <div class="accordion" id="comments">
+            <div class="well">
             {% include "tasks/task_comments.html" %}
+            </div>
     </div>
 </div>
 {% endif %}
