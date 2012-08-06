@@ -83,7 +83,7 @@ Edit Task
 	    </tr>
 	    <tr>
 	      <th>Creator: </th>
-	      <td>{{ user_name }}</td>
+          <td><a href="{% url users.views.view_profile owner_name=user %}">{{ user_name }}</a></td>
 	    </tr>
 	    {% else %}
 	    <tr>
