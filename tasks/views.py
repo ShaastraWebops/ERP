@@ -322,7 +322,6 @@ def display_subtask (request, subtask_id, owner_name = None):
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
     comments = SubTaskComment.objects.filter (subtask__id = subtask_id)
-
     return render_to_response('tasks/display_subtask.html',
                               locals(),
                               context_instance = global_context (request))

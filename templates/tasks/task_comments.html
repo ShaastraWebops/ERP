@@ -1,0 +1,18 @@
+
+<div id="comments_table">
+    {% include "tasks/comments/task_comment_table.html" %}
+</div>
+{# Comment Form #}
+
+<h2>Add a comment</h2>
+<textarea class='comment' id="comments_field_task_{{curr_task.id}}" placeholder="enter comment"></textarea>
+<div class="well">
+<button class="btn btn-primary" onclick="comment({{curr_task.id}}, 'True')" id="comment_button">Comment</button>
+</div>
+            <div class="alert alert-error span2 offset1 hide" id="comments_alert_task_{{curr_task.id}}">
+                <a class="close" data-dismiss="alert" href="#">&times;</a>
+                <center>
+                    <strong> Your comment is blank! </strong>
+                </center>
+            </div>
+  
