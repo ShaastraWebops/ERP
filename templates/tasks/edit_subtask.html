@@ -7,13 +7,14 @@ Subtask
 {% endblock title %}
 
 {% block form_stuff %}
+<link href="{{ MEDIA_URL }}css/datepicker.css" rel="stylesheet">
 <h1>SubTask</h1>
 
 {% if has_updated %}
 <h3>The SubTask has successfully been updated.</h3>
 {% endif %}
 
-<a href="{% url tasks.views.edit_task task_id=curr_subtask.task.id owner_name=page_owner %}">Go to Task</a>
+<a href="{% url tasks.views.display_task task_id=curr_subtask.task.id owner_name=page_owner %}">Go to Task</a>
 <form action="" method="post">
   {% csrf_token %}
   {% if is_owner %}
@@ -28,7 +29,7 @@ Subtask
     </tr>
     <tr>
       <th>Proposed by </th>
-      <td> {{ curr_subtask.creator.get_profile.name }} </td>
+      <td><a href="{% url users.views.view_profile owner_name=curr_subtask.creator.username %}">{{ curr_subtask.creator.get_profile.name }}</a></td>
     </tr>
     <tr>
       <th>Proposing Dept </th>
