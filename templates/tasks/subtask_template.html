@@ -1,7 +1,7 @@
 <table class="table table-bordered">
   <tr>
     <th>Subject</th>
-    <td> {{ curr_subtask.subject }} </td>
+    <td><a href="{% url tasks.views.edit_subtask subtask_id=curr_subtask.id owner_name=page_owner %}">{{ curr_subtask.subject }}</a></td>
   </tr>
   <tr>
     <th>Department</th>
