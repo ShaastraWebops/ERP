@@ -83,7 +83,7 @@ Edit Task
 	    </tr>
 	    <tr>
 	      <th>Creator: </th>
-	      <td>{{ user_name }} </td>
+          <td><a href="{% url users.views.view_profile owner_name=user %}">{{ user_name }}</a></td>
 	    </tr>
 	    {% else %}
 	    <tr>
@@ -92,7 +92,7 @@ Edit Task
 	    </tr>
 	    <tr>
 	      <th>Creator: </th>
-	      <td>{{ curr_task.creator.get_profile.name }} </td>
+	      <td><a href="{% url users.views.view_profile owner_name=curr_task.creator.username %}">{{ curr_task.creator.get_profile.name }}</a></td>
 	    </tr>
 	    {% endif %}
 	    {{ task_form.as_table }}
@@ -156,7 +156,7 @@ Edit Task
   </tr>
   {% for curr_subtask in curr_subtasks %}
   <tr>
-    <td> {{ curr_subtask.subject }} </td>
+    <td><a href="{% url tasks.views.edit_subtask subtask_id=curr_subtask.id owner_name=page_owner %}">{{ curr_subtask.subject }}</a></td>
     <td> {{ curr_subtask.creation_date }} </td>    
     <td> {{ curr_subtask.department}} </td>
     <td> {{ curr_subtask.deadline }} </td>

@@ -18,7 +18,7 @@
   </tr>
   {% for comment in comments %}
   <tr>
-    <td>{{ comment.author.get_profile.name }}</td>
+    <td><a href="{% url users.views.view_profile owner_name=comment.author.username %}">{{ comment.author.get_profile.name }}</a></td>
     <td>{{ comment.comment_string }}</td>
     <td>{{ comment.time_stamp }}</td>
   </tr>
