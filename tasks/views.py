@@ -537,4 +537,3 @@ def remainder(request):
 	connection=mail.get_connection()
 	connection.send_messages(datatuple)	
 	return HttpResponse("remainder sent!")
-
