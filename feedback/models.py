@@ -8,7 +8,6 @@ from erp.misc.helper import is_core, is_coord, get_page_owner
 STAT_CHOICES= (
     ('Core','Core'),
     ('Coord','Coordinator'),
-    ('Vol','Volunteer'),
     ('All','All'),
 )
 
