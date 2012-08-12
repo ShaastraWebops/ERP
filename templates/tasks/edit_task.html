@@ -165,7 +165,7 @@ There are no subtasks for this task yet.
             </div>
             <div class="rbcontentwrap">
                 <div class="rbcontent">
-                    <h2>Subtasks</h2>
+                    {% if not is_new_task %}<h2>Subtasks</h2>{% endif %}
                     <!-- <p>Fill as many Subtasks as you want</p> -->
                 </div>
             </div>
