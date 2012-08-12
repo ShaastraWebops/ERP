@@ -163,7 +163,7 @@ def create_tasks (n = 5, partial_subtask = False):
     for i in xrange (n):
         new_task = Task ()
         new_task.subject = name + task_subj_str + str (i)
-        new_task.description = 'Gen Testing ' + str (i)
+        new_task.description = 'Description about Task ' + str (i)
         new_task.creator = curr_core
         new_task.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
         new_task.save () 
@@ -221,18 +221,18 @@ def create_comments ():
     """
     cores_list = User.objects.filter (groups__name = 'Cores')
     coords_list = User.objects.filter (groups__name = 'Coords')
-    standard_test_comment = ' Testing 123'
+    standard_test_comment = ' comments '
     for core in cores_list:
         task_list = Task.objects.filter (creator = core)
         subtask_list = SubTask.objects.filter (department = core.get_profile ().department)
-        comment_string = core.get_profile ().name + ' '
+        comment_string = core.get_profile ().name + '\'s '
         for task in task_list:
-            new_comment = TaskComment (comment_string = comment_string + 'Task' + standard_test_comment)
+            new_comment = TaskComment (comment_string = comment_string + standard_test_comment + '(for Task)')
             new_comment.author = core
             new_comment.task = task
             new_comment.save ()
         for subtask in subtask_list:
-            new_comment = SubTaskComment (comment_string = comment_string + 'SubTask' + standard_test_comment)
+            new_comment = SubTaskComment (comment_string = comment_string + standard_test_comment + '(for SubTask)')
             new_comment.author = core
             new_comment.subtask = subtask
             new_comment.save ()
@@ -255,11 +255,11 @@ def create_updates ():
     coords_list = User.objects.filter (groups__name = 'Coords')
     for coord in coords_list:
         # List of all SubTasks where coord is one of the Coords assigned
-        new_update = Update (comment_string = 'Hey This is Me ' + coord.get_profile ().name, author = coord)
+        new_update = Update (comment_string = 'This is me ' + coord.get_profile ().name + ', started working on the subtasks assigned ', author = coord)
         new_update.save ()
-        new_update = Update (comment_string = 'Yo! This is Me again! ' + coord.get_profile ().name, author = coord)
+        new_update = Update (comment_string = 'Finished two of the subtasks ' , author = coord)
         new_update.save ()
-        new_update = Update (comment_string = 'Guess What? ' + coord.get_profile ().name, author = coord)
+        new_update = Update (comment_string = ' This is me ' + coord.get_profile ().name + ', will finish the last subtask by tonight ' , author = coord)
         new_update.save ()
     print 'Coord updates - Created'
 
