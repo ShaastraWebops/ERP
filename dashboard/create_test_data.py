@@ -149,6 +149,10 @@ def create_tasks (n = 5, partial_subtask = False):
         task_subj_str = ' Test Task '
         subtask_subj_str_same = ' Same Dept - Do this '
         subtask_subj_str_other = ' Other Dept - Do this '
+    start_date = datetime.date.today().replace(day=1, month=3).toordinal()
+    end_date = datetime.date.today().toordinal()
+    print start_date
+    print end_date
     for name in dept_names:
         curr_dept = Department.objects.get (Dept_Name = name)
         # This Department's Core
@@ -156,47 +160,44 @@ def create_tasks (n = 5, partial_subtask = False):
         curr_coord1 = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = name)[0]
         curr_coord2 = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = name)[1]
         print 'Tasks for ', curr_dept.Dept_Name
-    start_date = datetime.date.today().replace(day=1, month=3).toordinal()
-    end_date = datetime.date.today().toordinal()
-    print start_date
-    print end_date
-    for i in xrange (n):
-        new_task = Task ()
-        new_task.subject = name + task_subj_str + str (i)
-        new_task.description = 'Description about Task ' + str (i)
-        new_task.creator = curr_core
-        new_task.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
-        new_task.save () 
-        if not partial_subtask:
-            subtask1 = SubTask ()
-            subtask1.subject = name + subtask_subj_str_same + str (i)
-            subtask1.creator = curr_core
-            subtask1.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
-            subtask1.department = curr_dept
-            subtask1.task = new_task
-            # Seems the SubTask must exist before many to many
-            # relations can be added
-            subtask1.save ()
-            subtask1.coords.add (curr_coord1)
-            subtask1.coords.add (curr_coord2)
-            subtask1.save ()
-        for j in xrange (num_other_tasks):
-            subtask2 = SubTask ()
-            subtask2.creator = curr_core
-            subtask2.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
-            index = random.randint (0, 9)
-            subtask2.department = Department.objects.get (Dept_Name = dept_names[index])
-            subtask2.subject = subtask2.department.Dept_Name + subtask_subj_str_other + str (i)
-            subtask2.task = new_task
-            # Seems the SubTask must exist before many to many
-            # relations can be added
-            subtask2.save ()
+
+        for i in xrange (n):
+            new_task = Task ()
+            new_task.subject = name + task_subj_str + str (i)
+            new_task.description = 'Description about Task ' + str (i)
+            new_task.creator = curr_core
+            new_task.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
+            new_task.save () 
             if not partial_subtask:
-                # If not a partial subtask, assign to coords
-                coord_list = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = dept_names[index])
-                subtask2.coords.add (coord_list[0])
-                subtask2.coords.add (coord_list[1])
+                subtask1 = SubTask ()
+                subtask1.subject = name + subtask_subj_str_same + str (i)
+                subtask1.creator = curr_core
+                subtask1.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
+                subtask1.department = curr_dept
+                subtask1.task = new_task
+                # Seems the SubTask must exist before many to many
+                # relations can be added
+                subtask1.save ()
+                subtask1.coords.add (curr_coord1)
+                subtask1.coords.add (curr_coord2)
+                subtask1.save ()
+            for j in xrange (num_other_tasks):
+                subtask2 = SubTask ()
+                subtask2.creator = curr_core
+                subtask2.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
+                index = random.randint (0, 9)
+                subtask2.department = Department.objects.get (Dept_Name = dept_names[index])
+                subtask2.subject = subtask2.department.Dept_Name + subtask_subj_str_other + str (i)
+                subtask2.task = new_task
+                # Seems the SubTask must exist before many to many
+                # relations can be added
                 subtask2.save ()
+                if not partial_subtask:
+                    # If not a partial subtask, assign to coords
+                    coord_list = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = dept_names[index])
+                    subtask2.coords.add (coord_list[0])
+                    subtask2.coords.add (coord_list[1])
+                    subtask2.save ()
             print 'Task ', i, 'Created'
 
 def finish_some_subtasks ():
