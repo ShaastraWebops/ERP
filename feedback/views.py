@@ -12,9 +12,6 @@ from django.db.models import Avg
 from django.core.urlresolvers import reverse
 from decimal import Decimal
 
-
-
-
 """
 Toggle function is solely for the qms core to open/close the feedback feature
 """
