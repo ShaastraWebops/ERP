@@ -2,33 +2,29 @@ from django.db import models
 from django.forms import ModelForm
 from feedback.models import *
 from django import forms
-
-from django.utils.safestring import mark_safe
-
-class HorizontalRadioRenderer(forms.RadioSelect.renderer):
-  def render(self):
-    return mark_safe(u'\n'.join([u'%s\n' % w for w in self]))
-
-RATING_CHOICES= [(i,i) for i in range(11)]
-
+from chosen import forms as chosenforms
 
 class QuestionFormCoord (ModelForm):
     class Meta:
 		model = Question
 		fields= ('question','answered_by','departments',)
+		widgets = {'answered_by':chosenforms.widgets.ChosenSelect(),'departments': chosenforms.widgets.ChosenSelectMultiple(overlay='')}
 
+    def __init__(self, *args, **kwargs):
+        super(QuestionFormCoord, self).__init__(*args, **kwargs)
+        # Removing "Hold down "Control", or "Command" on a Mac, to select more than one."
+        self.fields['departments'].help_text = ''
 
 class QuestionFormCore (ModelForm):
     class Meta:
-		model = Question
-		fields= ('question','departments',)
+        model = Question
+        fields= ('question','departments',)
+        widgets = {'departments': chosenforms.widgets.ChosenSelectMultiple(overlay='')}
         
-class AnswerForm (ModelForm):
-    rating = forms.ChoiceField(choices=RATING_CHOICES,widget=forms.RadioSelect)
-    class Meta:
-        model = Answer
-        fields = ('rating',)
-
+    def __init__(self, *args, **kwargs):
+        super(QuestionFormCore, self).__init__(*args, **kwargs)
+        # Removing "Hold down "Control", or "Command" on a Mac, to select more than one."
+        self.fields['departments'].help_text = ''        
         
         
 
