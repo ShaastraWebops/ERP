@@ -344,6 +344,16 @@ def display_task (request, task_id, owner_name = None):
     Back Button to go back
     """
     page_owner = get_page_owner (request, owner_name)
+    
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department          
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+    
     print 'Display Task - Task ID : ', task_id
     curr_task = Task.objects.get (id = task_id)
     comments = TaskComment.objects.filter (task__id = task_id)
@@ -483,4 +493,3 @@ def remainder(request):
 	connection=mail.get_connection()
 	connection.send_messages(datatuple)	
 	return HttpResponse("remainder sent!")
-
