@@ -108,15 +108,16 @@ Edit Task
        
         {% endif %}
         
-        {% if not is_new_task %}  
+
     <!--Subtasks-->
     <div class="accordion-heading">
-        <a class="accordion-toggle" href="#subtasks" data-parent="task_accordion" data-toggle="collapse" ><h3 style="color: rgb(50,50,50);">Edit Subtasks</h3></a>
+        <a class="accordion-toggle" href="#subtasks" data-parent="task_accordion" data-toggle="collapse" ><h3 style="color: rgb(50,50,50);">{% if not is_new_task %}Edit{% else %}Add{% endif %} Subtasks</h3></a>
     </div>
 
     <div id="subtasks" class="accordion-body collapse">
         <div class="accordion" id="subtasks">
 
+{% if not is_new_task %}  
 {# Display existing subtasks for convenience #}
 
 {% if curr_subtasks %}
@@ -165,8 +166,6 @@ There are no subtasks for this task yet.
             </div>
             <div class="rbcontentwrap">
                 <div class="rbcontent">
-                    {% if is_new_task %}<h2>Subtasks</h2>{% endif %}
-                    <!-- <p>Fill as many Subtasks as you want</p> -->
                 </div>
             </div>
             <!-- /rbcontent -->
@@ -207,11 +206,11 @@ There are no subtasks for this task yet.
 
         <a href="#" id="add">Add a SubTask</a>
 
-{% if not is_new_task %}                   
+
         </div>
     </div>        
     <!--End of Subtasks-->
-{% endif %} 
+
 
         <table>
             <tr>
@@ -227,6 +226,11 @@ There are no subtasks for this task yet.
         </table>
     </form>
 {% if is_new_task %}
+<div class="accordion" id="task_accordion">
+<div class="accordion-group">
+    <div id="comments" class="accordion-body collapse">
+    </div>
+</div>
 {% else %}
 <div class="accordion" id="task_accordion">
 <div class="accordion-group">

@@ -19,7 +19,7 @@
     <td>{{ update.comment_string }}</td>
     <td>{{ update.time_stamp }}</td>
     {% if po_is_core %}
-    <td>{{ update.author.get_profile.name }}</td>
+    <td><a href="{% url users.views.view_profile owner_name=update.author %}">{{ update.author.get_profile.name }}</a></td>
     {% endif %}
   </tr>
   {% endfor %}

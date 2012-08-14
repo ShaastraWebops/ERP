@@ -5,6 +5,7 @@ from django import forms
 from chosen import forms as chosenforms
 from erp.department.models import *
 from erp.users.models import *
+from django.contrib.auth.models import User
 #from chosen import widgets as chosenwidgets
 
 class TaskCommentForm (ModelForm):
@@ -34,6 +35,11 @@ class SubTaskForm (ModelForm):
         model = SubTask
         exclude = ['creator', 'description', 'department', 'task']
         widgets = {'department':chosenforms.widgets.ChosenSelect(),'coords': chosenforms.widgets.ChosenSelectMultiple(),'status': chosenforms.widgets.ChosenSelect()}
+    
+    def __init__(self, user=None, *args, **kwargs):
+        super(SubTaskForm, self).__init__(*args, **kwargs)
+        if user:
+            self.fields['coords'].queryset = User.objects.filter(userprofile__department=user.get_profile().department)
         
 #hack if these fields need to be formatted        
 #    def __init__(self, *args, **kwargs):

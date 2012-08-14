@@ -116,7 +116,7 @@ Dashboard
                 </tr>
                 {% for subtask in all_requested_SubTasks %}
                 <tr>
-                    <td><a href="{% url tasks.views.edit_task task_id=subtask.task.id owner_name=page_owner %}">{{ subtask.task.subject }}</a></td>
+                    <td><a href="{% url tasks.views.display_task task_id=subtask.task.id owner_name=page_owner %}">{{ subtask.task.subject }}</a></td>
                     <td><a href="{% url tasks.views.edit_subtask subtask_id=subtask.id owner_name=page_owner %}">{{ subtask.subject }}</a></td>
                     <td> {{ subtask.deadline }} </td>
                     {% if subtask.status == "O" %}
@@ -182,7 +182,7 @@ Dashboard
                     <ul>
                         {% for coord in subtask.coords.all %}
                         <li>
-                            {{ coord.get_profile.name }}
+                            <a href="{% url users.views.view_profile owner_name=coord %}">{{ coord.get_profile.name }}</a>
                         </li>
                         {% endfor %}
                     </ul></td>
