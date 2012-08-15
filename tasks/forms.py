@@ -40,6 +40,7 @@ class SubTaskForm (ModelForm):
         super(SubTaskForm, self).__init__(*args, **kwargs)
         if user:
             self.fields['coords'].queryset = User.objects.filter(userprofile__department=user.get_profile().department)
+            self.fields['coords'].help_text = ''
         
 #hack if these fields need to be formatted        
 #    def __init__(self, *args, **kwargs):
