@@ -1,3 +1,33 @@
+{% comment %}
+{% if is_task_comment %}
+<h2>Task - {{ curr_object.subject }}</h2>
+{% else %}
+<h2>Subtask - {{ curr_object.subject }}</h2>
+{% endif %}
+{% endcomment %}
+
+{# Display existing comments #}
+
+{% if comments %}
+<br />
+<h3>Comments</h3>
+<table class="table table-bordered" >
+  <tr>
+    <th>Author</th>
+    <th>Comment</th>
+    <th>Time</th>
+  </tr>
+  {% for comment in comments %}
+  <tr>
+    <td><a href="{% url users.views.view_profile owner_name=comment.author.username %}">{{ comment.author.get_profile.name }}</a></td>
+    <td>{{ comment.comment_string }}</td>
+    <td>{{ comment.time_stamp }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+There are no Comments yet.
+{% endif %}
 
 <div id="comments_table">
     {% include "tasks/comment_table.html" %}
@@ -26,14 +56,12 @@
 
 <h2>Add a comment</h2>
 <textarea class='comment' id="comments_field" placeholder="enter comment"></textarea>
-<div class="well">
+<div>
 <button class="btn btn-primary" type = "button" onclick="comment()" id="comment_button">Comment</button>
-
-
 </div>
             <div class="alert alert-error span2 offset1 hide" id="comments_alert">
                 <center>
                     <strong> Your comment is blank! </strong>
                 </center>
             </div>
-  
+ 

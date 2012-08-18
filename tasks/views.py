@@ -9,6 +9,7 @@ from django.forms.models import modelformset_factory, inlineformset_factory
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import datetime
+from datetime import date
 from forms import TaskForm, SubTaskForm, TaskCommentForm, SubTaskCommentForm, UpdateForm
 from models import *
 from erp.misc.util import *
@@ -24,12 +25,9 @@ from django.template.loader import get_template
 from django.template import Context
 from django.core import mail
 from django.http import HttpResponse
-
-from datetime import * 
 from dateutil.relativedelta import *
-
 from ajax import *
-
+from django.utils.functional import curry
 
 # Fields to be excluded in the SubTask forms during Task editing
 subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
@@ -192,6 +190,10 @@ def edit_task (request, task_id = None, owner_name = None):
     is_task_comment = True
     other_errors = False
 
+    #Get all subtasks for task, if task exists
+    if task_id:
+        curr_subtasks = SubTask.objects.filter(task = curr_task)
+        
     #Get Department Members' image thumbnails
     display_dict = dict ()
     department = page_owner.get_profile ().department      
@@ -208,6 +210,7 @@ def edit_task (request, task_id = None, owner_name = None):
                                             exclude = subtask_exclusion_tuple,
                                             extra = 0,
                                             can_delete = True)
+                                           
     if request.method == 'POST':
         # Get the submitted formset
         subtaskfs = SubTaskFormSet (request.POST,
@@ -288,7 +291,8 @@ def edit_subtask (request, subtask_id, owner_name = None):
 
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
-    curr_subtask_form = SubTaskForm (instance = curr_subtask)
+    curr_subtask_form = SubTaskForm (instance = curr_subtask, user=page_owner)
+
     if curr_subtask.is_owner (user):
         is_owner = True
     else:
@@ -301,10 +305,20 @@ def edit_subtask (request, subtask_id, owner_name = None):
         closed_task=0                     # The SubTask is not closed prior to editing
     has_updated = False
     other_errors = False
+
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department          
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
     if request.method == 'POST':
         if is_owner:
             # Let the Core save the SubTask
-            curr_subtask_form = SubTaskForm (request.POST, instance = curr_subtask)
+            curr_subtask_form = SubTaskForm (request.POST, instance = curr_subtask, user=page_owner)
             if curr_subtask_form.is_valid ():
                 if 'status' in request.POST:                
                     if(curr_subtask_form.cleaned_data['status']=='C')and(closed_task == 0):
@@ -325,7 +339,7 @@ def edit_subtask (request, subtask_id, owner_name = None):
             curr_subtask.save ()
             has_updated = True
             # Reinstantiate the form
-            curr_subtask_form = SubTaskForm (instance = curr_subtask)
+            curr_subtask_form = SubTaskForm (instance = curr_subtask, user=page_owner)
             print 'SubTask updated'
     comments, comment_form, comment_status = handle_comment (
         request = request,
@@ -365,6 +379,16 @@ def display_task (request, task_id, owner_name = None):
     Back Button to go back
     """
     page_owner = get_page_owner (request, owner_name)
+    
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department          
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+    
     print 'Display Task - Task ID : ', task_id
     curr_task = Task.objects.get (id = task_id)
     comments = TaskComment.objects.filter (task__id = task_id)
@@ -504,4 +528,3 @@ def remainder(request):
 	connection=mail.get_connection()
 	connection.send_messages(datatuple)	
 	return HttpResponse("remainder sent!")
-

@@ -1,18 +1,21 @@
 {% extends "base_portal.html" %}
 {% block body %}
+{{ block.super }}
 {% if qms_core %}
-<a class="pull-right" href="{% url feedback.views.display question_for=question_for %}">See all questions</a>
+<a class="btn btn-primary pull-right" href="{% url feedback.views.display question_for=question_for %}">SEE ALL QUESTIONS</a><br>
 {% endif %}
 
 {% if qms_coord %}
-<a class="pull-right" href="{% url feedback.views.display question_for=question_for %}">See all questions</a>
+<a class="btn btn-primary pull-right" href="{% url feedback.views.display question_for=question_for%}">SEE ALL QUESTIONS</a><br>
 {% endif %}
-<center><h1>Add Question </h1></center>
+<br>
 <form class="well" action="" method="POST">
+<h3>Add Question </h3><br>
 	{% csrf_token %}
 	<table>
 		{{questionform.as_table}}
-	</table>
+    </table>		
+	<br><br>	
 	<input type="submit" value="Save"/>
     </form>
 {% if question_added %}
@@ -25,7 +28,9 @@
 {% block tabs %}
 {% endblock %}
 {% block form_stuff %}
+<br><br><br><br><br><br><br><br>
 {% endblock %}
+
 {% block javascript %}
 {{ block.super }}
 
@@ -39,7 +44,12 @@ $(document).ready(function() {
     e.className = e.className + " icon-white";
  });
 </script>
+
+<script type="text/javascript">  //initialise django-chosen
+$(document).ready(function() {
+    $('select').chosen();
+});
+</script>
 {% endblock javascript %}
 {% block display_stuff %}
 {% endblock %}
-

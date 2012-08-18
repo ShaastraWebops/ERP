@@ -11,6 +11,7 @@ Edit Task
 {% endblock title %}
 
 {% block form_stuff %}
+<link href="{{ MEDIA_URL }}css/datepicker.css" rel="stylesheet">
 <div align="center">
     <div class="rbroundbox">
         <div class="rbtop">
@@ -68,7 +69,8 @@ Edit Task
             </div>
             <div class="rbcontentwrap">
                 <div class="rbcontent">
-                    <table>
+                <div class="well">
+                    <table cellpadding="4">
                         {% if is_new_task %}
                         <tr>
                             <th>Department: </th>
@@ -76,7 +78,7 @@ Edit Task
                         </tr>
                         <tr>
                             <th>Creator: </th>
-                            <td>{{ user_name }} </td>
+                            <td><a href="{% url users.views.view_profile owner_name=user %}">{{ user_name }}</a></td>
                         </tr>
                         {% else %}
                         <tr>
@@ -85,11 +87,12 @@ Edit Task
                         </tr>
                         <tr>
                             <th>Creator: </th>
-                            <td>{{ curr_task.creator.get_profile.name }} </td>
+                            <td><a href="{% url users.views.view_profile owner_name=curr_task.creator.username %}">{{ curr_task.creator.get_profile.name }}</a></td>
                         </tr>
                         {% endif %}
                         {{ task_form.as_table }}
                     </table>
+                </div>
                 </div>
             </div>
             <!-- /rbcontent -->
@@ -104,6 +107,57 @@ Edit Task
         {% else %}
        
         {% endif %}
+        
+
+    <!--Subtasks-->
+    <div class="accordion-heading">
+        <a class="accordion-toggle" href="#subtasks" data-parent="task_accordion" data-toggle="collapse" ><h3 style="color: rgb(50,50,50);">{% if not is_new_task %}Edit{% else %}Add{% endif %} Subtasks</h3></a>
+    </div>
+
+    <div id="subtasks" class="accordion-body collapse">
+        <div class="accordion" id="subtasks">
+
+{% if not is_new_task %}  
+{# Display existing subtasks for convenience #}
+
+{% if curr_subtasks %}
+<br />
+<table class="table table-bordered" >
+  <tr>
+    <th>Subject</th>
+    <th>Creation Date</th>
+    <th>Department</th>    
+    <th>Deadline</th>
+    <th>Status</th>    
+  </tr>
+  {% for curr_subtask in curr_subtasks %}
+  <tr>
+    <td><a href="{% url tasks.views.edit_subtask subtask_id=curr_subtask.id owner_name=page_owner %}">{{ curr_subtask.subject }}</a></td>
+    <td> {{ curr_subtask.creation_date }} </td>    
+    <td> {{ curr_subtask.department}} </td>
+    <td> {{ curr_subtask.deadline }} </td>
+    {% if curr_subtask.status == "O" %}
+		<td><span class="label label-warning">Open</span></td>
+	{% endif %}
+	{% if curr_subtask.status == "C" %}
+		<td><span class="label label-success">Completed</span></td>	
+	{% endif %}
+	{% if curr_subtask.status == "L" %}
+		<td><span class="label label-important">Overdue</span></td>
+	{% endif %}
+	{% if curr_subtask.status == "N" %}
+		<td><span class="label label-info">Almost</span></td>
+	{% endif %}    
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+There are no subtasks for this task yet.
+{% endif %}
+
+{% endif %}
+
+        
         <div class="rbroundbox">
             <div class="rbtop">
                 <div>
@@ -112,8 +166,6 @@ Edit Task
             </div>
             <div class="rbcontentwrap">
                 <div class="rbcontent">
-                    <h2>Subtasks</h2>
-                    <!-- <p>Fill as many Subtasks as you want</p> -->
                 </div>
             </div>
             <!-- /rbcontent -->
@@ -150,17 +202,20 @@ Edit Task
             </div>
             <!-- /rbroundbox -->
         </div>
-
         {% endfor %}
 
         <a href="#" id="add">Add a SubTask</a>
 
+        </div>
+    </div>        
+    <!--End of Subtasks-->
+
         <table>
             <tr>
                 <td> {% if is_new_task %}
-                <input type="submit" name = "Create" value="Create" />
+                <input type="submit" name = "Create" value="Create" class="btn btn-inverse"/>
                 {% else %}
-                <input type="submit" name = "Edit" value= "Submit" />
+                <input type="submit" name = "Edit" value= "Submit" class="btn btn-inverse"/>
                 {% endif %} </td>
                 <td>
                 <input type="hidden" name="next" value="../../home" />
@@ -168,15 +223,29 @@ Edit Task
             </tr>
         </table>
     </form>
-</div>
 {% if is_new_task %}
+<div class="accordion" id="task_accordion">
+<div class="accordion-group">
+    <div id="comments" class="accordion-body collapse">
+    </div>
+</div>
 {% else %}
-<div class="row">
-    <div class="span4">
+<div class="accordion" id="task_accordion">
+<div class="accordion-group">
+    <!--Comments-->
+    <div class="accordion-heading">
+        <a class="accordion-toggle" href="#comments" data-parent="task_accordion" data-toggle="collapse"><h3 style="color: rgb(50,50,50);">Comments</h3></a>
+    </div>
+
+    <div id="comments" class="accordion-body collapse">
+        <div class="accordion" id="comments">
+            <div class="well">
             {% include "tasks/task_comments.html" %}
+            </div>
     </div>
 </div>
 {% endif %}
+</div>
 {% endblock form_stuff %}
 
 {% block javascript %}
@@ -189,15 +258,53 @@ Edit Task
 <!--include for comments -->
 
 <script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
+
 <script type="text/javascript">
-    $('.chzn-select').chosen();
+$(document).ready(function() {
+    var d = document.getElementById("li_task");
+    var e = document.getElementById("li_task_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+    
+    $('#id_subtask_set-TOTAL_FORMS').val(($('[id^=id_subtask_set]')   //'#id_subtask_set-TOTAL_FORMS' value doesn't reset on page refresh, messing up subtask numbering for the formset.
+                                    .filter('[id$=subject]')          //This code corrects it.
+                                    .filter(function(){
+                                        if ($(this).val()) {
+                                            return true;
+                                        }})
+                                    .length));                       //end of '#id_subtask_set-TOTAL_FORMS' correction code.
+    
+    $('[id$=deadline]').each(function() {
+        if ($(this).val()) //django default format of year-month-date
+        { 
+            if ($(this).val().indexOf("/")==-1)                //following code must execute only if date isn't of mm/dd/yyyy format
+            {
+                var splitdate = $(this).val().split("-");
+                $(this).val(splitdate[1] + "/" + splitdate[2] + "/" + splitdate[0]); //display in datepicker format of month/date/year
+            }
+        }
+        else
+            $(this).val("08/01/2012"); //Date set: Aug 1st, 2012. Set a date close to usage date for easier navigation
+    });
+ });
 </script>
+<script src="js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		var d = document.getElementById("li_task");
-		var e = document.getElementById("li_task_icon");
-		d.className = "active";
-		e.className = e.className + " icon-white";
-	}); 
+$(function(){
+    window.prettyPrint && prettyPrint();
+    $('[id$=deadline]').datepicker({
+        format: 'mm/dd/yyyy' //save mm dd yyyy format as django takes first bit as month and next as date
+    });
+});
 </script>
+
+<script type="text/javascript">  //initialise django-chosen
+{% for form in subtaskfs.forms %}
+val={{ forloop.counter }}-1;
+$("#id_subtask_set-" + val + "-department").chosen();
+$("#id_subtask_set-" + val + "-coords").chosen();
+{% endfor %}
+</script>
+
 {% endblock javascript %}

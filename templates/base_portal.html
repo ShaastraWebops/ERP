@@ -66,6 +66,12 @@
     e.preventDefault();
     $(this).tab('show');
     })
+    
+    function searchterm()
+    {
+        return document.getElementById('searchbar').value
+        
+    }
         </script>
         {% block extrahead %}
         {% endblock %}
@@ -121,10 +127,11 @@
                             <li>
 
                                 <div class="input-append">
-                                    <form class="navbar-search" id="search">
+                                    <form class="navbar-search" id="search" action="/search/" method="POST">
+                                        {%csrf_token%}
                                         <div class="input-append">
-                                            <input type="text" class="input-xlarge search-query" placeholder="Search for tasks">
-                                            <a href="#" id="search-icon"><i class="icon-search icon-white"></i></a> 
+                                            <input type="text" class="input-xlarge search-query" placeholder="Search for tasks" name="searchbar">
+                                            <a href="#" id="search-icon"><i class="icon-search icon-white" style="margin-top:2px;"></i></a> 
                                         </div>
                                     </form>
                                 </div>
@@ -141,7 +148,7 @@
             <!-- Main hero unit for a primary marketing message or call to action -->
 
             <div class="page-header white">
-                <h2>Welcome, {{user}}</h2>
+                <h2>Welcome, {{user.get_profile.name}}!</h2>
             </div>
             
             <div class="row">
@@ -171,12 +178,8 @@
         <script src="{{ MEDIA_URL }}js/jquery.js"></script>
         <script src="{{ MEDIA_URL }}js/bootstrap.js"></script>
         <script src="{{ MEDIA_URL }}js/bootstrap.min.js"></script>
-
-        <script src="{{ MEDIA_URL }}js/chosen.jquery.js"></script>
-        <script src="{{ MEDIA_URL }}js/chosen.jquery_ready.js"></script>
-        
         <script src="{{ MEDIA_URL }}js/jquery.dajax.core.js"></script>
-
+        <script src="{{ MEDIA_URL }}js/chosen.jquery.js"></script>
         <script type="text/javascript">
             function showMembers() {
                 var d = document.getElementById("department_members_icon");
@@ -189,9 +192,36 @@
             }
         </script>
         <script type="text/javascript">
-        $(document).ready(function(){
-        $('.chzn-select').chosen();
-        })
+            function showComments(tab, task_id) {
+                var d = document.getElementById(tab + "_comments_" + task_id + "_icon");
+                var e = document.getElementById(tab + "_comments_" + task_id + "_text");
+                if(d.className=="icon-plus-sign") {
+                    d.className = "icon-minus-sign";
+                    e.innerHTML="Hide";
+                    }
+                else {
+                    d.className = "icon-plus-sign";
+                    e.innerHTML="Show";
+                    }
+            }
+            function showSubtasks(tab, task_id) {
+                var d = document.getElementById(tab + "_subtask_" + task_id + "_icon");
+                var e = document.getElementById(tab + "_subtask_" + task_id + "_text");
+                if(d.className=="icon-plus-sign") {
+                    d.className = "icon-minus-sign";
+                    e.innerHTML="Hide";
+                    }
+                else {
+                    d.className = "icon-plus-sign";
+                    e.innerHTML="Show";
+                    }
+            }
+
+        </script>
+
+        <script type="text/javascript">
+            $('#id_status').chosen();
+            $('#id_coords').chosen();
         </script>
         <script type="text/javascript">        
         $('#search-icon').click(function() {

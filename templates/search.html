@@ -1,0 +1,12 @@
+<html>
+<form action="" method ="POST">
+<input type = "text" name="searchbar" id="s" value="seach for something">
+<input type = "submit" value="Search">
+</form>
+
+{% for result in results %}
+{{ result.object.title }}
+{{ result.object.subject }}
+{{ result.object.creator }}
+{% endfor %}
+</html>

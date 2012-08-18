@@ -1,8 +1,8 @@
-{% extends "base_portal.html" %}
 
-{%block body%}
 
-<link href="{{ MEDIA_URL }}css/fullcalendar.css" rel="stylesheet" type="text/css" />
+{% block body %}
+
+
 <style ="text/css" >
 
 
@@ -163,33 +163,14 @@
   {
 
   }
-  .fc-header-title {
-      margin:5px 0px 0px 10px;
-  }
-  
-  .fc-button {
-      margin-top:5px;
-  }
-
 
 
 </style>
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js">
 </script>
-<script src="{{ MEDIA_URL }}js/fullcalendar.js"></script>
+
 <script type="text/javascript">
   $(document).ready(function(){
-	  
-	$('#fullcal').fullCalendar({
-    dayClick: function(date, allDay, jsEvent, view) {
-
-        
-       location.href = "{% url tasks.views.display_task task_id=field.id owner_name=page_owner %}";
-
-    }
-});
-	 
   var id;
   $(".date > div").hover(function(){
   id =	".subtasks" + $(this).attr('id');
@@ -215,9 +196,84 @@
   });
 </script> 
 
-<!--<div id="main_pos">
-<div id="fullcal"></div>  
-<table>
+
+
+
+
+{% block left_side_bar %}
+{% include "left-sidebar.html" %}
+{% endblock left_side_bar %}
+<div id="main_pos">
+  <div id="month_header">
+    <div id="month_name">
+      <div id="prev_month" >
+	<a href="{% url dashboard.views.display_calendar owner_name=page_owner%}{{prev_month}}/{{prev_year}}" >
+	  Prev 
+	</a>
+      </div>
+      
+      
+
+      {{month_name}} ,{{year}}
+      
+      
+      <div id="next_month" >
+
+	<a href="{% url dashboard.views.display_calendar owner_name=page_owner%}{{next_month}}/{{next_year}}" >
+	  Next
+	</a>
+      </div>
+    </div>
+    
+    
+  </div>
+
+  <div id="weekday_header" >
+    <table >
+      <tr>
+	<td>
+	  <div class="weekday" >
+	    MON
+	  </div>
+	</td>
+	<td>
+	  <div class="weekday" >
+	    TUE
+	  </div>
+	</td>
+	<td>
+	  <div class="weekday" >
+	    WED
+	  </div>
+	</td>
+	<td>
+	  <div class="weekday" >
+	    THU
+	  </div>
+	</td>
+	<td>
+	  <div class="weekday" >
+	    FRI
+	  </div>
+	</td>
+	<td>
+	  <div class="weekday" >
+	    SAT
+	  </div>
+	</td>
+	<td>
+	  <div class="weekday" >
+	    SUN
+	  </div>
+	</td>
+      </tr>
+    </table>
+
+
+  </div>	
+
+
+  <table>
 
     {% for row in main_data %}
     <tr>
@@ -226,7 +282,8 @@
       <td>					
 	{% if column.date != 0 %}
 	<div class ="date_box" >
-	  <div>
+
+	  <div 
 	     {% if column.subtask %}
 	     class="date" 
 	     {% else %}
@@ -271,6 +328,7 @@
     {% endfor %}
   </table>
 
+
   <div id="today_date_box">
     <div id="today_word" >
       Today
@@ -292,20 +350,6 @@
     </div>
     {% endif %}
   </div>
-  </div>-->
-<div>
-{{ complete_data }}
-</div>
- {% endblock %}
+  </div>
 
-{% block javascript %}
-{{ block.super }}
-<script type="text/javascript">
-$(document).ready(function() {
-    var d = document.getElementById("li_calendar");
-    var e = document.getElementById("li_calendar_icon");
-    d.className = "active";
-    e.className = e.className + " icon-white";
- });
-</script>
-{% endblock javascript%}
+  {% endblock %}

@@ -1,7 +1,8 @@
 {% extends "base_portal.html" %}
 {% block body %}
-<a href="{% url feedback.views.add_question question_for=Core %}" >Feedback for Core</a>
-<a href="{% url feedback.views.add_question question_for=Coord %}" >Feedback for Coord</a>
+<h4><font color="3a87ad">'Feedback for Core' allows you to set review questions for core which will be answered by the coords of that department.<br> 'Feedback for Coord' allows you to set review questions for coords which may be answered only by core/co-coords or both.</font></h4><br>
+<a href="{% url feedback.views.add_question question_for=Core %}" ><h5 style="font-size:13px; line-height: 27px; color: rgb(50,50,50);">FEEDBACK FOR CORE</h5></a><br>
+<a href="{% url feedback.views.add_question question_for=Coord %}" ><h5 style="font-size:13px; line-height: 27px; color: rgb(50,50,50);">FEEDBACK FOR COORD</h5></a>
 {% endblock %}
 {% block tabs %}
 {% endblock %}
@@ -9,3 +10,17 @@
 {% endblock %}
 {% block display_stuff %}
 {% endblock %}	
+{% block javascript %}
+{{ block.super }}
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_questions");
+    var e = document.getElementById("li_questions_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+{% endblock javascript %}

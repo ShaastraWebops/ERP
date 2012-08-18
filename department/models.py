@@ -21,6 +21,5 @@ class Department(models.Model):
     def __str__(self):
         return self.Dept_Name
         
-    def __unicode__(self):
-        return self.Dept_Name
+    
 
