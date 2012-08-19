@@ -300,6 +300,7 @@
 			
 				// show or hide event description
 				var eventDescClass = '';
+				var eventLabelClass = '';
 				if(!eventsOpts.showDescription) {
 					eventDescClass = 'hidden';
 				}
@@ -331,7 +332,22 @@
 								} else {
 									eventStringDate = eventDay + "/" + eventMonthToShow + "/" + eventYear;
 									
-									events.push('<li id="' + key + '" class="'+event.type+'"><time datetime="'+eventDate+'"><em>' + eventStringDate + '</em><small>'+eventHour+":"+eventMinute+'</small></time><a href="'+event.url+'" target="' + eventLinkTarget + '" class="eventTitle">' + event.title + '</a><p class="eventDesc ' + eventDescClass + '">' + event.description + '</p></li>');
+									switch(event.description) {
+									case 'O':   event.LabelClass ="label-warning ";
+									            event.description = "Open";
+									            break;
+									case 'C':   event.LabelClass ="label-success ";
+									            event.description = "Completed";
+									            break;									
+									case 'L':   event.LabelClass ="label-important ";
+									            event.description = "Overdue";
+									            break;									
+									case 'N':   event.LabelClass ="label-info ";
+									            event.description = "Almost";
+									            break;									
+									}
+									
+									events.push('<li id="' + key + '" class="'+event.type+'"><time datetime="'+eventDate+'"><em>' + eventStringDate + '</em><small>'+eventHour+":"+eventMinute+'</small></time><a href="'+event.url+'" target="' + eventLinkTarget + '" class="eventTitle">' + event.title + '</a><span class="eventDesc label ' + event.LabelClass + eventDescClass + '">' + event.description + '</span></li>');
 									i++;
 								}
 						}
