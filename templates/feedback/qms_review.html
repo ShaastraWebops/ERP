@@ -12,7 +12,7 @@
 <h6><a href="{% url feedback.views.qms_review dept_id=curr_department.id is_all=no %}">GO BACK TO COLLAPSED VIEW!</a></h6><br>
 <h5 style="font-size:16px; line-height: 25px; color: rgb(50,50,50);">CORES</h5>
             {% for core in core_profiles %}
-           <h6>{{core}}</h6>
+           <h6>{{core.name}} {% if core.nickname %}({{core.nickname}}){% endif %}</h6>
               
                     <table class="table table-striped table-bordered table-condensed">
             	    <thead>
@@ -51,7 +51,7 @@
            {% endfor %}
 <br><h5 style="font-size:16px; line-height: 25px; color: rgb(50,50,50);">COORDINATORS</h5><br>           
 {% for coord in coord_profiles %}
-<h6>{{coord}}</h6>
+<h6>{{coord.name}} {% if coord.nickname %}({{coord.nickname}}){% endif %}</h6>
                 
                     <table class="table table-striped table-bordered table-condensed">
             	    <thead>

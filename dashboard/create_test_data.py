@@ -167,6 +167,7 @@ def create_tasks (n = 5, partial_subtask = False):
             new_task.description = 'Description about Task ' + str (i)
             new_task.creator = curr_core
             new_task.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
+            new_task.feedback = "Feedback" +str (i)
             new_task.save () 
             if not partial_subtask:
                 subtask1 = SubTask ()
@@ -175,6 +176,7 @@ def create_tasks (n = 5, partial_subtask = False):
                 subtask1.deadline =  datetime.date.fromordinal(random.randint(start_date, end_date))
                 subtask1.department = curr_dept
                 subtask1.task = new_task
+                subtask1.feedback = "Feedback" +str (i)
                 # Seems the SubTask must exist before many to many
                 # relations can be added
                 subtask1.save ()
@@ -189,6 +191,7 @@ def create_tasks (n = 5, partial_subtask = False):
                 subtask2.department = Department.objects.get (Dept_Name = dept_names[index])
                 subtask2.subject = subtask2.department.Dept_Name + subtask_subj_str_other + str (i)
                 subtask2.task = new_task
+                subtask2.feedback = "Feedback" +str (i)
                 # Seems the SubTask must exist before many to many
                 # relations can be added
                 subtask2.save ()
@@ -211,7 +214,7 @@ def finish_some_subtasks ():
         try:
             curr_subtask = SubTask.objects.filter (~Q (coords = None), department__Dept_Name = name)[0]
             curr_subtask.status = 'C'
-            print curr_subtask
+            print curr_subtask + ' Completed'
             curr_subtask.save ()
         except:
             pass

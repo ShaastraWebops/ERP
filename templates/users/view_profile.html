@@ -5,15 +5,8 @@
 
 <div class="row">
     <div id="username" class="span3 offset3">
-        <center>
-            <h2>{{profile.name}}</h2>
-
-            {% if profile.nickname %}
-            <br>
-            {% endif %}
-
-            <h3>({{profile.nickname}})</h3>
-        </center>
+            <center><h2>{{profile.name}} {% if profile.nickname %}({{profile.nickname}}){% endif %}</h2></center>
+<br/>
 <br/>
     </div>
     <div class="row">
