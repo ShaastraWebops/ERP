@@ -23,7 +23,9 @@ from django.conf import settings
 from django.utils import simplejson
 import csv # invite coords
 from create_test_data import *
-
+import time
+from django import template
+register = template.Library()
 
 
 """
@@ -473,6 +475,13 @@ def display_calendar1(request ,owner_name=None , month=0 ,year=0):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_coord= True
     return render_to_response('dashboard/mycalendar.html',locals() ,context_instance = global_context(request))
+    
+@register.filter
+def epoch(value):
+    try:
+        return int(time.mktime(value.timetuple())*1000)
+    except AttributeError:
+        return ''  
 
 def display_calendar(request ,owner_name=None , month=0 ,year=0):
     page_owner=get_page_owner(request ,owner_name=owner_name)
@@ -481,16 +490,15 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
     else:
         user_tasks=SubTask.objects.filter(coords=page_owner.id)
     
-    complete_data={}
-    complete_data["subtasks"]=[]
+    complete_data=[]
     if is_core(page_owner):
         for sub in user_tasks:
             creation_date=str(sub.creation_date).split(' ')[0]
-            complete_data["subtasks"].append({"subject": str(sub.subject), "task_id": str(sub.id), "creation_date": creation_date, "deadline": str(sub.deadline), "status": str(sub.status)})
+            complete_data.append({"title": str(sub.subject), "type": "task", "url": "../../display_task/" + str(sub.id), "date": str(epoch(sub.deadline)), "description": str(sub.status)})
     else:
         for sub in user_tasks:
             creation_date=str(sub.creation_date).split(' ')[0]
-            complete_data["subtasks"].append({"subject": str(sub.subject), "task_id": str(sub.task.id), "creation_date": creation_date, "deadline": str(sub.deadline), "status": str(sub.status)})
+            complete_data.append({"title": str(sub.subject), "type": "subtask", "url": "../../subtask/" + str(sub.task.id), "date": str(epoch(sub.deadline)), "description": str(sub.status)})
     
     #Get Department Members' image thumbnails
     department = page_owner.get_profile ().department      
