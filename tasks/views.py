@@ -258,15 +258,16 @@ def edit_task (request, task_id = None, owner_name = None):
         is_task_comment = True,
         object_id = task_id,
         other_errors = other_errors)
-    curr_user=request.user
-    curr_userprofile=userprofile.objects.get(user=request.user)
-    if is_core(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
-			qms_core= True
+    
+    curr_userprofile=userprofile.objects.get(user=user)
+    if is_core(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_core= True
 
-    if is_coord(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
-			qms_coord= True
+    if is_coord(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_coord= True
+
     return render_to_response('tasks/edit_task.html',
                               locals(),
                               context_instance = global_context (request))
@@ -346,6 +347,16 @@ def edit_subtask (request, subtask_id, owner_name = None):
         is_task_comment = False,
         object_id = subtask_id,
         other_errors = other_errors)
+    
+    curr_userprofile=userprofile.objects.get(user=user)
+    if is_core(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_core= True
+
+    if is_coord(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_coord= True     
+
     if has_updated:
         return redirect ('erp.tasks.views.display_portal',
                          owner_name = owner_name)
@@ -366,6 +377,16 @@ def display_subtask (request, subtask_id, owner_name = None):
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
     comments = SubTaskComment.objects.filter (subtask__id = subtask_id)
+
+    curr_userprofile=userprofile.objects.get(user=user)
+    if is_core(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_core= True
+
+    if is_coord(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_coord= True
+
     return render_to_response('tasks/display_subtask.html',
                               locals(),
                               context_instance = global_context (request))
@@ -379,7 +400,7 @@ def display_task (request, task_id, owner_name = None):
     Back Button to go back
     """
     page_owner = get_page_owner (request, owner_name)
-    
+    user = request.user
     #Get Department Members' image thumbnails
     department = page_owner.get_profile ().department          
     dept_cores_list = User.objects.filter (
@@ -392,6 +413,16 @@ def display_task (request, task_id, owner_name = None):
     print 'Display Task - Task ID : ', task_id
     curr_task = Task.objects.get (id = task_id)
     comments = TaskComment.objects.filter (task__id = task_id)
+
+    curr_userprofile=userprofile.objects.get(user=user)
+    if is_core(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_core= True
+
+    if is_coord(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_coord= True
+
     return render_to_response('tasks/display_task.html',
                               locals(),
                               context_instance = global_context (request))
