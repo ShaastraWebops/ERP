@@ -306,7 +306,7 @@ def edit_subtask (request, subtask_id, owner_name = None):
 
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
-    curr_subtask_form = SubTaskForm (instance = curr_subtask, editor=page_owner)
+    curr_subtask_form = SubTaskForm (instance = curr_subtask)
 
     if curr_subtask.is_owner (user):
         is_owner = True
@@ -354,7 +354,7 @@ def edit_subtask (request, subtask_id, owner_name = None):
             curr_subtask.save ()
             has_updated = True
             # Reinstantiate the form
-            curr_subtask_form = SubTaskForm (instance = curr_subtask, editor=page_owner)
+            curr_subtask_form = SubTaskForm (instance = curr_subtask)
             print 'SubTask updated'
     comments, comment_form, comment_status = handle_comment (
         request = request,
