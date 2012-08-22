@@ -90,6 +90,8 @@ def FillToHalf(length):
 def Show(request,elements,position_on_page,sno,task,is_task,coord_subtask,assigner_string,assignee_string,assignee_list) :
     aW = PAGE_WIDTH-2*FRAME_BORDER                                 # available width and height
     aH = position_on_page+FRAME_BORDER
+    if (task.feedback is None) or (len(task.feedback)==0) :
+        task.feedback="No Feedback Given"
     P = Paragraph(task.feedback,standard)
     w,h = P.wrap(aW, aH)
     if coord_subtask == 0 : 
@@ -142,8 +144,8 @@ def Show(request,elements,position_on_page,sno,task,is_task,coord_subtask,assign
                     elements.append(Paragraph('%s %s' 
                                         % (FillToHalf(31) ,
                                            str(assignee_list[i].get_profile().name)),standard))
-                    elements.append(small_spacer)
                     i=i+1
+                    elements.append(small_spacer)
             
             except:
                 elements.append(Paragraph('<b>Assigned To</b> : Unassigned ',standard))  
@@ -190,9 +192,8 @@ def Show(request,elements,position_on_page,sno,task,is_task,coord_subtask,assign
                     elements.append(Paragraph('%s %s' 
                                     % (FillToHalf(31) ,
                                        str(assignee_list[i].get_profile().name)),standard))
+                    i=i+1                
                     elements.append(small_spacer)
-                    i=i+1
-            
             except:
                 elements.append(Paragraph('<b>Assigned To</b> : Unassigned ',standard))    
                 elements.append(small_spacer)             
@@ -242,8 +243,8 @@ def Show(request,elements,position_on_page,sno,task,is_task,coord_subtask,assign
                     elements.append(Paragraph('%s %s' 
                                     % (FillToHalf(31) ,
                                        str(assignee_list[i].get_profile().name)),standard))
-                    elements.append(small_spacer)
                     i=i+1
+                    elements.append(small_spacer)
             
             except:
                 elements.append(Paragraph('<b>Assigned To</b> : Unassigned ',standard))  
@@ -260,7 +261,6 @@ def ShowTask(request,elements,position_on_page,sno,task):
     '''When cores get something from another deprtment it's a task. When they give something to another department, it's
        a subtask. Nomenclature is pretty bad'''
     styles=getSampleStyleSheet()["Normal"]  
-    print 'Task display'
     coord_subtask = 0 
     is_task = 1
     assignee_list=[]
@@ -282,7 +282,6 @@ def ShowSubTask(request,elements,position_on_page,sno,task):
                 ''' This is when the core tries to find the SubTasks given to his coords. Assigner is creator and a list of coords is the
                 assignee'''
 
-                print '2323232'
                 
                 assigner_string = str(task.creator.get_profile().name)
                 assignee_list = task.coords.all()               
@@ -328,10 +327,8 @@ def ReportGen(request, owner_name):
         elements.append(Paragraph('Tasks made by your Department',h1))
         elements.append(big_spacer)
         position_on_page = position_on_page - h1.fontSize - big_spacer_height
-        print 'q'
         for task in tasks:
             position_on_page,sno=ShowTask(request,elements,position_on_page,sno,task)
-        print 'r'
         elements.append(PageBreak())    
         position_on_page=PAGE_HEIGHT-FRAME_BORDER
         elements.append(Paragraph('SubTasks given to your Department',h1))
@@ -348,7 +345,6 @@ def ReportGen(request, owner_name):
     
     sno=1
     if is_core(request.user):
-        print 'p'
         subtasks=SubTask.objects.filter(creator__in = users_in_department).order_by('creation_date')  
       
         elements.append(Paragraph('Sub-Tasks given to your coords',h1))
