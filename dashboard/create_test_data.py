@@ -212,10 +212,11 @@ def finish_some_subtasks ():
     for name in dept_names:
         # The SubTask must not be a partial SubTask (for the sake of testing)
         try:
-            curr_subtask = SubTask.objects.filter (~Q (coords = None), department__Dept_Name = name)[0]
+            curr_subtask = SubTask.objects.filter(department__Dept_Name = name)[0]
             curr_subtask.status = 'C'
-            print curr_subtask + ' Completed'
-            curr_subtask.save ()
+            curr_task.completion_date=datetime.date.today()
+            print curr_subtask
+            curr_subtask.save()
         except:
             pass
 

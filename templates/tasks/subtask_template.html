@@ -30,6 +30,15 @@
     <td> {{ curr_subtask.deadline }} </td>
   </tr>
   <tr>
+    <th>Completion Date</th>
+    {% if curr_subtask.completion_date %}
+    <td> {{ curr_subtask.completion_date }} </td>
+    {% else %}
+    <td> Incomplete </td>
+    {% endif %}
+  </tr>
+
+  <tr>
     <th>Status</th>
     {% if curr_subtask.status == "O" %}
 		<td><span class="label label-warning">Open</span></td>

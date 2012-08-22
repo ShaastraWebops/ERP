@@ -96,8 +96,22 @@ def display_core_portal (request, core):
     """
     Display core's portal
     """
-
     display_dict = dict ()
+
+    if request.method == "POST":
+        if 'delete' in request.POST:
+            delete_tasks=request.POST.getlist('delete_tasks')
+            for i in delete_tasks:
+                deltask=Task.objects.get(pk=i)
+                for delcomment in deltask.taskcomment_set.all():
+                    delcomment.delete()
+                for delsubtask in deltask.subtask_set.all():
+                    for delsubtaskcomment in delsubtask.subtaskcomment_set.all():
+                        delsubtaskcomment.delete()
+                    delsubtask.delete()
+                deltask.delete()
+            display_dict['tasks_deleted'] = True
+                
     # Deal with the Updates part (viewing, creating) of the portal
     update_dict = handle_updates (request, core)
     department = core.get_profile ().department
@@ -291,7 +305,7 @@ def edit_subtask (request, subtask_id, owner_name = None):
 
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
-    curr_subtask_form = SubTaskForm (instance = curr_subtask, user=page_owner)
+    curr_subtask_form = SubTaskForm (instance = curr_subtask, editor=page_owner)
 
     if curr_subtask.is_owner (user):
         is_owner = True
@@ -318,7 +332,7 @@ def edit_subtask (request, subtask_id, owner_name = None):
     if request.method == 'POST':
         if is_owner:
             # Let the Core save the SubTask
-            curr_subtask_form = SubTaskForm (request.POST, instance = curr_subtask, user=page_owner)
+            curr_subtask_form = SubTaskForm (request.POST, instance = curr_subtask)
             if curr_subtask_form.is_valid ():
                 if 'status' in request.POST:                
                     if(curr_subtask_form.cleaned_data['status']=='C')and(closed_task == 0):
@@ -339,7 +353,7 @@ def edit_subtask (request, subtask_id, owner_name = None):
             curr_subtask.save ()
             has_updated = True
             # Reinstantiate the form
-            curr_subtask_form = SubTaskForm (instance = curr_subtask, user=page_owner)
+            curr_subtask_form = SubTaskForm (instance = curr_subtask, editor=page_owner)
             print 'SubTask updated'
     comments, comment_form, comment_status = handle_comment (
         request = request,

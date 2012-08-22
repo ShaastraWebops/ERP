@@ -25,6 +25,7 @@ Maybe you meant {{spelling_suggestion}}?<br><br>
         <tr>
         
         {% for task in tasks %}
+        {% if task %}
         
         <td>
         {{ task.object.subject }}
@@ -36,6 +37,7 @@ Maybe you meant {{spelling_suggestion}}?<br><br>
         {{ task.object.creator }}
         </td>       
         </tr>
+        {% endif %}
         {% endfor %}
         
         </table>
@@ -46,7 +48,7 @@ Maybe you meant {{spelling_suggestion}}?<br><br>
         <tr>
         
         {% for subtask in subtasks %}
-        
+        {% if subtask %}
         <td>
         {{ subtask.object.subject }}
         </td>
@@ -60,6 +62,7 @@ Maybe you meant {{spelling_suggestion}}?<br><br>
         {{ subtask.object.department }}
         </td>       
         </tr>
+        {% endif %}
         {% endfor %}
         
         </table>
@@ -70,6 +73,7 @@ Maybe you meant {{spelling_suggestion}}?<br><br>
         <tr>
         
         {% for user in users %}
+        {% if user %}
         <tr>       
         <td>
         {{ user.room_no }}
@@ -93,6 +97,7 @@ Maybe you meant {{spelling_suggestion}}?<br><br>
         {{ user.nickname }}
         </td>       
         </tr>
+        {% endif %}
         {% endfor %}
         </table>
         </div>

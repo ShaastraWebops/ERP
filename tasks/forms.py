@@ -27,19 +27,19 @@ class UpdateForm (ModelForm):
 class TaskForm (ModelForm):
     class Meta:
         model = Task
-        exclude = ('creator', )
+        exclude = ('creator', 'completion_date')
         widgets = {'status': chosenforms.widgets.ChosenSelect()}
 
 class SubTaskForm (ModelForm):
     class Meta:
         model = SubTask
-        exclude = ['creator', 'description', 'department', 'task']
+        exclude = ['creator', 'description', 'department', 'task', 'completion_date']
         widgets = {'department':chosenforms.widgets.ChosenSelect(),'coords': chosenforms.widgets.ChosenSelectMultiple(),'status': chosenforms.widgets.ChosenSelect()}
     
-    def __init__(self, user=None, *args, **kwargs):
+    def __init__(self, editor=None, *args, **kwargs):
         super(SubTaskForm, self).__init__(*args, **kwargs)
-        if user:
-            self.fields['coords'].queryset = User.objects.filter(userprofile__department=user.get_profile().department)
+        if editor:
+            self.fields['coords'].queryset = User.objects.filter(userprofile__department=editor.get_profile().department)
             self.fields['coords'].help_text = ''
         
 #hack if these fields need to be formatted        

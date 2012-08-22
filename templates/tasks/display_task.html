@@ -43,6 +43,14 @@ Task
     <td> {{ curr_task.deadline }} </td>
   </tr>
   <tr>
+    <th>Completion Date</th>
+    {% if curr_task.completion_date %}
+    <td> {{ curr_task.completion_date }} </td>
+    {% else %}
+    <td> Incomplete </td>
+    {% endif %}
+  </tr>
+  <tr>
     <th>Status</th>
 	{% if curr_task.status == "O" %}
 		<td><span class="label label-warning">Open</span></td>
