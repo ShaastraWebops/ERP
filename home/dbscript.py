@@ -6,40 +6,46 @@ from django.shortcuts import HttpResponseRedirect
 
 def parse_csv(details):
     line=details.next()
-    def parse_line(line):
-        print line
+    def parse_line(line,dept=None):
         if len(line)==2:
             department=line[0]
             dept=Department(Dept_Name=department)
             dept.save()
-            print "saved dept", 
-        else:
-            try:  
-                print line[0], "HERE"
-                firstname=line[0].rsplit(' ',1)[0]
-                print firstname, "firstname"
-                lastname=line[0].rsplit(' ',1)[1]
-                print lastname, "lastname"
+            try:
+                line=details.next()
+                save_user(line,dept)
             except:
-                firstname=line[0]
-                lastname=''
-            print 'firstname', firstname, 'lastname', lastname, 'username', line[1], 'password', line[1]
-            user=User(first_name=firstname,last_name=lastname,username=line[1],password=line[1],email=line[2])
-            user.save()
-            print "saved user", user.first_name
-            moreinfo = userprofile(user=user,department=dept,hostel=line[3],name=line[0],chennai_number=line[4])
-            moreinfo.save()
-            print "saved userprofile", moreinfo.name
+                pass
+        else:
+            save_user(line,dept)
+            
+    def save_user(line,dept):
+        try:  
+            firstname=line[0].rsplit(' ',1)[0]
+            lastname=line[0].rsplit(' ',1)[1]
+        except:
+            firstname=line[0]
+            lastname=''
+        print 'firstname', firstname, 'lastname', lastname, 'username', line[1], 'password', line[1], 'email', line[2], 'dept', dept
+        user=User()
+        user.first_name=firstname
+        user.last_name=lastname
+        user.username=line[1].lower()
+        user.password=line[1].lower()
+        user.email=line[2]
+        user.save()
+        moreinfo = userprofile(user=user,department=dept,hostel=line[3],name=line[0],chennai_number=line[4])
+        moreinfo.save()
         try:
             line=details.next()
-            print "Calls again with ", line
-            parse_line(line)
+            print "Call with", line
+            parse_line(line,dept)
         except:
             pass 
     return parse_line(line)
     
 def write_into_db(request):
     details=csv.reader(open('home/details.csv', 'rb'))
-    print "HERE", details
+    print details
     parse_csv(details)  
     return HttpResponseRedirect('/')
