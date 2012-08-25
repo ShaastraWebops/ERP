@@ -1,4 +1,3 @@
-from django.conf.urls.defaults import patterns, include, url
 from django.conf.urls import *
 from django.contrib import admin
 from dajaxice.core import dajaxice_autodiscover
@@ -40,7 +39,7 @@ urlpatterns = patterns('',
     (r'^erp/(?P<owner_name>\w+)/dashboard/',include('erp.dashboard.urls')),	
     (r'^erp/(?P<owner_name>\w+)/', include('erp.tasks.urls')),
     
-    (r'^loaddata/$', 'dashboard.views.load_data'),
+    (r'^loaddata/$', 'erp.dashboard.views.load_data'),
     
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
     

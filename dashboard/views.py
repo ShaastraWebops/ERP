@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+Since Django 1.5 drops support for Python 2.5, the json module will be in Python’s standard library,
+so django has removed its own copy of simplejson. You can change any use of django.utils.simplejson to json.
+import json
+using json.dumps() instead of simplejson.dumps()
+"""
 from django.shortcuts import render_to_response, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
