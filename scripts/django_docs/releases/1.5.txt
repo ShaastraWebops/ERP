@@ -1,0 +1,178 @@
+============================================
+Django 1.5 release notes - UNDER DEVELOPMENT
+============================================
+
+These release notes cover the `new features`_, as well
+as some `backwards incompatible changes`_ you'll want to be aware of
+when upgrading from Django 1.4 or older versions. We've also dropped some
+features, which are detailed in :doc:`our deprecation plan
+</internals/deprecation>`, and we've `begun the deprecation process for some
+features`_.
+
+.. _`new features`: `What's new in Django 1.5`_
+.. _`backwards incompatible changes`: `Backwards incompatible changes in 1.5`_
+.. _`begun the deprecation process for some features`: `Features deprecated in 1.5`_
+
+Python compatibility
+====================
+
+Django 1.5 has dropped support for Python 2.5. Python 2.6 is now the minimum
+required Python version. Django is tested and supported on Python 2.6 and
+2.7.
+
+This change should affect only a small number of Django users, as most
+operating-system vendors today are shipping Python 2.6 or newer as their default
+version. If you're still using Python 2.5, however, you'll need to stick to
+Django 1.4 until you can upgrade. Per :doc:`our support policy
+</internals/release-process>`, Django 1.4 will continue to receive security
+support until the release of Django 1.6.
+
+As Jython does currently not offer any version compatible with Python 2.6,
+Django 1.5 does not run on Jython.
+
+What's new in Django 1.5
+========================
+
+* Support for saving a subset of model’s fields 
+
+The method Model.save() has a new keyword argument
+update_fields. By using this argument it is possible to save only a select list of model’s fields. 
+This can be useful for performance reasons or when trying to avoid overwriting concurrent changes.
+See the Model.save() documentation for more details.
+
+* Caching of related model instances
+
+When traversing relations, the ORM will avoid re-fetching
+objects that were previously loaded. For example, with the tutorial’s models:
+
+>>> first_poll = Poll.objects.all()[0]
+>>> first_choice = first_poll.choice_set.all()[0]
+>>> first_choice.poll is first_poll
+True
+
+In Django 1.5, the third line no longer triggers a new SQL query to fetch first_choice.poll;
+it was set by the second line.
+
+For one-to-one relationships, both sides can be cached. For many-to-one relationships, 
+only the single side of the relationship can be cached. This is particularly helpful in
+combination with prefetch_related. 
+
+*{% verbatim %} template tag To make it easier to deal with javascript templates which collide
+with Django’s syntax, you can now use the verbatim block tag to avoid parsing the tag’s content.
+
+*Retrieval of ContentType instances associated with proxy models
+
+The methods ContentTypeManager.get_for_model() and ContentTypeManager.get_for_models() have
+a new keyword argument – respectively for_concrete_model and for_concrete_models. By passing
+False using this argument it is now possible to retreive the ContentType associated with proxy models.
+
+
+
+Minor features
+~~~~~~~~~~~~~~
+
+Django 1.5 also includes several smaller improvements worth noting:
+
+* The template engine now interprets ``True``, ``False`` and ``None`` as the
+  corresponding Python objects.
+* django.utils.timezone provides a helper for converting aware datetimes between time zones. See
+  localtime().
+* The generic views support OPTIONS requests.
+* Management commands do not raise SystemExit any more when called by code from call_command. Any
+  exception raised by the command (mostly CommandError) is propagated.
+* The dumpdata management command outputs one row at a time, preventing out-of-memory errors when dump-
+  ing large datasets.
+* In the localflavor for Canada, “pq” was added to the acceptable codes for Quebec. It’s an old abbreviation.
+* The receiver decorator is now able to connect to more than one signal by supplying a list of signals.
+* QuerySet.bulk_create() has now a batch_size argument. By default the batch_size is unlimited except
+  for SQLite where single batch is limited so that 999 parameters per query isn’t exceeded.
+
+Backwards incompatible changes in 1.5
+=====================================
+
+.. warning::
+
+    In addition to the changes outlined in this section, be sure to review the
+    :doc:`deprecation plan </internals/deprecation>` for any features that
+    have been removed. If you have not updated your code within the
+    deprecation timeline for a given feature, its removal may appear as a
+    backwards incompatible change.
+    
+* Context in year archive class-based views
+  For consistency with the other date-based generic views,
+  YearArchiveView now passes year in the context as a datetime.date rather than a string. If you are using
+  {{ year }} in your templates, you must replace it with {{ year|date:"Y" }}.
+  next_year and previous_year were also added in the context. They are calculated according to
+  allow_empty and allow_future.
+
+* OPTIONS, PUT and DELETE requests in the test client
+  Unlike GET and POST, these HTTP methods aren’t
+  implemented by web browsers. Rather, they’re used in APIs, which transfer data in various formats such as JSON or
+  XML. Since such requests may contain arbitrary data, Django doesn’t attempt to decode their body.
+  However, the test client used to build a query string for OPTIONS and DELETE requests like for GET, and a request
+  body for PUT requests like for POST. This encoding was arbitrary and inconsistent with Django’s behavior when it
+  receives the requests, so it was removed in Django 1.5.
+  If you were using the data parameter in an OPTIONS or a DELETE request, you must convert it to a query string
+  and append it to the path parameter.
+  If you were using the data parameter in a PUT request without a content_type, you must encode your data
+  before passing it to the test client and set the content_type argument.
+
+* String types of hasher method parameter
+  If you have written a custom password hasher, your encode(),
+  verify() or safe_summary() methods should accept Unicode parameters (password, salt or encoded).
+  If any of the hashing methods need byte strings, you can use the smart_str() utility to encode the strings.
+
+* Validation of previous_page_number and next_page_numbe
+  When using object pagination, the
+  previous_page_number() and next_page_number() methods of the Page object did not check if
+  the returned number was inside the existing page range. It does check it now and raises an InvalidPage exception
+  when the number is either too low or too high.
+  
+* Behavior of autocommit database option on PostgreSQL changed
+  PostgreSQL’s autocommit option didn’t work
+  as advertised previously. It did work for single transaction block, but after the first block was left the autocommit
+  behavior was never restored. This bug is now fixed in 1.5. While this is only a bug fix, it is worth checking your
+  applications behavior if you are using PostgreSQL together with the autocommit option.
+
+* Session not saved on 500 responses
+  Django’s session middleware will skip saving the session data if the response’s status code is 500.
+  
+* Changes in tests execution
+  Some changes have been introduced in the execution of tests that might be backward-
+  incompatible for some testing setups:
+  
+  Database flushing in django.test.TransactionTestCase Previously, the test database was truncated be-
+  fore each test run in a TransactionTestCase.
+  
+  In order to be able to run unit tests in any order and to make sure they are always isolated from each other,
+  TransactionTestCase will now reset the database after each test run instead.
+  
+* No more implict DB sequences reset TransactionTestCase tests used to reset primary key sequences auto-
+  matically together with the database flushing actions described above.
+
+  This has been changed so no sequences are implicitly reset. This can cause TransactionTestCase tests that
+  depend on hard-coded primary key values to break.
+
+  The new reset_sequences attribute can be used to force the old behavior for TransactionTestCase that
+  might need it.
+
+* Ordering of tests In order to make sure all TestCase code starts with a clean database, tests are now executed in
+  the following order:
+    • First, all unittests (including unittest.TestCase, SimpleTestCase, TestCase
+      TransactionTestCase) are run with no particular ordering guaranteed nor enforced among them.
+      and
+    • Then any other tests (e.g. doctests) that may alter the database without restoring it to its original state are run.
+    
+  This should not cause any problems unless you have existing doctests which assume a TransactionTestCase
+  executed earlier left some database state behind or unit tests that rely on some form of state being preserved after the
+  execution of other tests. Such tests are already very fragile, and must now be changed to be able to run independently.
+
+
+Features deprecated in 1.5
+==========================
+
+itercompat.product
+~~~~~~~~~~~~~~~~~~
+
+The :func:`~django.utils.itercompat.product` function has been deprecated. Use
+the builtin `itertools.product` instead.
