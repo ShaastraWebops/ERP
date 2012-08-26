@@ -8,7 +8,7 @@ class upload_documents(models.Model):
     file_name = models.CharField(max_length = 25)
     file_path = models.FileField(upload_to = settings.MEDIA_ROOT )
     google_doc_path=models.CharField(max_length=150  )
-    url = models.URLField(verify_exists = True )
+    url = models.URLField()
     topic = models.CharField(max_length = 100,blank = True)#short description
     date = models.DateField()
 

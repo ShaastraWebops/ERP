@@ -1,7 +1,7 @@
 import datetime
 from haystack.indexes import *
 from haystack import site
-from users.models import *
+from erp.users.models import *
 
    
 
