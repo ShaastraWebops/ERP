@@ -3,7 +3,7 @@
     <table id="markup">
         {% for field in shouts %}
         <tr>
-            <td id="shouterts name"><span id="nickname" ><a href="{% url users.views.view_profile owner_name=field.user%}">{{field.user}}</a>: </span> &nbsp; </td>
+            <td id="shouterts name"><span id="nickname" ><a href="{% url users.views.view_profile owner_name=field.user%}"><strong>{{field.user.get_profile.name}}</strong></a>: </span> &nbsp; </td>
             <td><span id="comment" >{{field.comments}}</span></td>
             <td></td>
         </tr>
