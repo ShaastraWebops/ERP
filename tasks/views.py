@@ -545,31 +545,31 @@ def display_department_portal (request, owner_name = None, department_name = Non
 
 
 def remainder(request):
-	"""
-		Here we check if the user is a coord. 
-		Then we get all the subtasks assigned to the coord which are only 3 days away from overdue. 
-		If it is the case we send them a mail, stating the subject of the subtask which is not yet completed and only 3 days from overdue along with its deadline and status
-		This is automated using cron and calling the respective url of this view everday.
-	"""
-	users=userprofile.objects.all()
-	t=get_template('mail_template.html')
-	today=date.today()
-	datatuple=()
-	for user1 in users:	
-		if is_coord(user1.user):
-			subtasks=SubTask.objects.filter(coords=user1.user).filter(deadline=today+relativedelta(days=+3))
-			if subtasks:
-				work_pending=False
-				for subtask in subtasks:
-					if subtask.status != 'C':
-						work_pending=True
-				if work_pending:
-					body=t.render(Context({'name':user1.user.username ,'subtasks':subtasks}))
-					msg=EmailMessage('Remainder',body,'noreply@shaastra.org',[user1.user.email])
-					msg.content_subtype="html"
-					datatuple+= (
-					(msg),
-					)
-	connection=mail.get_connection()
-	connection.send_messages(datatuple)	
-	return HttpResponse("remainder sent!")
+    """
+        Here we check if the user is a coord. 
+        Then we get all the subtasks assigned to the coord which are only 3 days away from overdue. 
+        If it is the case we send them a mail, stating the subject of the subtask which is not yet completed and only 3 days from overdue along with its deadline and status
+        This is automated using cron and calling the respective url of this view everday.
+    """
+    users=userprofile.objects.all()
+    t=get_template('mail_template.html')
+    today=date.today()
+    datatuple=()
+    for user1 in users:
+        if is_coord(user1.user):
+            subtasks=SubTask.objects.filter(coords=user1.user).filter(deadline=today+relativedelta(days=+3))
+            if subtasks:
+                work_pending=False
+                for subtask in subtasks:
+                    if subtask.status != 'C':
+                        work_pending=True
+                if work_pending:
+                    body=t.render(Context({'name':user1.user.username ,'subtasks':subtasks}))
+                    msg=EmailMessage('Remainder',body,'noreply@shaastra.org',[user1.user.email])
+                    msg.content_subtype="html"
+                    datatuple+= (
+                    (msg),
+                    )
+    connection=mail.get_connection()
+    connection.send_messages(datatuple)
+    return HttpResponse("remainder sent!")

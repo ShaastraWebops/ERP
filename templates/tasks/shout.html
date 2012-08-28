@@ -24,7 +24,10 @@
 		width: 350px;
 	}
 </style>
-{% load dajaxice_templatetags %}
+{# load dajaxice_templatetags #}
+    {# dajaxice_js_import #}
+    <script src="/dajaxice/dajaxice.core.js" type="text/javascript" charset="utf-8"></script>
+
 <div class="row">
     <div id="shoutbox" class="well span6">
         <!--We have to reload this area-->
@@ -32,7 +35,6 @@
         {% include "tasks/shoutbox.html" %}
         <!--We have to reload this area-->
     </div>
-    {% dajaxice_js_import %}
 </div>
 <div class="row">
     <div id="add_shoutbox" class="span6">
