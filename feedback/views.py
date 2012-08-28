@@ -4,7 +4,7 @@ from django.http import *
 from django.shortcuts import *
 from django.template import *
 from erp.misc.helper import is_core, is_coord, get_page_owner
-from feedback.forms import *
+from erp.feedback.forms import *
 from erp.users.models import *
 from django.http import Http404
 from erp.feedback.models import *

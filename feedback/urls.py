@@ -1,4 +1,3 @@
-from django.conf.urls.defaults import *
 from django.views.generic.simple import *
 from django.conf.urls import *
 

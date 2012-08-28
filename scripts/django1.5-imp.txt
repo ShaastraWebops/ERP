@@ -1,0 +1,40 @@
+============================================
+SECRET KEY
+============================================
+SECRET_KEY setting is required Running Django with an empty or known SECRET_KEY disables many of Django’s security protections and can lead to remote-code-execution vulnerabilities. No Django site should ever be run without a SECRET_KEY.
+
+In Django 1.4, starting Django with an empty SECRET_KEY will raise a DeprecationWarning. In Django 1.5, it will raise an exception and Django will refuse to start. This is slightly accelerated from the usual deprecation path due to the severity of the consequences of running Django with no SECRET_KEY.
+
+============================================
+MANGAGE.PY
+============================================
+
+The previous manage.py called functions that are now deprecated, and thus projects upgrading to Django 1.4 should update their manage.py. The old-style manage.py will continue to work as before until Django 1.6. In 1.5 it will raise DeprecationWarning.
+
+Copy what's within """ into the manage.py file.
+
+"""
+ 
+#!/usr/bin/env python
+import os, sys
+if __name__ == "__main__":
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "erp.settings")
+    from django.core.management import execute_from_command_line
+    execute_from_command_line(sys.argv)
+
+"""
+
+If settings, URLconfs and apps within the project are imported or referenced using the project name prefix (e.g. in settings, ROOT_URLCONF = "erp.urls", etc, INSTALLED APPS = "erp.dashboard"), the new manage.py will need to be moved one directory up, so it is outside the project package rather than adjacent to settings.py and urls.py.
+
+For instance, with the following layout: 
+
+manage.py
+erp/
+    __init__.py
+    settings.py
+    urls.py
+    users/
+        __init__.py
+        models.py
+        
+You could import erp.settings, erp.urls, and erp.users.models, but not settings, urls, or users.models as top-level modules.

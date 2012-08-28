@@ -1,6 +1,6 @@
 from django.db import models
 from django.forms import ModelForm
-from feedback.models import *
+from erp.feedback.models import *
 from django import forms
 from chosen import forms as chosenforms
 

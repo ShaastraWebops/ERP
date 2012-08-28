@@ -49,15 +49,18 @@ def parse_csv(details,writer):
         user.first_name=firstname
         user.last_name=lastname
         user.username=line[1].lower()
-        user.password=pass_generator(size=8)
+        password = pass_generator(size=8)
+        #Hash the password and save
+        user.set_password(password)
         user.email=line[2]
         user.save()
         # Currently everyone in the CSV are COORDS. Change if otherwise
         user.groups.add(Group.objects.get(name='Coord'))
         # write to CSV
-        writeout(writer,user.username,user.password,user.email)
+        writeout(writer,user.username,password,user.email)
         moreinfo = userprofile(user=user,department=dept,hostel=line[3],name=line[0],chennai_number=line[4])
         moreinfo.save()
+
         try:
             # Incase end of file? Very ugly but I can't find any other way
             line=details.next()
