@@ -25,9 +25,9 @@ def create_group (group_name):
 
 def create_groups ():
     """
-    Create groups Cores, Coords, and Vols (if they don't already exist).
+    Create groups Cores, Coords, and Supercoords (if they don't already exist).
     """
-    group_list = ['Cores', 'Coords', 'Vols',]
+    group_list = ['Cores', 'Coords', 'Supercoords',]
     for group_name in group_list:
         create_group (group_name)
 
@@ -117,6 +117,7 @@ def create_users (users_file_name = 'users.txt'):
     for line in users_file:
         # user_fields = line.split ()
         user_data_list = parse_user_info_list (line.split ())
+        print user_data_list        
         create_user (*user_data_list)
     users_file.close ()
     print 'All users created successfully.'
@@ -198,6 +199,7 @@ def create_tasks (n = 5, partial_subtask = False):
                 if not partial_subtask:
                     # If not a partial subtask, assign to coords
                     coord_list = User.objects.filter (groups__name = 'Coords', userprofile__department__Dept_Name = dept_names[index])
+                    print coord_list
                     subtask2.coords.add (coord_list[0])
                     subtask2.coords.add (coord_list[1])
                     subtask2.save ()

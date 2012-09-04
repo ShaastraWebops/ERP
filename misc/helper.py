@@ -7,6 +7,7 @@ import os
 from shutil import copyfile
 from django.conf import settings
 from erp.users.models import *
+from erp.dashboard.models import *
 
 # Temporary workaround for the fact that I don't know whether / how to
 # extend the User class with methods
@@ -15,6 +16,14 @@ def is_core (user):
     Return True if user is a Core.
     """
     if user.groups.filter (name = 'Cores'):
+        return True
+    return False
+
+def is_supercoord (user):
+    """
+    Return True if user is a Supercoord.
+    """
+    if user.groups.filter (name = 'Supercoords'):
         return True
     return False
 
@@ -84,14 +93,20 @@ def check_dir(user):
         os.makedirs(destdir,0775)
     src=os.path.join(settings.MEDIA_ROOT,"images")
     src=os.path.join(src,os.path.basename("default.jpeg"))
-    dest=os.path.join(destdir,os.path.basename("PROFILE_PIC_OF_THE_USER"))
+    dest=os.path.join(destdir,os.path.basename("PROFILE_PIC_OF_THE_USER.jpg"))
     copyfile(src, dest)
     dest=os.path.join(settings.MEDIA_URL,"upload_files")
     dest=os.path.join(dest, user.username)
-    dest=os.path.join(dest,os.path.basename("PROFILE_PIC_OF_THE_USER"))
+    dest=os.path.join(dest,os.path.basename("PROFILE_PIC_OF_THE_USER.jpg"))
     print dest
     image_object=userphoto(name=user, photo_path=dest)
     image_object.save()
+    google_path="http://docs.google.com/viewer?url="+dest
+    topic="Profile picture of the user."
+    date=datetime.datetime.now()
+    title=user.get_profile().name+"'s Profile Picture."
+    file_object=upload_documents(user=user , file_name="PROFILE_PIC_OF_THE_USER.jpg", file_path=dest, url=dest , google_doc_path=google_path ,topic=topic,date=date,title=title)
+    file_object.save()    
 
 """
 this function writes the file

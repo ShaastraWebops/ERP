@@ -2,6 +2,7 @@ from django.db import models
 from django.forms import ModelForm
 from models import *
 from django import forms
+from chosen import forms as chosenforms
 import re
 
 alnum_re = re.compile(r'^[\w.-]+$') # regexp. from jamesodo in #django  [a-zA-Z0-9_.]
@@ -75,8 +76,9 @@ class AddUserForm (forms.Form):
 	    
 class userprofileForm (ModelForm):
     class Meta:
-	model = userprofile
-	exclude = ('user','department')
+    	model = userprofile
+    	exclude = ('user','department')
+        widgets = {'hostel':chosenforms.widgets.ChosenSelect()}
 
     def clean_chennai_number(self):
         number1 = self.cleaned_data['chennai_number']

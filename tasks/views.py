@@ -88,6 +88,8 @@ def display_portal (request, owner_name = None):
 
     if is_core (page_owner):
         return display_core_portal (request, page_owner)
+    elif is_supercoord(page_owner):
+        return display_supercoord_portal (request, page_owner)
     else:
         return display_coord_portal (request, page_owner)
 
@@ -125,6 +127,9 @@ def display_core_portal (request, core):
     display_dict ['dept_cores_list'] = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    display_dict ['dept_supercoords_list'] = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -137,6 +142,57 @@ def display_core_portal (request, core):
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/core_portal2.html',
+                                  display_dict,
+                                  context_instance = global_context (request))
+
+def display_supercoord_portal (request, supercoord):
+    """
+    Display supercoord's portal
+    """
+    display_dict = dict ()
+
+    if request.method == "POST":
+        if 'delete' in request.POST:
+            delete_tasks=request.POST.getlist('delete_tasks')
+            for i in delete_tasks:
+                deltask=Task.objects.get(pk=i)
+                for delcomment in deltask.taskcomment_set.all():
+                    delcomment.delete()
+                for delsubtask in deltask.subtask_set.all():
+                    for delsubtaskcomment in delsubtask.subtaskcomment_set.all():
+                        delsubtaskcomment.delete()
+                    delsubtask.delete()
+                deltask.delete()
+            display_dict['tasks_deleted'] = True
+                
+    # Deal with the Updates part (viewing, creating) of the portal
+    update_dict = handle_updates (request, supercoord)
+    department = supercoord.get_profile ().department
+    display_dict['group'] = supercoord.groups.all()[0]
+    display_dict['all_Tasks'] = get_timeline (supercoord)
+    display_dict['all_SubTasks'] = get_subtasks (supercoord)
+    display_dict['all_completed_SubTasks'] = get_completed_subtasks (supercoord)
+    
+    
+    #Get Department Members' image thumbnails
+    display_dict ['dept_cores_list'] = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    display_dict ['dept_supercoords_list'] = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
+    display_dict ['dept_coords_list'] = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+        
+    qms_supercoord=False
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    if str(department) == 'QMS':
+		display_dict['qms_supercoord']=True
+    
+    # Include the key-value pairs in update_dict
+    display_dict.update (update_dict)
+    return render_to_response('tasks/supercoord_portal.html',
                                   display_dict,
                                   context_instance = global_context (request))
     
@@ -154,6 +210,9 @@ def display_coord_portal (request, coord):
     #Get Department Members' image thumbnails
     display_dict ['dept_cores_list'] = User.objects.filter (
         groups__name = 'Cores',
+        userprofile__department = department)
+    display_dict ['dept_supercoords_list'] = User.objects.filter (
+        groups__name = 'Supercoords',
         userprofile__department = department)
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
@@ -213,6 +272,9 @@ def edit_task (request, task_id = None, owner_name = None):
     department = page_owner.get_profile ().department      
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
+        userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
         userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
@@ -278,6 +340,10 @@ def edit_task (request, task_id = None, owner_name = None):
         if str(curr_userprofile.department) == 'QMS':
             qms_core= True
 
+    if is_supercoord(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_supercoord= True
+
     if is_coord(user):
         if str(curr_userprofile.department) == 'QMS':
             qms_coord= True
@@ -326,6 +392,9 @@ def edit_subtask (request, subtask_id, owner_name = None):
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -367,6 +436,10 @@ def edit_subtask (request, subtask_id, owner_name = None):
         if str(curr_userprofile.department) == 'QMS':
             qms_core= True
 
+    if is_supercoord(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_supercoord= True
+            
     if is_coord(user):
         if str(curr_userprofile.department) == 'QMS':
             qms_coord= True     
@@ -397,6 +470,10 @@ def display_subtask (request, subtask_id, owner_name = None):
         if str(curr_userprofile.department) == 'QMS':
             qms_core= True
 
+    if is_supercoord(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_supercoord= True
+
     if is_coord(user):
         if str(curr_userprofile.department) == 'QMS':
             qms_coord= True
@@ -420,6 +497,9 @@ def display_task (request, task_id, owner_name = None):
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -433,6 +513,10 @@ def display_task (request, task_id, owner_name = None):
         if str(curr_userprofile.department) == 'QMS':
             qms_core= True
 
+    if is_supercoord(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_supercoord= True
+            
     if is_coord(user):
         if str(curr_userprofile.department) == 'QMS':
             qms_coord= True
@@ -461,9 +545,17 @@ def handle_updates (request, owner_name = None):
         update_dict['update_form'] = update_form
         update_dict['update_status'] = update_status
     else:
-        # For Core, just display all updates for his dept
-        update_dict['updates'] = get_all_updates (
-            page_owner.get_profile ().department)
+        if page_owner.groups.filter (name = 'Supercoords'):
+            # For Supercoords
+            update_form = UpdateForm ()
+            update_status = "Blank"
+            update_dict['updates'] = get_all_updates (page_owner.get_profile ().department)
+            update_dict['update_form'] = update_form
+            update_dict['update_status'] = update_status
+        else:
+            # For Core, just display all updates for his dept
+            update_dict['updates'] = get_all_updates (
+                page_owner.get_profile ().department)
 
     if request.method == 'POST':
         update_form = UpdateForm (request.POST)            
@@ -526,6 +618,9 @@ def display_department_portal (request, owner_name = None, department_name = Non
     display_dict ['dept_cores_list'] = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    display_dict ['dept_supercoords_list'] = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -534,6 +629,12 @@ def display_department_portal (request, owner_name = None, department_name = Non
     if is_core(request.user):
 		if str(department) == 'QMS':
 			display_dict['qms_core']=True
+
+    qms_supercoord = False
+    if is_supercoord(request.user):
+        if str(department) == 'QMS':
+            display_dict['qms_supercoord']= True
+            
     qms_coord=False
     if is_coord(request.user):
 		if str(department) == 'QMS':

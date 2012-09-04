@@ -67,6 +67,9 @@ def display_contacts (request , owner_name=None):#this will be a common tab
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -79,6 +82,10 @@ def display_contacts (request , owner_name=None):#this will be a common tab
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
 
+    if is_supercoord(curr_user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_supercoord= True
+            
     if is_coord(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_coord= True
@@ -190,6 +197,9 @@ def change_profile_pic(request, owner_name):
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -200,6 +210,10 @@ def change_profile_pic(request, owner_name):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
 
+    if is_supercoord(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_supercoord= True
+            
     if is_coord(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_coord= True
@@ -240,32 +254,40 @@ def upload_file(request ,owner_name=None):
         if form.is_valid():
             print "form is valid"
             file_name=request.FILES['file'].name
+            title=form.cleaned_data['title']
             topic=form.cleaned_data['short_description']
 
-	    if topic=="short description of the file":
-		topic="No description"
+        if (topic=="short description of the file"):
+            topic="No description"
 
+        try:
+            extension = file_name.split('.')[-1]
+        except:
+            extension=''
+            
 	    print "creating dir for the user "
             save_path ,file_path = create_dir(file_name ,request.user.username)#passing to the fuction to make directories if not made                   
             date=datetime.datetime.now()
             try:
                 file_present=upload_documents.objects.get(user=request.user,file_name=file_name)
-                message="File with this name exists.please change name  of the file"
+                try:
+                    file_present=upload_documents.objects.get(user=request.user,file_name=(title+extension))
+                    message="File with this name exists.please change name  of the file"
+                except:
+                    save_path ,file_path = create_dir((title+extension) ,request.user.username)#passing to the fuction to make directories if not made
+                    f=request.FILES['file']
+                    write_file(save_path ,f)
+                    google_path="http://docs.google.com/viewer?url="+file_path
+                    file_object=upload_documents(user=request.user , file_name=(title+extension),file_path=save_path, url=file_path , google_doc_path=google_path ,topic=topic,date=date,title=title)#to change topic
+                    file_object.save()
             except:
                 f=request.FILES['file']
                 write_file(save_path ,f)
-		google_path="http://docs.google.com/viewer?url="+file_path
-                file_object=upload_documents(user=request.user , file_name=file_name,file_path=save_path, url=file_path , google_doc_path=google_path ,topic=topic,date=date)#to change topic
+                google_path="http://docs.google.com/viewer?url="+file_path
+                file_object=upload_documents(user=request.user , file_name=file_name,file_path=save_path, url=file_path , google_doc_path=google_path ,topic=topic,date=date,title=title)#to change topic
                 file_object.save()
 
-            
-        else:
-            file_name=request.FILES['file'].name
-
-
-    else:
-        print "the user has entered the page not posted (uploaded a doc) :)"
-        form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"short description of the file" ,'file_name':"if left blank , the original name will be used",})
+    form=UploadFileForm(initial={'title':"Enter the title" , 'short_description':"short description of the file" ,'file_name':"if left blank , the original name will be used",})
 
     print "can _edit form views" ,request.session.get('is_visitor','True')
     curr_user=request.user
@@ -276,6 +298,9 @@ def upload_file(request ,owner_name=None):
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -284,6 +309,10 @@ def upload_file(request ,owner_name=None):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
 
+    if is_supercoord(curr_user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_supercoord= True
+            
     if is_coord(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_coord= True
@@ -323,6 +352,10 @@ def delete_file(request,owner_name=None ,number=0  ):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
 
+    if is_supercoord(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_supercoord= True
+            
     if is_coord(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_coord= True         
@@ -422,6 +455,9 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -432,6 +468,10 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
 
+    if is_supercoord(curr_user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_supercoord= True
+            
     if is_coord(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_coord= True

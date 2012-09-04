@@ -16,9 +16,12 @@ Evolve Coords ee09b015 evolvecoordtwo@gmail.com password nickname evolvecoordtwo
 Facilities Cores ee09b016 facilitiescore@gmail.com password nickname facilitiescore 9999999999 9999999999 HomeSweetHome Ganga 420
 Facilities Coords ee09b017 facilitiescoordone@gmail.com password nickname facilitiescoordone 9999999999 9999999999 HomeSweetHome Ganga 340
 Facilities Coords ee09b018 facilitiescoordtwo@gmail.com password nickname facilitiescoordtwo 9999999999 9999999999 HomeSweetHome Ganga 420
-Webops Cores ee09b019 webopscore@gmail.com password nickname webopscore 9999999999 9999999999 HomeSweetHome Ganga 420
-Webops Coords ee09b020 webopscoordone@gmail.com password nickname webopscoordone 9999999999 9999999999 HomeSweetHome Ganga 420
-Webops Coords ee09b021 webopscoordtwo@gmail.com password nickname webopscoordtwo 9999999999 9999999999 HomeSweetHome Ganga 420
+WebOps Cores ee09b019 webopscore@gmail.com password nickname webopscore 9999999999 9999999999 HomeSweetHome Ganga 420
+WebOps Coords ee09b020 webopscoordone@gmail.com password nickname webopscoordone 9999999999 9999999999 HomeSweetHome Ganga 420
+WebOps Coords ee09b021 webopscoordtwo@gmail.com password nickname webopscoordtwo 9999999999 9999999999 HomeSweetHome Ganga 420
+MobOps Cores ee09b032 mobopscore@gmail.com password nickname mobopscore 9999999999 9999999999 HomeSweetHome Ganga 420
+MobOps Coords ee09b033 mobopscoordone@gmail.com password nickname mobopscoordone 9999999999 9999999999 HomeSweetHome Ganga 420
+MobOps Coords ee09b034 mobopscoordtwo@gmail.com password nickname mobopscoordtwo 9999999999 9999999999 HomeSweetHome Ganga 420
 Hospitality Cores ee09b022 hospitalitycore@gmail.com password nickname hospitalitycore 9999999999 9999999999 HomeSweetHome Ganga 420
 Hospitality Coords ee09b023 hospitalitycoordone@gmail.com password nickname hospitalitycoordone 9999999999 9999999999 HomeSweetHome Godav 420
 Hospitality Coords ee09b024 hospitalitycoordtwo@gmail.com password nickname hospitalitycoordtwo 9999999999 9999999999 HomeSweetHome Ganga 420
@@ -28,3 +31,5 @@ Publicity Coords ee09b027 publicitycoordtwo@gmail.com password nickname publicit
 Design Cores ee09b028 designcore@gmail.com password nickname designcore 9999999999 9999999999 HomeSweetHome Ganga 420
 Design Coords ee09b029 designcoordone@gmail.com password nickname designcoordone 9999999999 9999999999 HomeSweetHome Saras 420
 Design Coords ee09b030 designcoordtwo@gmail.com password nickname designcoordtwo 9999999999 9999999999 HomeSweetHome Ganga 420
+Design Supercoords ee09b031 designsupercoord@gmail.com password nickname designsupercoord 9999999999 9999999999 HomeSweetHome Ganga 420
+QMS Supercoords ee09b035 qmssupercoord@gmail.com password nickname qmssupercoord 9999999999 9999999999 HomeSweetHome Alak 325

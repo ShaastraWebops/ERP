@@ -14,15 +14,29 @@
             </a>
         </div>
         <div id="department_members" class="accordion-body collapse">
+
+            {% if dept_cores_list %}
             <h3>Cores</h3>
             {% for core in dept_cores_list %}
-            <a href="{% url users.views.view_profile owner_name=core.username %}"><img src="{{MEDIA_URL}}upload_files/{{ core.username }}/PROFILE_PIC_OF_THE_USER" width="30px" height="30px" title="{{ core.get_profile.name }}"/> </a>  
+            <a href="{% url users.views.view_profile owner_name=core.username %}"><img src="{{MEDIA_URL}}upload_files/{{ core.username }}/PROFILE_PIC_OF_THE_USER.jpg" width="30px" height="30px" title="{{ core.get_profile.name }}"/> </a>  
             {% endfor %}
+            {% endif %}
             <br/>
+
+            {% if dept_supercoords_list %}
+            <h3>Supercoords</h3>
+            {% for supercoord in dept_supercoords_list %}
+            <a href="{% url users.views.view_profile owner_name=supercoord.username %}"><img src="{{MEDIA_URL}}upload_files/{{ supercoord.username }}/PROFILE_PIC_OF_THE_USER.jpg" width="30px" height="30px" title="{{ supercoord.get_profile.name }}"/> </a>  
+            {% endfor %}
+            {% endif %}
+            <br/>
+
+            {% if dept_coords_list %}
             <h3>Coords</h3>
             {% for coord in dept_coords_list %}
-            <a href="{% url users.views.view_profile owner_name=coord.username %}"><img src="{{MEDIA_URL}}upload_files/{{ coord.username }}/PROFILE_PIC_OF_THE_USER" width="30px" height="30px" title="{{ coord.get_profile.name }}"/></a>
+            <a href="{% url users.views.view_profile owner_name=coord.username %}"><img src="{{MEDIA_URL}}upload_files/{{ coord.username }}/PROFILE_PIC_OF_THE_USER.jpg" width="30px" height="30px" title="{{ coord.get_profile.name }}"/></a>
             {% endfor %}
+            {% endif %}
             <br/>
             &nbsp;
         </div>

@@ -154,6 +154,7 @@ def view_profile(request, owner_name=None):
     except:
         photo_path=settings.MEDIA_URL+"upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
     profile = userprofile.objects.get(user=page_owner)
+    group = str(page_owner.groups.all()[0])[:-1] #drop 's' from group name. Ex: 'Core' from 'Cores'
     print profile.nickname
     print profile.name
 
@@ -161,6 +162,9 @@ def view_profile(request, owner_name=None):
     department = page_owner.get_profile ().department      
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
+        userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
         userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
@@ -172,6 +176,10 @@ def view_profile(request, owner_name=None):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
 
+    if is_supercoord(curr_user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_supercoord= True
+            
     if is_coord(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_coord= True
@@ -208,6 +216,9 @@ def handle_profile (request, owner_name):
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -218,6 +229,10 @@ def handle_profile (request, owner_name):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
 
+    if is_supercoord(user):
+        if str(curr_userprofile.department) == 'QMS':
+            qms_supercoord= True
+            
     if is_coord(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_coord= True

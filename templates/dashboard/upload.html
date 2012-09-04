@@ -47,9 +47,12 @@
 
                 <tr >
                     <td></td>
-                    <td id="documents_top"  > File name </td>
-                    <td id="documents_top"width="250px" > Description </td>
-                    <td id="documents_top" > Date </td>
+                    <td> File name </td>
+                    <td> Description </td>
+                    <td> Date </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
                 <tr>
 
@@ -58,9 +61,9 @@
 
                     {% if is_visitor %}
                     <br>
-                    no documents have been uploaded by {{page_owner.username}}
+                    {{page_owner.get_profile.name}} hasn't uploaded any documents yet..
                     {% else %}
-                    <h4>You have not uploaded any documents till now.</h4>
+                    <h4>You haven't uploaded any documents yet.</h4>
                     <br>
                     {% endif %}
                     {% endif %}
@@ -69,28 +72,15 @@
 
                 {% for field in users_documents %}
                 <tr >
-                    <td> {{forloop.counter}} <td> {{field.file_name}} </td>
+                    <td> {{forloop.counter}}</td>
+                    <td> {{field.title}} </td>
                     <td> {{field.topic}} </td>
-
                     <td> {{field.date}} </td>
                     <td><a href="{{field.url}}" class="google_doc" >Download</a></td>
-                    <td></td>
-
+                    <td><a  href="http://docs.google.com/viewer?url={{field.url}}" target="_blank">View in Google Docs</a></td>
+                    <td> {% if not is_visitor %} <a href="{% url dashboard.views.delete_file owner_name=page_owner number=field.id %}" >Delete </a> {% endif %} </td>
                 </tr>
-
-                <tr>
-
-                    </td>
-                    <td><td> {% if not is_visitor %} <a href="{% url dashboard.views.delete_file owner_name=page_owner number=field.id %}" >delete </a> {% endif %} </td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                    <div class="docs_link">
-                        <a  href="http://docs.google.com/viewer?url={{field.url}}" target="_blank">view in google docs</a>
-                    </div></td>
-                <tr>
-
-                    {% endfor %}
+                {% endfor %}
 
             </table>
         </div>

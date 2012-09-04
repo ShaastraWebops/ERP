@@ -5,7 +5,7 @@ from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 from erp.tasks.models import Task, SubTask
 from erp.users.models import *
-from erp.misc.helper import is_core, get_page_owner
+from erp.misc.helper import is_core, get_page_owner, is_supercoord, is_coord
 from erp import settings
 from erp.users import models
 from erp.department.models import Department
@@ -60,9 +60,11 @@ def global_context(request):
              'user_dept_name': user_dept_name,
              'user_name': user_name,
              'is_core' : is_core (request.user),
-             'is_coord' : not is_core (request.user),
+             'is_supercoord' : is_supercoord (request.user),
+             'is_coord' : is_coord (request.user),
              'po_is_core' : is_core (page_owner),
-             'po_is_coord' : not is_core (page_owner),
+             'po_is_supercoord' : is_supercoord (page_owner),
+             'po_is_coord' : is_coord (page_owner),
              'is_visitor' : is_visitor,
              'page_owner' : page_owner,
              'po_name' : po_name,
@@ -173,7 +175,7 @@ def page_owner_only (alternate_view_name = '', **kwargs):
                 username = __kwargs.get('owner_name', None))
             if curr_task_id is None:
                 # Creation of Task
-                if is_core (request.user):
+                if not is_coord (request.user):
                     if request.user == curr_page_owner:
                         # Go ahead
                         return func (*__args, **__kwargs)
@@ -253,6 +255,7 @@ def handle_existing_object (Model, object_id, curr_user,
     else:
         # Only the owner(s) can edit the object and that too only in
         # their own page
+        department=curr_page_owner.get_profile().department
         if model_name == 'task' and curr_object.is_owner (curr_page_owner) and curr_user == curr_page_owner:
             # User can edit the object in his own page
             return func (*__args, **__kwargs)

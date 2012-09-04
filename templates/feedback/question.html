@@ -5,6 +5,10 @@
 <a class="btn btn-primary pull-right" href="{% url feedback.views.display question_for=question_for %}">SEE ALL QUESTIONS</a><br>
 {% endif %}
 
+{% if qms_supercoord %}
+<a class="btn btn-primary pull-right" href="{% url feedback.views.display question_for=question_for%}">SEE ALL QUESTIONS</a><br>
+{% endif %}
+
 {% if qms_coord %}
 <a class="btn btn-primary pull-right" href="{% url feedback.views.display question_for=question_for%}">SEE ALL QUESTIONS</a><br>
 {% endif %}

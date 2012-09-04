@@ -2,7 +2,7 @@
 {% block body %}
 
 {% if qms_dept %}
-    <ul class="nav nav-pills">
+    <ul class="nav nav-tabs">
         {% for d in all_departments %}
                 <li {% ifequal d curr_department %}class="active"{% endifequal %}><a href="{% url feedback.views.qms_review dept_id=d.id is_all=no%}">{{d}}</a></li>
         {% endfor %}

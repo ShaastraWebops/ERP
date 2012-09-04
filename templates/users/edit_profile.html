@@ -5,9 +5,7 @@
 {% if profile_changed %}
 <h3>Your profile has been updated successfully.</h3>
 {% endif %}
-
-<div class="row">
-    <div class="span3 offset1">
+    <div class="span3">
         <ul class="thumbnails">
             <li class="span3">
                 <br>
@@ -46,7 +44,6 @@
             </div>
         </div>
     </div>
-</div>
 
 {% endblock %}
 
@@ -57,6 +54,9 @@ $(document).ready(function() {
     var d = document.getElementById("nav_profile");
     d.className = "active";
  });
+</script>
+<script type="text/javascript">  //initialise django-chosen
+$("#id_hostel").chosen();
 </script>
 {% endblock javascript%}
 

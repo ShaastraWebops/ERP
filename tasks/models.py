@@ -53,7 +53,7 @@ class Task(AbstractBaseTask):
         print 'User Dept : ', user.get_profile ().department
         print 'Is Core : ', is_core (user)
         print 'Task Dept : ', self.creator.get_profile ().department
-        return user.get_profile ().department == self.creator.get_profile ().department and is_core (user)
+        return user.get_profile ().department == self.creator.get_profile ().department and (not is_coord (user))
 
     def __str__(self):
         return self.subject
@@ -94,7 +94,7 @@ class SubTask(AbstractBaseTask):
         print 'Task Dept : ', self.task.creator.get_profile ().department
         print 'SubTask Dept : ', self.department
         user_dept = user.get_profile().department
-        return is_core (user) and (
+        return (not is_coord (user)) and (
             (user_dept == self.task.creator.get_profile ().department) or
             (user_dept == self.department))
 

@@ -14,7 +14,7 @@ Task
 <!--include for comments -->
 
 <center><h1>Task
-{% if is_core %}
+{% if not is_coord %}
 <a class="btn btn-primary btn-large pull-right" href="{% url erp.tasks.views.edit_task task_id=curr_task.id owner_name=page_owner %}">Edit Task &raquo;</a>
 {% endif %}
 </h1></center><br/>

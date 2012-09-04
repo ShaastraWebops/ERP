@@ -3,7 +3,7 @@ from __future__ import division
 from django.http import *
 from django.shortcuts import *
 from django.template import *
-from erp.misc.helper import is_core, is_coord, get_page_owner
+from erp.misc.helper import is_core, is_coord, is_supercoord, get_page_owner
 from erp.feedback.forms import *
 from erp.users.models import *
 from django.http import Http404
@@ -90,6 +90,9 @@ def answer(request):
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -100,6 +103,13 @@ def answer(request):
         if str(curr_userprofile.department) == "QMS":
             qms_core=True
             qms_dept=True
+
+    if is_supercoord(curr_user):
+        user_supercoord=True
+        if str(curr_userprofile.department) == "QMS":
+            qms_supercoord=True
+            qms_dept=True             
+    
     if is_coord(curr_user):
         user_coord=True
         if str(curr_userprofile.department) == "QMS":
@@ -132,6 +142,7 @@ def answer(request):
             coord_profiles = userprofile.objects.filter (department= curr_department,user__groups__name = 'Coords')
             questions=Question.objects.filter(departments=curr_department).exclude(answered_by='Coord').exclude(answered_by='Vol')
             answers=Answer.objects.filter(creator=curr_userprofile)
+
         if is_coord(curr_user):
             user_coord=True
             if str(curr_userprofile.department) == "QMS":
@@ -163,6 +174,9 @@ def answer_questions(request,userprofile_id,question_id,rating=None):
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -172,6 +186,10 @@ def answer_questions(request,userprofile_id,question_id,rating=None):
         is_visitor1=False  
         if str(curr_userprofile.department) == "QMS":
             qms_core=True
+    if is_supercoord(curr_user):
+        user_supercoord=True
+        if str(curr_userprofile.department) == "QMS":
+            qms_supercoord=True      
     if is_coord(curr_user):
         user_coord=True
         if str(curr_userprofile.department) == "QMS":
@@ -264,6 +282,9 @@ def question_for(request):
             qms_core=True
             is_core1=True
             is_visitor1=False
+        if is_supercoord(curr_user):
+            qms_supercoord=True
+            is_visitor1=False
         if is_coord(curr_user):
             qms_coord=True
             is_visitor1=False
@@ -275,6 +296,9 @@ def question_for(request):
     department = page_owner.get_profile ().department      
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
+        userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
         userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
@@ -300,6 +324,9 @@ def display(request,question_for):
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -318,6 +345,19 @@ def display(request,question_for):
         else:
             raise Http404
 
+    if is_supercoord(curr_user):
+        if str(curr_userprofile.department) == "QMS":
+            is_core1=True
+            is_visitor1=False
+            qms_core=True
+            if question_for=='Core':
+                question_for_core=True
+                questions=Question.objects.filter(feedback_for='Core')
+            else:
+                questions=Question.objects.filter(feedback_for='Coord')	
+                question_for_coord=True		
+        else:
+            raise Http404
     if is_coord(curr_user):
         if str(curr_userprofile.department) == "QMS":
             qms_coord=True
@@ -343,11 +383,56 @@ def add_question(request,question_for):
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
 
     if is_core(request.user):
+        curr_userprofile=userprofile.objects.get(user=request.user)
+        if str(curr_userprofile.department) == "QMS":
+            is_core1=True
+            is_visitor1=False
+            qms_core=True
+            if question_for== 'Coord':
+                if request.method == 'POST':
+                    questionform=QuestionFormCoord(request.POST)
+                    question_added=False
+                    if questionform.is_valid():
+                        questionform1=questionform.save(commit=False)
+                        questionform1.creator=curr_userprofile
+                        questionform1.edited_last=curr_userprofile
+                        questionform1.feedback_for='Coord'
+                        questionform1.save()
+                        questionform.save_m2m()
+                        question_added= True
+                    else:
+                        error=True
+                questionform=QuestionFormCoord()
+                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+            if question_for== 'Core':
+                if request.method == 'POST':
+                    questionform=QuestionFormCore(request.POST)
+                    question_added=False
+                    if questionform.is_valid():
+                        questionform1=questionform.save(commit=False)
+                        questionform1.creator=curr_userprofile
+                        questionform1.edited_last=curr_userprofile
+                        questionform1.feedback_for='Core'
+                        questionform1.answered_by='Coord'
+                        questionform1.save()
+                        questionform.save_m2m()
+                        question_added= True
+                    else:
+                        error=True
+                questionform=QuestionFormCore()
+                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+        else:
+            raise Http404
+
+    if is_supercoord(request.user):
         curr_userprofile=userprofile.objects.get(user=request.user)
         if str(curr_userprofile.department) == "QMS":
             is_core1=True
@@ -443,11 +528,56 @@ def edit_question(request,question_id, question_for):
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
     
     if is_core(request.user):
+        curr_userprofile=userprofile.objects.get(user=request.user)
+        if str(curr_userprofile.department) == "QMS":
+            is_core1=True
+            is_visitor1=False
+            qms_core=True
+            if question_for== 'Coord':
+                if request.method == 'POST':
+                    questionform=QuestionFormCoord(request.POST, instance=q)
+                    question_added=False
+                    if questionform.is_valid():
+                        questionform1=questionform.save(commit=False)
+                        questionform1.edited_last=curr_userprofile
+                        questionform1.feedback_for='Coord'
+                        questionform1.save()
+                        questionform.save_m2m()
+                        question_added= True
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                    else:
+                        error=True
+                questionform=QuestionFormCoord(instance=q)
+                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+            if question_for== 'Core':
+                if request.method == 'POST':
+                    questionform=QuestionFormCore(request.POST, instance=q)
+                    question_added=False
+                    if questionform.is_valid():
+                        questionform1=questionform.save(commit=False)
+                        questionform1.edited_last=curr_userprofile
+                        questionform1.feedback_for='Core'
+                        questionform1.answered_by='Coord'
+                        questionform1.save()
+                        questionform.save_m2m()
+                        question_added= True
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                    else:
+                        error=True
+                questionform=QuestionFormCore(instance=q)
+                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+        else:
+            raise Http404
+
+    if is_supercoord(request.user):
         curr_userprofile=userprofile.objects.get(user=request.user)
         if str(curr_userprofile.department) == "QMS":
             is_core1=True
@@ -535,7 +665,7 @@ def edit_question(request,question_id, question_for):
 A QMS core special.
 """ 
 def delete_question(request, question_id, question_for):
-    if is_core(request.user):
+    if not is_coord(request.user):
         curr_userprofile=userprofile.objects.get(user=request.user)
         owner_name=None
         page_owner = get_page_owner (request, owner_name)
@@ -573,6 +703,9 @@ def review(request):
     department = page_owner.get_profile ().department      
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
+        userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
         userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
@@ -654,6 +787,9 @@ def qms_review(request, dept_id, is_all):
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
     dept_coords_list = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
@@ -664,10 +800,13 @@ def qms_review(request, dept_id, is_all):
         if str(qms_department) == "QMS":
             qms_core=True
             qms_dept=True
+    if is_supercoord(request.user) and str(qms_department) == "QMS":
+        qms_dept=True
+        qms_supercoord=True
     if is_coord(request.user) and str(qms_department) == "QMS":
         qms_dept=True
         qms_coord=True
-    if is_coord(request.user) or is_core(request.user) and str(qms_department) == "QMS":            
+    if is_coord(request.user) or is_supercoord(request.user) or is_core(request.user) and str(qms_department) == "QMS":            
         core_profiles=userprofile.objects.filter(department=curr_department,user__groups__name='Cores')
         coord_profiles = userprofile.objects.filter (department= curr_department,user__groups__name = 'Coords')
         for coord in coord_profiles:

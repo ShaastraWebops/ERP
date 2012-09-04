@@ -5,7 +5,8 @@ from django.conf import settings
 
 class upload_documents(models.Model):
     user = models.ForeignKey(User)
-    file_name = models.CharField(max_length = 25)
+    title = models.CharField(max_length = 50)
+    file_name = models.CharField(max_length = 50)
     file_path = models.FileField(upload_to = settings.MEDIA_ROOT )
     google_doc_path=models.CharField(max_length=150  )
     url = models.URLField()

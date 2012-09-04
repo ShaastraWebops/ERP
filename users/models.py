@@ -15,7 +15,7 @@ HOSTEL_CHOICES  =(
         ("Mandak", "Mandak"),
         ("Jamuna", "Jamuna"),
         ("Alak", "Alak"),
-        ("Saraswati", "Saraswati"),
+        ("Saraswathi", "Saraswathi"),
         ("Narmada", "Narmada"),
         ("Godav", "Godav"),
         ("Pampa", "Pampa"),
@@ -26,7 +26,7 @@ HOSTEL_CHOICES  =(
         ("Krishna", "Krishna"),
         ("Cauvery", "Cauvery"),
         ("Tapti", "Tapti"),
-        ("Bhramhaputra", "Bhramhaputra"),
+        ("Brahmaputra", "Brahmaputra"),
         ("Sarayu", "Sarayu"),
         )
 
