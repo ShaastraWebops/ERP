@@ -44,7 +44,6 @@ class userprofile(models.Model):
     hostel = models.CharField(max_length=15, choices = HOSTEL_CHOICES, blank=True)
     room_no = models.IntegerField(default=0, blank=True)
 
-
     class Meta:
         pass
 

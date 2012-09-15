@@ -9,8 +9,14 @@ from django.conf import settings
 from erp.users.models import *
 from erp.dashboard.models import *
 
-# Temporary workaround for the fact that I don't know whether / how to
-# extend the User class with methods
+def is_multiple_user (user):
+    """
+    Return True if the user is Core of multiple depts
+    """
+    if len(user.department_set.all())>0:
+        return True
+    return False
+
 def is_core (user):
     """
     Return True if user is a Core.

@@ -86,12 +86,22 @@ def display_portal (request, owner_name = None):
     """
     page_owner = get_page_owner (request, owner_name)
 
-    if is_core (page_owner):
+    if is_multiple_user (page_owner):
+        return display_multiple_portal (request, page_owner)
+    elif is_core (page_owner):
         return display_core_portal (request, page_owner)
     elif is_supercoord(page_owner):
         return display_supercoord_portal (request, page_owner)
     else:
         return display_coord_portal (request, page_owner)
+
+@permissions
+def display_multiple_portal (request, user):
+    """
+    Display the portal so Core/coord can login into respective events
+    """
+    depts = list(user.department_set.all())+(list(Department.objects.filter(Dept_Name=user.get_profile ().department)))
+    return render_to_response("tasks/multiple.html",locals(), context_instance=global_context(request))
 
 @permissions
 def display_core_portal (request, core):
