@@ -293,32 +293,35 @@ def permissions(func, *_args):
         return _permission         
     
     def _authorize(current_user, current_page_owner):
-        current_user_dept = userprofile.objects.get(user = current_user).department.Dept_Name
-        current_page_owner_dept = userprofile.objects.get(user = current_page_owner).department.Dept_Name
-        if current_user_dept == 'Webops':
-        #Everything allowed for Webops
-            return True
-        elif current_user_dept==current_page_owner_dept:
-            #Both from same department
-            if is_core(current_user):
-                #Core wants to see either coord's or fellow core's page, which is allowed   
+        try:
+            current_user_dept = userprofile.objects.get(user = current_user).department.Dept_Name
+            current_page_owner_dept = userprofile.objects.get(user = current_page_owner).department.Dept_Name
+            if current_user_dept == 'Webops':
+            #Everything allowed for Webops
                 return True
-            else:
-                #User is a coord, only allowed to see another coord
-                if is_core(current_page_owner):
-                    return False
+            elif current_user_dept==current_page_owner_dept:
+                #Both from same department
+                if is_core(current_user):
+                    #Core wants to see either coord's or fellow core's page, which is allowed   
+                    return True
                 else:
-                #Coord wants to see coord, allow
-                    return True    
-        elif current_user_dept == 'QMS':
-            #QMS core can see everyone's dashboard
-            if is_core(current_user):
-                return True
-            #working on QMS coord
+                    #User is a coord, only allowed to see another coord
+                    if is_core(current_page_owner):
+                        return False
+                    else:
+                    #Coord wants to see coord, allow
+                        return True    
+            elif current_user_dept == 'QMS':
+                #QMS core can see everyone's dashboard
+                if is_core(current_user):
+                    return True
+                #working on QMS coord
+                else:
+                    return True
             else:
-                return True
-        else:
-            #Either the current_user and current_page owner are not in the same dept, or something went wrong.
-            return False    
+                #Either the current_user and current_page owner are not in the same dept, or something went wrong.
+                return False    
+        except:
+            return True
     return _dec(func)
    

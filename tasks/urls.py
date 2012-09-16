@@ -10,6 +10,7 @@ urlpatterns = patterns('erp.tasks.views',
       #(r'^search/', include('haystack.urls')),
 
       (r'^create', 'edit_task'),
+      (r'^login/(?P<department>\w+)/', 'multiple_login'),
       (r'^task/(?P<task_id>[0-9]+)', 'edit_task'),
       (r'^display_task/(?P<task_id>[0-9]+)?', 'display_task'),
       (r'^subtask/(?P<subtask_id>[0-9]+)', 'edit_subtask'),
