@@ -45,22 +45,28 @@ def multiple_login(request, owner_name=None, department=None):
     print dept, request.user.department_set.all(), "WHY"
     if dept in request.user.department_set.all():
         auth.logout(request)
+        try:
+          #  response.set_cookie('unb_User',"")
+            response.set_cookie('logged_out', 1)
+        except:
+            pass
         print "THe department is", department
         dept = Department.objects.filter(Dept_Name=department)
         multiple = userprofile.objects.filter(department=dept)
         for each in multiple:              
-            if each.user.username.startswith(owner_name):    
+            if each.user.username.startswith(owner_name):# and each.user.username.endswith(owner_name):    
                 # Hard code this or write a backend?
                 each.user.backend = 'django.contrib.auth.backends.ModelBackend'
                 auth.login (request, each.user)
+                print "THIS IS" , request.user
                 request.session['logged_in'] = True
                 try:
                     response.set_cookie('logged_out', 0)
                 except:
                     pass
-                HttpResponseRedirect('/')    
-                #return redirect ('erp.tasks.views.display_portal',
-                #                 owner_name = each.user.username)
+                #HttpResponseRedirect('/')    
+                return redirect ('erp.tasks.views.display_portal',
+                                 owner_name = each.user.username)
     return HttpResponseRedirect('/')                
     
 def get_timeline (user):
