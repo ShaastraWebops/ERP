@@ -54,8 +54,9 @@ def multiple_login(request, owner_name=None, department=None):
         dept = Department.objects.filter(Dept_Name=department)
         multiple = userprofile.objects.filter(department=dept)
         for each in multiple:              
-            if each.user.username.startswith(owner_name):# and each.user.username.endswith(owner_name):    
+            if each.user.username.startswith(owner_name.lower()) and each.user.username.endswith(department.lower()):    
                 # Hard code this or write a backend?
+                auth.logout(request)
                 each.user.backend = 'django.contrib.auth.backends.ModelBackend'
                 auth.login (request, each.user)
                 print "THIS IS" , request.user
@@ -69,6 +70,8 @@ def multiple_login(request, owner_name=None, department=None):
                                  owner_name = each.user.username)
     return HttpResponseRedirect('/')                
     
+
+
 def get_timeline (user):
     """
     If user is a Core, return all Tasks created by user.
