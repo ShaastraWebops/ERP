@@ -48,7 +48,13 @@ def global_context(request):
         po_name = page_owner.get_profile ().name
     except:
         po_name = False
-
+    
+    try:
+        if (request.user.get_profile().department.owner):
+            supercore = True
+    except:
+        supercore = False
+            
     if page_owner != request.user:
         is_visitor = True
     else:
@@ -70,7 +76,7 @@ def global_context(request):
              'po_name' : po_name,
              'po_dept_name' : po_dept_name,
              'photo_list':photo_list,
-
+             'supercore':supercore,   
             })
     return context
 

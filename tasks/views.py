@@ -42,11 +42,9 @@ def multiple_login(request, owner_name=None, department=None):
     else:
         group_name='Coord'
     dept=Department.objects.filter(Dept_Name=department)[0]
-    print dept, request.user.department_set.all(), "WHY"
     if dept in request.user.department_set.all():
         auth.logout(request)
         try:
-          #  response.set_cookie('unb_User',"")
             response.set_cookie('logged_out', 1)
         except:
             pass
@@ -59,7 +57,6 @@ def multiple_login(request, owner_name=None, department=None):
                 auth.logout(request)
                 each.user.backend = 'django.contrib.auth.backends.ModelBackend'
                 auth.login (request, each.user)
-                print "THIS IS" , request.user
                 request.session['logged_in'] = True
                 try:
                     response.set_cookie('logged_out', 0)
@@ -70,8 +67,21 @@ def multiple_login(request, owner_name=None, department=None):
                                  owner_name = each.user.username)
     return HttpResponseRedirect('/')                
     
-
-
+def multiple_logout(request, owner_name=None):
+    if owner_name==request.user.username:
+        supercore = request.user.get_profile().department.owner
+        auth.logout(request)
+        supercore.backend = 'django.contrib.auth.backends.ModelBackend'
+        auth.login(request, supercore)
+        request.session['logged_in'] = True
+        try:
+            response.set_cookie('logged_out', 0)
+        except:
+            pass
+    else:
+        supercore=request.user
+    return redirect ('erp.tasks.views.display_portal',
+                                 owner_name = supercore.username)
 def get_timeline (user):
     """
     If user is a Core, return all Tasks created by user.

@@ -146,9 +146,12 @@
         <div class="container">
 
             <!-- Main hero unit for a primary marketing message or call to action -->
-
+            
             <div class="page-header white">
                 <h2>Welcome, {{user.get_profile.name}}!</h2>
+                <div class="pull-right">
+                {% block multiple %}
+                {% endblock %}
             </div>
             
             <div class="row">
