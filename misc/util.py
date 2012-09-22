@@ -50,6 +50,7 @@ def global_context(request):
         po_name = False
     
     try:
+        supercore = False
         if (request.user.get_profile().department.owner):
             supercore = True
     except:

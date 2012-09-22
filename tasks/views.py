@@ -346,6 +346,8 @@ def edit_task (request, task_id = None, owner_name = None):
                                             exclude = subtask_exclusion_tuple,
                                             extra = 0,
                                             can_delete = True)
+
+    SubTaskFormSet.form = staticmethod(curry(SubTaskForm, editor=request.user))
                                            
     if request.method == 'POST':
         # Get the submitted formset
@@ -378,6 +380,7 @@ def edit_task (request, task_id = None, owner_name = None):
                 # In case it's a new form (inline formset won't
                 # fill in the task in that case)
                 subtask.task = curr_task
+                subtask.department=request.user.get_profile().department
                 subtask.save ()
             subtaskfs.save_m2m () # Necessary, since we used commit = False
             return redirect ('erp.tasks.views.display_portal',
@@ -389,11 +392,12 @@ def edit_task (request, task_id = None, owner_name = None):
         task_form = TaskForm (instance = curr_task)
         subtaskfs = SubTaskFormSet (instance = curr_task)
         template_form = subtaskfs.empty_form
-    comments, comment_form, comment_status = handle_comment (
+        comments, comment_form, comment_status = handle_comment (
         request = request,
         is_task_comment = True,
         object_id = task_id,
         other_errors = other_errors)
+        print "atleast here" 
     
     curr_userprofile=userprofile.objects.get(user=user)
     if is_core(user):
@@ -429,7 +433,6 @@ def edit_subtask (request, subtask_id, owner_name = None):
     Have an Edit Subtask view (like for Tasks)?
     """
     page_owner = get_page_owner (request, owner_name)
-
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
     curr_subtask_form = SubTaskForm (instance = curr_subtask)

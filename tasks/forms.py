@@ -41,11 +41,16 @@ class SubTaskForm (ModelForm):
 #            curr_subtask_form = SubTaskForm (request.POST, instance = curr_subtask)  line 336 in tasks/views.py  
 #
 #
-#    def __init__(self, editor=None, *args, **kwargs):
-#        super(SubTaskForm, self).__init__(*args, **kwargs)
-#        if editor:
-#            self.fields['coords'].queryset = User.objects.filter(userprofile__department=editor.get_profile().department)
-#           self.fields['coords'].help_text = ''
+#   The Curry issue has been fixed. However, when trying to edit a form, it does not change the form because it isn't valid 
+#   for some reason. Line 469  if curr_subtask_form.is_valid (): returns FALSE. So the subtask just reloads itself without any changes.
+#
+
+    def __init__(self, editor=None, *args, **kwargs):
+        super(SubTaskForm, self).__init__(*args, **kwargs)
+        if isinstance(editor,User):
+            print "THIS IS", editor
+            self.fields['coords'].queryset = User.objects.filter(userprofile__department=editor.get_profile().department)
+            self.fields['coords'].help_text = ''
         
 #hack if these fields need to be formatted        
 #    def __init__(self, *args, **kwargs):
