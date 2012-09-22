@@ -48,6 +48,11 @@ class SubTaskForm (ModelForm):
     def __init__(self, editor=None, *args, **kwargs):
         super(SubTaskForm, self).__init__(*args, **kwargs)
         if isinstance(editor,User):
+            # The reason it is isinstance is because when i'm editing a subtask in particular, 
+            # junk values are getting passed to editor in POST method.
+            # To check, make it
+        # if editor:
+            # The code will fail but editor will be a random dictionary of variables.
             print "THIS IS", editor
             self.fields['coords'].queryset = User.objects.filter(userprofile__department=editor.get_profile().department)
             self.fields['coords'].help_text = ''
