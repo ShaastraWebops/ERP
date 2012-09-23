@@ -35,7 +35,7 @@ from django.contrib.sessions.models import Session
 # Fields to be excluded in the SubTask forms during Task editing
 subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
 
-@needs_authentication
+@needs_authentication_multiple_user
 def multiple_login(request, owner_name=None, department=None):
     if is_core(request.user):
         group_name='Core'
@@ -49,7 +49,7 @@ def multiple_login(request, owner_name=None, department=None):
         except:
             pass
         print "THe department is", department
-        dept = Department.objects.filter(Dept_Name=department)
+        dept = Department.objects.get(Dept_Name=department)
         multiple = userprofile.objects.filter(department=dept)
         for each in multiple:              
             if each.user.username.startswith(owner_name.lower()) and each.user.username.endswith(department.lower()):    
@@ -66,18 +66,25 @@ def multiple_login(request, owner_name=None, department=None):
                 return redirect ('erp.tasks.views.display_portal',
                                  owner_name = each.user.username)
     return HttpResponseRedirect('/')                
-    
+
+@needs_authentication_multiple_user    
 def multiple_logout(request, owner_name=None):
     if owner_name==request.user.username:
-        supercore = request.user.get_profile().department.owner
-        auth.logout(request)
-        supercore.backend = 'django.contrib.auth.backends.ModelBackend'
-        auth.login(request, supercore)
-        request.session['logged_in'] = True
-        try:
-            response.set_cookie('logged_out', 0)
-        except:
-            pass
+        supercorelist = request.user.get_profile().department.owner.all()
+        for each in supercorelist:
+            print owner_name, each
+            if owner_name.startswith(each.username.lower()):
+                supercore=each
+                print supercore
+                auth.logout(request)
+                supercore.backend = 'django.contrib.auth.backends.ModelBackend'
+                auth.login(request, supercore)
+                request.session['logged_in'] = True
+                try:
+                    response.set_cookie('logged_out', 0)
+                except:
+                    pass
+                break
     else:
         supercore=request.user
     return redirect ('erp.tasks.views.display_portal',
@@ -129,7 +136,7 @@ def get_completed_subtasks (user):
     user_dept = user.userprofile_set.all()[0].department
     return SubTask.objects.filter (department = user_dept, status = 'C')
 
-@needs_authentication
+@needs_authentication_multiple_user
 def display_portal (request, owner_name = None):
     """
     Display owner's portal.
@@ -142,8 +149,8 @@ def display_portal (request, owner_name = None):
         return display_core_portal (request, page_owner)
     elif is_supercoord(page_owner):
         return display_supercoord_portal (request, page_owner)
-    else:
-        return display_coord_portal (request, page_owner)
+    elif is_coord(page_owner):
+        return display_coord_portal (request, page_owner)       
 
 @permissions
 def display_multiple_portal (request, user):

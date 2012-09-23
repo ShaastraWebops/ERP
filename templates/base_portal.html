@@ -130,8 +130,8 @@
                                     <form class="navbar-search" id="search" action="/search/" method="POST">
                                         {%csrf_token%}
                                         <div class="input-append">
-                                            <input type="text" class="input-xlarge search-query" placeholder="Search for tasks" name="searchbar">
-                                            <a href="#" id="search-icon"><i class="icon-search icon-white" style="margin-top:2px;"></i></a> 
+                                            <input type="text" style="border-radius:13px 13px 13px 13px;" class="input-xlarge search-query" placeholder="Search" name="searchbar">
+                                            <a href="#" id="search-icon"><i class="icon-search" style="margin-top:2px; z-index:3;position:absolute;right:10px;top:5px;"></i></a> 
                                         </div>
                                     </form>
                                 </div>
@@ -148,19 +148,39 @@
             <!-- Main hero unit for a primary marketing message or call to action -->
             
             <div class="page-header white">
-                <h2>Welcome, {{user.get_profile.name}}!</h2>
-                <div class="pull-right">
+                <h2>Welcome, {{user.get_profile.name}}!
                 {% block multiple %}
+                <div class="pull-right">
+                {% if is_core %}
+                {% if supercore %}
+                <a href="{% url tasks.views.multiple_logout owner_name=user %}">
+                <button class="btn btn-danger large">
+                <strong>Change Event</strong> </button>
+                </a>
+                {% endif %}
+                {% endif %}
+                <div>
                 {% endblock %}
+                </h2>
             </div>
-            
+            <br/>
             <div class="row">
                 <div class="tabbable span12">
+                {% if is_core %}
+                    {% if not is_multiple_user %}
                     <ul class="nav nav-pills nav-stacked span2" id="myTab">
                         {% include "left-sidebar.html" %}
                         <hr>
                         {% include "right-sidebar.html" %}
                     </ul>
+                    {% endif %}
+                {% else %}
+                    <ul class="nav nav-pills nav-stacked span2" id="myTab">
+                        {% include "left-sidebar.html" %}
+                        <hr>
+                        {% include "right-sidebar.html" %}
+                    </ul>
+                {% endif %}
                     <div class="tab-content span9">
                         {% block body %}
                         {% endblock %}

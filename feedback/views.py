@@ -11,6 +11,7 @@ from erp.feedback.models import *
 from django.db.models import Avg
 from django.core.urlresolvers import reverse
 from decimal import Decimal
+from erp.misc.util import *
 
 """
 Toggle function is solely for the qms core to open/close the feedback feature
@@ -75,7 +76,8 @@ def togglereview(request):
 """
 Answer and answer_questions and review are open to all members, with different permissions.
 """
-def answer(request):
+@needs_authentication
+def answer(request, owner_name=None):
     print "in answer"
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
