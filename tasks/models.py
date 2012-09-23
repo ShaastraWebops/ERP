@@ -50,10 +50,10 @@ class Task(AbstractBaseTask):
         user is the owner of the current Task if
         - user is a Core in the Task's department
         """
-        print 'User Dept : ', user.get_profile ().department
+        print 'User Dept : ', user.get_profile ().department.all()[0]
         print 'Is Core : ', is_core (user)
-        print 'Task Dept : ', self.creator.get_profile ().department
-        return user.get_profile ().department == self.creator.get_profile ().department and (not is_coord (user))
+        print 'Task Dept : ', self.creator.get_profile ().department.all()[0]
+        return user.get_profile ().department.all()[0] == self.creator.get_profile ().department.all()[0] and (not is_coord (user))
 
     def __str__(self):
         return self.subject
@@ -89,22 +89,22 @@ class SubTask(AbstractBaseTask):
           which SubTask is related to
         - user is a Core in the department to which SubTask is assigned
         """
-        print 'User Dept : ', user.get_profile ().department
+        print 'User Dept : ', user.get_profile ().department.all()[0]
         print 'Is Core : ', is_core (user)
-        print 'Task Dept : ', self.task.creator.get_profile ().department
+        print 'Task Dept : ', self.task.creator.get_profile ().department.all()[0]
         print 'SubTask Dept : ', self.department
-        user_dept = user.get_profile().department
+        user_dept = user.get_profile().department.all()[0]
         return (not is_coord (user)) and (
-            (user_dept == self.task.creator.get_profile ().department) or
+            (user_dept == self.task.creator.get_profile ().department.all()[0]) or
             (user_dept == self.department))
 
     def is_assignee (self, user):
         """
         Return True if user is a Coord who has been assigned this subtask.
         """
-        print 'User Dept : ', user.get_profile ().department
+        print 'User Dept : ', user.get_profile ().department.all()[0]
         print 'Is Coord : ', is_coord (user)
-        user_dept = user.get_profile().department
+        user_dept = user.get_profile().department.all()[0]
         return is_coord (user) and (self.coords.filter (id = user.id).exists ())
 
     def __str__(self):

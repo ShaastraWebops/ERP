@@ -6,7 +6,7 @@ from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 from django.db.models import Q
 from erp import settings
-from erp.users import models
+from erp.users.models import *
 from erp.department.models import Department, DEP_CHOICES
 from erp.tasks.models import Task, SubTask, DEFAULT_STATUS, TaskComment, SubTaskComment, Update
 from erp.misc.helper import check_dir
@@ -73,10 +73,17 @@ def create_user (department_name, group_name, user_dict, profile_dict):
     except:
         # If userprofile doesn't exist (whether or not user is a new
         # one or old one), create it
-        profile_dict['user'] = user
-        profile_dict['department'] = Department.objects.get (Dept_Name = department_name)
-        curr_userprofile = models.userprofile (**profile_dict)
+        curr_userprofile = userprofile ()
+        curr_userprofile.user = user
+        curr_userprofile.nickname = profile_dict['nickname']
+        curr_userprofile.name = profile_dict['name']
+        curr_userprofile.chennai_number = profile_dict['chennai_number']
+        curr_userprofile.summer_number = profile_dict['summer_number']
+        curr_userprofile.summer_stay = profile_dict['summer_stay']
+        curr_userprofile.hostel = profile_dict['hostel']
+        curr_userprofile.room_no = profile_dict['room_no']
         curr_userprofile.save ()
+        curr_userprofile.department.add(Department.objects.get (Dept_Name = department_name))
         print "%s - userprofile created" %(user_dict['username'])
         check_dir(user)
     print "%s - personal directory created" %(user_dict['username'])
@@ -231,7 +238,7 @@ def create_comments ():
     standard_test_comment = ' comments '
     for core in cores_list:
         task_list = Task.objects.filter (creator = core)
-        subtask_list = SubTask.objects.filter (department = core.get_profile ().department)
+        subtask_list = SubTask.objects.filter (department = core.get_profile ().department.all()[0])
         comment_string = core.get_profile ().name + '\'s '
         for task in task_list:
             new_comment = TaskComment (comment_string = comment_string + standard_test_comment + '(for Task)')

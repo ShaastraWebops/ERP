@@ -16,10 +16,11 @@ from erp.misc.util import *
 """
 Toggle function is solely for the qms core to open/close the feedback feature
 """
-def toggle(request):
+@needs_authentication
+def toggle(request, owner_name = None):
     print "hello"
     curr_userprofile=userprofile.objects.get(user=request.user)
-    if is_core(request.user) and str(curr_userprofile.department) == "QMS":
+    if is_core(request.user) and str(curr_userprofile.department.all()[0]) == "QMS":
         openfeedback=OpenFeedback.objects.filter(id=1)
         if openfeedback:
             curr_feedback=OpenFeedback.objects.get(id=1)
@@ -30,21 +31,22 @@ def toggle(request):
         if curr_feedback.feedback==False:
             curr_feedback.feedback=True
             curr_feedback.save() 
-            return redirect('erp.feedback.views.answer', )
+            return redirect('erp.feedback.views.answer', owner_name = request.user)
     
         if curr_feedback.feedback==True:
             curr_feedback.feedback=False
             curr_feedback.save()
-            return redirect('erp.feedback.views.answer', )        
+            return redirect('erp.feedback.views.answer', owner_name = request.user)        
     else:
         raise Http404  
         
 """
 Togglereview function is solely for the qms core. Only if this is True can coords and cores see their reviews.
 """
-def togglereview(request):
+@needs_authentication
+def togglereview(request, owner_name = None):
     curr_userprofile=userprofile.objects.get(user=request.user)
-    if is_core(request.user) and str(curr_userprofile.department) == "QMS":
+    if is_core(request.user) and str(curr_userprofile.department.all()[0]) == "QMS":
         openreview=OpenReview.objects.filter(id=1)
         if openreview:
             curr_review=OpenReview.objects.get(id=1)
@@ -65,12 +67,12 @@ def togglereview(request):
             if curr_feedback.feedback==True:
                 curr_feedback.feedback=False
                 curr_feedback.save()             
-            return redirect('erp.feedback.views.answer', )
+            return redirect('erp.feedback.views.answer', owner_name = request.user)
     
         if curr_review.review==True:
             curr_review.review=False
             curr_review.save()
-            return redirect('erp.feedback.views.answer', )        
+            return redirect('erp.feedback.views.answer', owner_name = request.user)        
     else:
         raise Http404                          
 """
@@ -88,7 +90,7 @@ def answer(request, owner_name=None):
     no='no'
     
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0]     
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -102,19 +104,19 @@ def answer(request, owner_name=None):
     if is_core(curr_user):
         is_core1=True
         is_visitor1=False  
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             qms_core=True
             qms_dept=True
 
     if is_supercoord(curr_user):
         user_supercoord=True
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             qms_supercoord=True
             qms_dept=True             
     
     if is_coord(curr_user):
         user_coord=True
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             qms_coord=True
             qms_dept=True             
     
@@ -137,20 +139,20 @@ def answer(request, owner_name=None):
         if is_core(curr_user):
             is_core1=True
             is_visitor1=False
-            if str(curr_userprofile.department) == "QMS":
+            if str(curr_userprofile.department.all()[0]) == "QMS":
                 qms_core=True 
                 qms_dept=True   
-            curr_department=curr_userprofile.department
+            curr_department=curr_userprofile.department.all()[0]
             coord_profiles = userprofile.objects.filter (department= curr_department,user__groups__name = 'Coords')
             questions=Question.objects.filter(departments=curr_department).exclude(answered_by='Coord').exclude(answered_by='Vol')
             answers=Answer.objects.filter(creator=curr_userprofile)
 
         if is_coord(curr_user):
             user_coord=True
-            if str(curr_userprofile.department) == "QMS":
+            if str(curr_userprofile.department.all()[0]) == "QMS":
                 qms_coord=True
                 qms_dept=True
-            curr_department=curr_userprofile.department
+            curr_department=curr_userprofile.department.all()[0]
             core_profiles=userprofile.objects.filter(department=curr_department,user__groups__name='Cores')
             coord_profiles = userprofile.objects.filter (department= curr_department,user__groups__name = 'Coords').exclude(user=request.user)
             questions=Question.objects.filter(departments=curr_department).exclude(answered_by='Core').exclude(answered_by='Vol')
@@ -159,7 +161,8 @@ def answer(request, owner_name=None):
     
     return render_to_response('feedback/feedback.html',locals(),context_instance=RequestContext(request))    
     
-def answer_questions(request,userprofile_id,question_id,rating=None):
+@needs_authentication
+def answer_questions(request,userprofile_id,question_id,rating=None, owner_name = None):
     if str(rating) == '20':
         rating=None
     rating_choice=[i for i in range(11)]
@@ -172,7 +175,7 @@ def answer_questions(request,userprofile_id,question_id,rating=None):
     page_owner = get_page_owner (request, owner_name)
     
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0] 
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -186,15 +189,15 @@ def answer_questions(request,userprofile_id,question_id,rating=None):
     if is_core(curr_user):
         is_core1=True
         is_visitor1=False  
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             qms_core=True
     if is_supercoord(curr_user):
         user_supercoord=True
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             qms_supercoord=True      
     if is_coord(curr_user):
         user_coord=True
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             qms_coord=True      
 
     openfeedback=OpenFeedback.objects.filter(id=1)
@@ -206,7 +209,7 @@ def answer_questions(request,userprofile_id,question_id,rating=None):
     
     if curr_feedback.feedback==True:    
         
-        curr_department=curr_userprofile.department
+        curr_department=curr_userprofile.department.all()[0]
         answers=Answer.objects.filter(creator=curr_userprofile)
         question1=Question.objects.filter(id=question_id)
         if question1:
@@ -215,7 +218,7 @@ def answer_questions(request,userprofile_id,question_id,rating=None):
         
         if is_core(curr_user):
             question_no_answer=[]
-            if str(curr_userprofile.department) == "QMS":
+            if str(curr_userprofile.department.all()[0]) == "QMS":
                 is_core1=True
                 is_visitor1=False
                 qms_core=True
@@ -240,7 +243,7 @@ def answer_questions(request,userprofile_id,question_id,rating=None):
             return render_to_response('feedback/answer_questions.html',locals(),context_instance=RequestContext(request))
             
         if is_coord(curr_user):
-            if str(curr_userprofile.department) == "QMS":
+            if str(curr_userprofile.department.all()[0]) == "QMS":
                 qms_coord=True
             question_no_answer=[]
             if is_coord(curr_feedbackuser_userprofile.user):
@@ -271,7 +274,8 @@ def answer_questions(request,userprofile_id,question_id,rating=None):
 """
 A QMS Department special. To filter questions set for cores and coords.
 """ 
-def question_for(request):
+@needs_authentication
+def question_for(request, owner_name = None):
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
     owner_name=None
@@ -279,7 +283,7 @@ def question_for(request):
     Core='Core'
     Coord='Coord'
     
-    if str(curr_userprofile.department) == "QMS":
+    if str(curr_userprofile.department.all()[0]) == "QMS":
         if is_core(curr_user):
             qms_core=True
             is_core1=True
@@ -295,7 +299,7 @@ def question_for(request):
         return Http404
     
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0]    
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -311,8 +315,9 @@ def question_for(request):
 
 """
 A QMS Department special. Displays all questions with options for editing and deleting(only for core)
-"""        
-def display(request,question_for):
+""" 
+@needs_authentication       
+def display(request,question_for, owner_name = None):
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
     users_profile=userprofile.objects.all()
@@ -322,7 +327,7 @@ def display(request,question_for):
     Coord='Coord'
 
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0]      
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -334,7 +339,7 @@ def display(request,question_for):
         userprofile__department = department)
     
     if is_core(curr_user):
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             is_core1=True
             is_visitor1=False
             qms_core=True
@@ -348,7 +353,7 @@ def display(request,question_for):
             raise Http404
 
     if is_supercoord(curr_user):
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             is_core1=True
             is_visitor1=False
             qms_core=True
@@ -361,7 +366,7 @@ def display(request,question_for):
         else:
             raise Http404
     if is_coord(curr_user):
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             qms_coord=True
             if question_for=='Core':
                 question_for_core=True
@@ -377,11 +382,12 @@ def display(request,question_for):
 """
 A QMS Department special. To add questions.
 """ 
-def add_question(request,question_for):
+@needs_authentication
+def add_question(request,question_for, owner_name = None):
 
     #Get Department Members' image thumbnails
     page_owner = get_page_owner (request, owner_name=None)
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0]     
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -394,7 +400,7 @@ def add_question(request,question_for):
 
     if is_core(request.user):
         curr_userprofile=userprofile.objects.get(user=request.user)
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             is_core1=True
             is_visitor1=False
             qms_core=True
@@ -436,7 +442,7 @@ def add_question(request,question_for):
 
     if is_supercoord(request.user):
         curr_userprofile=userprofile.objects.get(user=request.user)
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             is_core1=True
             is_visitor1=False
             qms_core=True
@@ -480,7 +486,7 @@ def add_question(request,question_for):
         owner_name=None
         page_owner = get_page_owner (request, owner_name)
         curr_userprofile=userprofile.objects.get(user=request.user)
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             qms_coord=True
             if question_for== 'Coord':
                 if request.method == 'POST':
@@ -521,12 +527,12 @@ def add_question(request,question_for):
 """
 A QMS department special. Similar to add_questions, but updates last edited by column also.
 """ 
-def edit_question(request,question_id, question_for):
+def edit_question(request,question_id, question_for, owner_name = None):
     q = Question.objects.get(id=question_id)
     
     #Get Department Members' image thumbnails
     page_owner = get_page_owner (request, owner_name=None)
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0] 
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -539,7 +545,7 @@ def edit_question(request,question_id, question_for):
     
     if is_core(request.user):
         curr_userprofile=userprofile.objects.get(user=request.user)
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             is_core1=True
             is_visitor1=False
             qms_core=True
@@ -554,7 +560,7 @@ def edit_question(request,question_id, question_for):
                         questionform1.save()
                         questionform.save_m2m()
                         question_added= True
-                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
                     else:
                         error=True
                 questionform=QuestionFormCoord(instance=q)
@@ -571,7 +577,7 @@ def edit_question(request,question_id, question_for):
                         questionform1.save()
                         questionform.save_m2m()
                         question_added= True
-                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
                     else:
                         error=True
                 questionform=QuestionFormCore(instance=q)
@@ -581,7 +587,7 @@ def edit_question(request,question_id, question_for):
 
     if is_supercoord(request.user):
         curr_userprofile=userprofile.objects.get(user=request.user)
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             is_core1=True
             is_visitor1=False
             qms_core=True
@@ -596,7 +602,7 @@ def edit_question(request,question_id, question_for):
                         questionform1.save()
                         questionform.save_m2m()
                         question_added= True
-                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
                     else:
                         error=True
                 questionform=QuestionFormCoord(instance=q)
@@ -613,7 +619,7 @@ def edit_question(request,question_id, question_for):
                         questionform1.save()
                         questionform.save_m2m()
                         question_added= True
-                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
                     else:
                         error=True
                 questionform=QuestionFormCore(instance=q)
@@ -625,7 +631,7 @@ def edit_question(request,question_id, question_for):
         owner_name=None
         page_owner = get_page_owner (request, owner_name)
         curr_userprofile=userprofile.objects.get(user=request.user)
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             qms_coord=True
             if question_for== 'Coord':
                 if request.method == 'POST':
@@ -638,7 +644,7 @@ def edit_question(request,question_id, question_for):
                         questionform1.save()
                         questionform.save_m2m()
                         question_added= True
-                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
                     else:
                         error=True
                 questionform=QuestionFormCoord(instance=q)
@@ -655,7 +661,7 @@ def edit_question(request,question_id, question_for):
                         questionform1.save()
                         questionform.save_m2m()
                         question_added= True
-                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
                     else:
                         error=True
                 questionform=QuestionFormCore(instance=q)
@@ -666,12 +672,13 @@ def edit_question(request,question_id, question_for):
 """
 A QMS core special.
 """ 
-def delete_question(request, question_id, question_for):
+@needs_authentication
+def delete_question(request, question_id, question_for, owner_name = None):
     if not is_coord(request.user):
         curr_userprofile=userprofile.objects.get(user=request.user)
         owner_name=None
         page_owner = get_page_owner (request, owner_name)
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             q = Question.objects.get(id=question_id)
             answers = q.answer_set.all()
             answeraverages = q.answeravg_set.all()
@@ -683,7 +690,7 @@ def delete_question(request, question_id, question_for):
                     avg.delete()    
             q.delete()
             
-            return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+            return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
         else:
             raise Http404
     else:
@@ -691,10 +698,11 @@ def delete_question(request, question_id, question_for):
 
 """
 The following views are for feedback reviews.
-"""            
-def review(request):
+"""         
+@needs_authentication   
+def review(request, owner_name = None):
     curr_userprofile=userprofile.objects.get(user=request.user)
-    curr_department=curr_userprofile.department
+    curr_department=curr_userprofile.department.all()[0]
     owner_name=None
     page_owner = get_page_owner (request, owner_name)
     qms_core=False
@@ -702,7 +710,7 @@ def review(request):
     curr_averages = Answeravg.objects.filter(owner=curr_userprofile)
 
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0]     
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -721,7 +729,7 @@ def review(request):
         questions=Question.objects.filter(departments=curr_department).filter(feedback_for='Core')
     if is_coord(request.user):
         is_coord1=True
-        if str(curr_userprofile.department) == "QMS":
+        if str(curr_userprofile.department.all()[0]) == "QMS":
             qms_coord=True
         questions=Question.objects.filter(departments=curr_department).filter(feedback_for='Coord')
     
@@ -773,11 +781,11 @@ def review(request):
             raise Http404    
     return render_to_response('feedback/feedback.html',locals(),context_instance=RequestContext(request))      
 
-
-def qms_review(request, dept_id, is_all):
+@needs_authentication
+def qms_review(request, dept_id, is_all, owner_name= None):
     owner_name=None
     curr_userprofile=userprofile.objects.get(user=request.user)
-    qms_department=curr_userprofile.department
+    qms_department=curr_userprofile.department.all()[0]
     all_departments=Department.objects.all()
     page_owner = get_page_owner (request, owner_name)
     curr_department = Department.objects.get(id=dept_id)
@@ -785,7 +793,7 @@ def qms_review(request, dept_id, is_all):
     no='no'
     
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0]
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)

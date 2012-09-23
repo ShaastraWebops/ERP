@@ -67,7 +67,7 @@ def get_page_owner (request, owner_name):
 def get_department(request):
     try:
         print request.user
-        return userprofile.objects.get(user = request.user).department.Dept_Name
+        return userprofile.objects.get(user = request.user).department.all()[0].Dept_Name
     except:
         return None
 

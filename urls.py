@@ -33,7 +33,7 @@ urlpatterns = patterns('',
     #(r'^erp/users/', include('erp.users.urls')),
     #(r'^erp/dashboard/',include('erp.dashboard.urls')),	
     # Make the above 2 URLConfs look like these 2 below
-	(r'^erp/feedback/', include('erp.feedback.urls')),
+	(r'^erp/(?P<owner_name>\w+)/feedback/', include('erp.feedback.urls')),
     (r'^erp/(?P<owner_name>\w+)/users/', include('erp.users.urls')),
     (r'^erp/(?P<owner_name>\w+)/dashboard/',include('erp.dashboard.urls')),	
     (r'^erp/(?P<owner_name>\w+)/', include('erp.tasks.urls')),

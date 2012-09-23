@@ -88,7 +88,7 @@ def invite(request ,owner_name):
     message=[]
     message+=["start"]
     User=request.user
-    user_dept = str(User.userprofile_set.all()[0].department)
+    user_dept = str(User.userprofile_set.all()[0].department.all()[0])
     print user_dept
     success_message="" 
     if request.method=='POST':
@@ -168,31 +168,33 @@ def view_profile(request, owner_name=None):
     print profile.name
 
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department      
-    dept_cores_list = User.objects.filter (
-        groups__name = 'Cores',
-        userprofile__department = department)
-    dept_supercoords_list = User.objects.filter (
-        groups__name = 'Supercoords',
-        userprofile__department = department)
-    dept_coords_list = User.objects.filter (
-        groups__name = 'Coords',
-        userprofile__department = department)
+    try:
+        department = page_owner.get_profile ().department.all()[0]   
+        dept_cores_list = User.objects.filter (
+            groups__name = 'Cores',
+            userprofile__department = department)
+        dept_supercoords_list = User.objects.filter (
+            groups__name = 'Supercoords',
+            userprofile__department = department)
+        dept_coords_list = User.objects.filter (
+            groups__name = 'Coords',
+            userprofile__department = department)
 
-    curr_user=request.user
-    curr_userprofile=userprofile.objects.get(user=request.user)    
-    if is_core(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
-			qms_core= True
-
-    if is_supercoord(curr_user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_supercoord= True
-            
-    if is_coord(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
-			qms_coord= True
-
+        curr_user=request.user
+        curr_userprofile=userprofile.objects.get(user=request.user)    
+        if is_core(curr_user):
+    		if str(curr_userprofile.department.all()[0]) == 'QMS':
+    			qms_core= True
+    
+        if is_supercoord(curr_user):
+            if str(curr_userprofile.department.all()[0]) == 'QMS':
+                qms_supercoord= True
+                
+        if is_coord(curr_user):
+    		if str(curr_userprofile.department.all()[0]) == 'QMS':
+    			qms_coord= True
+    except:
+        pass
     return render_to_response('users/view_profile.html',locals(),context_instance = global_context(request))
     	
 def saveprofileform (userprofile, form):
@@ -214,7 +216,7 @@ def handle_profile (request, owner_name):
     profile = userprofile.objects.get(user=request.user)
     if request.method=='POST':
         try:
-            supercores = request.user.get_profile().department.owner.all()          #check if the department has a supercore, else department.owner will be NULL, and go to except. The supercore account will
+            supercores = request.user.get_profile().department.all()[0].owner.all()          #check if the department has a supercore, else department.owner will be NULL, and go to except. The supercore account will
             supercore=supercores[0]
             for x in supercores:
                 if request.user.username.startswith(x.username.lower()):
@@ -273,7 +275,7 @@ def handle_profile (request, owner_name):
 
     #Get Department Members' image thumbnails
     page_owner = get_page_owner (request, owner_name=None)
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0]     
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -287,15 +289,15 @@ def handle_profile (request, owner_name):
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)    
     if is_core(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
+		if str(curr_userprofile.department.all()[0]) == 'QMS':
 			qms_core= True
 
     if is_supercoord(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_supercoord= True
             
     if is_coord(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
+		if str(curr_userprofile.department.all()[0]) == 'QMS':
 			qms_coord= True
 
     return render_to_response('users/edit_profile.html',locals(),context_instance = global_context(request))

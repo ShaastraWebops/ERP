@@ -63,7 +63,7 @@ def display_contacts (request , owner_name=None):#this will be a common tab
     #Get Department Members' image thumbnails
     display_dict = dict ()
     page_owner = get_page_owner (request, owner_name=None)
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0]      
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -260,7 +260,7 @@ def change_profile_pic(request, owner_name):
 
     #Get Department Members' image thumbnails
     page_owner = get_page_owner (request, owner_name=None)
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0]    
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -362,7 +362,7 @@ def upload_file(request ,owner_name=None):
     curr_userprofile=userprofile.objects.get(user=request.user)
     
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0]    
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -520,7 +520,7 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
             complete_data.append({"title": str(sub.subject), "type": "subtask", "url": "../../subtask/" + str(sub.task.id), "date": str(epoch(sub.deadline)), "description": str(sub.status)})
     
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0]      
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)

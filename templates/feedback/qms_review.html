@@ -4,12 +4,12 @@
 {% if qms_dept %}
     <ul class="nav nav-tabs">
         {% for d in all_departments %}
-                <li {% ifequal d curr_department %}class="active"{% endifequal %}><a href="{% url feedback.views.qms_review dept_id=d.id is_all=no%}">{{d}}</a></li>
+                <li {% ifequal d curr_department %}class="active"{% endifequal %}><a href="{% url feedback.views.qms_review dept_id=d.id is_all=no owner_name=request.user %}">{{d}}</a></li>
         {% endfor %}
     </ul>
 <h6>Feedback on a scale of 1-10, 10 being the best<h6>
 {% ifequal is_all "yes" %}
-<h6><a href="{% url feedback.views.qms_review dept_id=curr_department.id is_all=no %}">GO BACK TO COLLAPSED VIEW!</a></h6><br>
+<h6><a href="{% url feedback.views.qms_review dept_id=curr_department.id is_all=no owner_name=request.user %}">GO BACK TO COLLAPSED VIEW!</a></h6><br>
 <h5 style="font-size:16px; line-height: 25px; color: rgb(50,50,50);">CORES</h5>
             {% for core in core_profiles %}
            <h6>{{core.name}} {% if core.nickname %}({{core.nickname}}){% endif %}</h6>
@@ -91,7 +91,7 @@
 
 {% ifequal is_all "no" %}
 <br>
-<br><h6>Choose cores/coordinators and click on the names to see reviews one by one. To see all reviews at once, click <a href="{% url feedback.views.qms_review dept_id=curr_department.id is_all=yes %}">SEE ALL REVIEWS!</a></h6>
+<br><h6>Choose cores/coordinators and click on the names to see reviews one by one. To see all reviews at once, click <a href="{% url feedback.views.qms_review dept_id=curr_department.id is_all=yes owner_name=request.user %}">SEE ALL REVIEWS!</a></h6>
 <div class="accordion" id="review_accordion">
       
 <div class="accordion-group">

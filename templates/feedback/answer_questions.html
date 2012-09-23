@@ -11,7 +11,7 @@
 		<div class="btn-group">
 	
 			{% for i in rating_choice %}
-				<a  class="btn " href="{% url feedback.views.answer_questions userprofile_id=userprofile_id question_id=question.id rating=i %}" >{{i}}</a>
+				<a  class="btn " href="{% url feedback.views.answer_questions userprofile_id=userprofile_id question_id=question.id rating=i owner_name=request.user %}" >{{i}}</a>
 			{% endfor %}
 		</div>
 	{% endif %}
@@ -25,9 +25,9 @@
 						<div class="btn-group">
 							{% for i in rating_choice %}
 								{% if i == answer.rating %}
-									<a  class="btn btn-info" href="{% url feedback.views.answer_questions userprofile_id=userprofile_id question_id=question.id rating=i %}" >{{i}}</a>
+									<a  class="btn btn-info" href="{% url feedback.views.answer_questions userprofile_id=userprofile_id question_id=question.id rating=i owner_name=request.user %}" >{{i}}</a>
 								{% else %}
-									<a  class="btn" href="{% url feedback.views.answer_questions userprofile_id=userprofile_id question_id=question.id rating=i %}" >{{i}}</a>
+									<a  class="btn" href="{% url feedback.views.answer_questions userprofile_id=userprofile_id question_id=question.id rating=i owner_name=request.user %}" >{{i}}</a>
 								{% endif %}
 							{% endfor %}
 						</div>
@@ -44,7 +44,7 @@
 
 {% endfor %}
 <br>
-<a  class="btn btn-info" href="{% url feedback.views.answer %}" >Done</a>
+<a  class="btn btn-info" href="{% url feedback.views.answer owner_name=request.user %}" >Done</a>
 {% endblock %}
 {% block tabs %}
 {% endblock %}

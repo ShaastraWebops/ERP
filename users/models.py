@@ -37,7 +37,7 @@ class userprofile(models.Model):
     user = models.ForeignKey(User, unique=True)
     nickname = models.CharField(max_length=30, blank=True)
     name = models.CharField(max_length=30, blank=True)
-    department = models.ForeignKey(Department, blank=True, null=True)
+    department = models.ManyToManyField(Department, blank=True, null=True)
     chennai_number = models.CharField(max_length=15, blank=True)
     summer_number = models.CharField(max_length=15, blank=True)
     summer_stay = models.CharField(max_length=30, blank=True)

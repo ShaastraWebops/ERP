@@ -6,7 +6,9 @@ Subtask
 {% endblock title %}
 
 {% block display_stuff %}
-
+<script type="text/javascript" src="{{ MEDIA_URL }}js/comments.js"></script>
+{% load dajaxice_templatetags %}
+{% dajaxice_js_import %}
 <h1>SubTask</h1>
 <a href="{% url tasks.views.display_task task_id=curr_subtask.task.id owner_name=page_owner %}">View Task</a>
 

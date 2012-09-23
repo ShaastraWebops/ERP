@@ -70,7 +70,7 @@ def multiple_login(request, owner_name=None, department=None):
 @needs_authentication_multiple_user    
 def multiple_logout(request, owner_name=None):
     if owner_name==request.user.username:
-        supercorelist = request.user.get_profile().department.owner.all()
+        supercorelist = request.user.get_profile().department.all()[0].owner.all()
         for each in supercorelist:
             print owner_name, each
             if owner_name.startswith(each.username.lower()):
@@ -97,7 +97,7 @@ def get_timeline (user):
     Should it be based on Department instead of Core?
     """
     # Get user's department name
-    user_dept = user.userprofile_set.all()[0].department
+    user_dept = user.userprofile_set.all()[0].department.all()[0]
     if is_core (user):
         return Task.objects.filter (creator = user)
     else:
@@ -116,7 +116,7 @@ def get_unassigned_received_subtasks (user):
     been assigned to any Coord.
     user is assumed to be a Core.
     """
-    user_dept = user.userprofile_set.all()[0].department
+    user_dept = user.userprofile_set.all()[0].department.all()[0]
     return SubTask.objects.filter (department = user_dept).filter (coords = None)
 
 def get_requested_subtasks (user):
@@ -125,7 +125,7 @@ def get_requested_subtasks (user):
 
     user is assumed to be a Core.
     """
-    user_dept = user.userprofile_set.all()[0].department
+    user_dept = user.userprofile_set.all()[0].department.all()[0]
     # Q object used here to negate the search
     return SubTask.objects.filter (~Q (department = user_dept), creator = user)
 
@@ -133,7 +133,7 @@ def get_completed_subtasks (user):
     """
     Return all SubTasks completed by coords in user's Department
     """
-    user_dept = user.userprofile_set.all()[0].department
+    user_dept = user.userprofile_set.all()[0].department.all()[0]
     return SubTask.objects.filter (department = user_dept, status = 'C')
 
 @needs_authentication_multiple_user
@@ -157,7 +157,10 @@ def display_multiple_portal (request, user):
     """
     Display the portal so Core/coord can login into respective events
     """
-    depts = list(user.department_set.all())+(list(Department.objects.filter(Dept_Name=user.get_profile ().department)))
+    if is_core (request.user):
+        depts = list(user.department_set.all())
+    else:
+        depts = list(Department.objects.filter(Dept_Name=user.get_profile ().department.all()[0]))
     return render_to_response("tasks/multiple.html",locals(), context_instance=global_context(request))
 
 @permissions
@@ -183,7 +186,7 @@ def display_core_portal (request, core):
                 
     # Deal with the Updates part (viewing, creating) of the portal
     update_dict = handle_updates (request, core)
-    department = core.get_profile ().department
+    department = core.get_profile ().department.all()[0]
     display_dict['all_Tasks'] = get_timeline (core)
     display_dict['all_unassigned_received_SubTasks'] = get_unassigned_received_subtasks (core)
     display_dict['all_requested_SubTasks'] = get_requested_subtasks (core)
@@ -234,7 +237,7 @@ def display_supercoord_portal (request, supercoord):
                 
     # Deal with the Updates part (viewing, creating) of the portal
     update_dict = handle_updates (request, supercoord)
-    department = supercoord.get_profile ().department
+    department = supercoord.get_profile ().department.all()[0]
     display_dict['group'] = supercoord.groups.all()[0]
     display_dict['all_Tasks'] = get_timeline (supercoord)
     display_dict['all_SubTasks'] = get_subtasks (supercoord)
@@ -270,7 +273,7 @@ def display_coord_portal (request, coord):
     display_dict = dict ()
     # Deal with the Updates part (viewing, creating) of the portal
     update_dict = handle_updates (request, coord)
-    department = coord.get_profile ().department
+    department = coord.get_profile ().department.all()[0]
     display_dict['all_Tasks'] = get_timeline (coord)
     display_dict['all_SubTasks'] = get_subtasks (coord)
     
@@ -336,7 +339,7 @@ def edit_task (request, task_id = None, owner_name = None):
         
     #Get Department Members' image thumbnails
     display_dict = dict ()
-    department = page_owner.get_profile ().department      
+    department = page_owner.get_profile ().department.all()[0]     
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -404,15 +407,15 @@ def edit_task (request, task_id = None, owner_name = None):
     
     curr_userprofile=userprofile.objects.get(user=user)
     if is_core(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_core= True
 
     if is_supercoord(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_supercoord= True
 
     if is_coord(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_coord= True
 
     return render_to_response('tasks/edit_task.html',
@@ -455,7 +458,7 @@ def edit_subtask (request, subtask_id, owner_name = None):
     other_errors = False
 
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department          
+    department = page_owner.get_profile ().department.all()[0]         
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -500,15 +503,15 @@ def edit_subtask (request, subtask_id, owner_name = None):
     
     curr_userprofile=userprofile.objects.get(user=user)
     if is_core(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_core= True
 
     if is_supercoord(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_supercoord= True
             
     if is_coord(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_coord= True     
 
     if has_updated:
@@ -534,15 +537,15 @@ def display_subtask (request, subtask_id, owner_name = None):
 
     curr_userprofile=userprofile.objects.get(user=user)
     if is_core(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_core= True
 
     if is_supercoord(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_supercoord= True
 
     if is_coord(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_coord= True
 
     return render_to_response('tasks/display_subtask.html',
@@ -560,7 +563,7 @@ def display_task (request, task_id, owner_name = None):
     page_owner = get_page_owner (request, owner_name)
     user = request.user
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department          
+    department = page_owner.get_profile ().department.all()[0]      
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -577,15 +580,15 @@ def display_task (request, task_id, owner_name = None):
 
     curr_userprofile=userprofile.objects.get(user=user)
     if is_core(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_core= True
 
     if is_supercoord(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_supercoord= True
             
     if is_coord(user):
-        if str(curr_userprofile.department) == 'QMS':
+        if str(curr_userprofile.department.all()[0]) == 'QMS':
             qms_coord= True
 
     return render_to_response('tasks/display_task.html',
@@ -616,13 +619,13 @@ def handle_updates (request, owner_name = None):
             # For Supercoords
             update_form = UpdateForm ()
             update_status = "Blank"
-            update_dict['updates'] = get_all_updates (page_owner.get_profile ().department)
+            update_dict['updates'] = get_all_updates (page_owner.get_profile ().department.all()[0])
             update_dict['update_form'] = update_form
             update_dict['update_status'] = update_status
         else:
             # For Core, just display all updates for his dept
             update_dict['updates'] = get_all_updates (
-                page_owner.get_profile ().department)
+                page_owner.get_profile ().department.all()[0])
 
     if request.method == 'POST':
         update_form = UpdateForm (request.POST)            
@@ -672,7 +675,7 @@ def display_department_portal (request, owner_name = None, department_name = Non
             shout_form = shout_box_form ()
         
     if department_name is None:
-        department = page_owner.get_profile ().department
+        department = page_owner.get_profile ().department.all()[0]
     else:
         department = Department.objects.get (department_name)
     display_dict = dict ()

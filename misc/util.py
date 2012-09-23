@@ -24,7 +24,7 @@ def global_context(request):
     # The try...except blocks are there for the case when an anonymous
     # user visits any page (esp the login page)
     try:
-        user_dept_name = request.user.get_profile ().department.Dept_Name
+        user_dept_name = request.user.get_profile ().department.all()[0].Dept_Name
     except:
         user_dept_name = False
     try:
@@ -40,7 +40,7 @@ def global_context(request):
     page_owner = request.session.get ('page_owner', request.user)
 
     try:
-        po_dept_name = page_owner.get_profile ().department.Dept_Name
+        po_dept_name = page_owner.get_profile ().department.all()[0].Dept_Name
     except:
         po_dept_name = False
 
@@ -50,7 +50,7 @@ def global_context(request):
         po_name = False
     
     try:
-        if (request.user.get_profile().department.owner.all()):
+        if (request.user.get_profile().department.all()[0].owner.all()[0]):
             supercore = True
     except:
         supercore = False
@@ -125,10 +125,11 @@ def needs_authentication (func):
             print "path from util", request.path
             return redirect ('erp.home.views.login')
         else:
+            print __kwargs['owner_name']
             try:
                 if __kwargs['owner_name']:
                     if __kwargs['owner_name']==request.user.username:
-                        if (request.user.get_profile().department):
+                        if (request.user.get_profile().department.all()[0]):
                             return func (*__args, **__kwargs)
                         else:
                             return redirect ('erp.tasks.views.display_portal',
@@ -293,7 +294,7 @@ def handle_existing_object (Model, object_id, curr_user,
     else:
         # Only the owner(s) can edit the object and that too only in
         # their own page
-        department=curr_page_owner.get_profile().department
+        department=curr_page_owner.get_profile().department.all()[0]
         if model_name == 'task' and curr_object.is_owner (curr_page_owner) and curr_user == curr_page_owner:
             # User can edit the object in his own page
             return func (*__args, **__kwargs)
@@ -332,8 +333,8 @@ def permissions(func, *_args):
     
     def _authorize(current_user, current_page_owner):
         try:
-            current_user_dept = userprofile.objects.get(user = current_user).department.Dept_Name
-            current_page_owner_dept = userprofile.objects.get(user = current_page_owner).department.Dept_Name
+            current_user_dept = userprofile.objects.get(user = current_user).department.all()[0].Dept_Name
+            current_page_owner_dept = userprofile.objects.get(user = current_page_owner).department.all()[0].Dept_Name
             if current_user_dept == 'Webops':
             #Everything allowed for Webops
                 return True
