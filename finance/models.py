@@ -1,4 +1,5 @@
 from django.db import models
+from erp.department.models import Department
 
 # Create your models here.
 
