@@ -216,7 +216,7 @@ def handle_profile (request, owner_name):
     profile = userprofile.objects.get(user=request.user)
     if request.method=='POST':
         try:
-            supercores = request.user.get_profile().department.all()[0].owner.all()          #check if the department has a supercore, else department.owner will be NULL, and go to except. The supercore account will
+            supercores = request.user.get_profile().department.all()[0].owner.all()     #check if the department has a supercore, else department.owner will be NULL, and go to except.
             supercore=supercores[0]
             for x in supercores:
                 if request.user.username.startswith(x.username.lower()):
@@ -251,9 +251,7 @@ def handle_profile (request, owner_name):
                 allUserProfiles = userprofile.objects.all()
                 for each in allUserProfiles:
                     if each.user.username.startswith(request.user.username.lower()):
-                        profile = userprofile.objects.get(user = each.user)
-                        print profile
-                        profile_form = userprofileForm (request.POST, instance = profile)
+                        profile_form = userprofileForm (request.POST, instance = each)
                         if profile_form.is_valid():
                             profile_form.save()
             else:                                                       #all other cases.
@@ -273,32 +271,36 @@ def handle_profile (request, owner_name):
     except:
         photo_path=settings.MEDIA_URL+"/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
 
-    #Get Department Members' image thumbnails
-    page_owner = get_page_owner (request, owner_name=None)
-    department = page_owner.get_profile ().department.all()[0]     
-    dept_cores_list = User.objects.filter (
-        groups__name = 'Cores',
-        userprofile__department = department)
-    dept_supercoords_list = User.objects.filter (
-        groups__name = 'Supercoords',
-        userprofile__department = department)
-    dept_coords_list = User.objects.filter (
-        groups__name = 'Coords',
-        userprofile__department = department)
-
-    curr_user=request.user
-    curr_userprofile=userprofile.objects.get(user=request.user)    
-    if is_core(curr_user):
-		if str(curr_userprofile.department.all()[0]) == 'QMS':
-			qms_core= True
-
-    if is_supercoord(user):
-        if str(curr_userprofile.department.all()[0]) == 'QMS':
-            qms_supercoord= True
+    try:
+        #Get Department Members' image thumbnails
+        page_owner = get_page_owner (request, owner_name=None)
+        department = page_owner.get_profile ().department.all()[0]     
+        dept_cores_list = User.objects.filter (
+            groups__name = 'Cores',
+            userprofile__department = department)
+        dept_supercoords_list = User.objects.filter (
+            groups__name = 'Supercoords',
+            userprofile__department = department)
+        dept_coords_list = User.objects.filter (
+            groups__name = 'Coords',
+            userprofile__department = department)
+        
+        curr_user=request.user
+        curr_userprofile=userprofile.objects.get(user=request.user) 
+        if is_core(curr_user):
+    		if str(curr_userprofile.department.all()[0]) == 'QMS':
+    			qms_core= True
+    
+        if is_supercoord(user):
+            if str(curr_userprofile.department.all()[0]) == 'QMS':
+                qms_supercoord= True
             
-    if is_coord(curr_user):
-		if str(curr_userprofile.department.all()[0]) == 'QMS':
-			qms_coord= True
+        if is_coord(curr_user):
+    		if str(curr_userprofile.department.all()[0]) == 'QMS':
+			    qms_coord= True
+
+    except:
+        pass
 
     return render_to_response('users/edit_profile.html',locals(),context_instance = global_context(request))
 

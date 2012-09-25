@@ -9,6 +9,7 @@ from django.forms.models import modelformset_factory, inlineformset_factory
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import datetime
+from django.contrib.auth.models import User
 from datetime import date
 from forms import TaskForm, SubTaskForm, TaskCommentForm, SubTaskCommentForm, UpdateForm
 from models import *
@@ -28,7 +29,6 @@ from django.http import HttpResponse
 from dateutil.relativedelta import *
 from ajax import *
 from django.utils.functional import curry
-from django.contrib import auth
 from department.models import *
 from misc.helper import is_core
 from django.contrib.sessions.models import Session
@@ -72,8 +72,9 @@ def multiple_login(request, owner_name=None, department=None):
     return HttpResponseRedirect('/')                
 
 def multiple_logout(request, owner_name=None):
+    superuser = request.user
     if owner_name==request.user.username:
-        if is_core:
+        if is_core (request.user):
             supercorelist = request.user.get_profile().department.all()[0].owner.all()
 
             for each in supercorelist:
@@ -95,7 +96,7 @@ def multiple_logout(request, owner_name=None):
             dept = request.user.get_profile().department.all()[0]
             if request.user.username.endswith(dept.Dept_Name.lower()):
                 multiple_coord = request.user.username.split('_')[0]
-                superuser = Users.objects.get(username = multiple_coord)
+                superuser = User.objects.get(username = multiple_coord)
                 auth.logout(request)
                 superuser.backend = 'django.contrib.auth.backends.ModelBackend'
                 auth.login(request, superuser)
