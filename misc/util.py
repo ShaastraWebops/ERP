@@ -55,6 +55,13 @@ def global_context(request):
     except:
         supercore = False
             
+    try:
+        department = request.user.get_profile().department.all()[0]
+        if request.user.username.endswith(department.Dept_Name.lower()):
+            multiple_coord = True
+    except:
+        multiple_coord = False
+                    
     if page_owner != request.user:
         is_visitor = True
     else:
@@ -77,7 +84,8 @@ def global_context(request):
              'po_name' : po_name,
              'po_dept_name' : po_dept_name,
              'photo_list':photo_list,
-             'supercore':supercore,   
+             'supercore':supercore,
+             'multiple_coord':multiple_coord, 
             })
     return context
 

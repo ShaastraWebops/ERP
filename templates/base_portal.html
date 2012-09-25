@@ -159,6 +159,14 @@
                 </a>
                 {% endif %}
                 {% endif %}
+                {% if is_coord %}
+                {% if multiple_coord %}
+                <a href="{% url tasks.views.multiple_logout owner_name=user %}">
+                <button class="btn btn-danger large">
+                <strong>Change Department</strong> </button>
+                </a>
+                {% endif %}
+                {% endif %}
                 <div>
                 {% endblock %}
                 </h2>
