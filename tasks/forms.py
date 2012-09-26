@@ -33,7 +33,7 @@ class TaskForm (ModelForm):
 class SubTaskForm (ModelForm):
     class Meta:
         model = SubTask
-        exclude = ['creator', 'description', 'department', 'task', 'completion_date']
+        exclude = ['creator', 'description', 'task', 'completion_date']
         widgets = {'department':chosenforms.widgets.ChosenSelect(),'coords': chosenforms.widgets.ChosenSelectMultiple(),'status': chosenforms.widgets.ChosenSelect()}
 
 #to restrict coords for a core. Currently all coords display for a core. Code results in cups because of a cup in
@@ -46,16 +46,18 @@ class SubTaskForm (ModelForm):
 #
 
     def __init__(self, editor=None, *args, **kwargs):
-        super(SubTaskForm, self).__init__(*args, **kwargs)
         if isinstance(editor,User):
             # The reason it is isinstance is because when i'm editing a subtask in particular, 
             # junk values are getting passed to editor in POST method.
             # To check, make it
         # if editor:
             # The code will fail but editor will be a random dictionary of variables.
+            super(SubTaskForm, self).__init__(*args, **kwargs)
             print "THIS IS", editor
             self.fields['coords'].queryset = User.objects.filter(userprofile__department=editor.get_profile().department)
             self.fields['coords'].help_text = ''
+        else:
+            super(SubTaskForm, self).__init__(editor,*args, **kwargs)
         
 #hack if these fields need to be formatted        
 #    def __init__(self, *args, **kwargs):

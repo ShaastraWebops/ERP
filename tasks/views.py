@@ -435,7 +435,7 @@ def edit_subtask (request, subtask_id, owner_name = None):
     page_owner = get_page_owner (request, owner_name)
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
-    curr_subtask_form = SubTaskForm (instance = curr_subtask)
+    curr_subtask_form = SubTaskForm (instance = curr_subtask,editor=request.user)
 
     if curr_subtask.is_owner (user):
         is_owner = True
