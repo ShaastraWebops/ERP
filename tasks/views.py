@@ -380,7 +380,7 @@ def edit_task (request, task_id = None, owner_name = None):
                 # In case it's a new form (inline formset won't
                 # fill in the task in that case)
                 subtask.task = curr_task
-                subtask.department=request.user.get_profile().department
+                #subtask.department=request.user.get_profile().department
                 subtask.save ()
             subtaskfs.save_m2m () # Necessary, since we used commit = False
             return redirect ('erp.tasks.views.display_portal',
