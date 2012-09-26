@@ -41,11 +41,11 @@ class SubTaskForm (ModelForm):
 #            curr_subtask_form = SubTaskForm (request.POST, instance = curr_subtask)  line 336 in tasks/views.py  
 #
 #
-#    def __init__(self, editor=None, *args, **kwargs):
-#        super(SubTaskForm, self).__init__(*args, **kwargs)
-#        if editor:
-#            self.fields['coords'].queryset = User.objects.filter(userprofile__department=editor.get_profile().department)
-#           self.fields['coords'].help_text = ''
+    def __init__(self, editor=None, *args, **kwargs):
+        super(SubTaskForm, self).__init__(editor,*args, **kwargs)
+        if isinstance(editor,User):
+            self.fields['coords'].queryset = User.objects.filter(userprofile__department=editor.get_profile().department)       
+            self.fields['coords'].help_text = ''
         
 #hack if these fields need to be formatted        
 #    def __init__(self, *args, **kwargs):
