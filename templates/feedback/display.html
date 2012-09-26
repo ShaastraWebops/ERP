@@ -35,21 +35,21 @@
 <td>{{q.creator.name}}</td>
 <td>{{q.edited_last.name}}</td>
 {% if question_for_coord %}
-    <td><a href="{% url feedback.views.edit_question question_id=q.id question_for=Coord %}">Edit</a></td>
+    <td><a href="{% url feedback.views.edit_question question_id=q.id question_for=Coord owner_name=request.user %}">Edit</a></td>
     {% if qms_core %}
-    <td><a href="{% url feedback.views.delete_question question_id=q.id question_for=Coord %}">Delete</a></td>
+    <td><a href="{% url feedback.views.delete_question question_id=q.id question_for=Coord owner_name=request.user %}">Delete</a></td>
     {% endif %}
     {% if qms_supercoord %}
-    <td><a href="{% url feedback.views.delete_question question_id=q.id question_for=Coord %}">Delete</a></td>
+    <td><a href="{% url feedback.views.delete_question question_id=q.id question_for=Coord owner_name=request.user %}">Delete</a></td>
     {% endif %}    
 {% endif %}
 {% if question_for_core %}
-    <td><a href="{% url feedback.views.edit_question question_id=q.id question_for=Core %}">Edit</a></td>    
+    <td><a href="{% url feedback.views.edit_question question_id=q.id question_for=Core owner_name=request.user %}">Edit</a></td>     
     {% if qms_core %}
-    <td><a href="{% url feedback.views.delete_question question_id=q.id question_for=Core %}">Delete</a></td>
+    <td><a href="{% url feedback.views.delete_question question_id=q.id question_for=Core owner_name=request.user %}">Delete</a></td>
     {% endif %}
     {% if qms_supercoord %}
-    <td><a href="{% url feedback.views.delete_question question_id=q.id question_for=Core %}">Delete</a></td>
+    <td><a href="{% url feedback.views.delete_question question_id=q.id question_for=Core owner_name=request.user %}">Delete</a></td>
     {% endif %}
 {% endif %}    
 

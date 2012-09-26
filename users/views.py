@@ -152,7 +152,14 @@ def view_profile(request, owner_name=None):
         image=userphoto.objects.get(name=page_owner)
         photo_path =image.photo_path
     except:
-        photo_path=settings.MEDIA_URL+"upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"
+        if is_multiple_user(request.user):
+            multiple = userprofile.objects.all()
+            for each in multiple:
+                if (each.user.username.startswith(request.user.username.lower()) and each.user.username!=request.user.username):
+                    image=userphoto.objects.get(name = each.user)
+                    photo_path =image.photo_path
+                    break
+
     profile = userprofile.objects.get(user=page_owner)
     group = str(page_owner.groups.all()[0])[:-1] #drop 's' from group name. Ex: 'Core' from 'Cores'
     print profile.nickname
@@ -186,20 +193,77 @@ def view_profile(request, owner_name=None):
 
     return render_to_response('users/view_profile.html',locals(),context_instance = global_context(request))
     	
-
-
-@needs_authentication
+@needs_authentication_multiple_user
 def handle_profile (request, owner_name):
     print request.user.id , "is the id of the user"
 
     user = request.user
     profile = userprofile.objects.get(user=request.user)
-    if request.method=='POST' :
-        profile_form = userprofileForm (request.POST, instance = profile)
-        if profile_form.is_valid ():
-            profile_form.save ()
-            # Should this just redirect to the dashboard?
-	    return view_profile(request ,request.user.username)
+    if request.method=='POST':
+        try:
+            supercores = request.user.get_profile().department.owner.all()     #check if the department has a supercore, else department.owner will be NULL, and go to except.
+            supercore=supercores[0]
+            for x in supercores:
+                if request.user.username.startswith(x.username.lower()):
+                    supercore = x
+                    break
+                    
+            if request.user.username.startswith(supercore.username.lower()):                  #checking if the supercore is using one of his core accounts.
+                profile = userprofile.objects.get(user = supercore)
+                profile_form = userprofileForm (request.POST, instance = profile)
+                if profile_form.is_valid():
+                    profile_form.save ()
+                departments = supercore.department_set.all()
+                for dept in departments:
+                    allUserProfiles = userprofile.objects.filter(department = dept)
+                    for each in allUserProfiles:
+                        if each.user.username.startswith(supercore.username.lower()):
+                            profile_form = userprofileForm (request.POST, instance = each)
+                            if profile_form.is_valid():
+                                profile_form.save()
+            else:                                                            
+                department = request.user.get_profile().department
+                if request.user.username.endswith(department.Dept_Name.lower()):                #a multiple coord-associated acc.
+                    allUserProfiles = userprofile.objects.all()
+                    multiple_coord=request.user.username.split('_')[0]
+                    for each in allUserProfiles:
+                        if each.user.username.startswith(multiple_coord.lower()):
+                            profile_form = userprofileForm (request.POST, instance = each)
+                            if profile_form.is_valid():
+                                profile_form.save()
+                else:                                      #there may be an account in a department having a supercore, but is not a supercore-associated account, and isn't a multiple-coord-associated acc.
+                    profile = userprofile.objects.get(user=request.user)
+                    profile_form = userprofileForm (request.POST, instance = profile)
+                    if profile_form.is_valid():
+                        profile_form.save ()
+                
+        except:
+            if is_multiple_user(request.user):                           #is a supercore/multiple-coord account
+                allUserProfiles = userprofile.objects.all()
+                for each in allUserProfiles:
+                    if each.user.username.startswith(request.user.username.lower()):
+                        profile_form = userprofileForm (request.POST, instance = each)
+                        if profile_form.is_valid():
+                            profile_form.save()
+            else:                                        #multiple-coord-associated acc, in a dept without a supercore.
+                department = request.user.get_profile().department
+                if request.user.username.endswith(department.Dept_Name.lower()):
+                    allUserProfiles = userprofile.objects.all()
+                    multiple_coord=request.user.username.split('_')[0]
+                    print multiple_coord
+                    for each in allUserProfiles:
+                        if each.user.username.startswith(multiple_coord.lower()):
+                            print each
+                            profile_form = userprofileForm (request.POST, instance = each)
+                            if profile_form.is_valid():
+                                profile_form.save()
+                else:
+                    profile = userprofile.objects.get(user=request.user)
+                    profile_form = userprofileForm (request.POST, instance = profile)
+                    if profile_form.is_valid():
+                        profile_form.save ()
+            
+        return redirect ('erp.users.views.view_profile', owner_name = request.user.username)
     print profile.hostel
     profile_form = userprofileForm (instance = profile)       
     print " default pic address http://localhost/django-media/upload_files/ee10b000/PROFILE_PIC_OF_THE_USER"

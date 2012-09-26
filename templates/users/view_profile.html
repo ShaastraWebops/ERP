@@ -22,7 +22,24 @@
         </div>
         <div class="span5">
             <center>
-                <h3>{{ profile.department }} {{ group }}</h3>
+            {% if profile.department %}
+                <h3>
+            {% for dept in profile.department.all %}
+              {% if forloop.counter == 1 %}  
+                {{ dept }}
+              {% else %}
+                /{{ dept }} 
+              {% endif %}
+            {% endfor %}
+            {{ group }}</h3>
+
+            {% else %} <!-- A multiple user -->
+                {% if is_core %}
+                    <h3> Events {{ group }}</h3> <!-- Assuming that the only multiple department core would be the Events core. -->
+                {% else %}
+                <h3>{{ group }}</h3> <!-- A multiple coord -->
+                {% endif %}
+            {% endif %}    
             </center>
             {% if is_core %}
             <center>
@@ -91,7 +108,7 @@
 
                 </div>
             </table>
-            {% if not is_visitor  %}
+            {% if not is_visitor %}
             <center>
                 <a href="{% url users.views.handle_profile owner_name=user%}"  id ="edit_profile"> Edit profile </a>
             </center>

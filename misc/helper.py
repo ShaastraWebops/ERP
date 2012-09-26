@@ -13,9 +13,14 @@ def is_multiple_user (user):
     """
     Return True if the user is Core of multiple depts
     """
-    if len(user.department_set.all())>0:
-        return True
-    return False
+    try:
+        if (user.get_profile().department):
+            return False
+        else:
+            return True
+    except:
+        pass
+    return True
 
 def is_core (user):
     """

@@ -11,11 +11,13 @@ from erp.feedback.models import *
 from django.db.models import Avg
 from django.core.urlresolvers import reverse
 from decimal import Decimal
+from erp.misc.util import *
 
 """
 Toggle function is solely for the qms core to open/close the feedback feature
 """
-def toggle(request):
+@needs_authentication
+def toggle(request, owner_name = None):
     print "hello"
     curr_userprofile=userprofile.objects.get(user=request.user)
     if is_core(request.user) and str(curr_userprofile.department) == "QMS":
@@ -29,19 +31,20 @@ def toggle(request):
         if curr_feedback.feedback==False:
             curr_feedback.feedback=True
             curr_feedback.save() 
-            return redirect('erp.feedback.views.answer', )
+            return redirect('erp.feedback.views.answer', owner_name = request.user)
     
         if curr_feedback.feedback==True:
             curr_feedback.feedback=False
             curr_feedback.save()
-            return redirect('erp.feedback.views.answer', )        
+            return redirect('erp.feedback.views.answer', owner_name = request.user)        
     else:
         raise Http404  
         
 """
 Togglereview function is solely for the qms core. Only if this is True can coords and cores see their reviews.
 """
-def togglereview(request):
+@needs_authentication
+def togglereview(request, owner_name = None):
     curr_userprofile=userprofile.objects.get(user=request.user)
     if is_core(request.user) and str(curr_userprofile.department) == "QMS":
         openreview=OpenReview.objects.filter(id=1)
@@ -64,18 +67,19 @@ def togglereview(request):
             if curr_feedback.feedback==True:
                 curr_feedback.feedback=False
                 curr_feedback.save()             
-            return redirect('erp.feedback.views.answer', )
+            return redirect('erp.feedback.views.answer', owner_name = request.user)
     
         if curr_review.review==True:
             curr_review.review=False
             curr_review.save()
-            return redirect('erp.feedback.views.answer', )        
+            return redirect('erp.feedback.views.answer', owner_name = request.user)        
     else:
         raise Http404                          
 """
 Answer and answer_questions and review are open to all members, with different permissions.
 """
-def answer(request):
+@needs_authentication
+def answer(request, owner_name=None):
     print "in answer"
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
@@ -156,8 +160,9 @@ def answer(request):
             return render_to_response('feedback/feedback.html',locals(),context_instance=RequestContext(request))
     
     return render_to_response('feedback/feedback.html',locals(),context_instance=RequestContext(request))    
-    
-def answer_questions(request,userprofile_id,question_id,rating=None):
+
+@needs_authentication    
+def answer_questions(request,userprofile_id,question_id,rating=None, owner_name = None):
     if str(rating) == '20':
         rating=None
     rating_choice=[i for i in range(11)]
@@ -269,7 +274,8 @@ def answer_questions(request,userprofile_id,question_id,rating=None):
 """
 A QMS Department special. To filter questions set for cores and coords.
 """ 
-def question_for(request):
+@needs_authentication
+def question_for(request, owner_name = None):
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
     owner_name=None
@@ -309,8 +315,9 @@ def question_for(request):
 
 """
 A QMS Department special. Displays all questions with options for editing and deleting(only for core)
-"""        
-def display(request,question_for):
+"""       
+@needs_authentication 
+def display(request,question_for, owner_name = None):
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
     users_profile=userprofile.objects.all()
@@ -375,7 +382,8 @@ def display(request,question_for):
 """
 A QMS Department special. To add questions.
 """ 
-def add_question(request,question_for):
+@needs_authentication
+def add_question(request,question_for, owner_name = None):
 
     #Get Department Members' image thumbnails
     page_owner = get_page_owner (request, owner_name=None)
@@ -519,7 +527,8 @@ def add_question(request,question_for):
 """
 A QMS department special. Similar to add_questions, but updates last edited by column also.
 """ 
-def edit_question(request,question_id, question_for):
+@needs_authentication
+def edit_question(request,question_id, question_for, owner_name = None):
     q = Question.objects.get(id=question_id)
     
     #Get Department Members' image thumbnails
@@ -552,7 +561,7 @@ def edit_question(request,question_id, question_for):
                         questionform1.save()
                         questionform.save_m2m()
                         question_added= True
-                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
                     else:
                         error=True
                 questionform=QuestionFormCoord(instance=q)
@@ -569,7 +578,7 @@ def edit_question(request,question_id, question_for):
                         questionform1.save()
                         questionform.save_m2m()
                         question_added= True
-                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
                     else:
                         error=True
                 questionform=QuestionFormCore(instance=q)
@@ -594,7 +603,7 @@ def edit_question(request,question_id, question_for):
                         questionform1.save()
                         questionform.save_m2m()
                         question_added= True
-                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
                     else:
                         error=True
                 questionform=QuestionFormCoord(instance=q)
@@ -611,7 +620,7 @@ def edit_question(request,question_id, question_for):
                         questionform1.save()
                         questionform.save_m2m()
                         question_added= True
-                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
                     else:
                         error=True
                 questionform=QuestionFormCore(instance=q)
@@ -636,7 +645,7 @@ def edit_question(request,question_id, question_for):
                         questionform1.save()
                         questionform.save_m2m()
                         question_added= True
-                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
                     else:
                         error=True
                 questionform=QuestionFormCoord(instance=q)
@@ -653,7 +662,7 @@ def edit_question(request,question_id, question_for):
                         questionform1.save()
                         questionform.save_m2m()
                         question_added= True
-                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+                        return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
                     else:
                         error=True
                 questionform=QuestionFormCore(instance=q)
@@ -664,7 +673,8 @@ def edit_question(request,question_id, question_for):
 """
 A QMS core special.
 """ 
-def delete_question(request, question_id, question_for):
+@needs_authentication
+def delete_question(request, question_id, question_for, owner_name = None):
     if not is_coord(request.user):
         curr_userprofile=userprofile.objects.get(user=request.user)
         owner_name=None
@@ -681,7 +691,7 @@ def delete_question(request, question_id, question_for):
                     avg.delete()    
             q.delete()
             
-            return redirect('erp.feedback.views.display', question_for=question_for, permanent=True)
+            return redirect('erp.feedback.views.display', question_for=question_for, permanent=True, owner_name = request.user)
         else:
             raise Http404
     else:
@@ -689,8 +699,9 @@ def delete_question(request, question_id, question_for):
 
 """
 The following views are for feedback reviews.
-"""            
-def review(request):
+""" 
+@needs_authentication           
+def review(request, owner_name = None):
     curr_userprofile=userprofile.objects.get(user=request.user)
     curr_department=curr_userprofile.department
     owner_name=None
@@ -771,8 +782,8 @@ def review(request):
             raise Http404    
     return render_to_response('feedback/feedback.html',locals(),context_instance=RequestContext(request))      
 
-
-def qms_review(request, dept_id, is_all):
+@needs_authentication
+def qms_review(request, dept_id, is_all, owner_name = None):
     owner_name=None
     curr_userprofile=userprofile.objects.get(user=request.user)
     qms_department=curr_userprofile.department

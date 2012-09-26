@@ -5,6 +5,7 @@
 {% if profile_changed %}
 <h3>Your profile has been updated successfully.</h3>
 {% endif %}
+{% if not is_multiple_user %}
     <div class="span3">
         <ul class="thumbnails">
             <li class="span3">
@@ -19,6 +20,9 @@
         </center>
     </div>
     <div class="span5">
+{% else %}    
+    <div class="span5 offset3">
+{% endif %}    
         <div id="main_edit_profile">
             <div id ="heading">
                 <center>

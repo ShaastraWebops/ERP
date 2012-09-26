@@ -9,6 +9,7 @@ from django.forms.models import modelformset_factory, inlineformset_factory
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import datetime
+from django.contrib.auth.models import User
 from datetime import date
 from forms import TaskForm, SubTaskForm, TaskCommentForm, SubTaskCommentForm, UpdateForm
 from models import *
@@ -28,28 +29,29 @@ from django.http import HttpResponse
 from dateutil.relativedelta import *
 from ajax import *
 from django.utils.functional import curry
-from django.contrib import auth
 from department.models import *
 from misc.helper import is_core
 from django.contrib.sessions.models import Session
 # Fields to be excluded in the SubTask forms during Task editing
 subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
 
-@needs_authentication
+@needs_authentication_multiple_user
 def multiple_login(request, owner_name=None, department=None):
     if is_core(request.user):
         group_name='Core'
     else:
         group_name='Coord'
     dept=Department.objects.filter(Dept_Name=department)[0]
-    if dept in request.user.department_set.all():
+    if (request.user.get_profile().department):
+            multiple_user = False
+    else:
         auth.logout(request)
         try:
             response.set_cookie('logged_out', 1)
         except:
             pass
         print "THe department is", department
-        dept = Department.objects.filter(Dept_Name=department)
+        dept = Department.objects.get(Dept_Name=department)
         multiple = userprofile.objects.filter(department=dept)
         for each in multiple:              
             if each.user.username.startswith(owner_name.lower()) and each.user.username.endswith(department.lower()):    
@@ -66,22 +68,47 @@ def multiple_login(request, owner_name=None, department=None):
                 return redirect ('erp.tasks.views.display_portal',
                                  owner_name = each.user.username)
     return HttpResponseRedirect('/')                
-    
+
+@needs_authentication_multiple_user    
 def multiple_logout(request, owner_name=None):
+    superuser = request.user
     if owner_name==request.user.username:
-        supercore = request.user.get_profile().department.owner
-        auth.logout(request)
-        supercore.backend = 'django.contrib.auth.backends.ModelBackend'
-        auth.login(request, supercore)
-        request.session['logged_in'] = True
-        try:
-            response.set_cookie('logged_out', 0)
-        except:
-            pass
+        if is_core (request.user):
+            supercorelist = request.user.get_profile().department.owner.all()
+
+            for each in supercorelist:
+                print owner_name, each
+                if owner_name.startswith(each.username.lower()):
+                    superuser=each
+                    print superuser
+                    auth.logout(request)
+                    superuser.backend = 'django.contrib.auth.backends.ModelBackend'
+                    auth.login(request, superuser)
+                    request.session['logged_in'] = True
+                    try:
+                        response.set_cookie('logged_out', 0)
+                    except:
+                        pass
+                    break
+
+        else:
+            dept = request.user.get_profile().department
+            if request.user.username.endswith(dept.Dept_Name.lower()):
+                multiple_coord = request.user.username.split('_')[0]
+                superuser = User.objects.get(username = multiple_coord)
+                auth.logout(request)
+                superuser.backend = 'django.contrib.auth.backends.ModelBackend'
+                auth.login(request, superuser)
+                request.session['logged_in'] = True
+                try:
+                    response.set_cookie('logged_out', 0)
+                except:
+                    pass
     else:
-        supercore=request.user
+        superuser=request.user
     return redirect ('erp.tasks.views.display_portal',
-                                 owner_name = supercore.username)
+                                 owner_name = superuser.username)
+
 def get_timeline (user):
     """
     If user is a Core, return all Tasks created by user.
@@ -129,7 +156,7 @@ def get_completed_subtasks (user):
     user_dept = user.userprofile_set.all()[0].department
     return SubTask.objects.filter (department = user_dept, status = 'C')
 
-@needs_authentication
+@needs_authentication_multiple_user
 def display_portal (request, owner_name = None):
     """
     Display owner's portal.
@@ -142,15 +169,22 @@ def display_portal (request, owner_name = None):
         return display_core_portal (request, page_owner)
     elif is_supercoord(page_owner):
         return display_supercoord_portal (request, page_owner)
-    else:
-        return display_coord_portal (request, page_owner)
+    elif is_coord(page_owner):
+        return display_coord_portal (request, page_owner)       
 
 @permissions
 def display_multiple_portal (request, user):
     """
     Display the portal so Core/coord can login into respective events
     """
-    depts = list(user.department_set.all())+(list(Department.objects.filter(Dept_Name=user.get_profile ().department)))
+    if is_core (request.user):
+        depts = list(user.department_set.all())
+    else:
+        depts=[]
+        multiple = userprofile.objects.all()
+        for each in multiple:              
+            if each.user.username.startswith(user.username.lower()+'_'):
+                depts.append(each.department)
     return render_to_response("tasks/multiple.html",locals(), context_instance=global_context(request))
 
 @permissions

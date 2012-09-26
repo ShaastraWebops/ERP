@@ -1,8 +1,8 @@
 {% extends "base_portal.html" %}
 {% block body %}
 <h4><font color="3a87ad">'Feedback for Core' allows you to set review questions for core which will be answered by the coords of that department.<br> 'Feedback for Coord' allows you to set review questions for coords which may be answered only by core/co-coords or both.</font></h4><br>
-<a href="{% url feedback.views.add_question question_for=Core %}" ><h5 style="font-size:13px; line-height: 27px; color: rgb(50,50,50);">FEEDBACK FOR CORE</h5></a><br>
-<a href="{% url feedback.views.add_question question_for=Coord %}" ><h5 style="font-size:13px; line-height: 27px; color: rgb(50,50,50);">FEEDBACK FOR COORD</h5></a>
+<a href="{% url feedback.views.add_question question_for=Core owner_name=request.user %}" ><h5 style="font-size:13px; line-height: 27px; color: rgb(50,50,50);">FEEDBACK FOR CORE</h5></a><br>
+<a href="{% url feedback.views.add_question question_for=Coord owner_name=request.user %}" ><h5 style="font-size:13px; line-height: 27px; color: rgb(50,50,50);">FEEDBACK FOR COORD</h5></a>
 {% endblock %}
 {% block tabs %}
 {% endblock %}

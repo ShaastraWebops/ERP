@@ -1,12 +1,8 @@
  /* Theme CSS */
- html {
-	background-color:#eee;
- }
  body {
 	font-family: Arial, "Lucida Grande", sans-serif; 
 	font-size: 13px; 
 	line-height: 18px; 
-	color: #555; 
 	background-color:#fff;
  }
 .eventCalendar-wrap {

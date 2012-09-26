@@ -43,20 +43,20 @@ Current status:
 <br/>
 {% if not curr_feedback.feedback %}
 <div class="well"><h4 style="color: rgb(255,0,0);">Click on 'Open Feedback' to enable Shaastra team members to give feedback by rating on a scale of 1-10 (10 being the best). They will be able to see the questions that your department has set.</h4><br>
-<h4><a class="btn btn-danger" href="{% url feedback.views.toggle %}">Open Feedback</a></h4><br></div>
+<h4><a class="btn btn-danger" href="{% url feedback.views.toggle owner_name=request.user %}">Open Feedback</a></h4><br></div>
 {% endif %}
 
 {% if curr_review.review %}
-<div class="well"><h6 style="color: rgb(255,0,0);">Click on 'close review' if you want to revert to previous state. Note: By clicking on this Shaastra team memebers cannot view their own reviews. Feedback is currently closed. If you want to open feedback, do so manually.</h6><h4><a class="btn btn-danger" href="{% url feedback.views.togglereview %}">CLOSE REVIEW</a></h4><br></div>
+<div class="well"><h6 style="color: rgb(255,0,0);">Click on 'close review' if you want to revert to previous state. Note: By clicking on this Shaastra team memebers cannot view their own reviews. Feedback is currently closed. If you want to open feedback, do so manually.</h6><h4><a class="btn btn-danger" href="{% url feedback.views.togglereview owner_name=request.user %}">CLOSE REVIEW</a></h4><br></div>
 {% endif %}
 
 {% if curr_feedback.feedback %}
 <div class="well"><h6 style="color: rgb(255,0,0);">Click on 'close feedback' to close the feedback feature for Shaastra 2013 team members. They will no longer be able to see the questions or give feedback. If any feedback has been given, it is still stored in database.</h6><br> 
-<h4><a class="btn btn-danger" href="{% url feedback.views.toggle %}">CLOSE FEEDBACK</a></h4><br></div>
+<h4><a class="btn btn-danger" href="{% url feedback.views.toggle owner_name=request.user %}">CLOSE FEEDBACK</a></h4><br></div>
 
 {% if not curr_review.review %}
 <div class="well"><h6>Clicking on 'open review' automatically closes feedback (i.e. Shaastra cores and coords will be unable to see questions and give feedback). It now allows Shaastra team members to view their own reviews.</h6><br> 
-<h4><a class="btn btn-danger" href="{% url feedback.views.togglereview %}">OPEN REVIEW</a></h4><br>
+<h4><a class="btn btn-danger" href="{% url feedback.views.togglereview owner_name=request.user %}">OPEN REVIEW</a></h4><br>
 <h6 style="color: rgb(255,0,0);"><i class="icon-warning-sign"></i>Note: QMS department can see all reviews anyway. The above <b>'OPEN REVIEW'</b> feature allows other department members to see their own reviews.</h6></div>
 {% endif %}
 
@@ -66,13 +66,13 @@ Current status:
 
 
 {% if qms_dept %}
-<div><h4><a class="btn btn-info pull-right" href="{% url feedback.views.qms_review dept_id=1 is_all=no %}">Feedback for Members of All Departments &raquo;</a></h4></div>
+<div><h4><a class="btn btn-info pull-right" href="{% url feedback.views.qms_review dept_id=1 is_all=no owner_name=request.user %}">Feedback for Members of All Departments &raquo;</a></h4></div>
 {% endif %}
 
 
 <br>
-{% if not is_visitor1 %}{% if curr_review.review %}<div class="well span5" align="center"><h6><a href="{% url feedback.views.review %}">MY REVIEW - SEE WHAT THE OTHERS HAVE TO TELL ABOUT ME!</a></h6></div>{% endif %}{% endif %}
-
+{% if not is_visitor1 %}{% if curr_review.review %}<div class="well span5" align="center"><h6><a href="{% url feedback.views.review owner_name=request.user %}">MY REVIEW - SEE WHAT THE OTHERS HAVE TO TELL ABOUT ME!</a></h6></div>{% endif %}{% endif %}
+ 
 
 {% if curr_feedback.feedback %} 
 
@@ -80,13 +80,13 @@ Current status:
 {% if user_coord %}
 <h4>GIVE FEEDBACK FOR THE CORES OF YOUR DEPARTMENT</h4><br>
 {% for core in core_profiles %}
-	<a href="{% url feedback.views.answer_questions userprofile_id=core.id question_id=0 rating=20 %}">{{core.name}}</a></br></br>
+	<a href="{% url feedback.views.answer_questions userprofile_id=core.id question_id=0 rating=20 owner_name=request.user %}">{{core.name}}</a></br></br>
 {% endfor %}
 {% endif %}
 <br>
 <h4>GIVE FEEDBACK FOR THE COORDINATORS IN YOUR DEPARTMENT</h4><br>
 {% for coord in coord_profiles %}
-	<a href="{% url feedback.views.answer_questions userprofile_id=coord.id question_id=0 rating=20 %}">{{coord.name}}</a></br></br>
+	<a href="{% url feedback.views.answer_questions userprofile_id=coord.id question_id=0 rating=20 owner_name=request.user %}">{{coord.name}}</a></br></br>
 {% endfor %}</div>
 
 {% endif %}

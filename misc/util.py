@@ -5,7 +5,7 @@ from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 from erp.tasks.models import Task, SubTask
 from erp.users.models import *
-from erp.misc.helper import is_core, get_page_owner, is_supercoord, is_coord
+from erp.misc.helper import is_core, get_page_owner, is_supercoord, is_coord, is_multiple_user
 from erp import settings
 from erp.users import models
 from erp.department.models import Department
@@ -50,11 +50,21 @@ def global_context(request):
         po_name = False
     
     try:
-        supercore = False
-        if (request.user.get_profile().department.owner):
+        if (request.user.get_profile().department.owner.all()):
             supercore = True
+        else:
+            supercore = False
     except:
         supercore = False
+       
+    try:
+        department = request.user.get_profile().department
+        if request.user.username.endswith(department.Dept_Name.lower()):
+            multiple_coord = True
+        else:
+            multiple_coord = False
+    except:
+        multiple_coord = False
             
     if page_owner != request.user:
         is_visitor = True
@@ -67,6 +77,7 @@ def global_context(request):
              'user_dept_name': user_dept_name,
              'user_name': user_name,
              'is_core' : is_core (request.user),
+             'is_multiple_user' : is_multiple_user (request.user),
              'is_supercoord' : is_supercoord (request.user),
              'is_coord' : is_coord (request.user),
              'po_is_core' : is_core (page_owner),
@@ -77,7 +88,8 @@ def global_context(request):
              'po_name' : po_name,
              'po_dept_name' : po_dept_name,
              'photo_list':photo_list,
-             'supercore':supercore,   
+             'supercore':supercore,
+             'multiple_coord':multiple_coord,                 
             })
     return context
 
@@ -125,12 +137,43 @@ def needs_authentication (func):
             print "path from util", request.path
             return redirect ('erp.home.views.login')
         else:
-            if __kwargs['owner_name']:
-                if __kwargs['owner_name']==request.user.username:
-                    return func (*__args, **__kwargs)
-                else:
-                    return redirect ('erp.tasks.views.display_portal',
-                                         owner_name = request.user.username)
+            try:
+                if __kwargs['owner_name']:
+                    if __kwargs['owner_name']==request.user.username:
+                        if (request.user.get_profile().department):
+                            return func (*__args, **__kwargs)
+                        else:
+                            return redirect ('erp.tasks.views.display_portal',
+                                             owner_name = request.user.username)
+                    else:
+                        return redirect ('erp.tasks.views.display_portal',
+                                             owner_name = request.user.username)
+            except:
+                return redirect ('erp.tasks.views.display_portal',
+                                             owner_name = request.user.username)
+    return wrapper
+
+def needs_authentication_multiple_user (func):
+    # print 'In Decorator - Function Name : ', func.__name__
+    def wrapper (*__args, **__kwargs):
+        request = __args[0]
+        if not request.user.is_authenticated():
+            # Return here after logging in
+            request.session['from_url'] = request.path
+            
+            print "path from util", request.path
+            return redirect ('erp.home.views.login')
+        else:
+            try:
+                if __kwargs['owner_name']:
+                    if __kwargs['owner_name']==request.user.username:
+                        return func (*__args, **__kwargs)
+                    else:
+                        return redirect ('erp.tasks.views.display_portal',
+                                             owner_name = request.user.username)
+            except:
+                return redirect ('erp.tasks.views.display_portal',
+                                             owner_name = request.user.username)
     return wrapper
 
 def profile_authentication (func):

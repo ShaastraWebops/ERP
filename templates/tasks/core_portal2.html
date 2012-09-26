@@ -11,15 +11,6 @@ Dashboard
 </div>
 {% endblock content-heading %}
 
-{% block multiple %}
-{% if supercore %}
-<a href="{% url tasks.views.multiple_logout owner_name=user %}">
-<button class="btn btn-danger large">
-<strong>Change Event</strong> </button>
-</a>
-{% endif %}
-{% endblock %}
-
 {% block tabs %}
 
 <div class="tabbable span8">
