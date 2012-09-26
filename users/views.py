@@ -302,4 +302,24 @@ def handle_profile (request, owner_name):
 			qms_coord= True
 
     return render_to_response('users/edit_profile.html',locals(),context_instance = global_context(request))
+    
+    
+
+def change_password(request, owner_name=None):
+    print "here"
+    if (request.method=='POST'):
+        old_pass=request.POST['old_pass']
+        new_pass1=request.POST['new_pass1']
+        new_pass2=request.POST['new_pass2']
+        user = User.objects.get(username=request.user.username)
+        if (user.check_password(old_pass)):
+            if new_pass1==new_pass2 and user==request.user:
+                user.set_password(new_pass1)
+                user.save()
+                changed=True  
+            else:
+                failed=True  
+        else:            
+            invalid=True
+    return render_to_response('users/change_password.html', locals(), context_instance = global_context(request))            
 

@@ -1,263 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Shaastra | ERP - Alpha Release</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="author" content="">
+  <head>
+    <meta charset="utf-8">
+    <title>Shaastra | ERP - Alpha Release</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-        <!-- Le styles -->
-        <link href="{{ MEDIA_URL }}css/bootstrap.css" rel="stylesheet">
-        <style type="text/css">
-			body {
-				padding-top: 60px;
-				padding-bottom: 40px;
-				background: white;
-			}
+    <!-- Le styles -->
+    <link href="{{ MEDIA_URL }}css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+      padding-top: 60px;
+      padding-bottom: 40px;
+      background: white;
+      }
 
-			.span4 {
-				padding-top: 10px;
-				padding-left: 0px;
-				padding-bottom: 50px;
-			}
-			
-			#logo {
-			    color: #ffffff;
-			}	
-			#id_description {
-			    width:350px; 
-			    height:80px;
-			    
-			}
-			#id_subject {
-			    width:350px; 
-			    
-			}
-			#id_deadline {
-			    width:350px;
-			}
-			#id_status {
-			    width:350px;
-			}
-			#id_comment_string {
-			    width:350px;
-			    height:40px;
-			}
-			 		
-			
-        </style>
-        <link href="{{ MEDIA_URL }}css/bootstrap-responsive.css" rel="stylesheet">
-        <link href="{{ MEDIA_URL }}css/chosen.css" rel="stylesheet">
-        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-        <!--[if lt IE 9]>
+      .span4 {
+      padding-top: 10px;
+      padding-left: 0px;
+      padding-bottom: 50px;
+      }
+      
+      #logo {
+      color: #ffffff;
+      }	
+      #id_description {
+      width:350px; 
+      height:80px;
+      
+      }
+      #id_subject {
+      width:350px; 
+      
+      }
+      #id_deadline {
+      width:350px;
+      }
+      #id_status {
+      width:350px;
+      }
+      #id_comment_string {
+      width:350px;
+      height:40px;
+      }
+      
+      
+    </style>
+    <link href="{{ MEDIA_URL }}css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="{{ MEDIA_URL }}css/chosen.css" rel="stylesheet">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 
-        <!-- Le fav and touch icons -->
-        <link rel="shortcut icon" href="{{ MEDIA_URL }}images/favicon.ico">
-        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ MEDIA_URL }}images/apple-touch-icon-144-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ MEDIA_URL }}images/apple-touch-icon-114-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ MEDIA_URL }}images/apple-touch-icon-72-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" href="{{ MEDIA_URL }}images/apple-touch-icon-57-precomposed.png">
-        
-        <script>
-            $('#myTab a').click(function (e) {
-    e.preventDefault();
-    $(this).tab('show');
-    })
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="{{ MEDIA_URL }}images/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ MEDIA_URL }}images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ MEDIA_URL }}images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ MEDIA_URL }}images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="{{ MEDIA_URL }}images/apple-touch-icon-57-precomposed.png">
     
-    function searchterm()
-    {
-        return document.getElementById('searchbar').value
-        
-    }
-        </script>
-        {% block extrahead %}
-        {% endblock %}
-        {% block extrastyle %}
-        {% endblock %}
-    </head>
+    <script>
+      $('#myTab a').click(function (e) {
+      e.preventDefault();
+      $(this).tab('show');
+      })
+      
+      function searchterm()
+      {
+      return document.getElementById('searchbar').value
+      
+      }
+    </script>
+    {% block extrahead %}
+    {% endblock %}
+    {% block extrastyle %}
+    {% endblock %}
+  </head>
 
-    <body>
-
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
-                    <ul class="nav">
-                        <li>
-                            <a class="brand" href="{% url tasks.views.display_portal owner_name=user %}" id="logo"><i class="icon-globe icon-white" style="margin-top:5px;"></i> ERP</a>
-                        </li>
-                    </ul>
-
-                    <ul class=" nav pull-right">
-                        <li>
-                            <a href="{% url home.views.logout %}"><i class="icon-off icon-white"></i> Sign Out</a>
-                        </li>
-                    </ul>
-                    <!--
-                    <div class="btn-group pull-right">
-                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="icon-user"></i> Username
-                    <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                    <li><a href="#">Profile</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Sign Out</a></li>
-                    </ul>
-                    </div>
-
-                    -->
-                    <div class="nav-collapse">
-                        <ul class="nav">
-                            <li id="nav_home">
-                                <a href="{% url tasks.views.display_portal owner_name=user %}"><i class="icon-home icon-white"></i> Home</a>
-                            </li>
-                            <li id="nav_profile">
-                                <a href="{% url users.views.view_profile owner_name=user%}"><i class="icon-user icon-white"></i> Profile</a>
-                            </li>
-                            <li id="nav_contact">
-                                <a href="#"><i class="icon-wrench icon-white"></i> Contact</a>
-                            </li>
-
-                        </ul>
-                        <ul class="nav">
-                            <li>
-
-                                <div class="input-append">
-                                    <form class="navbar-search" id="search" action="/search/" method="POST">
-                                        {%csrf_token%}
-                                        <div class="input-append">
-                                            <input type="text" style="border-radius:13px 13px 13px 13px;" class="input-xlarge search-query" placeholder="Search" name="searchbar">
-                                            <a href="#" id="search-icon"><i class="icon-search" style="margin-top:2px; z-index:3;position:absolute;right:10px;top:5px;"></i></a> 
-                                        </div>
-                                    </form>
-                                </div>
-                            </li>
-
-                        </ul>
-                    </div><!--/.nav-collapse -->
-                </div>
-            </div>
-        </div>
-
+  <body>
+    <div class="modal hide" id="myModal">
+      <div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">×</button>
+	<h3>Change Password</h3>
+      </div>
+      <div class="modal-body">
+	<p>Enter the details to change your password</p>
+	<form class = "form-horizontal" action="{% url users.views.change_password owner_name=user %}" method="POST">
+	  {% csrf_token %}
+	  
+	  <fieldset>
+	    <div class="control-group">
+	      <label class="control-label" for="old_pass">Enter your current password: </label>
+	      <div class="controls">
+		<input type="password" class="input-xlarge" id="old_pass" name="old_pass">
+	      </div>
+	    </div>
+	    <div class="control-group">
+	      <label class="control-label" for="new_pass1">Enter your new password: </label>
+	      <div class="controls">
+		<input type="password" class="input-xlarge" id="new_pass1" name="new_pass1">
+	      </div>
+	    </div>
+	    <div class="control-group">
+	      <label class="control-label" for="new_pass2">Re-enter your new password: </label>
+	      <div class="controls">
+		<input type="password" class="input-xlarge" id="new_pass2" name="new_pass2">
+	      </div>
+	    </div>
+	  </fieldset>
+	  
+	  
+	  
+      </div>
+      <div class="modal-footer">
+	<input type="submit" class="btn btn-primary" value="Change Password">
+      </form>
+      </div>
+    </div>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
         <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a>
+          <ul class="nav">
+            <li>
+              <a class="brand" href="{% url tasks.views.display_portal owner_name=user %}" id="logo"><i class="icon-globe icon-white" style="margin-top:5px;"></i> ERP</a>
+            </li>
+          </ul>
 
-            <!-- Main hero unit for a primary marketing message or call to action -->
+          <ul class=" nav pull-right">
             
-            <div class="page-header white">
-                <h2>Welcome, {{user.get_profile.name}}!
-                {% block multiple %}
-                <div class="pull-right">
-                {% if is_core %}
-                {% if supercore %}
-                <a href="{% url tasks.views.multiple_logout owner_name=user %}">
-                <button class="btn btn-danger large">
+          </ul>
+          
+          
+          <div class="btn-group pull-right">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i  class="icon-th-large"></i> Actions
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="{% url users.views.handle_profile owner_name=user %}"><i class="icon-tag"></i> Edit Profile</a></li>
+              <li><a data-toggle="modal" href="#myModal"><i class="icon-lock"></i> Change Password</a></li>
+              <li>
+                <a href="{% url home.views.logout %}"><i class="icon-off"></i> Sign Out</a>
+              </li>
+            </ul>
+	  </div>
+
+
+          
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li id="nav_home">
+                <a href="{% url tasks.views.display_portal owner_name=user %}"><i class="icon-home icon-white"></i> Home</a>
+              </li>
+              <li id="nav_profile">
+                <a href="{% url users.views.view_profile owner_name=user%}"><i class="icon-user icon-white"></i> Profile</a>
+              </li>
+              <li id="nav_contact">
+                <a href="#"><i class="icon-wrench icon-white"></i> Contact</a>
+              </li>
+
+            </ul>
+            <ul class="nav">
+              <li>
+
+                <div class="input-append">
+                  <form class="navbar-search" id="search" action="/search/" method="POST">
+                    {%csrf_token%}
+                    <div class="input-append">
+                      <input type="text" style="border-radius:13px 13px 13px 13px;" class="input-xlarge search-query" placeholder="Search" name="searchbar">
+                      <a href="#" id="search-icon"><i class="icon-search" style="margin-top:2px; z-index:3;position:absolute;right:10px;top:5px;"></i></a> 
+                    </div>
+                  </form>
+                </div>
+              </li>
+
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      
+      <div class="page-header white">
+        <h2>Welcome, {{user.get_profile.name}}!
+          {% block multiple %}
+          <div class="pull-right">
+            {% if is_core %}
+            {% if supercore %}
+            <a href="{% url tasks.views.multiple_logout owner_name=user %}">
+              <button class="btn btn-danger large">
                 <strong>Change Event</strong> </button>
-                </a>
-                {% endif %}
-                {% endif %}
-                {% if is_coord %}
-                {% if multiple_coord %}
-                <a href="{% url tasks.views.multiple_logout owner_name=user %}">
-                <button class="btn btn-danger large">
+            </a>
+            {% endif %}
+            {% endif %}
+            {% if is_coord %}
+            {% if multiple_coord %}
+            <a href="{% url tasks.views.multiple_logout owner_name=user %}">
+              <button class="btn btn-danger large">
                 <strong>Change Department</strong> </button>
-                </a>
-                {% endif %}
-                {% endif %}                
-                <div>
-                {% endblock %}
-                </h2>
-            </div>
-            <br/>
-            <div class="row">
-                <div class="tabbable span12">
-                {% if not is_multiple_user %}
-                    <ul class="nav nav-pills nav-stacked span2" id="myTab">
-                        {% include "left-sidebar.html" %}
-                        <hr>
-                        {% include "right-sidebar.html" %}
-                    </ul>
-                {% endif %}
-                    <div class="tab-content span9">
-                        {% block body %}
-                        {% endblock %}
-                        {% block tabs %}
-                        {% endblock %}
-                        {% block form_stuff %}
-                        {% endblock %}
-                        {% block display_stuff %}
-                        {% endblock %}
-                    </div><!-- /.tab-content -->
-                </div><!-- /.tabbable -->
-            </div><!-- /.row -->
+            </a>
+            {% endif %}
+            {% endif %}                
+            <div>
+              {% endblock %}
+        </h2>
+        </div>
+        <br/>
+        <div class="row">
+          
+          <div class="tabbable span12">
+            
+            {% if not is_multiple_user %}
+            <ul class="nav nav-pills nav-stacked span2" id="myTab">
+              {% include "left-sidebar.html" %}
+              <hr>
+              {% include "right-sidebar.html" %}
+            </ul>
+            {% endif %}
+            <div class="tab-content span9">
+              {% block body %}
+              {% endblock %}
+              {% block tabs %}
+              {% endblock %}
+              {% block form_stuff %}
+              {% endblock %}
+              {% block display_stuff %}
+              {% endblock %}
+            </div><!-- /.tab-content -->
+          </div><!-- /.tabbable -->
+        </div><!-- /.row -->
 
         </div>
+        
+        
+        
         <!-- ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
+        
         {% block javascript %}
         <script src="{{ MEDIA_URL }}js/jquery.js"></script>
         <script src="{{ MEDIA_URL }}js/bootstrap.js"></script>
+        <script src="{{ MEDIA_URL }}js/bootstrap-modal.js"></script>
+        <script src="{{ MEDIA_URL }}js/bootstrap-dropdown.js"></script>
         <script src="{{ MEDIA_URL }}js/bootstrap.min.js"></script>
         <script src="{{ MEDIA_URL }}js/jquery.dajax.core.js"></script>
         <script src="{{ MEDIA_URL }}js/chosen.jquery.js"></script>
         <script type="text/javascript">
-            function showMembers() {
-                var d = document.getElementById("department_members_icon");
-                if(d.className=="icon-plus-sign") {
-                    d.className = "icon-minus-sign";
-                    }
-                else {
-                    d.className = "icon-plus-sign";
-                    }
-            }
+          function showMembers() {
+          var d = document.getElementById("department_members_icon");
+          if(d.className=="icon-plus-sign") {
+          d.className = "icon-minus-sign";
+          }
+          else {
+          d.className = "icon-plus-sign";
+          }
+          }
         </script>
         <script type="text/javascript">
-            function showComments(tab, task_id) {
-                var d = document.getElementById(tab + "_comments_" + task_id + "_icon");
-                var e = document.getElementById(tab + "_comments_" + task_id + "_text");
-                if(d.className=="icon-plus-sign") {
-                    d.className = "icon-minus-sign";
-                    e.innerHTML="Hide";
-                    }
-                else {
-                    d.className = "icon-plus-sign";
-                    e.innerHTML="Show";
-                    }
-            }
-            function showSubtasks(tab, task_id) {
-                var d = document.getElementById(tab + "_subtask_" + task_id + "_icon");
-                var e = document.getElementById(tab + "_subtask_" + task_id + "_text");
-                if(d.className=="icon-plus-sign") {
-                    d.className = "icon-minus-sign";
-                    e.innerHTML="Hide";
-                    }
-                else {
-                    d.className = "icon-plus-sign";
-                    e.innerHTML="Show";
-                    }
-            }
+          function showComments(tab, task_id) {
+          var d = document.getElementById(tab + "_comments_" + task_id + "_icon");
+          var e = document.getElementById(tab + "_comments_" + task_id + "_text");
+          if(d.className=="icon-plus-sign") {
+          d.className = "icon-minus-sign";
+          e.innerHTML="Hide";
+          }
+          else {
+          d.className = "icon-plus-sign";
+          e.innerHTML="Show";
+          }
+          }
+          function showSubtasks(tab, task_id) {
+          var d = document.getElementById(tab + "_subtask_" + task_id + "_icon");
+          var e = document.getElementById(tab + "_subtask_" + task_id + "_text");
+          if(d.className=="icon-plus-sign") {
+          d.className = "icon-minus-sign";
+          e.innerHTML="Hide";
+          }
+          else {
+          d.className = "icon-plus-sign";
+          e.innerHTML="Show";
+          }
+          }
         </script>
 
         <script type="text/javascript">
-            $('#id_status').chosen();
-            $('#id_coords').chosen();
+          $('#id_status').chosen();
+          $('#id_coords').chosen();
         </script>
         <script type="text/javascript">        
-        $('#search-icon').click(function() {
-            $('#search').submit();
-        });
+          $('#search-icon').click(function() {
+          $('#search').submit();
+          });
         </script>
         <script type="text/javascript">
-        $("#task_delete").click(function() {
-            var notif = document.getElementById("alertdiv");
-            notif.className = "alert alert-block alert-error fade in";
-            alertdiv.innerHTML = '<button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">Are you sure you want to delete the selected tasks?</h4><br><input class="btn btn-danger" type="submit" name="delete" value="Yes"><a class="btn" data-dismiss="alert">No</a>';
-        });
+          $("#task_delete").click(function() {
+          var notif = document.getElementById("alertdiv");
+          notif.className = "alert alert-block alert-error fade in";
+          alertdiv.innerHTML = '<button type="button" class="close" data-dismiss="alert">&times;</button><h4 class="alert-heading">Are you sure you want to delete the selected tasks?</h4><br><input class="btn btn-danger" type="submit" name="delete" value="Yes"><a class="btn" data-dismiss="alert">No</a>';
+          });
         </script>
         {% endblock %}
-    </body>
+  </body>
 
 </html>
