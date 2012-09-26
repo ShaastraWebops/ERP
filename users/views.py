@@ -153,14 +153,12 @@ def view_profile(request, owner_name=None):
         photo_path =image.photo_path
     except:
         if is_multiple_user(request.user):
-            departments = request.user.department_set.all()
-            for department in departments:
-                multiple = userprofile.objects.filter(department=department)
-                for each in multiple:
-                    if each.user.username.startswith(request.user.username.lower()) and each.user.username.endswith(department.Dept_Name.lower()):
-                        image=userphoto.objects.get(name = each.user)
-                        photo_path =image.photo_path
-                        break
+            multiple = userprofile.objects.all()
+            for each in multiple:
+                if (each.user.username.startswith(request.user.username.lower()) and each.user.username!=request.user.username):
+                    image=userphoto.objects.get(name = each.user)
+                    photo_path =image.photo_path
+                    break
 
     profile = userprofile.objects.get(user=page_owner)
     group = str(page_owner.groups.all()[0])[:-1] #drop 's' from group name. Ex: 'Core' from 'Cores'
@@ -195,17 +193,6 @@ def view_profile(request, owner_name=None):
 
     return render_to_response('users/view_profile.html',locals(),context_instance = global_context(request))
     	
-def saveprofileform (userprofile, form):
-    userprofile.nickname = form.cleaned_data['nickname']
-    userprofile.name = form.cleaned_data['name']
-    userprofile.chennai_number = form.cleaned_data['chennai_number']
-    userprofile.summer_number = form.cleaned_data['summer_number']
-    userprofile.summer_stay = form.cleaned_data['summer_stay']
-    userprofile.hostel = form.cleaned_data['hostel']
-    userprofile.room_no = form.cleaned_data['room_no']
-    userprofile.save()
-
-
 @needs_authentication_multiple_user
 def handle_profile (request, owner_name):
     print request.user.id , "is the id of the user"
@@ -214,7 +201,7 @@ def handle_profile (request, owner_name):
     profile = userprofile.objects.get(user=request.user)
     if request.method=='POST':
         try:
-            supercores = request.user.get_profile().department.owner.all()          #check if the department has a supercore, else department.owner will be NULL, and go to except. The supercore account will
+            supercores = request.user.get_profile().department.owner.all()     #check if the department has a supercore, else department.owner will be NULL, and go to except.
             supercore=supercores[0]
             for x in supercores:
                 if request.user.username.startswith(x.username.lower()):
@@ -234,31 +221,47 @@ def handle_profile (request, owner_name):
                             profile_form = userprofileForm (request.POST, instance = each)
                             if profile_form.is_valid():
                                 profile_form.save()
-            else:                                                            #there may be an account in a department having a supercore, but is not a supercore-associated account. 
-                profile_form = userprofileForm (request.POST, instance = profile)
-                if profile_form.is_valid():
-                    profile_form.save ()
-            
-        except:
-            if is_multiple_user(request.user):                           #is a supercore account
-                profile = userprofile.objects.get(user = request.user)
-                profile_form = userprofileForm (request.POST, instance = profile)
-                if profile_form.is_valid():
-                    profile_form.save ()
+            else:                                                            
+                department = request.user.get_profile().department
+                if request.user.username.endswith(department.Dept_Name.lower()):                #a multiple coord-associated acc.
+                    allUserProfiles = userprofile.objects.all()
+                    multiple_coord=request.user.username.split('_')[0]
+                    for each in allUserProfiles:
+                        if each.user.username.startswith(multiple_coord.lower()):
+                            profile_form = userprofileForm (request.POST, instance = each)
+                            if profile_form.is_valid():
+                                profile_form.save()
+                else:                                      #there may be an account in a department having a supercore, but is not a supercore-associated account, and isn't a multiple-coord-associated acc.
+                    profile = userprofile.objects.get(user=request.user)
+                    profile_form = userprofileForm (request.POST, instance = profile)
+                    if profile_form.is_valid():
+                        profile_form.save ()
                 
+        except:
+            if is_multiple_user(request.user):                           #is a supercore/multiple-coord account
                 allUserProfiles = userprofile.objects.all()
                 for each in allUserProfiles:
                     if each.user.username.startswith(request.user.username.lower()):
-                        profile = userprofile.objects.get(user = each.user)
-                        print profile
-                        profile_form = userprofileForm (request.POST, instance = profile)
+                        profile_form = userprofileForm (request.POST, instance = each)
                         if profile_form.is_valid():
                             profile_form.save()
-            else:                                                       #all other cases.
-                profile = userprofile.objects.get(user = request.user)
-                profile_form = userprofileForm (request.POST, instance = profile)
-                if profile_form.is_valid():
-                    profile_form.save ()
+            else:                                        #multiple-coord-associated acc, in a dept without a supercore.
+                department = request.user.get_profile().department
+                if request.user.username.endswith(department.Dept_Name.lower()):
+                    allUserProfiles = userprofile.objects.all()
+                    multiple_coord=request.user.username.split('_')[0]
+                    print multiple_coord
+                    for each in allUserProfiles:
+                        if each.user.username.startswith(multiple_coord.lower()):
+                            print each
+                            profile_form = userprofileForm (request.POST, instance = each)
+                            if profile_form.is_valid():
+                                profile_form.save()
+                else:
+                    profile = userprofile.objects.get(user=request.user)
+                    profile_form = userprofileForm (request.POST, instance = profile)
+                    if profile_form.is_valid():
+                        profile_form.save ()
             
         return redirect ('erp.users.views.view_profile', owner_name = request.user.username)
     print profile.hostel

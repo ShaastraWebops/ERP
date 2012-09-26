@@ -159,6 +159,14 @@
                 </a>
                 {% endif %}
                 {% endif %}
+                {% if is_coord %}
+                {% if multiple_coord %}
+                <a href="{% url tasks.views.multiple_logout owner_name=user %}">
+                <button class="btn btn-danger large">
+                <strong>Change Department</strong> </button>
+                </a>
+                {% endif %}
+                {% endif %}                
                 <div>
                 {% endblock %}
                 </h2>
@@ -166,15 +174,7 @@
             <br/>
             <div class="row">
                 <div class="tabbable span12">
-                {% if is_core %}
-                    {% if not is_multiple_user %}
-                    <ul class="nav nav-pills nav-stacked span2" id="myTab">
-                        {% include "left-sidebar.html" %}
-                        <hr>
-                        {% include "right-sidebar.html" %}
-                    </ul>
-                    {% endif %}
-                {% else %}
+                {% if not is_multiple_user %}
                     <ul class="nav nav-pills nav-stacked span2" id="myTab">
                         {% include "left-sidebar.html" %}
                         <hr>

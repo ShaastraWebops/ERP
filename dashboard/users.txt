@@ -1,8 +1,8 @@
 Events Cores ee09b001_events eventscore@gmail.com password nickname eventscore 9999999999 9999999999 HomeSweetHome Ganga 420
-Events Coords ee09b002 eventscoordone@gmail.com password nickname eventscoordone 9999999999 9999999999 HomeSweetHome Jamuna 420
+Events Coords ee09b002_events eventscoordone@gmail.com password nickname eventscoordone 9999999999 9999999999 HomeSweetHome Jamuna 420
 Events Coords ee09b003 eventscoordtwo@gmail.com password nickname eventscoordtwo 9999999999 9999999999 HomeSweetHome Ganga 420
 QMS Cores ee09b001_qms qmscore@gmail.com password nickname qmscore 9999999999 9999999999 HomeSweetHome Ganga 420
-QMS Coords ee09b005 qmscoordone@gmail.com password nickname qmscoordone 9999999999 9999999999 HomeSweetHome Ganga 420
+QMS Coords ee09b002_qms qmscoordone@gmail.com password nickname qmscoordone 9999999999 9999999999 HomeSweetHome Ganga 420
 QMS Coords ee09b006 qmscoordtwo@gmail.com password nickname qmscoordtwo 9999999999 9999999999 HomeSweetHome Alak 325
 Finance Cores ee09b007 financecore@gmail.com password nickname financecore 9999999999 9999999999 HomeSweetHome Ganga 420
 Finance Coords ee09b008 financecoordone@gmail.com password nickname financecoordone 9999999999 9999999999 HomeSweetHome Ganga 420

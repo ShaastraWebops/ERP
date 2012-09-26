@@ -2,15 +2,15 @@
 {% block body %}
 {{ block.super }}
 {% if qms_core %}
-<a class="btn btn-primary pull-right" href="{% url feedback.views.display question_for=question_for %}">SEE ALL QUESTIONS</a><br>
+<a class="btn btn-primary pull-right" href="{% url feedback.views.display question_for=question_for owner_name=request.user%}">SEE ALL QUESTIONS</a><br>
 {% endif %}
 
 {% if qms_supercoord %}
-<a class="btn btn-primary pull-right" href="{% url feedback.views.display question_for=question_for%}">SEE ALL QUESTIONS</a><br>
+<a class="btn btn-primary pull-right" href="{% url feedback.views.display question_for=question_for owner_name=request.user%}">SEE ALL QUESTIONS</a><br>
 {% endif %}
 
 {% if qms_coord %}
-<a class="btn btn-primary pull-right" href="{% url feedback.views.display question_for=question_for%}">SEE ALL QUESTIONS</a><br>
+<a class="btn btn-primary pull-right" href="{% url feedback.views.display question_for=question_for owner_name=request.user%}">SEE ALL QUESTIONS</a><br>
 {% endif %}
 <br>
 <form class="well" action="" method="POST">
