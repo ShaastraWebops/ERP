@@ -201,6 +201,89 @@ def change_profile_pic(request, owner_name):
                                     pass                                       
 
                 else:                                                            #there may be an account in a department having a supercore, but is not a supercore-associated account. 
+                    department = request.user.get_profile().department
+                    if request.user.username.endswith(department.Dept_Name.lower()):                #a multiple coord-associated acc.  
+                        allUserProfiles = userprofile.objects.all()
+                        multiple_coord=request.user.username.split('_')[0]
+                        for each in allUserProfiles:
+                            if (each.user.username.startswith(multiple_coord.lower()) and each.user.username.lower()!=multiple_coord.lower()):
+                                save_path, file_path = create_dir(file_name, each.user.username)#passing to the fuction to make directories if not made
+                                try:
+                                    photo=userphoto(name = each.user)
+                                except:
+                                  	pass
+                                f=request.FILES['file']
+                                write_file(save_path ,f)
+                                print save_path
+                                if os.path.isfile(save_path):
+                                    print "file path of the user photo exists"
+                                    delete_object=userphoto.objects.filter(name=each.user)
+                                    delete_object.delete()
+                                else :
+                                    print "file path of the user photo doesnt exists"
+                                try:
+                                    image_object=userphoto(name=each.user, photo_path=file_path )
+                                    image_object.save()
+                                    print "profile photo changed"
+                                except:
+                                    print "profile photo not changed"
+                                    pass
+                    else:                        
+                        file_name="PROFILE_PIC_OF_THE_USER.jpg"
+                        user_name=request.user.username
+                        save_path ,file_path = create_dir(file_name ,user_name)#passing to the fuction to make directories if not made       
+                    
+                        try:
+                            photo=userphoto(name = request.user)
+                        except:
+                            pass
+                        f=request.FILES['file']
+                        write_file(save_path ,f)      
+                        print save_path
+                        if os.path.isfile(save_path):
+                            print "file path of the user photo exists"
+                            delete_object=userphoto.objects.filter(name=request.user)
+                            delete_object.delete()
+                        else :
+                            print "file path of the user photo doesnt exists"
+                        try:
+                            image_object=userphoto(name=request.user, photo_path=file_path )
+                            image_object.save()
+                            print "profile photo changed"
+                        except:
+                            print "profile photo not changed"
+                            pass
+                        
+            except:
+                department = request.user.get_profile().department                              #multiple-coord-associated acc, in a dept without a supercore.
+                if request.user.username.endswith(department.Dept_Name.lower()):                #a multiple coord-associated acc.  
+                    allUserProfiles = userprofile.objects.all()
+                    multiple_coord=request.user.username.split('_')[0]
+                    for each in allUserProfiles:
+                        if (each.user.username.startswith(multiple_coord.lower()) and each.user.username.lower()!=multiple_coord.lower()):
+                            save_path, file_path = create_dir(file_name, each.user.username)#passing to the fuction to make directories if not made
+                            try:
+                                photo=userphoto(name = each.user)
+                            except:
+                              	pass
+                            f=request.FILES['file']
+                            write_file(save_path ,f)
+                            print save_path
+                            if os.path.isfile(save_path):
+                                print "file path of the user photo exists"
+                                delete_object=userphoto.objects.filter(name=each.user)
+                                delete_object.delete()
+                            else :
+                                print "file path of the user photo doesnt exists"
+                            try:
+                                image_object=userphoto(name=each.user, photo_path=file_path )
+                                image_object.save()
+                                print "profile photo changed"
+                            except:
+                                print "profile photo not changed"
+                                pass
+                
+                else:
                     file_name="PROFILE_PIC_OF_THE_USER.jpg"
                     user_name=request.user.username
                     save_path ,file_path = create_dir(file_name ,user_name)#passing to the fuction to make directories if not made       
@@ -208,7 +291,7 @@ def change_profile_pic(request, owner_name):
                     try:
                         photo=userphoto(name = request.user)
                     except:
-                        pass
+                   	    pass
                     f=request.FILES['file']
                     write_file(save_path ,f)      
                     print save_path
@@ -216,7 +299,7 @@ def change_profile_pic(request, owner_name):
                         print "file path of the user photo exists"
                         delete_object=userphoto.objects.filter(name=request.user)
                         delete_object.delete()
-                    else :
+                    else:
                         print "file path of the user photo doesnt exists"
                     try:
                         image_object=userphoto(name=request.user, photo_path=file_path )
@@ -225,32 +308,6 @@ def change_profile_pic(request, owner_name):
                     except:
                         print "profile photo not changed"
                         pass
-                        
-            except:
-                file_name="PROFILE_PIC_OF_THE_USER.jpg"
-                user_name=request.user.username
-                save_path ,file_path = create_dir(file_name ,user_name)#passing to the fuction to make directories if not made       
-                
-                try:
-                    photo=userphoto(name = request.user)
-                except:
-               	    pass
-                f=request.FILES['file']
-                write_file(save_path ,f)      
-                print save_path
-                if os.path.isfile(save_path):
-                    print "file path of the user photo exists"
-                    delete_object=userphoto.objects.filter(name=request.user)
-                    delete_object.delete()
-                else:
-                    print "file path of the user photo doesnt exists"
-                try:
-                    image_object=userphoto(name=request.user, photo_path=file_path )
-                    image_object.save()
-                    print "profile photo changed"
-                except:
-                    print "profile photo not changed"
-                    pass
         else:
             print "form not valid"
 
