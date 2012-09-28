@@ -8,6 +8,9 @@ import random
 from time import sleep
 from erp.dashboard.create_test_data import create_group, create_user, parse_user_info_list, create_depts
 
+IN_FILE="home/details-min.csv"
+OUT_FILE="home/lookup.csv"
+
 # Write each entry to the CSV
 def writeout(writer, dept, group, username, email, password, nickname, name, chennai_number, summer_number, summer_stay, hostel, roomno):
     writer.writerow([dept, group, username, email, password, nickname, name, chennai_number, summer_number, summer_stay, hostel, roomno])
@@ -67,8 +70,8 @@ def parse_csv(details,writer):
 
         try:
             # Incase end of file? Very ugly but I can't find any other way
-            print "sleeping"
-            sleep(10)
+            #print "sleeping"
+            #sleep(1)
             line=details.next()
             parse_line(line,dept)
         except:
@@ -77,8 +80,8 @@ def parse_csv(details,writer):
 
 # Open one to read and one to write    
 def write_into_db(request):
-    details=csv.reader(open('home/details.csv', 'rb'))
-    outfile=open('home/lookup.csv', 'wb')
+    details=csv.reader(open(IN_FILE, 'rb'))
+    outfile=open(OUT_FILE, 'wb')
     writer = csv.writer(outfile)
     # Create group if already not there
     create_group('Coords')
@@ -86,5 +89,5 @@ def write_into_db(request):
     # only closing saves the csv. NOTE: breaking out of the process midway will not save the passes.
     outfile.close()
     create_depts ()
-    create_users (users_file_name = 'home/lookup.csv')    
+    create_users (users_file_name = OUT_FILE)    
     return HttpResponseRedirect('/')
