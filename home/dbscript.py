@@ -5,6 +5,7 @@ from department.models import *
 from django.shortcuts import HttpResponseRedirect
 import string
 import random
+from time import sleep
 from erp.dashboard.create_test_data import create_group, create_user, parse_user_info_list, create_depts
 
 # Write each entry to the CSV
@@ -66,6 +67,8 @@ def parse_csv(details,writer):
 
         try:
             # Incase end of file? Very ugly but I can't find any other way
+            print "sleeping"
+            sleep(10)
             line=details.next()
             parse_line(line,dept)
         except:
