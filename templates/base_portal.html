@@ -184,16 +184,18 @@
 
     <div class="container">
 
-      <!-- Main hero unit for a primary marketing message or call to action -->
-      
-      <div class="page-header white">
-        <h2>Welcome, {{user.get_profile.name}}!
-          {% block multiple %}
-          <div class="pull-right">
-            {% if is_core %}
-            {% if supercore %}
-            <a href="{% url tasks.views.multiple_logout owner_name=user %}">
-              <button class="btn btn-danger large">
+
+            <!-- CHAMPI BASAK! CHAMPI BASAK! CHAMPI BASAK! CHAMPI BASAK! -->
+            
+            <div class="page-header white">
+                <h2>Welcome, {{user.get_profile.name}}!
+                {% block multiple %}
+                <div class="pull-right">
+                {% if is_core %}
+                {% if supercore %}
+                <a href="{% url tasks.views.multiple_logout owner_name=user %}">
+                <button class="btn btn-danger large">
+
                 <strong>Change Event</strong> </button>
             </a>
             {% endif %}

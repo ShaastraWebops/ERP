@@ -74,7 +74,11 @@ def create_user (department_name, group_name, user_dict, profile_dict):
         # If userprofile doesn't exist (whether or not user is a new
         # one or old one), create it
         profile_dict['user'] = user
-        profile_dict['department'] = Department.objects.get (Dept_Name = department_name)
+        try:
+            profile_dict['department'] = Department.objects.get (Dept_Name = department_name)
+        except:
+            new_dept = Department.objects.create (Dept_Name = department_name)
+            profile_dict['department'] = new_dept
         curr_userprofile = models.userprofile (**profile_dict)
         curr_userprofile.save ()
         print "%s - userprofile created" %(user_dict['username'])
