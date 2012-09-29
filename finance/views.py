@@ -10,6 +10,7 @@ from django.forms.models import modelformset_factory
 def budget_portal(request, plan):
     page_owner = get_page_owner (request, owner_name=request.user)
     department = page_owner.get_profile ().department
+        
     """
     First check if plans exist in database for the particular department
     else create three plans.
@@ -25,7 +26,7 @@ def budget_portal(request, plan):
         curr_plan = Budget(name='C', total_amount=0, department=department)
         curr_plan.save()
         plans = Budget.objects.filter(department=department)  
-    
+    description='Description'
     form_selected = False
     """
     Let the user choose the Plan to be updated and accordingly prepopulate 
@@ -36,7 +37,7 @@ def budget_portal(request, plan):
             if p.name == plan:
                 curr_plan = Budget.objects.get(id=p.id)
                 form_selected=True
-        ItemFormset=modelformset_factory(Item, fields=('name', 'description', 'original_amount')) 
+        ItemFormset=modelformset_factory(Item, fields=('name', 'description', 'original_amount'),extra=2) 
         qset = Item.objects.filter(department=department, budget=curr_plan)
         if request.method == 'POST':
             budgetclaimform=BudgetClaimForm(request.POST, instance=curr_plan) 
@@ -51,7 +52,9 @@ def budget_portal(request, plan):
                         tempform.department=department
                         tempform.budget=curr_plan
                         tempform.save()
-                form_saved = True                
+                form_saved = True 
+                qset = Item.objects.filter(department=department, budget=curr_plan) 
+                itemformset=ItemFormset(queryset=qset)               
                 return render_to_response('finance/budget_portal.html',locals(),context_instance=RequestContext(request))
         else:
             budgetclaimform=BudgetClaimForm(instance=curr_plan)

@@ -3,11 +3,18 @@
 
 <div class="well">
 <h2>BUDGET PORTAL</h2>
-<h5>Hi! Here you will be able to propose three budget plans for your event.</h5><br>
+<h5>Here you can propose three budget plans for your event.</h5><br>
 <h5>CHOOSE PLAN TO UPDATE</h5><br>
-{% for plan in plans %}
-<a  class="btn btn-action" href="{% url finance.views.budget_portal plan=plan.name %}" >PLAN {{plan.name}}</a>
+{% for plan1 in plans %}
+	{% if plan1.name == plan %}
+	<a  class="btn btn-info" href="{% url finance.views.budget_portal plan=plan1.name %}" >PLAN {{plan1.name}}</a>
+	{% else %}
+<a  class="btn btn-action" href="{% url finance.views.budget_portal plan=plan1.name %}" >PLAN {{plan1.name}}</a>
+	{% endif %}
 {% endfor %}
+<div class="pull-right">
+<a  class="btn " href="{% url finance.views.display %}" >Display all plans</a>
+</div>
 </div>
 <br>
 
@@ -15,24 +22,43 @@
 <h6>Plan saved!</h6><br>
 {% endif %}
 
-<a  class="btn btn-info" href="{% url finance.views.display %}" >Display</a>
+
 
 {% if form_selected %}
 <h3>PLAN {{curr_plan.name}}</h3>
 <form action="" method="POST">
 {% csrf_token %}
-	{{budgetclaimform}}
-
+	
+</br>
 <h4>Items</h4>
 {{itemformset.management_form}}
-    
+   <table class="table table-bordered"> 
+	<thead>
+	<tr>
+		<th>Name</th>
+		<th>Description</th>
+		<th>Amount</th>
+	</tr>	
+	</thead>
+<tbody>
+<div class="budgettextarea">
 	{% for itemform in itemformset %}
-	<div class="well">
-    {{itemform.as_table}}
-	</div>
+<tr>
+		{% for field in itemform %}
+			<td>{{field}}</td>
+		{% endfor %}
+</tr>  
 	{% endfor%}
-
-<input type="submit" class="btn btn-info" value="Save Plan"/>
+</div>
+</tbody>
+</table>
+<div class="pull-right">
+<input type="submit" class="btn btn-info" value="Add more items"/>
+</div>
+{{budgetclaimform}}
+</br>
+</br>
+<input type="submit" class="btn btn-primary" value="Save Plan"/>
 </form>
 {% endif %}
 
