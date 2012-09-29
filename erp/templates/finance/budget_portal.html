@@ -1,0 +1,66 @@
+{% extends "base_portal.html" %}
+{% block body %}
+Choose plan to update
+{% for plan in plans %}
+<a  class="btn" href="{% url finance.views.budget_portal plan=plan.name %}" >PLAN {{plan.name}}</a>
+{% endfor %}
+<br><br><br>
+{% if form_selected %}
+This is plan {{curr_plan.name}}
+<form action="" method="POST">
+{% csrf_token %}
+<div>
+
+	{{budgetclaimform}}
+
+</div>
+
+<h4>Items</h4>
+{{itemformset.management_form}}
+    
+	{% for itemform in itemformset %}
+	<div class="well">
+    {{itemform.as_table}}
+	</div>
+	{% endfor%}
+
+<input type="submit" class="btn btn-info" value="Save Plan"/>
+</form>
+{% endif %}
+
+{% endblock %}
+{% block tabs %}
+{% endblock %}
+{% block form_stuff %}
+<br>
+
+{% if form_saved %}
+Plan saved!<br>
+{% endif %}
+
+<a  class="btn btn-info" href="{% url finance.views.display %}" >Display</a>
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_questions");
+    var e = document.getElementById("li_questions_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+
+<script type="text/javascript">  //initialise django-chosen
+$(document).ready(function() {
+    $('select').chosen();
+});
+</script>
+
+{% endblock javascript %}
+{% block display_stuff %}
+{% endblock %}

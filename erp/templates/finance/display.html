@@ -1,0 +1,36 @@
+{% extends "base_portal.html" %}
+{% block body %}
+{% for budget in budgets %}
+name: {{budget.name}}  amount: {{budget.total_amount}}  dept: {{budget.department}}  comments: {{budget.comment}} {{budget.event_core_status}} {{budget.finance_core_status}}<br>
+{% for item in items %}
+{% ifequal item.budget budget %}
+item name: {{item.name}}<br>
+{% endifequal %}
+{% endfor %}
+
+{% endfor %}
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_questions");
+    var e = document.getElementById("li_questions_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+
+<script type="text/javascript">  //initialise django-chosen
+$(document).ready(function() {
+    $('select').chosen();
+});
+</script>
+{% endblock javascript %}
+{% block display_stuff %}
+{% endblock %}
