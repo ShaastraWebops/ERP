@@ -1,14 +1,29 @@
 {% extends "base_portal.html" %}
 {% block body %}
-{% for budget in budgets %}
-name: {{budget.name}}  amount: {{budget.total_amount}}  dept: {{budget.department}}  comments: {{budget.comment}} {{budget.event_core_status}} {{budget.finance_core_status}}<br>
-{% for item in items %}
-{% ifequal item.budget budget %}
-item name: {{item.name}}<br>
-{% endifequal %}
-{% endfor %}
 
+
+<table class="table table-striped table-bordered table-condensed">
+	<tbody>
+{% for budget in budgets %}
+		<tr>
+			<td><h4>{{budget.name}}</h4></td>
+			<td>{{budget.total_amount}}</td>
+			<td>{{budget.department}}</td>
+			<td>{{budget.comment}}</td>
+		</tr>
+{% for item in items %}	
+{% ifequal item.budget budget %}
+		<tr>
+			<td>{{item.name}}</td>
+			<td>{{item.budget.name}}</td>
+			<td>{{item.department}}</td>
+			<td>{{item.description}}</td>
+		</tr>
+{% endifequal %}			
+{% endfor %}			
 {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}
 
