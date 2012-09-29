@@ -25,7 +25,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.core import mail
 from django.http import HttpResponse
-from dateutil.relativedelta import *
+#from dateutil.relativedelta import *
 from ajax import *
 from django.utils.functional import curry
 

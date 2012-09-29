@@ -1,11 +1,12 @@
 from django.conf.urls import *
 from django.contrib import admin
-from dajaxice.core import dajaxice_autodiscover
+#from dajaxice.core import dajaxice_autodiscover
 from django.conf import settings
 from erp.tasks.views import *
 from erp.users.views import *
 from erp.home.views import *
 from erp.feedback.views import *
+from erp.finance.views import *
 import haystack
 from haystack.views import SearchView
 from haystack.forms import ModelSearchForm
@@ -14,7 +15,7 @@ from haystack.views import search_view_factory
 from django.conf.urls import *
 
 haystack.autodiscover()
-dajaxice_autodiscover()
+#dajaxice_autodiscover()
 admin.autodiscover()
 
 # Uncomment the next two lines to enable the admin:

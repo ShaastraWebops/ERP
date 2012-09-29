@@ -9,9 +9,5 @@ class BudgetClaimForm(ModelForm):
 	class Meta:
 		model=Budget
 		fields=('total_amount','comment')
-
-class ItemForm(ModelForm):
-	class Meta:
-		model=Item
-		fields=('name','description','original_amount')
+        #widgets={'name':chosenforms.widgets.ChosenSelect()}
 		
