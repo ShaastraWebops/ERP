@@ -1,25 +1,37 @@
 {% extends "base_portal.html" %}
 {% block body %}
-
+{% if event %}
 <div class="well">
 <h2>BUDGET PORTAL</h2>
 <h5>Here you can propose three budget plans for your event.</h5><br>
 <h5>CHOOSE PLAN TO UPDATE</h5><br>
 {% for plan1 in plans %}
+{% ifnotequal plan1.name 'F' %} 
 	{% if plan1.name == plan %}
 	<a  class="btn btn-info" href="{% url finance.views.budget_portal plan=plan1.name %}" >PLAN {{plan1.name}}</a>
 	{% else %}
 <a  class="btn btn-action" href="{% url finance.views.budget_portal plan=plan1.name %}" >PLAN {{plan1.name}}</a>
 	{% endif %}
+{% endifnotequal %}
 {% endfor %}
 <div class="pull-right">
-<a  class="btn " href="{% url finance.views.display %}" >Display all plans</a>
+<a  class="btn " href="{% url finance.views.display event_name=department.Dept_Name %}" >Display all plans</a>
 </div>
 </div>
 <br>
 
 {% if form_saved %}
-<h6>Plan saved!</h6><br>
+<div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+	Plan saved successfully    
+	</div>
+
+{% endif %}
+{% if error %}
+    <div class="alert">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <strong>Error</strong> Data not saved, Please check your inputs
+    </div>
 {% endif %}
 
 
@@ -60,6 +72,19 @@
 </br>
 <input type="submit" class="btn btn-primary" value="Save Plan"/>
 </form>
+{% endif %}
+
+{% endif %}
+
+{% if finance %}
+<h3>Welcome to Budget Portal</h3>
+</br>
+Please click on the event name whose budget plans you want to see and update
+{% for dept in departments %}
+	</br>
+	</br>
+	<a href="{% url finance.views.display event_name=dept.Dept_Name %}">{{dept}}</a>
+{% endfor %}
 {% endif %}
 
 {% endblock %}
