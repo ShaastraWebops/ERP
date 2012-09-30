@@ -1,6 +1,6 @@
 from django.db import models
 from erp.department.models import Department
-
+from erp.users.models import userprofile
 # Create your models here.
 
 class Budget(models.Model):
@@ -21,4 +21,13 @@ class Item(models.Model):
     original_amount = models.FloatField()
     request_amount = models.FloatField(blank=True, null=True)
     balance_amount = models.FloatField(blank=True, null=True)   
-    request_status = models.BooleanField(default=False)    
+    request_status = models.BooleanField(default=False)  
+    
+class OpenBudgetPortal(models.Model):
+    opened = models.BooleanField(default=False)
+    
+class Permission(models.Model):
+    coord = models.ForeignKey(userprofile)
+    budget_sanction = models.BooleanField(default=False)
+    
+               

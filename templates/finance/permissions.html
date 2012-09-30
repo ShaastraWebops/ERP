@@ -1,0 +1,73 @@
+{% extends "base_portal.html" %}
+{% block body %}
+
+
+<form action="" method="POST">
+{% csrf_token %}
+
+	
+<h4>Finance coords</h4>
+{{permissionformset.management_form}}
+   <table class="table table-bordered"> 
+	<thead>
+	<tr>
+		<th>Coord</th>
+		<th>Can sanction budget</th>
+	</tr>	
+	</thead>
+<tbody>
+
+	{% for permissionform in permissionformset %}
+<tr>
+		{% for field in permissionform %}
+			<td>{{field}}
+		{% endfor %}</td>
+</tr>  
+	{% endfor%}
+
+</tbody>
+</table>
+</br>
+<input type="submit" class="btn btn-primary" value="Save Changes"/>
+</form>
+
+{% if perms %}
+<div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+	Permissions changed    
+	</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block tabs %}
+{% endblock %}
+{% block form_stuff %}
+<br>
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_questions");
+    var e = document.getElementById("li_questions_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+
+<script type="text/javascript">  //initialise django-chosen
+$(document).ready(function() {
+    $('select').chosen();
+});
+</script>
+
+{% endblock javascript %}
+{% block display_stuff %}
+{% endblock %}

@@ -2,6 +2,10 @@
 {% block body %}
 
 
+<style>
+textarea{ width: 250px; height: 60px;}
+</style>
+
 
 	
 {% for budget in budgets %}
@@ -13,8 +17,8 @@
 		<tr>
 		<th>Items Name</th>
 		<th>Description</th>
-		<th>Amount</th>				
-		</tr>
+		<th>Amount</th>	
+    	</tr>
 </thead>
 <tbody>
 {% for item in items %}	
@@ -64,6 +68,8 @@
 		<th>Name</th>
 		<th>Description</th>
 		<th>Amount</th>
+		<th> </th>
+		<th>Delete?</th>
 	</tr>	
 	</thead>
 <tbody>

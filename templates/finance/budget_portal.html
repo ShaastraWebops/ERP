@@ -1,10 +1,54 @@
 {% extends "base_portal.html" %}
 {% block body %}
+
+
+
+<style>
+textarea{ width: 250px; height: 60px;}
+</style>
+
+{% if finance_core %}
+
+{% if not curr_portal.opened %}
+<div class="well"><h4>Click on 'Open Portal' to enable Shaastra event coordinators to update event budgets.</h4><br>
+<h4><a class="btn btn-success" href="{% url erp.finance.views.toggle %}">Open Portal</a></h4><br></div>
+{% endif %}
+
+{% if curr_portal.opened %}
+<div class="well"><h4>Click on 'Close Portal' to disable further editing of budget plans by Shaastra event coordinators.</h4><br>
+<h4><a class="btn btn-danger" href="{% url erp.finance.views.toggle %}">Close Portal</a></h4><br></div>
+{% endif %}
+
+
+<h4><a class="btn btn-success" href="{% url erp.finance.views.permissions %}">Pemissions</a></h4><br>
+{% endif %}
+
+
 {% if event %}
-<div class="well">
-<h2>BUDGET PORTAL</h2>
-<h5>Here you can propose three budget plans for your event.</h5><br>
-<h5>CHOOSE PLAN TO UPDATE</h5><br>
+
+
+    {% if not curr_portal.opened %}
+        <div class="well">
+            <h2>BUDGET PORTAL</h2>
+            <h5>Here you can propose three budget plans for your event.</h5><br>
+            <h5>THE PORTAL IS CURRENTLY CLOSED. YOU ARE NOT ALLOWED TO EDIT YOUR PLANS.</h5><br>
+        
+    <div class="pull-right">
+    <a class="btn " href="{% url finance.views.display event_name='none' %}" >Display all plans</a>
+    </div><br>
+        
+        </div>
+    {% endif %}
+
+{% if curr_portal.opened %}
+
+{% if not form_selected %}        
+    <div class="well">
+        <h2>BUDGET PORTAL</h2>
+        <h5>Here you can propose three budget plans for your event.</h5><br>
+        <h5>CHOOSE PLAN TO UPDATE</h5><br>
+{% endif %}
+
 {% for plan1 in plans %}
 {% ifnotequal plan1.name 'F' %} 
 	{% if plan1.name == plan %}
@@ -17,8 +61,12 @@
 <div class="pull-right">
 <a  class="btn " href="{% url finance.views.display event_name=department.Dept_Name %}" >Display all plans</a>
 </div>
-</div>
-<br>
+
+{% if not form_selected %} 
+    </div>
+{% endif %}
+
+<br><br>
 
 {% if form_saved %}
 <div class="alert alert-success">
@@ -27,6 +75,7 @@
 	</div>
 
 {% endif %}
+
 {% if error %}
     <div class="alert">
     <button type="button" class="close" data-dismiss="alert">×</button>
@@ -50,6 +99,8 @@
 		<th>Name</th>
 		<th>Description</th>
 		<th>Amount</th>
+		<th> </th>
+		<th>Delete?</th>
 	</tr>	
 	</thead>
 <tbody>
@@ -57,8 +108,8 @@
 	{% for itemform in itemformset %}
 <tr>
 		{% for field in itemform %}
-			<td>{{field}}</td>
-		{% endfor %}
+			<td>{{field}}
+		{% endfor %}</td>
 </tr>  
 	{% endfor%}
 </div>
@@ -72,11 +123,15 @@
 </br>
 <input type="submit" class="btn btn-primary" value="Save Plan"/>
 </form>
-{% endif %}
 
-{% endif %}
+{% endif %}<!-- form selected  -->
+
+{% endif %}<!-- portal open  -->
+
+{% endif %}<!-- is event?  -->
 
 {% if finance %}
+
 <h3>Welcome to Budget Portal</h3>
 </br>
 Please click on the event name whose budget plans you want to see and update
@@ -85,7 +140,9 @@ Please click on the event name whose budget plans you want to see and update
 	</br>
 	<a href="{% url finance.views.display event_name=dept.Dept_Name %}">{{dept}}</a>
 {% endfor %}
+
 {% endif %}
+
 
 {% endblock %}
 {% block tabs %}
