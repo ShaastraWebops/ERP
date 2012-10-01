@@ -62,28 +62,29 @@ def budget_portal(request, plan="None"):
     finance=False
     if (department.is_event):
         event=True    
-
-        """
-        First check if plans exist in database for the particular department
-        else create three plans.
-        """
-        plans = Budget.objects.filter(department=department)
-        if plans:
-            print "plans exist"
-        else: 
-            curr_plan = Budget(name='A', total_amount=0, department=department)
-    	    curr_plan.save() 
-    	    curr_plan = Budget(name='B', total_amount=0, department=department)
-    	    curr_plan.save() 
-    	    curr_plan = Budget(name='C', total_amount=0, department=department)
-    	    curr_plan.save()
-            curr_plan = Budget(name='F', total_amount=0, department=department)
-    	    curr_plan.save()
-    	    plans = Budget.objects.filter(department=department)  
-    	description='Description'
-    	form_selected = False
-
         if curr_portal.opened==True:
+
+            """
+            First check if plans exist in database for the particular department
+            else create three plans.
+            """
+            plans = Budget.objects.filter(department=department)
+            if plans:
+                print "plans exist"
+            else: 
+                curr_plan = Budget(name='A', total_amount=0, department=department)
+                curr_plan.save() 
+                curr_plan = Budget(name='B', total_amount=0, department=department)
+                curr_plan.save() 
+                curr_plan = Budget(name='C', total_amount=0, department=department)
+                curr_plan.save()
+                curr_plan = Budget(name='F', total_amount=0, department=department)
+                curr_plan.save()
+                plans = Budget.objects.filter(department=department)  
+            description='Description'
+            form_selected = False
+
+        
     	    """
     	    Let the user choose the Plan to be updated and accordingly prepopulate 
     	    the form with the data.
@@ -135,14 +136,44 @@ def budget_portal(request, plan="None"):
     	            budgetclaimform=BudgetClaimForm(instance=curr_plan)
     	            itemformset=ItemFormset(queryset=qset)   
                   
-        return render_to_response('finance/budget_portal.html',locals(),context_instance=RequestContext(request))
-
-
-
+            
+        else:
+            items=Item.objects.all()
+            curr_plans = Budget.objects.filter(department=department)
+            if curr_plans:
+                plan_finance=Budget.objects.get(name='F',department=department)
+                if plan_finance.submitted == True:
+                    submitted=True            
+        return render_to_response('finance/budget_portal.html',locals(),context_instance=RequestContext(request))    
+        
     elif str(curr_userprofile.department) == "Finance":
         finance=True
         event=False
         departments=Department.objects.filter(is_event=True)
+        has_perms = False
+        finance_coords=Permission.objects.all()
+        for eachcoord in finance_coords:
+            if request.user.username == eachcoord.coord:        
+                if eachcoord.budget_sanction==True:
+                    has_perms = True
+              
+        if is_core(request.user):
+            has_perms=True 
+            
+            
+        #check if any plan is submitted            
+        if curr_portal.opened == False:
+            submittedplans = []
+            plans = Budget.objects.all()
+            if plans:
+                for dept in departments:
+                    curr_plans = Budget.objects.filter(department=dept)
+                    if curr_plans:
+                        plan_finance=Budget.objects.get(name='F',department=dept)
+                        if plan_finance.submitted == True:
+                            submittedplans.append(dept.Dept_Name)
+                  
+               
         return render_to_response('finance/budget_portal.html',locals(),context_instance=RequestContext(request))
     else:
         raise Http404
@@ -211,6 +242,11 @@ def permissions(request):
         if str(department) == "Finance":
             finance=True            
             
+    """
+    Get instances already created of Permission model 
+    create instances of Permission model with coord name and permission
+    Note: There will be as many objects as finance coords.
+    """ 
     if is_core(request.user) and str(department) == "Finance":
         coords=Permission.objects.all()
         if coords:
@@ -220,7 +256,7 @@ def permissions(request):
             finance_coords=userprofile.objects.filter(department=department)
             for eachcoord in finance_coords:
                 if is_coord(eachcoord.user):
-                    curr_coord=Permission(coord=eachcoord)
+                    curr_coord=Permission(coord=eachcoord.user.username)
                     curr_coord.save()               
                                
                 
@@ -231,7 +267,8 @@ def permissions(request):
             permissionformset=PermissionFormset(request.POST, queryset=qset)            
             if permissionformset.is_valid():
                 for form in permissionformset.forms:
-                    form.save()
+                    if form.has_changed:
+                        form.save()
                 qset = Permission.objects.all() 
                 permissionformset=PermissionFormset(queryset=qset) 
                 perms=True 
@@ -248,9 +285,7 @@ def display(request, event_name):
     Display the plans and items.
     """
     finance=False
-    curr_userprofile=userprofile.objects.get(user=request.user)
     page_owner = get_page_owner (request, owner_name=request.user)
-    curr_user=request.user
 
     #Get Department Members' image thumbnails
     department = page_owner.get_profile ().department      
@@ -270,7 +305,6 @@ def display(request, event_name):
         is_visitor1=False  
         if str(department) == "QMS":
             qms_core=True
-            qms_dept=True
 
     if is_supercoord(request.user):
         user_supercoord=True
@@ -284,71 +318,127 @@ def display(request, event_name):
             qms_coord=True
             qms_dept=True     
          
-
-
     if(department.is_event):
         budgets = Budget.objects.filter(department=department)
         items = Item.objects.all()
+        item_exist = False
+        if items:
+            item_exist = True
         return render_to_response('finance/display.html',locals(),context_instance=RequestContext(request))
     
-    elif str(curr_userprofile.department) == "Finance":
-        
+	#Check if instance of open portal present. Otherwise make one.                
+    openportal=OpenBudgetPortal.objects.filter(id=1)
+    if openportal:
+        curr_portal=OpenBudgetPortal.objects.get(id=1)
+    else:
+        curr_portal=OpenBudgetPortal(opened=False)
+        curr_portal.save()    
+    first_time=False
+    item_exist=False
+    if str(department) == "Finance":
+   
+        finance_core=False
         finance=True
-        event1=Department.objects.get(Dept_Name=event_name)
+        event1 = Department.objects.get(Dept_Name=event_name)
         plans = Budget.objects.filter(department=event1)
         if plans:
-            print "plans exist"
-        else: 
-            curr_plan = Budget(name='A', total_amount=0, department=event1)
-            curr_plan.save() 
-            curr_plan = Budget(name='B', total_amount=0, department=event1)
-            curr_plan.save() 
-            curr_plan = Budget(name='C', total_amount=0, department=event1)
-            curr_plan.save()
-            curr_plan = Budget(name='F', total_amount=0, department=event1)
-            curr_plan.save()
-            plans = Budget.objects.filter(department=event1)
-        budgets=Budget.objects.filter(department=event1)
-        items = Item.objects.all()
-        plan_finance=Budget.objects.get(name='F',department=event1)
-        qset = Item.objects.filter(department=event1, budget=plan_finance) 
-        if len(qset)<7:
-            extra1=7-len(qset)
-        else:
-            extra1=2
-        ItemFormset=modelformset_factory(Item, fields=('name', 'description', 'original_amount'),extra=extra1, can_delete=True)
-        if request.method== "POST":
-            budgetclaimform=BudgetClaimForm(request.POST, instance=plan_finance) 
-    	    itemformset=ItemFormset(request.POST, queryset=qset)            
-    	    form_saved = False
-    	    if budgetclaimform.is_valid():
-    	        budgetclaimform.save()
-            else:
-                error=True
-    	    if itemformset.is_valid():
-    	        for form in itemformset.forms:
-    	            if form.has_changed():
-    	                if not form in itemformset.deleted_forms:
-        	                tempform = form.save(commit=False)
-        	                tempform.department=event1
-        	                tempform.budget=plan_finance
-        	                tempform.save()
-                        if form in itemformset.deleted_forms:
-                            curr_item = Item.objects.get(id=form.instance.id)
-                            curr_item.delete()      	                
-    	        form_saved = True 
-    	        qset = Item.objects.filter(department=event1, budget=plan_finance) 
-                if len(qset)<7:
-                    extra1=7-len(qset)
+            item_exist=True
+            budgets=Budget.objects.filter(department=event1)
+            items = Item.objects.all()
+            planF = False
+            has_perms = False
+            if curr_portal.opened==False:
+                finance_coords=Permission.objects.all()
+                for eachcoord in finance_coords:
+                    if request.user.username == eachcoord.coord:        
+                        if eachcoord.budget_sanction==True:
+                            has_perms = True
+                        
+                if is_core(request.user):
+                    has_perms=True                  
+                    finance_core=True
+                planF = True
+                plan_finance=Budget.objects.get(name='F',department=event1)
+                submitted = False
+                
+                if plan_finance.submitted ==False:
+                    qset = Item.objects.filter(department=event1, budget=plan_finance)
+                     
+                    if len(qset)<7:
+                        extra1=7-len(qset)
+                    else:
+                        extra1=2
+                    ItemFormset=modelformset_factory(Item, fields=('name', 'description', 'original_amount'), extra=extra1, can_delete=True)
+                    if request.method== "POST":
+                        budgetclaimform=BudgetClaimForm(request.POST, instance=plan_finance) 
+                        itemformset=ItemFormset(request.POST, queryset=qset)            
+                        form_saved = False
+                        if budgetclaimform.is_valid():
+                            budgetclaimform.save()
+                        else:
+                            error=True
+                        if itemformset.is_valid():
+                            for form in itemformset.forms:
+                                if form.has_changed():
+                                    if not form in itemformset.deleted_forms:
+                                        tempform = form.save(commit=False)
+                                        tempform.department=event1
+                                        tempform.budget=plan_finance
+                                        tempform.save()
+                                    if form in itemformset.deleted_forms:
+                                        curr_item = Item.objects.get(id=form.instance.id)
+                                        curr_item.delete()      	                
+                            form_saved = True 
+                            qset = Item.objects.filter(department=event1, budget=plan_finance) 
+                            if len(qset)<7:
+                                extra1=7-len(qset)
+                            else:
+                                extra1=2
+                            ItemFormset=modelformset_factory(Item, fields=('name', 'description', 'original_amount'), extra=extra1, can_delete=True)
+                            itemformset=ItemFormset(queryset=qset)  
+                        else:
+                            error=True
+                    else:
+                        budgetclaimform=BudgetClaimForm(instance=plan_finance)
+                        itemformset=ItemFormset(queryset=qset)
+                    return render_to_response('finance/display.html',locals(),context_instance=RequestContext(request))
                 else:
-                    extra1=2
-                ItemFormset=modelformset_factory(Item, fields=('name', 'description', 'original_amount'),extra=extra1, can_delete=True)
-    	        itemformset=ItemFormset(queryset=qset)  
+                    submitted = True
+                    return render_to_response('finance/display.html',locals(),context_instance=RequestContext(request))               
             else:
-                error=True
+                return render_to_response('finance/display.html',locals(),context_instance=RequestContext(request))    
+                        
         else:
-            budgetclaimform=BudgetClaimForm(instance=plan_finance)
-            itemformset=ItemFormset(queryset=qset)
-        return render_to_response('finance/display.html',locals(),context_instance=RequestContext(request))
-    else:
+            first_time = True
+            return render_to_response('finance/display.html',locals(),context_instance=RequestContext(request)) 
+    else: 
         raise Http404
+        
+        
+def submit(request, event):
+    page_owner = get_page_owner (request, owner_name=request.user)
+    department = page_owner.get_profile ().department 
+    if is_core(request.user) and str(department) == "Finance":
+        openportal=OpenBudgetPortal.objects.filter(id=1)
+        if openportal:
+            curr_portal=OpenBudgetPortal.objects.get(id=1)
+        else:
+            curr_portal=OpenBudgetPortal(opened=False)
+            curr_portal.save()
+        
+        if curr_portal.opened==False:
+            event1 = Department.objects.get(Dept_Name=event)
+            plans = Budget.objects.filter(department=event1)
+            if plans:
+                plan_finance=Budget.objects.get(name='F',department=event1)
+                
+                if plan_finance.submitted==False:
+                    plan_finance.submitted=True
+                    plan_finance.save()
+                    return HttpResponseRedirect(reverse('erp.finance.views.display', kwargs={'event_name': event,}))
+                if plan_finance.submitted==True:
+                    plan_finance.submitted=False
+                    plan_finance.save()
+                    return HttpResponseRedirect(reverse('erp.finance.views.budget_portal', kwargs={'plan': 'budget',}))
+    else:
+        raise Http404         

@@ -10,8 +10,8 @@ class Budget(models.Model):
     comment = models.TextField(blank=True)
     event_core_status = models.BooleanField(default=False)
     finance_core_status = models.BooleanField(default=False)
-    
-    
+    submitted = models.BooleanField(default=False)
+        
 class Item(models.Model):
     budget = models.ForeignKey(Budget)
     department = models.ForeignKey(Department)
@@ -27,7 +27,7 @@ class OpenBudgetPortal(models.Model):
     opened = models.BooleanField(default=False)
     
 class Permission(models.Model):
-    coord = models.ForeignKey(userprofile)
+    coord = models.CharField(max_length=25)
     budget_sanction = models.BooleanField(default=False)
     
                
