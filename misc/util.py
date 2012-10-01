@@ -59,7 +59,7 @@ def global_context(request):
        
     try:
         department = request.user.get_profile().department
-        if request.user.username.endswith(department.Dept_Name.lower()):
+        if request.user.username.endswith(department.Dept_Name.replace(' ','').lower()):
             multiple_coord = True
         else:
             multiple_coord = False

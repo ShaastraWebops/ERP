@@ -54,7 +54,7 @@ def multiple_login(request, owner_name=None, department=None):
         dept = Department.objects.get(Dept_Name=department)
         multiple = userprofile.objects.filter(department=dept)
         for each in multiple:              
-            if each.user.username.startswith(owner_name.lower()) and each.user.username.endswith(department.lower()):    
+            if each.user.username.startswith(owner_name.lower()) and each.user.username.endswith(department.replace(' ','').lower()):    
                 # Hard code this or write a backend?
                 auth.logout(request)
                 each.user.backend = 'django.contrib.auth.backends.ModelBackend'
@@ -93,7 +93,7 @@ def multiple_logout(request, owner_name=None):
 
         else:
             dept = request.user.get_profile().department
-            if request.user.username.endswith(dept.Dept_Name.lower()):
+            if request.user.username.endswith(dept.Dept_Name.replace(' ','').lower()):
                 multiple_coord = request.user.username.split('_')[0]
                 superuser = User.objects.get(username = multiple_coord)
                 auth.logout(request)
@@ -184,7 +184,8 @@ def display_multiple_portal (request, user):
         multiple = userprofile.objects.all()
         for each in multiple:              
             if each.user.username.startswith(user.username.lower()+'_'):
-                depts.append(each.department)
+                dept_name = each.department.Dept_Name
+                depts.append(dept_name)
     return render_to_response("tasks/multiple.html",locals(), context_instance=global_context(request))
 
 @permissions

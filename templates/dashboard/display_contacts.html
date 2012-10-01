@@ -13,30 +13,30 @@ Contacts
 </style>
 
 <div class="accordion" id="contact_accordion">
-      {% for dept_name, core_profiles, coord_profiles in contacts %}
+      {% for dept_name, core_profiles, coord_profiles, dept_name_underscore in contacts %}
 <div class="accordion-group">
     <div class="accordion-heading">
-        <a class="accordion-toggle" href="#contact_{{ dept_name }}" data-parent="contact_accordion" data-toggle="collapse" onclick=showContacts("{{dept_name}}");><i class="icon-plus-sign" id="{{ dept_name }}_icon" style="margin-top:1px;"></i> {{ dept_name }}</a>
+        <a class="accordion-toggle" href="#contact_{{ dept_name_underscore }}" data-parent="contact_accordion" data-toggle="collapse" onclick=showContacts("{{dept_name_underscore}}");><i class="icon-plus-sign" id="{{ dept_name_underscore }}_icon" style="margin-top:1px;"></i> {{ dept_name }}</a>
     </div>
     
     <style>
-    #contact_{{ dept_name }} {
+    #contact_{{ dept_name_underscore }} {
         margin-left:30px;
     }
-    #contact_{{ dept_name }} table{
+    #contact_{{ dept_name_underscore }} table{
         margin-left:30px;
     }
     </style>
 
-    <div id="contact_{{ dept_name }}" class="accordion-body collapse">
-        <div class="accordion" id="contact_{{ dept_name }}_accordion">
+    <div id="contact_{{ dept_name_underscore }}" class="accordion-body collapse">
+        <div class="accordion" id="contact_{{ dept_name_underscore }}_accordion">
             <div class="accordion-group">
                 <div class="accordion-heading">
-                    <a class="accordion-toggle" href="#contact_{{ dept_name }}_cores" data-parent="contact_accordion" data-toggle="collapse" onclick=showContacts("{{dept_name}}_core");>
-                        <i class="icon-plus-sign" id="{{ dept_name }}_core_icon" style="margin-top:1px;"></i> Cores
+                    <a class="accordion-toggle" href="#contact_{{ dept_name_underscore }}_cores" data-parent="contact_accordion" data-toggle="collapse" onclick=showContacts("{{dept_name_underscore}}_core");>
+                        <i class="icon-plus-sign" id="{{ dept_name_underscore }}_core_icon" style="margin-top:1px;"></i> Cores
                     </a>
                 </div>
-	            <div id="contact_{{ dept_name }}_cores" class="accordion-body collapse">
+	            <div id="contact_{{ dept_name_underscore }}_cores" class="accordion-body collapse">
 		            <table class="table table-bordered table-striped span8">
         		        <tr style="color:#111; font-size:18px;">
         		            <th style="width:250px; padding-left:-10px;">Name</td>
@@ -57,11 +57,11 @@ Contacts
         	</div>
             <div class="accordion-group">
                 <div class="accordion-heading">
-                    <a class="accordion-toggle" href="#contact_{{ dept_name }}_coords" data-parent="contact_accordion" data-toggle="collapse" onclick=showContacts("{{dept_name}}_coord");>
-                        <i class="icon-plus-sign" id="{{ dept_name }}_coord_icon" style="margin-top:1px;"></i> Coordinators
+                    <a class="accordion-toggle" href="#contact_{{ dept_name_underscore }}_coords" data-parent="contact_accordion" data-toggle="collapse" onclick=showContacts("{{dept_name_underscore}}_coord");>
+                        <i class="icon-plus-sign" id="{{ dept_name_underscore }}_coord_icon" style="margin-top:1px;"></i> Coordinators
                     </a>
                 </div>
-	            <div id="contact_{{ dept_name }}_coords" class="accordion-body collapse">
+	            <div id="contact_{{ dept_name_underscore }}_coords" class="accordion-body collapse">
                 	<table class="table table-bordered table-striped span8">
 		                <tr style="color:#111; font-size:18px;">
                 		    <th style="width:250px; padding-left:-10px;">Name</td>

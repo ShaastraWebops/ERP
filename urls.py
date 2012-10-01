@@ -23,7 +23,7 @@ from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^134c036048b637ac75edcd4352212e55/$', 'erp.home.dbscript.write_into_db'),
+    #(r'^134c036048b637ac75edcd4352212e55/$', 'erp.home.dbscript.write_into_db'), used to load coord details into db.
     (r'^dajaxice/', include('dajaxice.urls')),
     #(r'^search/', include('haystack.urls')),
     url(r'^$', 'erp.home.views.login', name='home'),
@@ -38,7 +38,7 @@ urlpatterns = patterns('',
     (r'^erp/(?P<owner_name>\w+)/dashboard/',include('erp.dashboard.urls')),	
     (r'^erp/(?P<owner_name>\w+)/', include('erp.tasks.urls')),
     
-    (r'^loaddata/$', 'erp.dashboard.views.load_data'),
+    #(r'^loaddata/$', 'erp.dashboard.views.load_data'), used to load test data into db.
     
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
     

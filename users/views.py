@@ -223,7 +223,7 @@ def handle_profile (request, owner_name):
                                 profile_form.save()
             else:                                                            
                 department = request.user.get_profile().department
-                if request.user.username.endswith(department.Dept_Name.lower()):                #a multiple coord-associated acc.
+                if request.user.username.endswith(department.Dept_Name.replace(' ','').lower()):                #a multiple coord-associated acc.
                     allUserProfiles = userprofile.objects.all()
                     multiple_coord=request.user.username.split('_')[0]
                     for each in allUserProfiles:
@@ -247,7 +247,7 @@ def handle_profile (request, owner_name):
                             profile_form.save()
             else:                                        #multiple-coord-associated acc, in a dept without a supercore.
                 department = request.user.get_profile().department
-                if request.user.username.endswith(department.Dept_Name.lower()):
+                if request.user.username.endswith(department.Dept_Name.replace(' ','').lower()):
                     allUserProfiles = userprofile.objects.all()
                     multiple_coord=request.user.username.split('_')[0]
                     print multiple_coord

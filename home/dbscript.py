@@ -8,8 +8,8 @@ import random
 from time import sleep
 from erp.dashboard.create_test_data import create_group, create_user, parse_user_info_list, create_depts
 
-IN_FILE="home/details-min.csv"
-OUT_FILE="home/lookup.csv"
+IN_FILE="home/details-min-2.csv"
+OUT_FILE="home/lookup-2.csv"
 
 # Write each entry to the CSV
 def writeout(writer, dept, group, username, email, password, nickname, name, chennai_number, summer_number, summer_stay, hostel, roomno):
