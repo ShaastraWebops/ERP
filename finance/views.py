@@ -113,7 +113,6 @@ def budget_portal(request, plan="None"):
                     extra1=2
                 ItemFormset=modelformset_factory(Item, fields=('name', 'description','quantity', 'original_amount'),extra=extra1, can_delete=True)
     	        if request.method == 'POST':
-    	            print "helloe1"
                     budgetclaimform=BudgetClaimForm(request.POST, instance=curr_plan) 
                     itemformset=ItemFormset(request.POST, queryset=qset)            
                     form_saved = False
@@ -128,12 +127,19 @@ def budget_portal(request, plan="None"):
                                 if form in itemformset.deleted_forms:
                                     curr_item = Item.objects.get(id=form.instance.id)
                                     curr_item.delete()   
-                                form_saved = True 
-                        qset = Item.objects.filter(department=department, budget=curr_plan) 
-                        if len(qset)<5:
-                            extra1=5-len(qset)
+                            form_saved = True 
+                        qset = Item.objects.filter(department=department, budget=curr_plan)
+                        if 'add_more_items' in request.POST: 
+                            print "hellO"
+                            if len(qset)<5:
+                                extra1=5-len(qset)
+                            else:
+                                extra1=2
                         else:
-                            extra1=2
+                            if len(qset)<5:
+                                extra1=5-len(qset)
+                            else:
+                                extra1=0
                         ItemFormset=modelformset_factory(Item, fields=('name', 'description','quantity','original_amount'),extra=extra1, can_delete=True)
                         itemformset=ItemFormset(queryset=qset)               
                         
