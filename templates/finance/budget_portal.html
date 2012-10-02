@@ -5,6 +5,7 @@
 
 <style>
 textarea{ width: 250px; height: 60px;}
+input{width:100px; height:25px;}
 </style>
 
 {% if event %}
@@ -32,6 +33,7 @@ textarea{ width: 250px; height: 60px;}
 	    	<tr>
 	    	<th>Items Name</th>
 	    	<th>Description</th>
+	    	<th>Quantity</th>
 	    	<th>Amount</th>	
            	</tr>
         </thead>
@@ -41,6 +43,7 @@ textarea{ width: 250px; height: 60px;}
         		<tr>
 	    		<td>{{item.name}}</td>
 	    		<td>{{item.description}}</td>
+	    		<td>{{item.quantity}}</td>
 	    		<td>{{item.original_amount}}</td>
                 </tr>
             {% endifequal %}			
@@ -50,16 +53,20 @@ textarea{ width: 250px; height: 60px;}
     <h4>comments:</h4> <p>{{plan_finance.comment}}</p>    
     
     
-    {% endif %}        
+    {% endif %}   <!--submit-->     
         
         
-    {% endif %}
+    {% endif %}     <!-- not curr-port.. -->
 
 {% if curr_portal.opened %}
 
 {% if not form_selected %}        
     <div class="well">
         <h2>BUDGET PORTAL</h2>
+        <div class="pull-right">
+            <h3>Deadline:</h3><strong>{{deadline.budget_portal_deadline}}</strong>
+        </div>
+
         <h5>Here you can propose three budget plans for your event.</h5><br>
         <h5>CHOOSE PLAN TO UPDATE</h5><br>
 {% endif %}
@@ -108,11 +115,12 @@ textarea{ width: 250px; height: 60px;}
 </br>
 <h4>Items</h4>
 {{itemformset.management_form}}
-   <table class="table table-bordered"> 
+   <table class="table table-condensed table-bordered"> 
 	<thead>
 	<tr>
 		<th>Name</th>
 		<th>Description</th>
+		<th>Quantity</th>
 		<th>Amount</th>
 		<th> </th>
 		<th>Delete?</th>
@@ -175,6 +183,15 @@ Please click on the event name whose budget plans you want to see{% if not curr_
 <h4><a class="btn btn-danger" href="{% url erp.finance.views.toggle %}">Close Portal</a></h4><br>
 {% endif %}
 <h4><a class="btn btn-success" href="{% url erp.finance.views.permissions %}">Pemissions</a></h4><br></div>
+
+<h3>Choose the Deadline that needs to be displayed for the Event coords for their Budget proposal submission</h3>
+<form action="" method="POST">
+{% csrf_token %}
+<table>
+{{deadlineform}}
+</table>
+<input type="submit" class="btn btn-primary" value="Save Deadline"/>
+</form>
 {% endif %}
 
 

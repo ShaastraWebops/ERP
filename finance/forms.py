@@ -18,5 +18,8 @@ class PermissionForm(ModelForm):
         super(PermissionForm, self).__init__(*args, **kwargs)
         if self.instance.id:
             self.fields['coord'].widget.attrs['readonly'] = True
-               
+            
+class DeadlineForm(ModelForm):
+    class Meta:
+        model=Deadline             
 		

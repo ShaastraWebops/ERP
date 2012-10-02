@@ -16,6 +16,7 @@ class Item(models.Model):
     budget = models.ForeignKey(Budget)
     department = models.ForeignKey(Department)
     name = models.CharField(max_length=50)
+    quantity=models.IntegerField(blank=True,null=True)
     description = models.TextField(blank=True)
     comment = models.TextField(blank=True)
     original_amount = models.FloatField()
@@ -29,5 +30,8 @@ class OpenBudgetPortal(models.Model):
 class Permission(models.Model):
     coord = models.CharField(max_length=25)
     budget_sanction = models.BooleanField(default=False)
+    
+class Deadline(models.Model):
+    budget_portal_deadline=models.DateTimeField()
     
                
