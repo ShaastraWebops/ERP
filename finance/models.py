@@ -5,7 +5,7 @@ from erp.users.models import userprofile
 
 class Budget(models.Model):
     name = models.CharField(max_length=1)
-    total_amount = models.FloatField()
+    total_amount = models.FloatField(blank=True,null=True)
     department = models.ForeignKey(Department)
     comment = models.TextField(blank=True)
     event_core_status = models.BooleanField(default=False)

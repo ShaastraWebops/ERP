@@ -14,6 +14,7 @@ from datetime import date
 
 def budget_portal(request, plan="None"):
     finance_core=False
+    total_amount1=0
     curr_userprofile=userprofile.objects.get(user=request.user)
     page_owner = get_page_owner (request, owner_name=request.user)
 	
@@ -112,35 +113,39 @@ def budget_portal(request, plan="None"):
                     extra1=2
                 ItemFormset=modelformset_factory(Item, fields=('name', 'description','quantity', 'original_amount'),extra=extra1, can_delete=True)
     	        if request.method == 'POST':
-    	            budgetclaimform=BudgetClaimForm(request.POST, instance=curr_plan) 
-    	            itemformset=ItemFormset(request.POST, queryset=qset)            
-    	            form_saved = False
-    	            if budgetclaimform.is_valid():
-    	                budgetclaimform.save()
-                    else:
-                        error=True
-    	            if itemformset.is_valid():
-    	                for form in itemformset.forms:
-    	                    if form.has_changed():
+    	            print "helloe1"
+                    budgetclaimform=BudgetClaimForm(request.POST, instance=curr_plan) 
+                    itemformset=ItemFormset(request.POST, queryset=qset)            
+                    form_saved = False
+                    if itemformset.is_valid():
+                        for form in itemformset.forms:
+                            if form.has_changed():
                                 if not form in itemformset.deleted_forms:
-    	                            tempform = form.save(commit=False)
-    	                            tempform.department=department
-    	                            tempform.budget=curr_plan
-    	                            tempform.save()
+                                    tempform = form.save(commit=False)
+                                    tempform.department=department
+                                    tempform.budget=curr_plan
+                                    tempform.save()
                                 if form in itemformset.deleted_forms:
                                     curr_item = Item.objects.get(id=form.instance.id)
                                     curr_item.delete()   
-                                                    
-    	                form_saved = True 
-    	                qset = Item.objects.filter(department=department, budget=curr_plan) 
+                                form_saved = True 
+                        qset = Item.objects.filter(department=department, budget=curr_plan) 
                         if len(qset)<5:
                             extra1=5-len(qset)
                         else:
                             extra1=2
                         ItemFormset=modelformset_factory(Item, fields=('name', 'description','quantity','original_amount'),extra=extra1, can_delete=True)
-    	                itemformset=ItemFormset(queryset=qset)               
-    	                return render_to_response('finance/budget_portal.html',locals(),context_instance=RequestContext(request))
+                        itemformset=ItemFormset(queryset=qset)               
+                        
                     else:
+                        error=True
+                    if budgetclaimform.is_valid():
+    	                budgetclaimform1=budgetclaimform.save(commit=False)
+    	                for qset1 in qset:
+    	                    total_amount1+=qset1.original_amount
+    	                budgetclaimform1.total_amount=float(total_amount1)
+    	                budgetclaimform1.save()
+    	            else:
                         error=True
     	        else:
     	            budgetclaimform=BudgetClaimForm(instance=curr_plan)
@@ -313,6 +318,7 @@ def display(request, event_name):
     """
     finance=False
     form_saved=False
+    total_amount1=0
     page_owner = get_page_owner (request, owner_name=request.user)
 
     #Get Department Members' image thumbnails
@@ -392,7 +398,8 @@ def display(request, event_name):
                 
                 if plan_finance.submitted ==False:
                     qset = Item.objects.filter(department=event1, budget=plan_finance)
-                     
+                    for qset1 in qset:
+    	                        total_amount1+=qset1.original_amount 
                     if len(qset)<5:
                         extra1=5-len(qset)
                     else:
@@ -402,10 +409,6 @@ def display(request, event_name):
                         budgetclaimform=BudgetClaimForm(request.POST, instance=plan_finance) 
                         itemformset=ItemFormset(request.POST, queryset=qset)            
                         form_saved = False
-                        if budgetclaimform.is_valid():
-                            budgetclaimform.save()
-                        else:
-                            error=True
                         if itemformset.is_valid():
                             for form in itemformset.forms:
                                 if form.has_changed():
@@ -426,6 +429,15 @@ def display(request, event_name):
                             ItemFormset=modelformset_factory(Item, fields=('name', 'description','quantity', 'original_amount'), extra=extra1, can_delete=True)
                             itemformset=ItemFormset(queryset=qset)  
                         else:
+                            error=True
+                        if budgetclaimform.is_valid():
+                            total_amount1=0
+    	                    budgetclaimform1=budgetclaimform.save(commit=False)
+    	                    for qset1 in qset:
+    	                        total_amount1+=qset1.original_amount
+    	                    budgetclaimform1.total_amount=float(total_amount1)
+    	                    budgetclaimform1.save()
+    	                else:
                             error=True
                     else:
                         budgetclaimform=BudgetClaimForm(instance=plan_finance)

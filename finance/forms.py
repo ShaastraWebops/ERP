@@ -7,7 +7,7 @@ from chosen import forms as chosenforms
 class BudgetClaimForm(ModelForm):
 	class Meta:
 		model=Budget
-		fields=('total_amount','comment')
+		fields=('comment',)
         #widgets={'name':chosenforms.widgets.ChosenSelect()}
         
 class PermissionForm(ModelForm):
