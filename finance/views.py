@@ -17,7 +17,8 @@ def budget_portal(request, plan="None"):
     total_amount1=0
     curr_userprofile=userprofile.objects.get(user=request.user)
     page_owner = get_page_owner (request, owner_name=request.user)
-	
+    qms_dept=False
+    events_core=False	
     #Get Department Members' image thumbnails
     department = page_owner.get_profile ().department      
     dept_cores_list = User.objects.filter (
@@ -77,7 +78,27 @@ def budget_portal(request, plan="None"):
         deadline=Deadline.objects.get(id=1)
         
     if (department.is_event):
-        event=True    
+        event=True
+        if is_core(request.user):
+            events_core=True 
+            item_exist=False
+            submitted = False
+            plans = Budget.objects.filter(department=department)
+            items = Item.objects.filter(department=department)
+            if items:
+                item_exist=True
+                if curr_portal.opened == True:
+                    budgets = plans.exclude(name='F')
+                if curr_portal.opened == False:
+                    plan_finance = Budget.objects.get(name='F',department=department)
+                    if plan_finance.submitted == True:
+                        submitted = True
+                    budgets = plans.exclude(name='F') 
+                return render_to_response('finance/event_core_view.html',locals(),context_instance=RequestContext(request))        
+            else:
+                return render_to_response('finance/event_core_view.html',locals(),context_instance=RequestContext(request))            
+            
+                           
         if curr_portal.opened==True:
 
             """
@@ -172,11 +193,16 @@ def budget_portal(request, plan="None"):
                     submitted=True            
         return render_to_response('finance/budget_portal.html',locals(),context_instance=RequestContext(request))    
         
-    elif str(curr_userprofile.department) == "Finance":
+    elif str(department) == "Finance":
         finance=True
         event=False
         departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
         has_perms = False
+        
+        """
+        Checking is the finance coord logged in has permission
+        to update plan from finance department.
+        """
         finance_coords=Permission.objects.all()
         for eachcoord in finance_coords:
             if request.user.username == eachcoord.coord:        
@@ -186,9 +212,13 @@ def budget_portal(request, plan="None"):
         if is_core(request.user):
             has_perms=True 
             
+        """
+        Make a list of all the budget plans which have already been
+        approved. Note that this happens only when the portal is 
+        closed.
+        """    
             
-        #check if any plan is submitted            
-        '''if curr_portal.opened == False:
+        if curr_portal.opened == False: 
             submittedplans = []
             plans = Budget.objects.all()
             if plans:
@@ -198,17 +228,10 @@ def budget_portal(request, plan="None"):
                         plan_finance=Budget.objects.get(name='F',department=dept)
                         if plan_finance.submitted == True:
                             submittedplans.append(dept.Dept_Name)
-        '''
-         
-        submittedplans = []
-        plans = Budget.objects.all()
-        if plans:
-            for dept in departments:
-                curr_plans = Budget.objects.filter(department=dept)
-                if curr_plans:
-                    plan_finance=Budget.objects.get(name='F',department=dept)
-                    if plan_finance.submitted == True:
-                        submittedplans.append(dept.Dept_Name)
+                            
+        """
+        Finance core has the option to set deadline.
+        """                            
         if finance_core:                
             if request.method=='POST':
                 deadlineform=DeadlineForm(request.POST,instance=deadline)
@@ -217,6 +240,28 @@ def budget_portal(request, plan="None"):
               
             else:
     	        deadlineform=DeadlineForm(instance=deadline)
+    
+        return render_to_response('finance/budget_portal.html',locals(),context_instance=RequestContext(request))
+        
+    """
+    If user is part of QMS department then, he/she has the pemission to
+    view all plans from all departments, like a finance coord without
+    permission.
+    """    	        
+    if qms_dept:
+        departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+    	has_perms=False
+        if curr_portal.opened == False: 
+            submittedplans = []
+            plans = Budget.objects.all()
+            if plans:
+                for dept in departments:
+                    curr_plans = Budget.objects.filter(department=dept)
+                    if curr_plans:
+                        plan_finance=Budget.objects.get(name='F',department=dept)
+                        if plan_finance.submitted == True:
+                            submittedplans.append(dept.Dept_Name)
+                                	
         return render_to_response('finance/budget_portal.html',locals(),context_instance=RequestContext(request))
     else:
         raise Http404
@@ -350,6 +395,7 @@ def display(request, event_name):
         is_visitor1=False  
         if str(department) == "QMS":
             qms_core=True
+            qms_dept=True
 
     if is_supercoord(request.user):
         user_supercoord=True
@@ -381,10 +427,13 @@ def display(request, event_name):
         curr_portal.save()    
     first_time=False
     item_exist=False
-    if str(department) == "Finance":
+    if str(department) == "Finance" or "QMS":
    
         finance_core=False
-        finance=True
+        if str(department) == "Finance":
+            finance=True
+        else:
+            qms_dept=True    
         event1 = Department.objects.get(Dept_Name=event_name)
         plans = Budget.objects.filter(department=event1)
         if plans:
@@ -400,7 +449,7 @@ def display(request, event_name):
                         if eachcoord.budget_sanction==True:
                             has_perms = True
                         
-                if is_core(request.user):
+                if is_core(request.user) and str(department) == "Finance":
                     has_perms=True                  
                     finance_core=True
                 planF = True
@@ -463,10 +512,7 @@ def display(request, event_name):
         else:
             first_time = True
             return render_to_response('finance/display.html',locals(),context_instance=RequestContext(request)) 
-    else: 
-        raise Http404
-        
-        
+       
 def submit(request, event):
     page_owner = get_page_owner (request, owner_name=request.user)
     department = page_owner.get_profile ().department 

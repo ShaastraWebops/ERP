@@ -6,7 +6,8 @@
 textarea{ width: 250px; height: 60px;}
 input{width:100px; height:25px;}
 </style>
-{% if not item_exist and not finance %}
+
+{% if not item_exist and not finance and not qms_dept%}
 <h4>There are no budget plans yet.</h4>
 {% endif %}
 
@@ -14,7 +15,11 @@ input{width:100px; height:25px;}
 
 {% if item_exist and not submitted%} <h2>PROPOSED BUDGETS</h2> {% endif %}
 
-{% ifequal department.Dept_Name 'Finance' %}
+{% ifequal department.Dept_Name 'Finance'%}
+<h6>{{event_name}}</h6>
+{% endifequal %}
+
+{% ifequal department.Dept_Name 'QMS'%}
 <h6>{{event_name}}</h6>
 {% endifequal %}
 
@@ -152,7 +157,8 @@ input{width:100px; height:25px;}
 
 
 <!-- Final view -->
-{% if finance and planF and submitted%}
+{% if planF and submitted %}
+{% if finance or qms_dept %}
 <h2>FINAL BUDGET PLAN FROM FINANCE DEPARTMENT </h2>
 
     <h5 style="font-size:16px; line-height: 22px; color: rgb(50,50,50);">Plan {{plan_finance.name}}</h5>
@@ -184,9 +190,15 @@ input{width:100px; height:25px;}
 
 
 <h2>PROPOSED BUDGETS</h2>
-{% ifequal department 'Finance' %}
+{% ifequal department 'Finance'%}
 <h6>{{event_name}}</h6>
 {% endifequal %}
+
+{% ifequal department 'QMS'%}
+<h6>{{event_name}}</h6>
+{% endifequal %}
+
+
     {% for budget in budgets %}
         {% ifnotequal budget.name 'F' %}
             
@@ -219,6 +231,7 @@ input{width:100px; height:25px;}
 
         {% endifnotequal %}
     {% endfor %}
+{% endif %}
 {% endif %}
 <!-- the end -->
 
