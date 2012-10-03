@@ -1,8 +1,6 @@
 {% extends "base_portal.html" %}
 {% block body %}
 
-
-
 <style>
 textarea{ width: 250px; height: 60px;}
 input{width:100px; height:25px;}
@@ -109,6 +107,7 @@ input{width:100px; height:25px;}
 
 {% if form_selected %}
 <h3>PLAN {{curr_plan.name}}</h3>
+<div class='pull-right'><b>Total Amount</b>: {{curr_plan.total_amount}}</div>
 <form action="" method="POST">
 {% csrf_token %}
 	
@@ -171,27 +170,48 @@ Please click on the event name whose budget plans you want to see{% if not curr_
 {% endif %}
 
 <br><br>
-{% if finance_core %}
+<!--
+          <div id="myModal" class="modal hide fade">
+            <div class="modal-body">
+                <p>  The portal will now be open to event coordinators. They will
+                be able to update their plans. All finance coordinators will be able
+                to view the plans. For editing permissions, portal must be closed.</p>
+            </div>
 
+            <div class="modal-footer">
+              <a class="btn btn-primary" href="{% url erp.finance.views.toggle %}">Open Portal</a>
+              <a href="#" class="btn btn-action" data-dismiss="modal" >Cancel</a>
+            </div>
+          </div>-->
+          
+
+{% if finance_core %}
+<div class="label label-inverse">Finance core actions</div>
 {% if not curr_portal.opened %}
-<div class="well"><h4>Click on 'Open Portal' to enable Shaastra event coordinators to update event budgets.</h4><br>
-<h4><a class="btn btn-success" href="{% url erp.finance.views.toggle %}">Open Portal</a></h4><br>
+<div class="well">
+<h4>Click on 'Open Portal' to enable Shaastra event coordinators to update event budgets.</h4><br>
+<!--<h4><a data-toggle="modal" href="#myModal" class="btn btn-success">Open Portal</a></h4>-->
+<h4><a class="btn btn-success" href="{% url erp.finance.views.toggle %}">Open Portal</a></h4>
+<br>
 {% endif %}
 
 {% if curr_portal.opened %}
-<div class="well"><h4>Click on 'Close Portal' to disable further editing of budget plans by Shaastra event coordinators.</h4><br>
+
+<div class="well">
+<h4>Click on 'Close Portal' to disable further editing of budget plans by Shaastra event coordinators.</h4><br>
 <h4><a class="btn btn-danger" href="{% url erp.finance.views.toggle %}">Close Portal</a></h4><br>
 {% endif %}
-<h4><a class="btn btn-success" href="{% url erp.finance.views.permissions %}">Pemissions</a></h4><br></div>
+<h4>Grant permissions to only certain finance coordinators to sanction budget plan.</h4><br>
+<h4><a class="btn btn-success" href="{% url erp.finance.views.permissions %}">Pemissions</a></h4><br>
 
-<h3>Choose the Deadline that needs to be displayed for the Event coords for their Budget proposal submission</h3>
+<h4>Choose the deadline that needs to be displayed for the Event coords for their Budget proposal submission.</h4>
 <form action="" method="POST">
 {% csrf_token %}
 <table>
 {{deadlineform}}
 </table>
 <input type="submit" class="btn btn-primary" value="Save Deadline"/>
-</form>
+</form></div>
 {% endif %}
 
 
@@ -205,7 +225,7 @@ Please click on the event name whose budget plans you want to see{% if not curr_
 
 {% block javascript %}
 {{ block.super }}
-
+<script src="{{MEDIA_URL}}js/jquery.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
 
 <script type="text/javascript">

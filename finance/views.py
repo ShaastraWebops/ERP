@@ -63,7 +63,12 @@ def budget_portal(request, plan="None"):
     curr_user=request.user
     event=False
     finance=False
-    deadline=Deadline.objects.get(id=1)
+    deadline=Deadline.objects.filter(id=1)
+    if deadline:
+        deadline=Deadline.objects.get(id=1)
+    if not deadline:
+        deadline=Deadline(budget_portal_deadline=date.today())
+  
     if finance_core:
         deadlines=Deadline.objects.all()
         if not deadlines:
@@ -130,7 +135,7 @@ def budget_portal(request, plan="None"):
                             form_saved = True 
                         qset = Item.objects.filter(department=department, budget=curr_plan)
                         if 'add_more_items' in request.POST: 
-                            print "hellO"
+                         
                             if len(qset)<5:
                                 extra1=5-len(qset)
                             else:
@@ -170,7 +175,7 @@ def budget_portal(request, plan="None"):
     elif str(curr_userprofile.department) == "Finance":
         finance=True
         event=False
-        departments=Department.objects.filter(is_event=True)
+        departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
         has_perms = False
         finance_coords=Permission.objects.all()
         for eachcoord in finance_coords:
