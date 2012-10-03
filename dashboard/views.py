@@ -81,14 +81,19 @@ def display_contacts (request , owner_name=None):#this will be a common tab
     if is_core(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_core= True
+    		finance_tab=True
 
     if is_supercoord(curr_user):
         if str(curr_userprofile.department) == 'QMS':
             qms_supercoord= True
+            finance_tab=True
             
     if is_coord(curr_user):
 		if str(curr_userprofile.department) == 'QMS':
 			qms_coord= True
+			finance_tab=True
+    if department.is_event:
+            finance_tab=True
     return render_to_response('dashboard/display_contacts.html',locals() ,context_instance = global_context(request))
 
 

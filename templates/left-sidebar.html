@@ -24,11 +24,14 @@
     <a href="{% url tasks.views.edit_task owner_name=user %}"><i class="icon-plus" id="li_task_icon"></i> Add Task </a>
 </li>
 {% endif %}
-{% if event or finance %}
-{% endif %}
+<!--{% if event or finance %}
+{% endif %}-->
+
+{% if finance_tab %}
 <li id="li_finance">
     <a href="{% url finance.views.budget_portal plan='budget'  %}"><i class="icon-star" id="li_finance_icon"></i> Finance </a>
 </li>
+{% endif %}
 
 
 <li id="li_feedback">
