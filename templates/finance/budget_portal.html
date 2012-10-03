@@ -205,6 +205,7 @@ Please click on the event name whose budget plans you want to see{% if not curr_
 <h4><a class="btn btn-success" href="{% url erp.finance.views.permissions %}">Pemissions</a></h4><br>
 
 <h4>Choose the deadline that needs to be displayed for the Event coords for their Budget proposal submission.</h4>
+YYYY-MM-DD hrs:min:sec
 <form action="" method="POST">
 {% csrf_token %}
 <table>
@@ -212,6 +213,13 @@ Please click on the event name whose budget plans you want to see{% if not curr_
 </table>
 <input type="submit" class="btn btn-primary" value="Save Deadline"/>
 </form></div>
+{% if form_saved %}
+<div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+	Deadline updated successfully    
+	</div>
+
+{% endif %}
 {% endif %}
 
 

@@ -232,11 +232,13 @@ def budget_portal(request, plan="None"):
         """
         Finance core has the option to set deadline.
         """                            
-        if finance_core:                
+        if finance_core:
+            form_saved=False                
             if request.method=='POST':
                 deadlineform=DeadlineForm(request.POST,instance=deadline)
                 if deadlineform.is_valid():
                     deadlineform.save()
+                    form_saved=True
               
             else:
     	        deadlineform=DeadlineForm(instance=deadline)
@@ -463,7 +465,7 @@ def display(request, event_name):
                     if len(qset)<5:
                         extra1=5-len(qset)
                     else:
-                        extra1=2
+                        extra1=0
                     ItemFormset=modelformset_factory(Item, fields=('name', 'description','quantity', 'original_amount'), extra=extra1, can_delete=True)
                     if request.method== "POST":
                         budgetclaimform=BudgetClaimForm(request.POST, instance=plan_finance) 
@@ -482,12 +484,6 @@ def display(request, event_name):
                                         curr_item.delete()      	                
                                     form_saved = True 
                             qset = Item.objects.filter(department=event1, budget=plan_finance) 
-                            if len(qset)<5:
-                                extra1=5-len(qset)
-                            else:
-                                extra1=2
-                            ItemFormset=modelformset_factory(Item, fields=('name', 'description','quantity', 'original_amount'), extra=extra1, can_delete=True)
-                            itemformset=ItemFormset(queryset=qset)  
                         else:
                             error=True
                         if budgetclaimform.is_valid():
@@ -499,6 +495,18 @@ def display(request, event_name):
     	                    budgetclaimform1.save()
     	                else:
                             error=True
+                        if 'add_more_items' in request.POST: 
+                            if len(qset)<5:
+                                extra1=5-len(qset)
+                            else:
+                                extra1=2
+                        else:
+                            if len(qset)<5:
+                                extra1=5-len(qset)
+                            else:
+                                extra1=0
+                        ItemFormset=modelformset_factory(Item, fields=('name', 'description','quantity','original_amount'),extra=extra1, can_delete=True)
+                        itemformset=ItemFormset(queryset=qset) 
                     else:
                         budgetclaimform=BudgetClaimForm(instance=plan_finance)
                         itemformset=ItemFormset(queryset=qset)
