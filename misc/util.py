@@ -10,7 +10,7 @@ from erp import settings
 from erp.users import models
 from erp.department.models import Department
 import os # upload files
-#import MySQLdb
+import MySQLdb
 import re, md5, time
 
 # Some macros for readability
