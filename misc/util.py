@@ -92,15 +92,25 @@ def global_context(request):
                 if str(curr_userprofile.department) == 'QMS':
                     qms_core= True
                     finance_tab=True
+                if str(curr_userprofile.department) == 'Finance':
+                    finance_tab=True
+                if department.is_event:
+                    finance_tab=True
             if is_supercoord(curr_user):
                 if str(curr_userprofile.department) == 'QMS':
                     qms_supercoord= True
+                    finance_tab=True
+                if str(curr_userprofile.department) == 'Finance':
+                    finance_tab=True
+                if department.is_event:
                     finance_tab=True            
             if is_coord(curr_user):
                 if str(curr_userprofile.department) == 'QMS':
                     qms_coord= True
                     finance_tab=True
-            if department.is_event:
+                if department.is_event:
+                    finance_tab=True
+                if str(curr_userprofile.department) == 'Finance':
                     finance_tab=True
         except:
                 qms_core = False
