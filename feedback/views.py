@@ -157,9 +157,9 @@ def answer(request, owner_name=None):
             coord_profiles = userprofile.objects.filter (department= curr_department,user__groups__name = 'Coords').exclude(user=request.user)
             questions=Question.objects.filter(departments=curr_department).exclude(answered_by='Core').exclude(answered_by='Vol')
             answers=Answer.objects.filter(creator=curr_userprofile)           
-            return render_to_response('feedback/feedback.html',locals(),context_instance=RequestContext(request))
+            return render_to_response('feedback/feedback.html',locals(),context_instance=global_context(request))
     
-    return render_to_response('feedback/feedback.html',locals(),context_instance=RequestContext(request))    
+    return render_to_response('feedback/feedback.html',locals(),context_instance=global_context(request))    
 
 @needs_authentication    
 def answer_questions(request,userprofile_id,question_id,rating=None, owner_name = None):
@@ -240,7 +240,7 @@ def answer_questions(request,userprofile_id,question_id,rating=None, owner_name 
                         answer_present=True
                 if not answer_present:
                     question_no_answer.append(question_one)
-            return render_to_response('feedback/answer_questions.html',locals(),context_instance=RequestContext(request))
+            return render_to_response('feedback/answer_questions.html',locals(),context_instance=global_context(request))
             
         if is_coord(curr_user):
             if str(curr_userprofile.department) == "QMS":
@@ -267,9 +267,9 @@ def answer_questions(request,userprofile_id,question_id,rating=None, owner_name 
                         answer_present=True
                 if not answer_present:
                     question_no_answer.append(question_one)
-            return render_to_response('feedback/answer_questions.html',locals(),context_instance=RequestContext(request))
+            return render_to_response('feedback/answer_questions.html',locals(),context_instance=global_context(request))
                            
-    return render_to_response('feedback/feedback.html',locals(),context_instance=RequestContext(request))    
+    return render_to_response('feedback/feedback.html',locals(),context_instance=global_context(request))    
 
 """
 A QMS Department special. To filter questions set for cores and coords.
@@ -311,7 +311,7 @@ def question_for(request, owner_name = None):
         userprofile__department = department)
 
              
-    return render_to_response('feedback/questions_for.html',locals(),context_instance=RequestContext(request))
+    return render_to_response('feedback/questions_for.html',locals(),context_instance=global_context(request))
 
 """
 A QMS Department special. Displays all questions with options for editing and deleting(only for core)
@@ -377,7 +377,7 @@ def display(request,question_for, owner_name = None):
         else:
             raise Http404
 
-    return render_to_response('feedback/display.html',locals(),context_instance=RequestContext(request))
+    return render_to_response('feedback/display.html',locals(),context_instance=global_context(request))
 
 """
 A QMS Department special. To add questions.
@@ -419,7 +419,7 @@ def add_question(request,question_for, owner_name = None):
                     else:
                         error=True
                 questionform=QuestionFormCoord()
-                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('feedback/question.html',locals(),context_instance=global_context(request))
             if question_for== 'Core':
                 if request.method == 'POST':
                     questionform=QuestionFormCore(request.POST)
@@ -436,7 +436,7 @@ def add_question(request,question_for, owner_name = None):
                     else:
                         error=True
                 questionform=QuestionFormCore()
-                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('feedback/question.html',locals(),context_instance=global_context(request))
         else:
             raise Http404
 
@@ -461,7 +461,7 @@ def add_question(request,question_for, owner_name = None):
                     else:
                         error=True
                 questionform=QuestionFormCoord()
-                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('feedback/question.html',locals(),context_instance=global_context(request))
             if question_for== 'Core':
                 if request.method == 'POST':
                     questionform=QuestionFormCore(request.POST)
@@ -478,7 +478,7 @@ def add_question(request,question_for, owner_name = None):
                     else:
                         error=True
                 questionform=QuestionFormCore()
-                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('feedback/question.html',locals(),context_instance=global_context(request))
         else:
             raise Http404
 
@@ -503,7 +503,7 @@ def add_question(request,question_for, owner_name = None):
                     else:
                         error=True
                 questionform=QuestionFormCoord()
-                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('feedback/question.html',locals(),context_instance=global_context(request))
             else:
                 if request.method == 'POST':
                     questionform=QuestionFormCore(request.POST)
@@ -520,7 +520,7 @@ def add_question(request,question_for, owner_name = None):
                     else:
                         error=True
                 questionform=QuestionFormCore()
-                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('feedback/question.html',locals(),context_instance=global_context(request))
         else:
             raise Http404
 
@@ -565,7 +565,7 @@ def edit_question(request,question_id, question_for, owner_name = None):
                     else:
                         error=True
                 questionform=QuestionFormCoord(instance=q)
-                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('feedback/question.html',locals(),context_instance=global_context(request))
             if question_for== 'Core':
                 if request.method == 'POST':
                     questionform=QuestionFormCore(request.POST, instance=q)
@@ -582,7 +582,7 @@ def edit_question(request,question_id, question_for, owner_name = None):
                     else:
                         error=True
                 questionform=QuestionFormCore(instance=q)
-                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('feedback/question.html',locals(),context_instance=global_context(request))
         else:
             raise Http404
 
@@ -607,7 +607,7 @@ def edit_question(request,question_id, question_for, owner_name = None):
                     else:
                         error=True
                 questionform=QuestionFormCoord(instance=q)
-                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('feedback/question.html',locals(),context_instance=global_context(request))
             if question_for== 'Core':
                 if request.method == 'POST':
                     questionform=QuestionFormCore(request.POST, instance=q)
@@ -624,7 +624,7 @@ def edit_question(request,question_id, question_for, owner_name = None):
                     else:
                         error=True
                 questionform=QuestionFormCore(instance=q)
-                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('feedback/question.html',locals(),context_instance=global_context(request))
         else:
             raise Http404
 
@@ -649,7 +649,7 @@ def edit_question(request,question_id, question_for, owner_name = None):
                     else:
                         error=True
                 questionform=QuestionFormCoord(instance=q)
-                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('feedback/question.html',locals(),context_instance=global_context(request))
             else:
                 if request.method == 'POST':
                     questionform=QuestionFormCore(request.POST, instance=q)
@@ -666,7 +666,7 @@ def edit_question(request,question_id, question_for, owner_name = None):
                     else:
                         error=True
                 questionform=QuestionFormCore(instance=q)
-                return render_to_response('feedback/question.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('feedback/question.html',locals(),context_instance=global_context(request))
         else:
             raise Http404
 
@@ -777,10 +777,10 @@ def review(request, owner_name = None):
                         saveavg = Answeravg(question=q,owner=curr_userprofile,avg=average, num=number)
                         saveavg.save()        
             averages = Answeravg.objects.filter(owner=curr_userprofile)
-            return render_to_response('feedback/review.html',locals(),context_instance=RequestContext(request))        
+            return render_to_response('feedback/review.html',locals(),context_instance=global_context(request))        
         else:
             raise Http404    
-    return render_to_response('feedback/feedback.html',locals(),context_instance=RequestContext(request))      
+    return render_to_response('feedback/feedback.html',locals(),context_instance=global_context(request))      
 
 @needs_authentication
 def qms_review(request, dept_id, is_all, owner_name = None):
@@ -883,4 +883,4 @@ def qms_review(request, dept_id, is_all, owner_name = None):
         averages = Answeravg.objects.all()
     else:
         raise Http404
-    return render_to_response('feedback/qms_review.html',locals(),context_instance=RequestContext(request))    
+    return render_to_response('feedback/qms_review.html',locals(),context_instance=global_context(request))    
