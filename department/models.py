@@ -71,8 +71,12 @@ DEP_CHOICES = (
 # This is the initial department model
 class Department(models.Model):
     Dept_Name= models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
+
     # In case of multiple owners
     owner = models.ManyToManyField(User, blank=True, null=True)
+
+    is_event=models.BooleanField(default=True)
+
     def __str__(self):
         return self.Dept_Name
         

@@ -1,0 +1,256 @@
+{% extends "base_portal.html" %}
+{% block body %}
+
+<style>
+textarea{ width: 250px; height: 60px;}
+input{width:100px; height:25px;}
+</style>
+
+{% if event %}
+
+
+    {% if not curr_portal.opened %}
+        <div class="well">
+            <h2>BUDGET PORTAL</h2>
+            <h5>Here you can propose three budget plans for your event.</h5><br>
+            <h5>THE PORTAL IS CURRENTLY CLOSED. YOU ARE NOT ALLOWED TO EDIT YOUR PLANS.</h5><br>
+        
+    <div class="pull-right">
+    <a class="btn " href="{% url finance.views.display event_name='none' %}" >Display all plans</a>
+    </div><br>
+        
+        </div>
+        
+    {% if submitted %}
+    
+<h2>FINAL BUDGET PLAN FROM FINANCE DEPARTMENT </h2>
+               
+    <h4>Total Amount: {{plan_finance.total_amount}}</h4>
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+	    	<tr>
+	    	<th>Items Name</th>
+	    	<th>Description</th>
+	    	<th>Quantity</th>
+	    	<th>Amount</th>	
+           	</tr>
+        </thead>
+        <tbody>
+        {% for item in items %}	
+            {% ifequal item.budget plan_finance %}
+        		<tr>
+	    		<td>{{item.name}}</td>
+	    		<td>{{item.description}}</td>
+	    		<td>{{item.quantity}}</td>
+	    		<td>{{item.original_amount}}</td>
+                </tr>
+            {% endifequal %}			
+        {% endfor %}
+        </tbody>
+    </table>	
+    <h4>comments:</h4> <p>{{plan_finance.comment}}</p>    
+    
+    
+    {% endif %}   <!--submit-->     
+        
+        
+    {% endif %}     <!-- not curr-port.. -->
+
+{% if curr_portal.opened %}
+
+{% if not form_selected %}        
+    <div class="well">
+        <h2>BUDGET PORTAL</h2>
+        <div class="pull-right">
+            <h3>Deadline:</h3><strong>{{deadline.budget_portal_deadline}}</strong>
+        </div>
+
+        <h5>Here you can propose three budget plans for your event.</h5><br>
+        <h5>CHOOSE PLAN TO UPDATE</h5><br>
+{% endif %}
+
+{% for plan1 in plans %}
+{% ifnotequal plan1.name 'F' %} 
+	{% if plan1.name == plan %}
+	<a  class="btn btn-info" href="{% url finance.views.budget_portal plan=plan1.name %}" >PLAN {{plan1.name}}</a>
+	{% else %}
+<a  class="btn btn-action" href="{% url finance.views.budget_portal plan=plan1.name %}" >PLAN {{plan1.name}}</a>
+	{% endif %}
+{% endifnotequal %}
+{% endfor %}
+<div class="pull-right">
+<a  class="btn " href="{% url finance.views.display event_name=department.Dept_Name %}" >Display all plans</a>
+</div>
+
+{% if not form_selected %} 
+    </div>
+{% endif %}
+
+<br><br>
+
+{% if form_saved %}
+<div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+	Plan saved successfully    
+	</div>
+
+{% endif %}
+
+{% if error %}
+    <div class="alert">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <strong>Error</strong> Data not saved, Please check your inputs
+    </div>
+{% endif %}
+
+
+
+{% if form_selected %}
+<h3>PLAN {{curr_plan.name}}</h3>
+<div class='pull-right'><b>Total Amount</b>: {{curr_plan.total_amount}}</div>
+<form action="" method="POST">
+{% csrf_token %}
+	
+</br>
+<h4>Items</h4>
+{{itemformset.management_form}}
+   <table class="table table-condensed table-bordered"> 
+	<thead>
+	<tr>
+		<th>Name</th>
+		<th>Description</th>
+		<th>Quantity</th>
+		<th>Amount</th>
+		<th> </th>
+		<th>Delete?</th>
+	</tr>	
+	</thead>
+<tbody>
+<div class="budgettextarea">
+	{% for itemform in itemformset %}
+<tr>
+		{% for field in itemform %}
+			<td>{{field}}
+		{% endfor %}</td>
+</tr>  
+	{% endfor%}
+</div>
+</tbody>
+</table>
+<div class="pull-right">
+<input type="submit" class="btn btn-info" name="add_more_items" value="Save and add more items"/>
+</div>
+{{budgetclaimform}}
+</br>
+</br>
+<input type="submit" class="btn btn-primary" name="save_plan" value="Save Plan"/>
+</form>
+
+{% endif %}<!-- form selected  -->
+
+{% endif %}<!-- portal open  -->
+
+{% endif %}<!-- is event?  -->
+
+{% if finance or qms_dept %}
+
+<h3>Welcome to Budget Portal</h3>
+</br>
+Please click on the event name whose budget plans you want to see{% if not curr_portal.opened and has_perms %} and update{% endif %}.<br><br>
+
+{% for dept in departments %}
+	{% if dept.Dept_Name in submittedplans %}
+	<a class="btn btn-danger" href="{% url finance.views.display event_name=dept.Dept_Name %}">{{dept}}</a>
+	{% endif %}
+	{% if dept.Dept_Name not in submittedplans %}
+	<a class="btn" href="{% url finance.views.display event_name=dept.Dept_Name %}">{{dept}}</a>
+    {% endif %}
+{% endfor %}
+
+{% endif %}
+
+<br><br>
+<!--
+          <div id="myModal" class="modal hide fade">
+            <div class="modal-body">
+                <p>  The portal will now be open to event coordinators. They will
+                be able to update their plans. All finance coordinators will be able
+                to view the plans. For editing permissions, portal must be closed.</p>
+            </div>
+
+            <div class="modal-footer">
+              <a class="btn btn-primary" href="{% url erp.finance.views.toggle %}">Open Portal</a>
+              <a href="#" class="btn btn-action" data-dismiss="modal" >Cancel</a>
+            </div>
+          </div>-->
+          
+
+{% if finance_core %}
+<div class="label label-inverse">Finance core actions</div>
+{% if not curr_portal.opened %}
+<div class="well">
+<h4>Click on 'Open Portal' to enable Shaastra event coordinators to update event budgets.</h4><br>
+<!--<h4><a data-toggle="modal" href="#myModal" class="btn btn-success">Open Portal</a></h4>-->
+<h4><a class="btn btn-success" href="{% url erp.finance.views.toggle %}">Open Portal</a></h4>
+<br>
+{% endif %}
+
+{% if curr_portal.opened %}
+
+<div class="well">
+<h4>Click on 'Close Portal' to disable further editing of budget plans by Shaastra event coordinators.</h4><br>
+<h4><a class="btn btn-danger" href="{% url erp.finance.views.toggle %}">Close Portal</a></h4><br>
+{% endif %}
+<h4>Grant permissions to only certain finance coordinators to sanction budget plan.</h4><br>
+<h4><a class="btn btn-success" href="{% url erp.finance.views.permissions %}">Pemissions</a></h4><br>
+
+<h4>Choose the deadline that needs to be displayed for the Event coords for their Budget proposal submission.</h4>
+YYYY-MM-DD hrs:min:sec
+<form action="" method="POST">
+{% csrf_token %}
+<table>
+{{deadlineform}}
+</table>
+<input type="submit" class="btn btn-primary" value="Save Deadline"/>
+</form></div>
+{% if form_saved %}
+<div class="alert alert-success">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+	Deadline updated successfully    
+	</div>
+
+{% endif %}
+{% endif %}
+
+
+{% endblock %}
+{% block tabs %}
+{% endblock %}
+{% block form_stuff %}
+<br>
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{{MEDIA_URL}}js/jquery.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_questions");
+    var e = document.getElementById("li_questions_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+
+<script type="text/javascript">  //initialise django-chosen
+$(document).ready(function() {
+    $('select').chosen();
+});
+</script>
+
+{% endblock javascript %}
+{% block display_stuff %}
+{% endblock %}

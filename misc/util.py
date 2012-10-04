@@ -25,8 +25,10 @@ def global_context(request):
     # user visits any page (esp the login page)
     try:
         user_dept_name = request.user.get_profile ().department.Dept_Name
+
     except:
         user_dept_name = False
+
     try:
         user_name = request.user.get_profile ().name
     except:
@@ -41,13 +43,17 @@ def global_context(request):
 
     try:
         po_dept_name = page_owner.get_profile ().department.Dept_Name
+
     except:
         po_dept_name = False
 
+
     try:
         po_name = page_owner.get_profile ().name
+
     except:
         po_name = False
+
     
     try:
         if (request.user.get_profile().department.owner.all()):
@@ -66,10 +72,41 @@ def global_context(request):
     except:
         multiple_coord = False
             
+
+
+    qms_core = False
+    qms_supercoord = False
+    qms_coord = False
+    finance_tab=False
+
     if page_owner != request.user:
         is_visitor = True
     else:
         is_visitor = False
+        try:        
+            po_name = page_owner.get_profile ().name
+            curr_user=request.user
+            curr_userprofile=userprofile.objects.get(user=request.user)
+            department = page_owner.get_profile ().department
+            if is_core(curr_user):
+                if str(curr_userprofile.department) == 'QMS':
+                    qms_core= True
+                    finance_tab=True
+            if is_supercoord(curr_user):
+                if str(curr_userprofile.department) == 'QMS':
+                    qms_supercoord= True
+                    finance_tab=True            
+            if is_coord(curr_user):
+                if str(curr_userprofile.department) == 'QMS':
+                    qms_coord= True
+                    finance_tab=True
+            if department.is_event:
+                    finance_tab=True
+        except:
+                qms_core = False
+                qms_supercoord = False
+                qms_coord = False
+                finance_tab=False
 
     context =  RequestContext (request,
             {'user':request.user,
@@ -90,6 +127,10 @@ def global_context(request):
              'photo_list':photo_list,
              'supercore':supercore,
              'multiple_coord':multiple_coord,                 
+             'qms_core':qms_core,
+             'qms_coord':qms_coord,
+             'qms_supercoord':qms_supercoord,
+             'finance_tab':finance_tab,
             })
     return context
 

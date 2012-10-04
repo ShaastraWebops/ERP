@@ -1,0 +1,266 @@
+{% extends "base_portal.html" %}
+{% block body %}
+
+
+<style>
+textarea{ width: 250px; height: 60px;}
+input{width:100px; height:25px;}
+</style>
+
+{% if not item_exist and not finance and not qms_dept%}
+<h4>There are no budget plans yet.</h4>
+{% endif %}
+
+{% if not first_time %}
+
+{% if item_exist and not submitted%} <h2>PROPOSED BUDGETS</h2> {% endif %}
+
+{% ifequal department.Dept_Name 'Finance'%}
+<h6>{{event_name}}</h6>
+{% endifequal %}
+
+{% ifequal department.Dept_Name 'QMS'%}
+<h6>{{event_name}}</h6>
+{% endifequal %}
+
+{% if planF and has_perms and not submitted %}
+<div class="accordion" id="plan_accordion">
+    <div class="accordion-group">
+{% endif %}	
+    {% for budget in budgets %}
+        
+        {% ifnotequal budget.name 'F' %}
+
+{% if planF and has_perms and not submitted %}
+            <div class="accordion-heading">
+                <a class="accordion-toggle" href="#{{budget.name}}" data-parent="plan_accordion" data-toggle="collapse" onclick=showType('{{budget.name}}'); ><h5 style="font-size:16px; line-height: 22px; color: rgb(50,50,50);">Plan {{budget.name}}</h5></a>
+            </div>
+            
+            <div id="{{budget.name}}" class="accordion-body collapse">
+                <div class="accordion" id="{{budget.name}}">
+{% endif %}
+
+{% if not planF and not submitted and item_exist %}
+<h5 style="font-size:16px; line-height: 22px; color: rgb(50,50,50);">Plan {{budget.name}}</h5>
+{% endif %}                
+{% if item_exist and not submitted%}
+                    <h4>Total Amount: {{budget.total_amount}}</h4>
+                        <table class="table table-striped table-bordered table-condensed">
+                            <thead>
+                    	    	<tr>
+                    	    	<th>Items Name</th>
+                    	    	<th>Description</th>
+                    	    	<th>Quantity</th>
+                    	    	<th>Amount</th>	
+                               	</tr>
+                            </thead>
+                            <tbody>
+                            {% for item in items %}	
+                                {% ifequal item.budget budget %}
+                            		<tr>
+                    	    		<td>{{item.name}}</td>
+                    	    		<td>{{item.description}}</td>
+                    	    		<td>{{item.quantity}}</td>
+                    	    		<td>{{item.original_amount}}</td>
+		                            </tr>
+                                {% endifequal %}			
+                            {% endfor %}
+                            </tbody>
+                        </table>	
+                        <h4>comments:</h4> <p>{{budget.comment}}</p>
+{% endif %}                        
+{% if planF and has_perms and not submitted %}
+                </div>
+            </div>
+{% endif %}            
+
+        {% endifnotequal %}
+    {% endfor %}
+    
+{% if planF and has_perms and not submitted %}
+    </div>
+</div>
+{% endif %}
+    
+    {% if finance and planF and has_perms and not submitted%}
+    <hr>
+<div>
+    <h3>Finance department's budget plan for {{event_name}}</h3>
+    {% if form_saved %}
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+        	Plan saved successfully    
+    	</div>
+
+    {% endif %}
+    {% if error %}
+        <div class="alert">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error</strong> Data not saved, Please check your inputs
+        </div>
+    {% endif %}
+    <h4>Total Amount= {{total_amount1}}</h4>
+    <form action="" method="POST">
+    {% csrf_token %}
+	
+    </br>
+    <h4>Items</h4>
+    {{itemformset.management_form}}
+        <table class="table table-striped table-bordered table-condensed"> 
+	        <thead>
+	            <tr>
+    	        <th>Name</th>
+	        	<th>Description</th>
+	        	<th>Quantity</th>
+	        	<th>Amount</th>
+	        	<th> </th>
+	        	<th>Delete?</th>
+	            </tr>	
+        	</thead>
+            <tbody>
+            <div class="budgettextarea">
+        	{% for itemform in itemformset %}
+                <tr>
+        		{% for field in itemform %}
+        			<td>{{field}}</td>
+        		{% endfor %}
+                </tr>  
+        	{% endfor%}
+            </div>
+            </tbody>
+        </table>
+    <div class="pull-right">
+        <input type="submit" class="btn btn-info" name="add_more_items"value="Save and add more items"/>
+    </div>
+    {{budgetclaimform}}
+    </br>
+    </br>
+        <input type="submit" class="btn btn-primary" value="Save Plan"/>
+    </form>
+</div>
+
+{% endif %}
+
+{% if finance_core and not submitted %}
+<a class="btn btn-danger" href="{% url finance.views.submit event=event_name %}" >Approve Plan</a>
+{% endif %}
+{% endif %}
+
+
+{% if finance and planF and has_perms and submitted%}
+
+{% if finance_core %}
+<a class="btn btn-info" href="{% url finance.views.submit event=event_name %}" >Disapprove Plan</a>
+{% endif %}
+
+{% endif %}
+
+
+<!-- Final view -->
+{% if planF and submitted %}
+{% if finance or qms_dept %}
+<h2>FINAL BUDGET PLAN FROM FINANCE DEPARTMENT </h2>
+
+    <h5 style="font-size:16px; line-height: 22px; color: rgb(50,50,50);">Plan {{plan_finance.name}}</h5>
+               
+    <h4>Total Amount: {{plan_finance.total_amount}}</h4>
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+	    	<tr>
+	    	<th>Items Name</th>
+	    	<th>Description</th>
+	    	<th>Quantity</th>
+	    	<th>Amount</th>	
+           	</tr>
+        </thead>
+        <tbody>
+        {% for item in items %}	
+            {% ifequal item.budget plan_finance %}
+        		<tr>
+	    		<td>{{item.name}}</td>
+	    		<td>{{item.description}}</td>
+	    		<td>{{item.quantity}}</td>
+	    		<td>{{item.original_amount}}</td>
+                </tr>
+            {% endifequal %}			
+        {% endfor %}
+        </tbody>
+    </table>	
+    <h4>comments:</h4> <p>{{plan_finance.comment}}</p>
+
+
+<h2>PROPOSED BUDGETS</h2>
+{% ifequal department 'Finance'%}
+<h6>{{event_name}}</h6>
+{% endifequal %}
+
+{% ifequal department 'QMS'%}
+<h6>{{event_name}}</h6>
+{% endifequal %}
+
+
+    {% for budget in budgets %}
+        {% ifnotequal budget.name 'F' %}
+            
+            <h5 style="font-size:16px; line-height: 22px; color: rgb(50,50,50);">Plan {{budget.name}}</h5>
+               
+                    <h4>Total Amount: {{budget.total_amount}}</h4>
+                        <table class="table table-striped table-bordered table-condensed">
+                            <thead>
+                    	    	<tr>
+                    	    	<th>Items Name</th>
+                    	    	<th>Description</th>
+                    	    	<th>Quantity</th>
+                    	    	<th>Amount</th>	
+                               	</tr>
+                            </thead>
+                            <tbody>
+                            {% for item in items %}	
+                                {% ifequal item.budget budget %}
+                            		<tr>
+                    	    		<td>{{item.name}}</td>
+                    	    		<td>{{item.description}}</td>
+                    	    		<td>{{item.quantity}}</td>
+                    	    		<td>{{item.original_amount}}</td>
+		                            </tr>
+                                {% endifequal %}			
+                            {% endfor %}
+                            </tbody>
+                        </table>	
+                        <h4>comments:</h4> <p>{{budget.comment}}</p>
+
+        {% endifnotequal %}
+    {% endfor %}
+{% endif %}
+{% endif %}
+<!-- the end -->
+
+{% if first_time %}
+<h4> {{event_name}} coordinators have not updated any plans. </h4>
+
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_questions");
+    var e = document.getElementById("li_questions_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+
+<script type="text/javascript">  //initialise django-chosen
+$(document).ready(function() {
+    $('select').chosen();
+});
+</script>
+{% endblock javascript %}
+{% block display_stuff %}
+{% endblock %}
