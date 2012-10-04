@@ -340,25 +340,7 @@ def edit_task (request, task_id = None, owner_name = None):
         request = request,
         is_task_comment = True,
         object_id = task_id,
-        other_errors = other_errors)
-    
-    curr_userprofile=userprofile.objects.get(user=user)
-    if is_core(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
-			qms_core= True
-    		finance_tab=True
-
-    if is_supercoord(curr_user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_supercoord= True
-            finance_tab=True
-            
-    if is_coord(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
-			qms_coord= True
-			finance_tab=True
-    if department.is_event:
-            finance_tab=True
+        other_errors = other_errors)    
 
     return render_to_response('tasks/edit_task.html',
                               locals(),
@@ -443,23 +425,7 @@ def edit_subtask (request, subtask_id, owner_name = None):
         object_id = subtask_id,
         other_errors = other_errors)
     
-    curr_userprofile=userprofile.objects.get(user=user)
-    if is_core(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
-			qms_core= True
-    		finance_tab=True
-
-    if is_supercoord(curr_user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_supercoord= True
-            finance_tab=True
-            
-    if is_coord(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
-			qms_coord= True
-			finance_tab=True
-    if department.is_event:
-            finance_tab=True     
+   
 
     if has_updated:
         return redirect ('erp.tasks.views.display_portal',
@@ -481,24 +447,6 @@ def display_subtask (request, subtask_id, owner_name = None):
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
     comments = SubTaskComment.objects.filter (subtask__id = subtask_id)
-
-    curr_userprofile=userprofile.objects.get(user=user)
-    if is_core(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
-			qms_core= True
-    		finance_tab=True
-
-    if is_supercoord(curr_user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_supercoord= True
-            finance_tab=True
-            
-    if is_coord(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
-			qms_coord= True
-			finance_tab=True
-    if department.is_event:
-            finance_tab=True
 
     return render_to_response('tasks/display_subtask.html',
                               locals(),
@@ -530,23 +478,6 @@ def display_task (request, task_id, owner_name = None):
     curr_task = Task.objects.get (id = task_id)
     comments = TaskComment.objects.filter (task__id = task_id)
 
-    curr_userprofile=userprofile.objects.get(user=user)
-    if is_core(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
-			qms_core= True
-    		finance_tab=True
-
-    if is_supercoord(curr_user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_supercoord= True
-            finance_tab=True
-            
-    if is_coord(curr_user):
-		if str(curr_userprofile.department) == 'QMS':
-			qms_coord= True
-			finance_tab=True
-    if department.is_event:
-            finance_tab=True
 
     return render_to_response('tasks/display_task.html',
                               locals(),
