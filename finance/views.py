@@ -94,9 +94,9 @@ def budget_portal(request, plan="None"):
                     if plan_finance.submitted == True:
                         submitted = True
                     budgets = plans.exclude(name='F') 
-                return render_to_response('finance/event_core_view.html',locals(),context_instance=RequestContext(request))        
+                return render_to_response('finance/event_core_view.html',locals(),context_instance=global_context(request))        
             else:
-                return render_to_response('finance/event_core_view.html',locals(),context_instance=RequestContext(request))            
+                return render_to_response('finance/event_core_view.html',locals(),context_instance=global_context(request))            
             
                            
         if curr_portal.opened==True:
@@ -191,7 +191,7 @@ def budget_portal(request, plan="None"):
                 plan_finance=Budget.objects.get(name='F',department=department)
                 if plan_finance.submitted == True:
                     submitted=True            
-        return render_to_response('finance/budget_portal.html',locals(),context_instance=RequestContext(request))    
+        return render_to_response('finance/budget_portal.html',locals(),context_instance=global_context(request))    
         
     elif str(department) == "Finance":
         finance=True
@@ -243,7 +243,7 @@ def budget_portal(request, plan="None"):
             else:
     	        deadlineform=DeadlineForm(instance=deadline)
     
-        return render_to_response('finance/budget_portal.html',locals(),context_instance=RequestContext(request))
+        return render_to_response('finance/budget_portal.html',locals(),context_instance=global_context(request))
         
     """
     If user is part of QMS department then, he/she has the pemission to
@@ -264,7 +264,7 @@ def budget_portal(request, plan="None"):
                         if plan_finance.submitted == True:
                             submittedplans.append(dept.Dept_Name)
                                 	
-        return render_to_response('finance/budget_portal.html',locals(),context_instance=RequestContext(request))
+        return render_to_response('finance/budget_portal.html',locals(),context_instance=global_context(request))
     else:
         raise Http404
         
@@ -362,13 +362,13 @@ def permissions(request):
                 qset = Permission.objects.all() 
                 permissionformset=PermissionFormset(queryset=qset) 
                 perms=True 
-                return render_to_response('finance/permissions.html',locals(),context_instance=RequestContext(request))
+                return render_to_response('finance/permissions.html',locals(),context_instance=global_context(request))
         else:
             permissionformset=PermissionFormset(queryset=qset)
                 
     else:
         raise Http404 
-    return render_to_response('finance/permissions.html',locals(),context_instance=RequestContext(request))
+    return render_to_response('finance/permissions.html',locals(),context_instance=global_context(request))
         
 def display(request, event_name):
     """
@@ -418,7 +418,7 @@ def display(request, event_name):
         item_exist = False
         if items:
             item_exist = True
-        return render_to_response('finance/display.html',locals(),context_instance=RequestContext(request))
+        return render_to_response('finance/display.html',locals(),context_instance=global_context(request))
     
 	#Check if instance of open portal present. Otherwise make one.                
     openportal=OpenBudgetPortal.objects.filter(id=1)
@@ -510,16 +510,16 @@ def display(request, event_name):
                     else:
                         budgetclaimform=BudgetClaimForm(instance=plan_finance)
                         itemformset=ItemFormset(queryset=qset)
-                    return render_to_response('finance/display.html',locals(),context_instance=RequestContext(request))
+                    return render_to_response('finance/display.html',locals(),context_instance=global_context(request))
                 else:
                     submitted = True
-                    return render_to_response('finance/display.html',locals(),context_instance=RequestContext(request))               
+                    return render_to_response('finance/display.html',locals(),context_instance=global_context(request))               
             else:
-                return render_to_response('finance/display.html',locals(),context_instance=RequestContext(request))    
+                return render_to_response('finance/display.html',locals(),context_instance=global_context(request))    
                         
         else:
             first_time = True
-            return render_to_response('finance/display.html',locals(),context_instance=RequestContext(request)) 
+            return render_to_response('finance/display.html',locals(),context_instance=global_context(request)) 
        
 def submit(request, event):
     page_owner = get_page_owner (request, owner_name=request.user)
