@@ -13,6 +13,7 @@ from django.core.urlresolvers import reverse
 from datetime import date
 
 def budget_portal(request, plan="None"):
+    feedback_tab=True
     finance_core=False
     total_amount1=0
     curr_userprofile=userprofile.objects.get(user=request.user)
@@ -269,6 +270,7 @@ def budget_portal(request, plan="None"):
         raise Http404
         
 def toggle(request):
+    feedback_tab=True
     page_owner = get_page_owner (request, owner_name=request.user)
     department = page_owner.get_profile ().department 
     if is_core(request.user) and str(department) == "Finance":
@@ -292,6 +294,7 @@ def toggle(request):
         raise Http404  
         
 def permissions(request):
+    feedback_tab=True
     page_owner = get_page_owner (request, owner_name=request.user)
     #Get Department Members' image thumbnails
     department = page_owner.get_profile ().department      
@@ -375,6 +378,7 @@ def display(request, event_name):
     Display the plans and items.
     """
     finance=False
+    feedback_tab=True
     form_saved=False
     total_amount1=0
     page_owner = get_page_owner (request, owner_name=request.user)
@@ -429,6 +433,7 @@ def display(request, event_name):
         curr_portal.save()    
     first_time=False
     item_exist=False
+    event1 = Department.objects.get(id=event_name)
     if str(department) == "Finance" or "QMS":
    
         finance_core=False
@@ -436,7 +441,7 @@ def display(request, event_name):
             finance=True
         else:
             qms_dept=True    
-        event1 = Department.objects.get(Dept_Name=event_name)
+        event1 = Department.objects.get(id=event_name)
         plans = Budget.objects.filter(department=event1)
         if plans:
             item_exist=True
@@ -522,6 +527,7 @@ def display(request, event_name):
             return render_to_response('finance/display.html',locals(),context_instance=global_context(request)) 
        
 def submit(request, event):
+    feedback_tab=True
     page_owner = get_page_owner (request, owner_name=request.user)
     department = page_owner.get_profile ().department 
     if is_core(request.user) and str(department) == "Finance":
@@ -533,7 +539,7 @@ def submit(request, event):
             curr_portal.save()
         
         if curr_portal.opened==False:
-            event1 = Department.objects.get(Dept_Name=event)
+            event1 = Department.objects.get(id=event)
             plans = Budget.objects.filter(department=event1)
             if plans:
                 plan_finance=Budget.objects.get(name='F',department=event1)

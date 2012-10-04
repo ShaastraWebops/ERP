@@ -3,9 +3,9 @@ from django.conf.urls import *
 
 
 urlpatterns=patterns('erp.finance.views',
-    (r'^display/(?P<event_name>\w+)/$','display'),
+    (r'^display/(?P<event_name>\d+)/$','display'),
     (r'^toggle/$','toggle'),
-    (r'^submit/(?P<event>\w+)/$','submit'),
+    (r'^submit/(?P<event>\d+)/$','submit'),
     (r'^perms/$','permissions'),
 	(r'^(?P<plan>\w+)/$','budget_portal'),
 

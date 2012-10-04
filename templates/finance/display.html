@@ -16,11 +16,11 @@ input{width:100px; height:25px;}
 {% if item_exist and not submitted%} <h2>PROPOSED BUDGETS</h2> {% endif %}
 
 {% ifequal department.Dept_Name 'Finance'%}
-<h6>{{event_name}}</h6>
+<h6>{{event1}}</h6>
 {% endifequal %}
 
 {% ifequal department.Dept_Name 'QMS'%}
-<h6>{{event_name}}</h6>
+<h6>{{event1}}</h6>
 {% endifequal %}
 
 {% if planF and has_perms and not submitted %}
@@ -85,7 +85,7 @@ input{width:100px; height:25px;}
     {% if finance and planF and has_perms and not submitted%}
     <hr>
 <div>
-    <h3>Finance department's budget plan for {{event_name}}</h3>
+    <h3>Finance department's budget plan for {{event1}}</h3>
     {% if form_saved %}
         <div class="alert alert-success">
             <button type="button" class="close" data-dismiss="alert">×</button>
@@ -191,11 +191,11 @@ input{width:100px; height:25px;}
 
 <h2>PROPOSED BUDGETS</h2>
 {% ifequal department 'Finance'%}
-<h6>{{event_name}}</h6>
+<h6>{{event1}}</h6>
 {% endifequal %}
 
 {% ifequal department 'QMS'%}
-<h6>{{event_name}}</h6>
+<h6>{{event1}}</h6>
 {% endifequal %}
 
 
@@ -236,7 +236,7 @@ input{width:100px; height:25px;}
 <!-- the end -->
 
 {% if first_time %}
-<h4> {{event_name}} coordinators have not updated any plans. </h4>
+<h4> {{event1}} coordinators have not updated any plans. </h4>
 
 {% endif %}
 
@@ -249,8 +249,8 @@ input{width:100px; height:25px;}
 
 <script type="text/javascript">
 $(document).ready(function() {
-    var d = document.getElementById("li_questions");
-    var e = document.getElementById("li_questions_icon");
+    var d = document.getElementById("li_finance");
+    var e = document.getElementById("li_finance_icon");
     d.className = "active";
     e.className = e.className + " icon-white";
  });

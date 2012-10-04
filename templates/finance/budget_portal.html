@@ -1,6 +1,6 @@
 {% extends "base_portal.html" %}
 {% block body %}
-
+{% load my_filter %}
 <style>
 textarea{ width: 250px; height: 60px;}
 input{width:100px; height:25px;}
@@ -16,7 +16,7 @@ input{width:100px; height:25px;}
             <h5>THE PORTAL IS CURRENTLY CLOSED. YOU ARE NOT ALLOWED TO EDIT YOUR PLANS.</h5><br>
         
     <div class="pull-right">
-    <a class="btn " href="{% url finance.views.display event_name='none' %}" >Display all plans</a>
+    <a class="btn " href="{% url finance.views.display event_name=0 %}" >Display all plans</a>
     </div><br>
         
         </div>
@@ -79,7 +79,7 @@ input{width:100px; height:25px;}
 {% endifnotequal %}
 {% endfor %}
 <div class="pull-right">
-<a  class="btn " href="{% url finance.views.display event_name=department.Dept_Name %}" >Display all plans</a>
+<a  class="btn " href="{% url finance.views.display event_name=department.id %}" >Display all plans</a>
 </div>
 
 {% if not form_selected %} 
@@ -160,12 +160,12 @@ Please click on the event name whose budget plans you want to see{% if not curr_
 
 {% for dept in departments %}
 	{% if dept.Dept_Name in submittedplans %}
-	<a class="btn btn-danger" href="{% url finance.views.display event_name=dept.Dept_Name %}">{{dept}}</a>
+	<a class="btn btn-danger" href="{% url finance.views.display event_name=dept.id %}">{{dept}}</a>
 	{% endif %}
 	{% if dept.Dept_Name not in submittedplans %}
-	<a class="btn" href="{% url finance.views.display event_name=dept.Dept_Name %}">{{dept}}</a>
+	<a class="btn" href="{% url finance.views.display event_name=dept.id %}">{{dept}}</a>
     {% endif %}
-    {% if curr_portal.opened  %}<a class="btn" href="{% url finance.views.display event_name=dept.Dept_Name %}">{{dept}}</a>{% endif %}
+    {% if curr_portal.opened  %}<a class="btn" href="{% url finance.views.display event_name=dept.id %}">{{dept}}</a>{% endif %}
 {% endfor %}
 
 {% endif %}
@@ -239,8 +239,8 @@ YYYY-MM-DD hrs:min:sec
 
 <script type="text/javascript">
 $(document).ready(function() {
-    var d = document.getElementById("li_questions");
-    var e = document.getElementById("li_questions_icon");
+    var d = document.getElementById("li_finance");
+    var e = document.getElementById("li_finance_icon");
     d.className = "active";
     e.className = e.className + " icon-white";
  });
