@@ -19,7 +19,7 @@
     <a href="{% url tasks.views.edit_task owner_name=user %}"><i class="icon-plus" id="li_task_icon"></i> Add Task </a>
 </li>
 {% endif %}
-{% if is_core1 and not is_visitor1 %}
+{% if is_core1 and not is_visitor1 and not feedback_tab %}
 <li id="li_task">
     <a href="{% url tasks.views.edit_task owner_name=user %}"><i class="icon-plus" id="li_task_icon"></i> Add Task </a>
 </li>

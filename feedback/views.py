@@ -18,6 +18,7 @@ Toggle function is solely for the qms core to open/close the feedback feature
 """
 @needs_authentication
 def toggle(request, owner_name = None):
+    feedback_tab=True
     print "hello"
     curr_userprofile=userprofile.objects.get(user=request.user)
     if is_core(request.user) and str(curr_userprofile.department) == "QMS":
@@ -45,6 +46,7 @@ Togglereview function is solely for the qms core. Only if this is True can coord
 """
 @needs_authentication
 def togglereview(request, owner_name = None):
+    feedback_tab=True
     curr_userprofile=userprofile.objects.get(user=request.user)
     if is_core(request.user) and str(curr_userprofile.department) == "QMS":
         openreview=OpenReview.objects.filter(id=1)
@@ -80,7 +82,7 @@ Answer and answer_questions and review are open to all members, with different p
 """
 @needs_authentication
 def answer(request, owner_name=None):
-    print "in answer"
+    feedback_tab=True
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
     users_profile=userprofile.objects.all()
@@ -163,6 +165,7 @@ def answer(request, owner_name=None):
 
 @needs_authentication    
 def answer_questions(request,userprofile_id,question_id,rating=None, owner_name = None):
+    feedback_tab=True
     if str(rating) == '20':
         rating=None
     rating_choice=[i for i in range(11)]
@@ -276,6 +279,7 @@ A QMS Department special. To filter questions set for cores and coords.
 """ 
 @needs_authentication
 def question_for(request, owner_name = None):
+    feedback_tab=True
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
     owner_name=None
@@ -318,6 +322,7 @@ A QMS Department special. Displays all questions with options for editing and de
 """       
 @needs_authentication 
 def display(request,question_for, owner_name = None):
+    feedback_tab=True
     curr_user=request.user
     curr_userprofile=userprofile.objects.get(user=request.user)
     users_profile=userprofile.objects.all()
@@ -384,6 +389,7 @@ A QMS Department special. To add questions.
 """ 
 @needs_authentication
 def add_question(request,question_for, owner_name = None):
+    feedback_tab=True
 
     #Get Department Members' image thumbnails
     page_owner = get_page_owner (request, owner_name=None)
@@ -529,6 +535,7 @@ A QMS department special. Similar to add_questions, but updates last edited by c
 """ 
 @needs_authentication
 def edit_question(request,question_id, question_for, owner_name = None):
+    feedback_tab=True
     q = Question.objects.get(id=question_id)
     
     #Get Department Members' image thumbnails
@@ -675,6 +682,7 @@ A QMS core special.
 """ 
 @needs_authentication
 def delete_question(request, question_id, question_for, owner_name = None):
+    feedback_tab=True
     if not is_coord(request.user):
         curr_userprofile=userprofile.objects.get(user=request.user)
         owner_name=None
@@ -702,6 +710,7 @@ The following views are for feedback reviews.
 """ 
 @needs_authentication           
 def review(request, owner_name = None):
+    feedback_tab=True
     curr_userprofile=userprofile.objects.get(user=request.user)
     curr_department=curr_userprofile.department
     owner_name=None
@@ -784,10 +793,11 @@ def review(request, owner_name = None):
 
 @needs_authentication
 def qms_review(request, dept_id, is_all, owner_name = None):
+    feedback_tab=True
     owner_name=None
     curr_userprofile=userprofile.objects.get(user=request.user)
     qms_department=curr_userprofile.department
-    all_departments=Department.objects.all()
+    all_departments=Department.objects.all().order_by('Dept_Name')
     page_owner = get_page_owner (request, owner_name)
     curr_department = Department.objects.get(id=dept_id)
     yes='yes'

@@ -165,6 +165,7 @@ Please click on the event name whose budget plans you want to see{% if not curr_
 	{% if dept.Dept_Name not in submittedplans %}
 	<a class="btn" href="{% url finance.views.display event_name=dept.Dept_Name %}">{{dept}}</a>
     {% endif %}
+    {% if curr_portal.opened  %}<a class="btn" href="{% url finance.views.display event_name=dept.Dept_Name %}">{{dept}}</a>{% endif %}
 {% endfor %}
 
 {% endif %}
