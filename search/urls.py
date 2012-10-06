@@ -1,5 +1,6 @@
 from erp.search.views import *
-from django.conf.urls import patterns, include, url
+from django.conf.urls import *
+from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
     (r'^$', search),
