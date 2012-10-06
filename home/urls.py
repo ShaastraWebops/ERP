@@ -1,5 +1,6 @@
 from django.conf.urls import *
 from django.contrib import admin
+from django.conf.urls.defaults import *
 
 urlpatterns = patterns('erp.home.views',
       #(r'^$', 'login'),

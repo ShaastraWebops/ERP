@@ -1,5 +1,6 @@
 from django.conf.urls import *
 from django.views.generic.simple import *
+from django.conf.urls.defaults import *
 
 urlpatterns = patterns('erp.users.views',
       (r'^$', 'handle_profile'),
