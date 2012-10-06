@@ -32,6 +32,7 @@ from create_test_data import *
 import time
 from django import template
 register = template.Library()
+import re
 
 
 """
@@ -59,7 +60,7 @@ def display_contacts (request , owner_name=None):#this will be a common tab
         coord_profiles = userprofile.objects.filter (department__Dept_Name = dept_name,
                                                      user__groups__name = 'Coords')
 
-        dept_name_underscore = dept_name.replace(" ","_")
+        dept_name_underscore = re.sub('[^a-zA-Z0-9]', '_', dept_name)
 
         contacts.append ((dept_name, core_profiles, coord_profiles, dept_name_underscore))
 
@@ -205,7 +206,7 @@ def change_profile_pic(request, owner_name):
 
                 else:                                                            #there may be an account in a department having a supercore, but is not a supercore-associated account. 
                     department = request.user.get_profile().department
-                    if request.user.username.endswith(department.Dept_Name.replace(' ','').lower()):                #a multiple coord-associated acc.  
+                    if request.user.username.endswith(re.sub('[^a-zA-Z0-9]', '', department.Dept_Name).lower()):                #a multiple coord-associated acc.  
                         allUserProfiles = userprofile.objects.all()
                         multiple_coord=request.user.username.split('_')[0]
                         for each in allUserProfiles:
@@ -259,7 +260,7 @@ def change_profile_pic(request, owner_name):
                         
             except:
                 department = request.user.get_profile().department                              #multiple-coord-associated acc, in a dept without a supercore.
-                if request.user.username.endswith(department.Dept_Name.replace(' ','').lower()):                #a multiple coord-associated acc.  
+                if request.user.username.endswith(re.sub('[^a-zA-Z0-9]', '', department.Dept_Name).lower()):           #a multiple coord-associated acc.  
                     allUserProfiles = userprofile.objects.all()
                     multiple_coord=request.user.username.split('_')[0]
                     for each in allUserProfiles:

@@ -32,6 +32,7 @@ from django.utils.functional import curry
 from department.models import *
 from misc.helper import is_core
 from django.contrib.sessions.models import Session
+import re
 # Fields to be excluded in the SubTask forms during Task editing
 subtask_exclusion_tuple = ('creator', 'status', 'description', 'task',)
 
@@ -54,7 +55,8 @@ def multiple_login(request, owner_name=None, department=None):
         dept = Department.objects.get(Dept_Name=department)
         multiple = userprofile.objects.filter(department=dept)
         for each in multiple:              
-            if each.user.username.startswith(owner_name.lower()) and each.user.username.endswith(department.replace(' ','').lower()):    
+            
+            if each.user.username.startswith(owner_name.lower()) and each.user.username.endswith(re.sub('[^a-zA-Z0-9]', '', department).lower()):
                 # Hard code this or write a backend?
                 auth.logout(request)
                 each.user.backend = 'django.contrib.auth.backends.ModelBackend'
@@ -93,7 +95,7 @@ def multiple_logout(request, owner_name=None):
 
         else:
             dept = request.user.get_profile().department
-            if request.user.username.endswith(dept.Dept_Name.replace(' ','').lower()):
+            if request.user.username.endswith(re.sub('[^a-zA-Z0-9]', '', dept.Dept_Name).lower()):
                 multiple_coord = request.user.username.split('_')[0]
                 superuser = User.objects.get(username = multiple_coord)
                 auth.logout(request)
@@ -119,9 +121,25 @@ def get_timeline (user):
     # Get user's department name
     user_dept = user.userprofile_set.all()[0].department
     if is_core (user):
-        return Task.objects.filter (creator = user)
+        tasks = []
+        subtasks =  SubTask.objects.filter (department = user_dept)
+        for subtask in subtasks:
+            if subtask.task not in tasks:
+                tasks.append(subtask.task)
+        for x in Task.objects.filter (creator = user).all():
+            if x not in tasks:
+                tasks.append(x)
+        return tasks
     else:
-        return Task.objects.filter (creator__userprofile__department = user_dept)
+        tasks = []
+        subtasks = SubTask.objects.filter (department = user_dept)
+        for subtask in subtasks:
+            if subtask.task not in tasks:
+                tasks.append (subtask.task)
+        for x in Task.objects.filter (creator__userprofile__department = user_dept).all():
+            if x not in tasks:
+                tasks.append(x)
+        return tasks
 
 def get_subtasks (user):
     """

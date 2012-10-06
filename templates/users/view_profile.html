@@ -24,15 +24,16 @@
             <center>
             {% if profile.department %}
                 <h3>
-            {% for dept in profile.department.all %}
-              {% if forloop.counter == 1 %}  
                 {{ dept }}
-              {% else %}
-                /{{ dept }} 
-              {% endif %}
-            {% endfor %}
             {{ group }}</h3>
 
+             {% for dept in  profile.department.all %}
+                   {% if forloop.counter == 1 %}
+                       {{ dept }}
+                   {% else %}
+                      /{{ dept }}
+                   {% endif %}
+             {% endfor %}
             {% else %} <!-- A multiple user -->
                 {% if is_core %}
                     <h3> Events {{ group }}</h3> <!-- Assuming that the only multiple department core would be the Events core. -->
