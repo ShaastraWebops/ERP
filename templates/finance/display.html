@@ -7,8 +7,11 @@ textarea{ width: 250px; height: 60px;}
 input{width:100px; height:25px;}
 </style>
 
-{% if event and curr_portal.opened %}
+{% if event %}
 <div class='pull-right'>
+
+{% if curr_portal.opened %}
+    
 <b>UPDATE: </b>
 {% for plan1 in budgets %}
 {% ifnotequal plan1.name 'F' %} 
@@ -17,14 +20,17 @@ input{width:100px; height:25px;}
 
 {% endifnotequal %}
 {% endfor %}
+
+{% endif %}
+
+{% if not curr_portal.opened %}
+    <a  class="btn" href="{% url finance.views.budget_portal plan='budget'  %}" >Budget Portal Home</a>
+{% endif %}
+
 </div>
 {% endif %}
 
-{% if event and not curr_portal.opened %}
-<div class='pull-right'>
-    <a  class="btn" href="{% url finance.views.budget_portal plan='budget'  %}" >Budget Portal Home</a>
-</div>
-{% endif %}
+
 
 {% if not first_time %}
 
