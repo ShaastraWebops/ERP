@@ -30,6 +30,10 @@ input{width:100px; height:25px;}
 </div>
 {% endif %}
 
+{% if not event %}
+    <a  class="btn" href="{% url finance.views.budget_portal plan='budget'  %}" >Budget Portal Home</a>
+{% endif %}
+
 
 
 {% if not first_time %}
