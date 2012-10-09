@@ -416,6 +416,14 @@ def display(request, event_name):
             qms_coord=True
             qms_dept=True     
          
+	#Check if instance of open portal present. Otherwise make one.                
+    openportal=OpenBudgetPortal.objects.filter(id=1)
+    if openportal:
+        curr_portal=OpenBudgetPortal.objects.get(id=1)
+    else:
+        curr_portal=OpenBudgetPortal(opened=False)
+        curr_portal.save()  
+
     if(department.is_event):
         event=True
         budgets = Budget.objects.filter(department=department)
@@ -425,13 +433,7 @@ def display(request, event_name):
             item_exist = True
         return render_to_response('finance/display.html',locals(),context_instance=global_context(request))
     
-	#Check if instance of open portal present. Otherwise make one.                
-    openportal=OpenBudgetPortal.objects.filter(id=1)
-    if openportal:
-        curr_portal=OpenBudgetPortal.objects.get(id=1)
-    else:
-        curr_portal=OpenBudgetPortal(opened=False)
-        curr_portal.save()    
+  
     first_time=False
     item_exist=False
     event1 = Department.objects.get(id=event_name)
