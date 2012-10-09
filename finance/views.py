@@ -152,8 +152,9 @@ def budget_portal(request, plan="None"):
                                     tempform.budget=curr_plan
                                     tempform.save()
                                 if form in itemformset.deleted_forms:
-                                    curr_item = Item.objects.get(id=form.instance.id)
-                                    curr_item.delete()   
+                                    if item.objects.filter(id=form.instance.id):
+                                        curr_item = Item.objects.get(id=form.instance.id)
+                                        curr_item.delete()   
                             form_saved = True 
                         qset = Item.objects.filter(department=department, budget=curr_plan)
                         if 'add_more_items' in request.POST: 
