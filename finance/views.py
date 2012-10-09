@@ -486,8 +486,9 @@ def display(request, event_name):
                                         tempform.budget=plan_finance
                                         tempform.save()
                                     if form in itemformset.deleted_forms:
-                                        curr_item = Item.objects.get(id=form.instance.id)
-                                        curr_item.delete()      	                
+                                        if Item.objects.filter(id=form.instance.id):
+                                            curr_item = Item.objects.get(id=form.instance.id)
+                                            curr_item.delete()      	                
                                     form_saved = True 
                             qset = Item.objects.filter(department=event1, budget=plan_finance) 
                         else:
