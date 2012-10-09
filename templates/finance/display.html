@@ -7,8 +7,23 @@ textarea{ width: 250px; height: 60px;}
 input{width:100px; height:25px;}
 </style>
 
-{% if not item_exist and not finance and not qms_dept%}
-<h4>There are no budget plans yet.</h4>
+{% if event and curr_portal.opened %}
+<div class='pull-right'>
+<b>UPDATE: </b>
+{% for plan1 in budgets %}
+{% ifnotequal plan1.name 'F' %} 
+
+	<a  class="btn" href="{% url finance.views.budget_portal plan=plan1.name %}" >PLAN {{plan1.name}}</a>
+
+{% endifnotequal %}
+{% endfor %}
+</div>
+{% endif %}
+
+{% if event and not curr_portal.opened %}
+<div class='pull-right'>
+    <a  class="btn" href="{% url finance.views.budget_portal plan='budget'  %}" >Budget Portal Home</a>
+</div>
 {% endif %}
 
 {% if not first_time %}

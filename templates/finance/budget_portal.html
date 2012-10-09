@@ -206,7 +206,9 @@ Please click on the event name whose budget plans you want to see{% if not curr_
 <h4><a class="btn btn-success" href="{% url erp.finance.views.permissions %}">Pemissions</a></h4><br>
 
 <h4>Choose the deadline that needs to be displayed for the Event coords for their Budget proposal submission.</h4>
-YYYY-MM-DD hrs:min:sec
+<h6><i class="icon-warning-sign"></i>The portal is to be manually opened/closed by finance core.</h6>
+<br>
+<h5>Format: YYYY-MM-DD hrs:min:sec</h5>
 <form action="" method="POST">
 {% csrf_token %}
 <table>
