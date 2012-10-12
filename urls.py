@@ -6,6 +6,7 @@ from erp.tasks.views import *
 from erp.users.views import *
 from erp.home.views import *
 from erp.feedback.views import *
+from erp.finance.views import *
 import haystack
 from haystack.views import SearchView
 from haystack.forms import ModelSearchForm
@@ -13,6 +14,7 @@ from haystack.forms import SearchForm
 from haystack.views import search_view_factory
 from django.conf.urls import *
 from tasks.views import *
+from django.conf.urls.defaults import *
 
 haystack.autodiscover()
 dajaxice_autodiscover()
@@ -34,6 +36,8 @@ urlpatterns = patterns('',
     #(r'^erp/dashboard/',include('erp.dashboard.urls')),	
     # Make the above 2 URLConfs look like these 2 below
 	(r'^erp/(?P<owner_name>\w+)/feedback/', include('erp.feedback.urls')),
+	(r'^erp/feedback/', include('erp.feedback.urls')),
+	(r'^erp/finance_portal/',include('erp.finance.urls')),
     (r'^erp/(?P<owner_name>\w+)/users/', include('erp.users.urls')),
     (r'^erp/(?P<owner_name>\w+)/dashboard/',include('erp.dashboard.urls')),	
     (r'^erp/(?P<owner_name>\w+)/', include('erp.tasks.urls')),

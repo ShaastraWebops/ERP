@@ -230,8 +230,10 @@ def display_core_portal (request, core):
     qms_core=False
     curr_userprofile=userprofile.objects.get(user=request.user)
     if str(department) == 'QMS':
-		display_dict['qms_core']=True
-    
+        display_dict['qms_core']=True
+        display_dict['finance_tab']=True
+    if department.is_event:
+        display_dict['finance_tab']=True
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/core_portal2.html',
@@ -282,7 +284,9 @@ def display_supercoord_portal (request, supercoord):
     curr_userprofile=userprofile.objects.get(user=request.user)
     if str(department) == 'QMS':
 		display_dict['qms_supercoord']=True
-    
+		display_dict['finance_tab']=True
+    if department.is_event:
+        display_dict['finance_tab']=True
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/supercoord_portal.html',
@@ -312,6 +316,9 @@ def display_coord_portal (request, coord):
         userprofile__department = department)
     if str(department) == 'QMS':
 		display_dict['qms_coord']=True
+		display_dict['finance_tab']=True
+    if department.is_event:
+        display_dict['finance_tab']=True
         
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
@@ -429,21 +436,11 @@ def edit_task (request, task_id = None, owner_name = None):
         request = request,
         is_task_comment = True,
         object_id = task_id,
+
         other_errors = other_errors)
         print "atleast here" 
     
-    curr_userprofile=userprofile.objects.get(user=user)
-    if is_core(user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_core= True
 
-    if is_supercoord(user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_supercoord= True
-
-    if is_coord(user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_coord= True
 
     return render_to_response('tasks/edit_task.html',
                               locals(),
@@ -527,18 +524,7 @@ def edit_subtask (request, subtask_id, owner_name = None):
         object_id = subtask_id,
         other_errors = other_errors)
     
-    curr_userprofile=userprofile.objects.get(user=user)
-    if is_core(user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_core= True
-
-    if is_supercoord(user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_supercoord= True
-            
-    if is_coord(user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_coord= True     
+   
 
     if has_updated:
         return redirect ('erp.tasks.views.display_portal',
@@ -560,19 +546,6 @@ def display_subtask (request, subtask_id, owner_name = None):
     user = request.user
     curr_subtask = SubTask.objects.get (id = subtask_id)
     comments = SubTaskComment.objects.filter (subtask__id = subtask_id)
-
-    curr_userprofile=userprofile.objects.get(user=user)
-    if is_core(user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_core= True
-
-    if is_supercoord(user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_supercoord= True
-
-    if is_coord(user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_coord= True
 
     return render_to_response('tasks/display_subtask.html',
                               locals(),
@@ -604,18 +577,6 @@ def display_task (request, task_id, owner_name = None):
     curr_task = Task.objects.get (id = task_id)
     comments = TaskComment.objects.filter (task__id = task_id)
 
-    curr_userprofile=userprofile.objects.get(user=user)
-    if is_core(user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_core= True
-
-    if is_supercoord(user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_supercoord= True
-            
-    if is_coord(user):
-        if str(curr_userprofile.department) == 'QMS':
-            qms_coord= True
 
     return render_to_response('tasks/display_task.html',
                               locals(),
@@ -720,21 +681,25 @@ def display_department_portal (request, owner_name = None, department_name = Non
     display_dict ['dept_coords_list'] = User.objects.filter (
         groups__name = 'Coords',
         userprofile__department = department)
-
     qms_core=False
     if is_core(request.user):
-		if str(department) == 'QMS':
-			display_dict['qms_core']=True
+        if str(department) == 'QMS':
+            display_dict['qms_core']=True
+            display_dict['finance_tab']=True
 
     qms_supercoord = False
     if is_supercoord(request.user):
         if str(department) == 'QMS':
             display_dict['qms_supercoord']= True
-            
+            display_dict['finance_tab']=True        
     qms_coord=False
     if is_coord(request.user):
-		if str(department) == 'QMS':
-			display_dict['qms_coord']=True
+        if str(department) == 'QMS':
+            display_dict['qms_coord']=True
+            display_dict['finance_tab']=True
+    finance_tab=False
+    if department.is_event:
+        display_dict['finance_tab']=True
 
     return render_to_response('tasks/department_portal.html',
                               display_dict,

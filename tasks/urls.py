@@ -1,6 +1,7 @@
 from django.views.generic.simple import *
 from django.contrib import admin
 from django.conf.urls import *
+from django.conf.urls.defaults import *
 
 # TODO
 # Caution : Any non-matched url goes straight to display_portal and
