@@ -13,6 +13,7 @@ from haystack.forms import SearchForm
 from haystack.views import search_view_factory
 from django.conf.urls import *
 from tasks.views import *
+from home.mailscript import *
 
 haystack.autodiscover()
 dajaxice_autodiscover()
@@ -25,7 +26,7 @@ from django.contrib import admin
 urlpatterns = patterns('',
     (r'^134c036048b637ac75edcd4352212e55/$', 'erp.home.dbscript.write_into_db'),
     (r'^dajaxice/', include('dajaxice.urls')),
-    #(r'^search/', include('haystack.urls')),
+    (r'^mailme/', 'erp.home.mailscript.send_mail'),
     url(r'^$', 'erp.home.views.login', name='home'),
     (r'^search/', include('erp.search.urls')),
     #(r'^erp/$', include('erp.home.urls')),
