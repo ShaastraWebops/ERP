@@ -53,7 +53,7 @@ DEP_CHOICES = (
 ("Symposium", "Symposium"),
 ("Exhibitions", "Exhibitions"),
 ("IITM Ideas Challenge", "IITM Ideas Challenge"),
-("GA/PA Materials", "GA/PA Materials"),
+("GA PA Materials", "GA/PA Materials"),
 ("Production", "Production"),
 ("Equipment", "Equipment"),
 ("Catering", "Catering"),

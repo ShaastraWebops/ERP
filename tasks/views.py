@@ -174,6 +174,7 @@ def get_completed_subtasks (user):
     user_dept = user.userprofile_set.all()[0].department
     return SubTask.objects.filter (department = user_dept, status = 'C')
 
+@needs_authentication_multiple_user
 def display_portal (request, owner_name = None):
     """
     Display owner's portal.
@@ -189,6 +190,7 @@ def display_portal (request, owner_name = None):
     elif is_coord(page_owner):
         return display_coord_portal (request, page_owner)       
 
+@permissions
 def display_multiple_portal (request, user):
     """
     Display the portal so Core/coord can login into respective events
