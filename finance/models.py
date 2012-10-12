@@ -19,9 +19,9 @@ class Item(models.Model):
     quantity=models.DecimalField(max_digits=12,decimal_places=2,blank=True,null=True)
     description = models.TextField(blank=True)
     comment = models.TextField(blank=True)
-    original_amount = models.FloatField()
-    request_amount = models.FloatField(blank=True, null=True)
-    balance_amount = models.FloatField(blank=True, null=True)   
+    original_amount = models.DecimalField(max_digits=12,decimal_places=2,)
+    request_amount = models.DecimalField(max_digits=12,decimal_places=2,blank=True, null=True)
+    balance_amount = models.DecimalField(max_digits=12,decimal_places=2,blank=True, null=True)   
     request_status = models.BooleanField(default=False)  
     
 class OpenBudgetPortal(models.Model):
