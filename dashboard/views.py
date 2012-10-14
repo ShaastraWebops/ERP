@@ -251,13 +251,8 @@ def change_profile_pic(request, owner_name):
                         
             except:
                 department = request.user.get_profile().department                              #multiple-coord-associated acc, in a dept without a supercore.
-<<<<<<< HEAD
 
-                if request.user.username.endswith(department.Dept_Name.replace(' ','').lower()):                #a multiple coord-associated acc.  
-
-=======
                 if request.user.username.endswith(re.sub('[^a-zA-Z0-9]', '', department.Dept_Name).lower()):           #a multiple coord-associated acc.  
->>>>>>> master
                     allUserProfiles = userprofile.objects.all()
                     multiple_coord=request.user.username.split('_')[0]
                     for each in allUserProfiles:

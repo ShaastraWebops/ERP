@@ -64,8 +64,8 @@ def login(request):
                                          owner_name = user.username)
                 else:
                     invalid_login_message="Incorrect username or password. Please try again."
-                    print "the user has not logged in -invalid "
                     request.session['invalid_login'] = True
+                    print "the user has not logged in -invalid "
                     print request.path
                     return render_to_response('home/login.html', locals(), context_instance= global_context(request))
                     #return HttpResponseRedirect (request.path)

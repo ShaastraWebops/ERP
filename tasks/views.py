@@ -250,10 +250,10 @@ def display_core_portal (request, core):
     qms_core=False
     curr_userprofile=userprofile.objects.get(user=request.user)
     if str(department) == 'QMS':
-        display_dict['qms_core']=True
-        display_dict['finance_tab']=True
+        display_dict ['qms_core']=True
+        display_dict ['finance_tab']=True
     if department.is_event:
-        display_dict['finance_tab']=True
+        display_dict ['finance_tab']=True
     # Include the key-value pairs in update_dict
     display_dict.update (update_dict)
     return render_to_response('tasks/core_portal2.html',
