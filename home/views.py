@@ -73,7 +73,6 @@ def login(request):
                     form = forms.UserLoginForm ()
         else:
             pass
-    
     return render_to_response('home/login.html', locals(), context_instance= global_context(request))
     
 def logout (request):
@@ -127,4 +126,4 @@ def forgot_password(request):
     else:
         print "problem in forgot_password_view"
     form = forms.UserLoginForm ()    
-    return render_to_response('home/forgot_password.html', locals(), context_instance= global_context(request))
+    return render_to_response('home/forgot_password.html', locals(), context_instance= global_context(request)) 

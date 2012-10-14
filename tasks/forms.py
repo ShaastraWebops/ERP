@@ -56,9 +56,10 @@ class SubTaskForm (ModelForm):
             super(SubTaskForm, self).__init__(*args, **kwargs)
             print "THIS IS", editor
             self.fields['coords'].queryset = User.objects.filter(userprofile__department=editor.get_profile().department)
+            self.fields['coords'].label_from_instance = lambda obj: "%s - %s" % (obj.get_profile ().name, obj.get_profile ().nickname)
             self.fields['coords'].help_text = ''
         else:
-            super(SubTaskForm, self).__init__(editor,*args, **kwargs)
+            super(SubTaskForm, self).__init__(editor,*args, **kwargs)   
 
         
 #hack if these fields need to be formatted        
