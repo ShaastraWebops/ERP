@@ -167,7 +167,7 @@ def view_profile(request, owner_name=None):
     print profile.name
 
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department      
+    department = request.user.get_profile ().department      
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
