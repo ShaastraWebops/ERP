@@ -207,7 +207,7 @@ def budget_portal(request, plan="None"):
         """
         finance_coords=Permission.objects.all()
         for eachcoord in finance_coords:
-            if request.user.username == eachcoord.coord:        
+            if curr_userprofile.name == eachcoord.coord:        
                 if eachcoord.budget_sanction==True:
                     has_perms = True
               
@@ -350,7 +350,7 @@ def permissions(request):
             finance_coords=userprofile.objects.filter(department=department)
             for eachcoord in finance_coords:
                 if is_coord(eachcoord.user):
-                    curr_coord=Permission(coord=eachcoord.user.username)
+                    curr_coord=Permission(coord=eachcoord.name)
                     curr_coord.save()               
                                
                 
@@ -455,7 +455,7 @@ def display(request, event_name):
             if curr_portal.opened==False:
                 finance_coords=Permission.objects.all()
                 for eachcoord in finance_coords:
-                    if request.user.username == eachcoord.coord:        
+                    if curr_userprofile.name == eachcoord.coord:        
                         if eachcoord.budget_sanction==True:
                             has_perms = True
                         
