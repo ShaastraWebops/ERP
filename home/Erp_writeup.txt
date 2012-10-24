@@ -1,0 +1,97 @@
+<h2><a href="erp.shaastra.org"> Shaastra | ERP </a></h2>
+<p>
+Shaastra proudly announces the release of its Enterprise Resource Planner (ERP). The ERP's main goal is to streamline workflow in shaastra, make things more fluid and systematic. You are part of Shaastra ERP's maiden voyage. Welcome!
+</p>
+<p>
+Firstly, to start things off, you'll need to login. <br>
+We've generated a random password for every user. This will allow you to access the ERP as it is closed to everyone outside Shaastra. 
+We would recommend you changing your password once you log in. Feel free to keep the password we give you if you like it. It's random and ONLY you know it.<br>
+</p>
+<p>
+<b>
+Username:</b> <<username>>
+<b><br>Password:</b> <<password>>
+
+</p>
+<p>
+At this point, you should have logged into the Shaastra ERP. If your username password doesn't work, look below on how to contact us.
+</p><p>
+<u><h3>Using the ERP:</h3></p></u>
+
+<li><u><h4>Your Profile/actions:</h4> </u>
+
+You can change your password by accessing the <b>Actions</b> dropdown bar on the top-right of the screen.  
+Once that is done, 
+Click on <b><i>Profile</b></i> on the top navigation bar. We have already updated the details we have about you. Please add/edit the details by clicking of <b><i>Edit Profile</b></i>.
+</li>
+<li><u><h4>Shaastra ERP Contact Details: </h4></u>
+
+You can now contact any core/coordinator in Shaastra from any department, anytime. No more PDFs and emails. Go to the <b><i>Contact Details</b></i> tab on the left.
+Note: The phone no. that people will see in the Contact Details is the one you put in when you edit your profile. Please do not add fake details.
+</li>
+<li><u><h4>Shaastra ERP Calendar: </h4></u>
+
+The Shaastra Calendar will remind you of what tasks your core has given you and when it is due. Please refer to it frequently for a summary of what tasks you have pending/overdue. This can be accessed from the "Calendar" tab on the left.
+<p></li>
+<u><h3>
+Shaastra ERP Dashboard:</h3></u>
+<p>
+This is the heart of the ERP. You will be spending most of your time here. The ERP works on the concept of Tasks and Subtasks. This is explained with an example below. <br>
+
+A Task is something a core wants to achieve. To achieve this, he needs to complete a series of subtasks.
+<br><b><br>
+Example:</b><br>
+
+Events Core sets a Task: <i>"Make the Robotics Arena"</i><br>
+Now this consists of many subtasks, each of which one or more coords will do. Like,
+<br>
+<u>Subtask 1:</u> Contact the arena manufacturers <br>
+<u>Subtask 2:</u> See if the SAC arena is free<br>
+<u>Subtask 3:</u> Get me food. (?)<br>
+<br>
+So he assigns Subtask 1 to 2 coords, subtask 2 to one more coord and subtask 3 to all coords.
+<br>
+This is where you come in. Your dashboard will contain all tasks that your core wants you to along with their deadlines and additional comments.
+<br>
+On clicking the <b><i>dashboard</b></i> tab on the left, you will see 3 tabs open up:
+
+<ul><li><h4>Timeline</h4>
+This tab lists all the tasks that your core has created. This allows transparency and clarity on what your department hopes to achieve as a whole. You can see each subtask of the task, including those which are not assigned to you.
+</li>
+<h4><li>Core Requests</h4>
+This tab summarizes the subtasks assigned to you by your core. Click on a subtask to edit its status etc. This is your role in Shaastra. Also, once you click a subtask, it will open up separately. You can comment on the subtask to add extra details you may have forgotten. 
+</li>
+<h4><li>Updates</h4>
+Want to say something to the entire department and not only your core? You can send your department an update. Type in anything you like. We will cover how to view updates in the next section.
+</li></ul>
+<u><h3>Shaastra ERP Department:</h3></u>
+This <b><i>Department</b></i> tab on you left accesses your department. This again opens 3 tabs:
+
+<ul><li><h4>Timeline:</h4>
+This is similar to the dashboard timeline tab. It summarizes all tasks that are there in your department and what subtasks each task consists of.
+</li>
+<li><h4>Updates:</h4>
+This is where you can view all updates in your department. 
+</li>
+<li><h4>Shout!:</h4>
+ERP presents its shoutbox! This is where you scream out to shaastra. Post a Shout on the Shoutbox and let everyone see it. 
+Note: Shouts can be seen by all coords and cores in all departments. Please refrain from using obscenities, and insulting other hostels.
+</li>
+</ul>
+
+<h3>ERP Files:</h3>
+This can be accessed by clicking the <b><i>Files</b></i> tab on the left. This allows you to upload your files and store them on the ERP. You can view them any later time. Facilities to share the files with others will be released shortly.
+
+<h3><u>Bugs/Queries/Errors/Cups:</h3></u>
+<p>
+For such bugs and queries,
+Please contact <br>
+<b>Akshay Rangasai:</b> akshayrangasai@shaastra.org <br>
+<b>Chetan Bademi:</b> chetanbademi@shaastra.org <br> <br>
+
+or email us at <b><i>webops@shaastra.org</b></i> <br>
+
+Contact details for bugs/queries can be found in the ERP under <b><i>Contact</b></i> in the top-left.
+<br><br>
+<br>
+<i>- Shaastra Web-Operations Team 2012-13</i>
