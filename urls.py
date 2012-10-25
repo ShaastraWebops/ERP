@@ -23,10 +23,17 @@ admin.autodiscover()
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 # admin.autodiscover()
-
+urlpatterns = patterns('',
+    url(r'^admin/password_reset/$', 'django.contrib.auth.views.password_reset', name='password_reset'),
+    (r'^password_reset/done/$', 'django.contrib.auth.views.password_reset_done'),
+    (r'^reset/(?P<uidb36>[-\w]+)/(?P<token>[-\w]+)/$', 'django.contrib.auth.views.password_reset_confirm'),
+    (r'^reset/done/$', 'django.contrib.auth.views.password_reset_complete'),
+)
+ 
 urlpatterns = patterns('',
     #(r'^134c036048b637ac75edcd4352212e55/$', 'erp.home.coregenerate.write_into_db'), #used to load coord/core details into db.
     (r'^dajaxice/', include('dajaxice.urls')),
+    url(r'^account/', include('django.contrib.auth.urls')),
     #(r'^search/', include('haystack.urls')),
     url(r'^$', 'erp.home.views.login', name='home'),
     (r'^search/', include('erp.search.urls')),
@@ -41,7 +48,7 @@ urlpatterns = patterns('',
     (r'^erp/(?P<owner_name>\w+)/users/', include('erp.users.urls')),
     (r'^erp/(?P<owner_name>\w+)/dashboard/',include('erp.dashboard.urls')),	
     (r'^erp/(?P<owner_name>\w+)/', include('erp.tasks.urls')),
-    
+    (r'^erp/forgot_password/$', 'erp.home.views.forgot_password'),
     #(r'^loaddata/$', 'erp.dashboard.views.load_data'), #used to load test data into db.
     
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
