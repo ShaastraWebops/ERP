@@ -318,6 +318,10 @@ def change_password(request, owner_name=None):
                 user.set_password(new_pass1)
                 user.save()
                 changed=True  
+                if '_' in user.username:
+                    user = User.objects.get (username = user.username.split('_')[0])
+                    user.set_password (new_pass1)
+                    user.save()
             else:
                 failed=True  
         else:            

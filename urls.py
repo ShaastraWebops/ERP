@@ -25,7 +25,7 @@ from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    #(r'^134c036048b637ac75edcd4352212e55/$', 'erp.home.coregenerate.write_into_db'), #used to load coord/core details into db.
+    #(r'^134c036048b637ac75edcd4352212e55/$', 'erp.home.dbscript.write_into_db'), #used to load coord/core details into db.
     (r'^dajaxice/', include('dajaxice.urls')),
     #(r'^search/', include('haystack.urls')),
     url(r'^$', 'erp.home.views.login', name='home'),
