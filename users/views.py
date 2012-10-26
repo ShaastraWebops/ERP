@@ -167,7 +167,7 @@ def view_profile(request, owner_name=None):
     print profile.name
 
     #Get Department Members' image thumbnails
-    department = page_owner.get_profile ().department      
+    department = request.user.get_profile ().department      
     dept_cores_list = User.objects.filter (
         groups__name = 'Cores',
         userprofile__department = department)
@@ -318,6 +318,10 @@ def change_password(request, owner_name=None):
                 user.set_password(new_pass1)
                 user.save()
                 changed=True  
+                if '_' in user.username:
+                    user = User.objects.get (username = user.username.split('_')[0])
+                    user.set_password (new_pass1)
+                    user.save()
             else:
                 failed=True  
         else:            

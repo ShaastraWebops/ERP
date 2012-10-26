@@ -66,6 +66,15 @@ DEP_CHOICES = (
 ("Sponsorship and PR", "Sponsorship and PR"),
 ("Vishesh", "Vishesh"),
 ("Newsletter and PR", "Newsletter and PR"),
+("HTW", "How Things Work"),
+("Auto Quiz", "Auto Quiz"),
+("Simchamp", "Simchamp"),
+("Ornithopter Workshop", "Ornithopter Workshop"),
+("Electronics Workshop", "Electronics Workshop"),
+("Robotics Workshop", "Robotics Workshop"),
+("3D Animation Workshop", "3D Animation Workshop"),
+("Research Expo", "Research Expo"),
+("Shaastra School Quiz", "Shaastra School Quiz"),
 )
 
 # This is the initial department model

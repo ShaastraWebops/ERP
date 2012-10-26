@@ -6,13 +6,13 @@
 </style>
 {% if updates %}
 <div class="row">
-<table class="table bordered span6">
+<table class="table bordered span7">
   <tr>
     {% if po_is_coord %}
-    <th> Author </th>
+    <th style="width: 20%"> Author </th>
     {% endif %}
-    <th>Message</th>
-    <th>Time</th>
+    <th style="width: 55%">Message</th>
+    <th style="width: 25%">Time</th>
   </tr>
   {% for update in updates %}
   <tr>

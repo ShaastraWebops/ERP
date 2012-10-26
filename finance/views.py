@@ -152,7 +152,7 @@ def budget_portal(request, plan="None"):
                                     tempform.budget=curr_plan
                                     tempform.save()
                                 if form in itemformset.deleted_forms:
-                                    if item.objects.filter(id=form.instance.id):
+                                    if Item.objects.filter(id=form.instance.id):
                                         curr_item = Item.objects.get(id=form.instance.id)
                                         curr_item.delete()   
                             form_saved = True 
@@ -383,7 +383,7 @@ def display(request, event_name):
     form_saved=False
     total_amount1=0
     page_owner = get_page_owner (request, owner_name=request.user)
-
+    curr_userprofile=userprofile.objects.get(user=request.user)
     #Get Department Members' image thumbnails
     department = page_owner.get_profile ().department      
     dept_cores_list = User.objects.filter (

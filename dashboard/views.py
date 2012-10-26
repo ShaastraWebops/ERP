@@ -539,7 +539,7 @@ def display_calendar(request ,owner_name=None , month=0 ,year=0):
     else:
         for sub in user_tasks:
             creation_date=str(sub.creation_date).split(' ')[0]
-            complete_data.append({"title": str(sub.subject), "type": "subtask", "url": "../../subtask/" + str(sub.task.id), "date": str(epoch(sub.deadline)), "description": str(sub.status)})
+            complete_data.append({"title": str(sub.subject), "type": "subtask", "url": "../../subtask/" + str(sub.id), "date": str(epoch(sub.deadline)), "description": str(sub.status)})
     
     #Get Department Members' image thumbnails
     department = page_owner.get_profile ().department      

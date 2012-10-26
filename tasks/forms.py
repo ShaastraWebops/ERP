@@ -33,7 +33,7 @@ class TaskForm (ModelForm):
 class SubTaskForm (ModelForm):
     class Meta:
         model = SubTask
-        exclude = ['creator', 'description', 'task', 'completion_date']
+        exclude = ['creator', 'task', 'completion_date']
         widgets = {'department':chosenforms.widgets.ChosenSelect(),'coords': chosenforms.widgets.ChosenSelectMultiple(),'status': chosenforms.widgets.ChosenSelect()}
 
 #to restrict coords for a core. Currently all coords display for a core. Code results in cups because of a cup in

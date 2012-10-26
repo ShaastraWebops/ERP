@@ -8,8 +8,8 @@ import random
 from time import sleep
 from erp.dashboard.create_test_data import create_group, create_user, parse_user_info_list, create_depts
 
-IN_FILE="home/details-min-2.csv"
-OUT_FILE="home/lookup-2.csv"
+IN_FILE="home/details-min-3.csv"
+OUT_FILE="home/lookup-3.csv"
 
 # Write each entry to the CSV
 def writeout(writer, dept, group, username, email, password, nickname, name, chennai_number, summer_number, summer_stay, hostel, roomno):
@@ -62,11 +62,11 @@ def parse_csv(details,writer):
         except:
             firstname=line[0]
             lastname=''
-        email=line[2]
+        email=line[7]
         if (email==''):
-            email= line[1].lower()+"@smail.iitm.ac.in"
-        print 'Firstname:', firstname, '\nLastname:', lastname, '\nUsername:', line[1], '\nEmail:', email, '\nDept:', dept
-        writeout(writer, dept, 'Coords', line[1].lower(), email, pass_generator(size=8), '', line[0], line[4], '', '', line[3], '1')
+            email= line[2].lower()+"@smail.iitm.ac.in"
+        print 'Firstname:', firstname, '\nLastname:', lastname, '\nUsername:', line[3], '\nEmail:', email, '\nDept:', dept
+        writeout(writer, dept, 'Coords', line[2].lower(), email, pass_generator(size=8), line[1], line[0], line[5], line[6], '', line[4], line[3])
 
         try:
             # Incase end of file? Very ugly but I can't find any other way
