@@ -24,8 +24,11 @@ class ModifiedPasswordResetForm(PasswordResetForm):
         email = self.cleaned_data["email"]
         query = User.objects.filter(email__iexact=email,
                                                is_active=True)
-        user = User.objects.filter(username=sortlist([x.username for x in query])[-1])
-        self.users_cache = user
+        try:
+            user = User.objects.filter(username=sortlist([x.username for x in query])[-1])
+            self.users_cache = user
+        except:
+            self.users_cache = []
         if not len(self.users_cache):
             raise forms.ValidationError(self.error_messages['unknown'])
         if any((user.password == UNUSABLE_PASSWORD)

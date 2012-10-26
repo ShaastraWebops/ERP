@@ -115,7 +115,7 @@
 		  {% endif %}
 		</div>
          <br/>
-		<input type = "submit" class="btn btn-primary" value="Login">
+		<input type = "submit" class="btn btn-primary" value="Login">  <a class="pull-right" href = "{% url password_reset %}"> Forgot Password ?</a>
 	
 		<br>
 	  {% if invalid_login %}
@@ -137,8 +137,8 @@
         {% if invalid_login_message %}
         {{ invalid_login_message }}
         {% endif %}
-        <a href = "{% url password_reset %}"> Forgot Password ?</a> 
         </div>	
+        
 	</div>
 
 		
