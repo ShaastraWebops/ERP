@@ -34,6 +34,7 @@ urlpatterns = patterns('',
     #(r'^134c036048b637ac75edcd4352212e55/$', 'erp.home.coregenerate.write_into_db'), #used to load coord/core details into db.
     (r'^dajaxice/', include('dajaxice.urls')),
     url(r'^account/', include('django.contrib.auth.urls')),
+    (r'^forgot_password/$','erp.home.views.forgot_password'),
     #(r'^search/', include('haystack.urls')),
     url(r'^$', 'erp.home.views.login', name='home'),
     (r'^search/', include('erp.search.urls')),

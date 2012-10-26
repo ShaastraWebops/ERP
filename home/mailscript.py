@@ -11,7 +11,6 @@ def send_mail():
     f=open('home/Erp_writeup.txt')
     #t=open('home/Erp_writeup_text.txt')
     html = f.read()
-    print html
     #text = t.read()
     message=[]
     line=details.next()
@@ -20,12 +19,12 @@ def send_mail():
         to = [line[1]]
         user = line[0]
         password = line[2]
-        print "Sent to", user, "at", to
         text_content = 'If you are seeing this, you mail client does not support html and that is,... embarrassing.'
         html_content = html.replace('<<username>>',user).replace('<<password>>',password)
         msg = EmailMultiAlternatives(subject, text_content, from_email, to)   
         msg.attach_alternative(html_content, "text/html")
         msg.send()
+        print "Sent to", user, "at", to
         with open("home/completed.txt", "a") as completed:
             completed.write(to[0]+'')
             completed.close()
