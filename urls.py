@@ -16,9 +16,9 @@ from django.conf.urls import *
 from tasks.views import *
 from django.conf.urls.defaults import *
 
-haystack.autodiscover()
-dajaxice_autodiscover()
-admin.autodiscover()
+#haystack.autodiscover()
+#dajaxice_autodiscover()
+#admin.autodiscover()
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -38,6 +38,7 @@ urlpatterns = patterns('',
 	(r'^erp/(?P<owner_name>\w+)/feedback/', include('erp.feedback.urls')),
 	(r'^erp/feedback/', include('erp.feedback.urls')),
 	(r'^erp/finance_portal/',include('erp.finance.urls')),
+	(r'^erp/facilities/',include('erp.facilities.urls')),
     (r'^erp/(?P<owner_name>\w+)/users/', include('erp.users.urls')),
     (r'^erp/(?P<owner_name>\w+)/dashboard/',include('erp.dashboard.urls')),	
     (r'^erp/(?P<owner_name>\w+)/', include('erp.tasks.urls')),

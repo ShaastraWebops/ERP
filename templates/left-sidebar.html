@@ -33,6 +33,12 @@
 </li>
 {% endif %}
 
+{% if facilities_tab %}
+<li id="li_facilities">
+    <a href="{% url facilities.views.portal  %}"><i class="icon-pencil" id="li_facilities_icon"></i> Facilities </a>
+</li>
+{% endif %}
+
 
 <li id="li_feedback">
     <a href="{% url feedback.views.answer owner_name=user%}"><i class="icon-comment" id="li_feedback_icon"></i> Feedback </a>

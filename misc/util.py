@@ -8,6 +8,7 @@ from erp.users.models import *
 from erp.misc.helper import is_core, get_page_owner, is_supercoord, is_coord, is_multiple_user
 from erp import settings
 from erp.users import models
+from misc.helper import *
 from erp.department.models import Department
 import os # upload files
 import MySQLdb
@@ -78,6 +79,7 @@ def global_context(request):
     qms_supercoord = False
     qms_coord = False
     finance_tab=False
+    facilities_tab=False
 
     if page_owner != request.user:
         is_visitor = True
@@ -94,22 +96,32 @@ def global_context(request):
                     finance_tab=True
                 if str(curr_userprofile.department) == 'Finance':
                     finance_tab=True
+                if is_facilities_coord(curr_user):
+                    facilities_tab=True
                 if department.is_event:
+                    facilities_tab=True
                     finance_tab=True
+
             if is_supercoord(curr_user):
                 if str(curr_userprofile.department) == 'QMS':
                     qms_supercoord= True
                     finance_tab=True
                 if str(curr_userprofile.department) == 'Finance':
                     finance_tab=True
+                if is_facilities_coord(curr_user):
+                    facilities_tab=True
                 if department.is_event:
-                    finance_tab=True            
+                    finance_tab=True     
+                    facilities_tab=True       
             if is_coord(curr_user):
                 if str(curr_userprofile.department) == 'QMS':
                     qms_coord= True
                     finance_tab=True
+                if is_facilities_coord(curr_user):
+                    facilities_tab=True
                 if department.is_event:
                     finance_tab=True
+                    facilities_tab=True
                 if str(curr_userprofile.department) == 'Finance':
                     finance_tab=True
         except:
@@ -117,6 +129,7 @@ def global_context(request):
                 qms_supercoord = False
                 qms_coord = False
                 finance_tab=False
+                facilities_tab=False
 
     context =  RequestContext (request,
             {'user':request.user,
@@ -141,6 +154,7 @@ def global_context(request):
              'qms_coord':qms_coord,
              'qms_supercoord':qms_supercoord,
              'finance_tab':finance_tab,
+             'facilities_tab':facilities_tab,
             })
     return context
 
