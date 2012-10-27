@@ -7,7 +7,7 @@ import datetime
 
 class FacilitiesObject(models.Model):
     creator = models.ForeignKey(userprofile)
-    department = models.ForeignKey(Department,limit_choices_to = Q(id__range=(57,61)))
+    department = models.ForeignKey(Department,limit_choices_to = Q(id__range=(57,62)))
     name = models.CharField(max_length=50)
     quantity=models.IntegerField(blank=True,null=True)
     approved_quantity = models.IntegerField(default=0)

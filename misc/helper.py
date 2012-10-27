@@ -47,7 +47,7 @@ def is_coord (user):
     return False
 
 def is_facilities_coord(user):
-    if user.get_profile().department.id in range(57,61):
+    if user.get_profile().department.id in range(57,62):
         return True
     return False
 
