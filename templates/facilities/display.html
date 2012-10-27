@@ -1,0 +1,58 @@
+{% extends "base_portal.html" %}
+{% block body %}
+
+
+<style>
+textarea{ width: 250px; height: 60px;}
+input{width:100px; height:25px;}
+</style>
+<table class="table table-striped table-bordered table-condensed" style="table-layout:fixed" >
+<tr>
+<th>Request Date</th><th>Name</th><th>Description</th><th>Department</th><th>Quantity</th><th>Approved</th><th>Status</th><th>Comment</th><th>Approved By</tj>
+</tr>
+{% for item in items %}
+<tr>
+    <td>{{item.request_date}}</td><td>{{item.name}}</td>
+    <td style="word-wrap: break-word;">{{item.description}}</td>
+    <td>{{item.department}}</td>
+    <td>{{item.quantity}}</td>
+    <td>{{item.approved_quantity}}</td>
+	{% if item.request_status == 2 %}
+	<td><span class="label ">Approved</span></td>	
+	{% endif %}
+    {% if item.request_status == 1 %}
+	<td><span class="label label-warning">Partial</span></td>
+	{% endif %}
+	{% if item.request_status == 0 %}
+	<td><span class="label label-important">Pending</span></td>
+	{% endif %}
+    <td><div style="word-wrap: break-word;">{{item.comment}}</td><td>{{item.approved_by}}</td></div>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
+<br/><br/>
+
+
+{% block javascript %}
+{{ block.super }}
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_finance");
+    var e = document.getElementById("li_finance_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+
+<script type="text/javascript">  //initialise django-chosen
+$(document).ready(function() {
+    $('select').chosen();
+});
+</script>
+{% endblock javascript %}
+{% block display_stuff %}
+{% endblock %}
