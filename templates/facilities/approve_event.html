@@ -22,46 +22,50 @@ input{width:100px; height:25px;}
             </div>
         {% endif %}
 <table class="table table-striped table-bordered table-condensed" >
+
 <tr>
+{% if facilities_coord %}
 <th>Request Date</th><th>Name</th><th>Quantity</th><th>Description</th><th>Status</th><th>Approved</th><th>To Approve</th><th>Your Comment</th><th></th>
+{% endif %}
+{% if qms_coord %}
+<th>Request Date</th><th>Name</th><th>Quantity</th><th>Target Department</th><th>Description</th><th>Status</th><th>Approved</th><th>Approved By </th><th>Facilities Comments</th>
+{% endif %}
 </tr>
 {% for item in items %}
 <tr>
     <td>{{item.request_date}}</td>
     <td><div style="word-wrap: break-word;">{{item.name}}</div></td>
     <td>{{item.quantity}}</td>
+    {% if qms_coord %}
+    <td>{{item.department}}</td>
+    {% endif %}
     <td><div style="word-wrap: break-word;">{{item.description}}</div></td>
 	{% if item.request_status == 2 %}
 	<td><span class="label ">Approved</span></td><td>{{item.approved_quantity}}</td>
-    <form action="{{site_url}}erp/facilities/submit_approval/{{item.id}}/" method="POST">
-    {% csrf_token %}
-    <td>{{request_form.approved_number}}</td>
-    <td><div style="word-wrap: break-word;">{{request_form.comment}}</div></td>
-    <td><input type="submit" class="btn btn-info" name={{item.id}} value="Submit"/></td>
-    </form>
-
+    
 	{% endif %}
 	{% if item.request_status == 1 %}
 	<td><span class="label label-warning">Partial</span></td><td>{{item.approved_quantity}}</td>
-    <form action="{{site_url}}erp/facilities/submit_approval/{{item.id}}/" method="POST">
-    {% csrf_token %}
-    <td>{{request_form.approved_number}}</td>
-    <td><div style="word-wrap: break-word;">{{request_form.comment}}</div></td>
-    <td><input type="submit" class="btn btn-info" name={{item.id}} value="Submit"/></td>
-    </form>
 
 	{% endif %}
 	{% if item.request_status == 0 %}
 	<td><span class="label label-important">Pending</span></td><td>0</td>
-        
-    <form action="{{site_url}}erp/facilities/submit_approval/{{item.id}}/" method="POST">
-    {% csrf_token %}
-    <td>{{request_form.approved_number}}</td>
-    <td>{{request_form.comment}}</td>
-    <td><input type="submit" class="btn btn-info" name={{item.id}} value="Submit"/></td>
-    </form>
+
 
 	{% endif %}
+    {% if facilities_coord %}
+        <form action="{{site_url}}erp/facilities/submit_approval/{{item.id}}/" method="POST">
+        {% csrf_token %}
+        <td>{{request_form.approved_number}}</td>
+        <td><div style="word-wrap: break-word;">{{request_form.comment}}</div></td>
+        <td><input type="submit" class="btn btn-info" name={{item.id}} value="Submit"/></td>
+        </form>
+    {% endif %}
+    {% if qms_coord %}
+        <td>{{item.approved_by}}</td><td>{{item.comment}}</td>
+    {% endif %}
+        
+
 </tr><br/>
 {% endfor %}
 </table>
@@ -88,4 +92,9 @@ $(document).ready(function() {
 </script>
 {% endblock javascript %}
 {% block display_stuff %}
+<<<<<<< HEAD
 {% endblock %}
+=======
+{% endblock %}
+
+>>>>>>> facilities
