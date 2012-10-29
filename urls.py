@@ -45,7 +45,7 @@ urlpatterns = patterns('',
     
     #(r'^loaddata/$', 'erp.dashboard.views.load_data'), #used to load test data into db.
     
-    (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
+    (r'^erp/media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
     
     #(r'^now/sign.html$', sign_in, ),
     # Examples:

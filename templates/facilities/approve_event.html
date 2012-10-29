@@ -33,7 +33,7 @@ input{width:100px; height:25px;}
     <td><div style="word-wrap: break-word;">{{item.description}}</div></td>
 	{% if item.request_status == 2 %}
 	<td><span class="label ">Approved</span></td><td>{{item.approved_quantity}}</td>
-    <form action="/erp/facilities/submit_approval/{{item.id}}/" method="POST">
+    <form action="{{site_url}}erp/facilities/submit_approval/{{item.id}}/" method="POST">
     {% csrf_token %}
     <td>{{request_form.approved_number}}</td>
     <td><div style="word-wrap: break-word;">{{request_form.comment}}</div></td>
@@ -43,7 +43,7 @@ input{width:100px; height:25px;}
 	{% endif %}
 	{% if item.request_status == 1 %}
 	<td><span class="label label-warning">Partial</span></td><td>{{item.approved_quantity}}</td>
-    <form action="/erp/facilities/submit_approval/{{item.id}}/" method="POST">
+    <form action="{{site_url}}erp/facilities/submit_approval/{{item.id}}/" method="POST">
     {% csrf_token %}
     <td>{{request_form.approved_number}}</td>
     <td><div style="word-wrap: break-word;">{{request_form.comment}}</div></td>
@@ -54,7 +54,7 @@ input{width:100px; height:25px;}
 	{% if item.request_status == 0 %}
 	<td><span class="label label-important">Pending</span></td><td>0</td>
         
-    <form action="/erp/facilities/submit_approval/{{item.id}}/" method="POST">
+    <form action="{{site_url}}erp/facilities/submit_approval/{{item.id}}/" method="POST">
     {% csrf_token %}
     <td>{{request_form.approved_number}}</td>
     <td>{{request_form.comment}}</td>
@@ -62,7 +62,6 @@ input{width:100px; height:25px;}
     </form>
 
 	{% endif %}
-
 </tr><br/>
 {% endfor %}
 </table>

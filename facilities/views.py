@@ -11,6 +11,7 @@ from django.forms.models import modelformset_factory
 from django.contrib.auth.models import User
 from erp.misc.util import *
 from erp.facilities.forms import *
+from settings import SITE_URL
 
 def test(request):
     facilities_tab = True
@@ -21,7 +22,7 @@ def portal(request):
     page_owner = get_page_owner (request, owner_name=request.user)
     department = page_owner.get_profile ().department      
     if is_facilities_coord(request.user):
-        return HttpResponseRedirect("/erp/facilities/approval_portal")
+        return HttpResponseRedirect(SITE_URL + "/erp/facilities/approval_portal")
     if department.is_event:
         qset = FacilitiesObject.objects.filter(creator__department=curr_userprofile.department)
         if len(qset)<5:
@@ -138,6 +139,7 @@ def approve_event(request,event_name,form_saved=0,error=0):
     return render_to_response('facilities/approve_event.html',locals(),context_instance=global_context(request))
 
 def submit_approval(request,item_id):
+
     item = FacilitiesObject.objects.get(id=item_id)
     error=form_saved=0
     if request.method == 'POST':
@@ -156,13 +158,9 @@ def submit_approval(request,item_id):
                 item.request_status = 2 
             item.save()
             form_saved=1
-            return HttpResponseRedirect('/erp/facilities/approve_event/%d/%d/%d/'%(item.creator.department.id,form_saved,error)) 
+            return HttpResponseRedirect(SITE_URL + 'erp/facilities/approve_event/%d/%d/%d/'%(item.creator.department.id,form_saved,error)) 
             
         else:
             error=1
-    return HttpResponseRedirect('/erp/facilities/approve_event/%d/%d/%d/'%(item.creator.department.id,form_saved,error))
+    return HttpResponseRedirect(SITE_URL + 'erp/facilities/approve_event/%d/%d/%d/'%(item.creator.department.id,form_saved,error))
     
-
-
-
-
