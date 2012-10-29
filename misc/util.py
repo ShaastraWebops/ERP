@@ -94,6 +94,7 @@ def global_context(request):
                 if str(curr_userprofile.department) == 'QMS':
                     qms_core= True
                     finance_tab=True
+                    facilities_tab=True
                 if str(curr_userprofile.department) == 'Finance':
                     finance_tab=True
                 if is_facilities_coord(curr_user):
@@ -106,6 +107,7 @@ def global_context(request):
                 if str(curr_userprofile.department) == 'QMS':
                     qms_supercoord= True
                     finance_tab=True
+                    facilities_tab=True
                 if str(curr_userprofile.department) == 'Finance':
                     finance_tab=True
                 if is_facilities_coord(curr_user):
@@ -117,6 +119,7 @@ def global_context(request):
                 if str(curr_userprofile.department) == 'QMS':
                     qms_coord= True
                     finance_tab=True
+                    facilities_tab=True
                 if is_facilities_coord(curr_user):
                     facilities_tab=True
                 if department.is_event:

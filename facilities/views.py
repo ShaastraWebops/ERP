@@ -22,6 +22,8 @@ def portal(request):
     department = page_owner.get_profile ().department      
     if is_facilities_coord(request.user):
         return HttpResponseRedirect("/erp/facilities/approval_portal")
+    if department.Dept_Name=="QMS":
+        return HttpResponseRedirect("/erp/facilities/qms_visible_portal")
     if department.is_event:
         qset = FacilitiesObject.objects.filter(creator__department=curr_userprofile.department)
         if len(qset)<5:
@@ -118,6 +120,26 @@ def approval_portal(request):
             exists_objects.append(dept.Dept_Name)
             
     return render_to_response('facilities/approval_portal.html',locals(),context_instance=global_context(request)) 
+
+def qms_visible_portal(request):
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    curr_user = request.user
+    page_owner = get_page_owner (request, owner_name=request.user)
+    department = page_owner.get_profile ().department
+    departments=Department.objects.filter(is_event=True).order_by('Dept_Name')   
+    changed_objects=[] 
+    new_objects=[]
+    exists_objects=[]
+    for dept in departments:
+        a=FacilitiesObject.objects.filter(creator__department=dept)
+        if len(a.filter(request_status=0)) != 0:       
+            new_objects.append(dept.Dept_Name)   
+        elif len(a.filter(request_status=1)) != 0 :       
+            changed_objects.append(dept.Dept_Name) 
+        elif len(a) !=0:
+            exists_objects.append(dept.Dept_Name)
+            
+    return render_to_response('facilities/approval_portal.html',locals(),context_instance=global_context(request)) 
     
 def display(request):
     curr_userprofile=userprofile.objects.get(user=request.user)
@@ -129,9 +151,17 @@ def display(request):
     return render_to_response('facilities/display.html',locals(),context_instance=global_context(request))
 
 def approve_event(request,event_name,form_saved=0,error=0):
-    curr_userprofile=userprofile.objects.get(user=request.user)
+    qms_coord=0
     dept=Department.objects.get(id=event_name)
-    items = FacilitiesObject.objects.filter(creator__department=dept,department=curr_userprofile.department).order_by('request_status','request_date')
+    facilities_coord=0
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    if is_facilities_coord(request.user):
+        facilities_coord=1
+        items = FacilitiesObject.objects.filter(creator__department=dept,department=curr_userprofile.department).order_by('request_status','request_date')
+    elif curr_userprofile.department.Dept_Name == "QMS":
+        qms_coord=1
+        items = FacilitiesObject.objects.filter(creator__department=dept).order_by('request_status','request_date')
+        
     
 
     request_form = ApprovalForm()
