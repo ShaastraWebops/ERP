@@ -1,21 +1,19 @@
-{% extends "finance/finance_base_portal.html" %}
-{% block tab1 %}
-         
 {% if event %}
 
-
+    <!--If portal is closed, and event department no editing allowed-->
+    
     {% if not curr_portal.opened %}
         <div class="well">
             <h2>BUDGET PORTAL</h2>
             <h5>Here you can propose three budget plans for your event.</h5><br>
             <h5>THE PORTAL IS CURRENTLY CLOSED. YOU ARE NOT ALLOWED TO EDIT YOUR PLANS.</h5><br>
         
-    <div class="pull-right">
-    <a class="btn " href="{% url finance.views.display event_name=0 %}" >Display all plans</a>
-    </div><br>
+            <div class="pull-right">
+                <a class="btn " href="{% url finance.views.display event_name=0 %}" >Display all plans</a>
+            </div><br>
         
         </div>
-        
+     <!-- If plan has been approved by finance department, then display it-->   
     {% if submitted %}
     
 <h2>FINAL BUDGET PLAN FROM FINANCE DEPARTMENT </h2>
@@ -46,43 +44,43 @@
     <h4>comments:</h4> <p>{{plan_finance.comment}}</p>    
     
     
-    {% endif %}   <!--submit-->     
+    {% endif %}   <!--submitted-->     
         
         
-    {% endif %}     <!-- not curr-port.. -->
+    {% endif %}     <!-- portal currently closed -->
 
-{% if curr_portal.opened %}
+    {% if curr_portal.opened %}
+        <!--Home page displays gray box with info-->
+        {% if not form_selected %}        
+        <div class="well">
+                <h2>BUDGET PORTAL</h2>
+            <div class="pull-right">
+                <h3>Deadline:</h3><strong>{{deadline.budget_portal_deadline}}</strong>
+            </div>
 
-{% if not form_selected %}        
-    <div class="well">
-        <h2>BUDGET PORTAL</h2>
+            <h5>Here you can propose three budget plans for your event.</h5><br>
+            <h5>CHOOSE PLAN TO UPDATE</h5><br>
+        {% endif %}
+        <!--Display Plan names-->
+        {% for plan1 in plans %}
+            {% ifnotequal plan1.name 'F' %} 
+            	{% if plan1.name == plan %}
+                	<a  class="btn btn-info" href="{% url finance.views.budget_portal plan=plan1.name %}" >PLAN {{plan1.name}}</a>
+            	{% else %}
+                    <a  class="btn btn-action" href="{% url finance.views.budget_portal plan=plan1.name %}" >PLAN {{plan1.name}}</a>
+            	{% endif %}
+            {% endifnotequal %}
+        {% endfor %}
         <div class="pull-right">
-            <h3>Deadline:</h3><strong>{{deadline.budget_portal_deadline}}</strong>
+            <a  class="btn " href="{% url finance.views.display event_name=department.id %}" >Display all plans</a>
         </div>
 
-        <h5>Here you can propose three budget plans for your event.</h5><br>
-        <h5>CHOOSE PLAN TO UPDATE</h5><br>
-{% endif %}
+        {% if not form_selected %} 
+        </div><!--end of well-->
+        {% endif %}
 
-{% for plan1 in plans %}
-{% ifnotequal plan1.name 'F' %} 
-	{% if plan1.name == plan %}
-	<a  class="btn btn-info" href="{% url finance.views.budget_portal plan=plan1.name %}" >PLAN {{plan1.name}}</a>
-	{% else %}
-<a  class="btn btn-action" href="{% url finance.views.budget_portal plan=plan1.name %}" >PLAN {{plan1.name}}</a>
-	{% endif %}
-{% endifnotequal %}
-{% endfor %}
-<div class="pull-right">
-<a  class="btn " href="{% url finance.views.display event_name=department.id %}" >Display all plans</a>
-</div>
-
-{% if not form_selected %} 
-    </div>
-{% endif %}
-
-<br><br>
-
+        <br><br>
+<!--messages after form saving-->
 {% if form_saved %}
 <div class="alert alert-success">
     <button type="button" class="close" data-dismiss="alert">×</button>
@@ -98,130 +96,151 @@
     </div>
 {% endif %}
 
-
+<!--If user is updating a plan, the gray box on the homepage is not necessary
+and unnecessarily increases scolling-->
 
 {% if form_selected %}
-<h3>PLAN {{curr_plan.name}}</h3>
-<div class='pull-right'><b>Total Amount</b>: {{curr_plan.total_amount}}</div>
-<form action="" method="POST">
-{% csrf_token %}
+    <h3>PLAN {{curr_plan.name}}</h3>
+        <div class='pull-right'><b>Total Amount</b>: {{curr_plan.total_amount}}</div>
+            <form action="" method="POST">
+            {% csrf_token %}
 	
-</br>
-<h4>Items</h4>
-{{itemformset.management_form}}
-   <table class="table table-condensed table-bordered"> 
-	<thead>
-	<tr>
-		<th>Name</th>
-		<th>Description</th>
-		<th>Quantity</th>
-		<th>Amount</th>
-		<th> </th>
-		<th>Delete?</th>
-	</tr>	
-	</thead>
-<tbody>
-<div class="budgettextarea">
-	{% for itemform in itemformset %}
-<tr>
-		{% for field in itemform %}
-			<td>{{field}}
-		{% endfor %}</td>
-</tr>  
-	{% endfor%}
-</div>
-</tbody>
-</table>
-<div class="pull-right">
-<input type="submit" class="btn btn-info" name="add_more_items" value="Save and add more items"/>
-</div>
-{{budgetclaimform}}
-</br>
-</br>
-<input type="submit" class="btn btn-primary" name="save_plan" value="Save Plan"/>
-</form>
+            </br>
+            <h4>Items</h4>
+            {{itemformset.management_form}}
+           <table class="table table-condensed table-bordered"> 
+           <thead>
+               <tr>
+        	    <th>Name</th>
+		        <th>Description</th>
+		        <th>Quantity</th>
+		        <th>Amount</th>
+		        <th> </th>
+		        <th>Delete?</th>
+        	   </tr>	
+        	</thead>
+            <tbody>
+                <div class="budgettextarea">
+              	{% for itemform in itemformset %}
+                <tr>
+        	    	{% for field in itemform %}
+    		    	<td>{{field}}
+	            	{% endfor %}</td>
+                </tr>  
+                {% endfor%}
+                </div>
+            </tbody>
+            </table>
+    
+                <div class="pull-right">
+                    <input type="submit" class="btn btn-info" name="add_more_items" value="Save and add more items"/>
+                </div>
+            <!--Basically displays only comments-->
+                    {{budgetclaimform}}
+                </br></br>
+                <input type="submit" class="btn btn-primary" name="save_plan" value="Save Plan"/>
+            </form>
 
-{% endif %}<!-- form selected  -->
+        {% endif %}<!-- form selected  -->
 
-{% endif %}<!-- portal open  -->
+    {% endif %}<!-- portal open  -->
 
 {% endif %}<!-- is event?  -->
 
+
+
 {% if finance or qms_dept %}
-
-<h3>Welcome to Budget Portal</h3>
-</br>
-Please click on the event name whose budget plans you want to see{% if not curr_portal.opened and has_perms %} and update{% endif %}.<br><br>
-
-{% for dept in departments %}
-	{% if dept.Dept_Name in submittedplans %}
-	<a class="btn btn-danger" href="{% url finance.views.display event_name=dept.id %}">{{dept}}</a>
-	{% endif %}
-	{% if dept.Dept_Name not in submittedplans %}
-	<a class="btn" href="{% url finance.views.display event_name=dept.id %}">{{dept}}</a>
-    {% endif %}
-    {% if curr_portal.opened  %}<a class="btn" href="{% url finance.views.display event_name=dept.id %}">{{dept}}</a>{% endif %}
-{% endfor %}
-
-{% endif %}
-
-<br><br>
-<!--
-          <div id="myModal" class="modal hide fade">
-            <div class="modal-body">
-                <p>  The portal will now be open to event coordinators. They will
-                be able to update their plans. All finance coordinators will be able
-                to view the plans. For editing permissions, portal must be closed.</p>
-            </div>
-
-            <div class="modal-footer">
-              <a class="btn btn-primary" href="{% url erp.finance.views.toggle %}">Open Portal</a>
-              <a href="#" class="btn btn-action" data-dismiss="modal" >Cancel</a>
-            </div>
-          </div>-->
-          
-
 {% if finance_core %}
-<div class="label label-inverse">Finance core actions</div>
-{% if not curr_portal.opened %}
-<div class="well">
-<h4>Click on 'Open Portal' to enable Shaastra event coordinators to update event budgets.</h4><br>
-<!--<h4><a data-toggle="modal" href="#myModal" class="btn btn-success">Open Portal</a></h4>-->
-<h4><a class="btn btn-success" href="{% url erp.finance.views.toggle %}">Open Portal</a></h4>
-<br>
-{% endif %}
-
-{% if curr_portal.opened %}
-
-<div class="well">
-<h4>Click on 'Close Portal' to disable further editing of budget plans by Shaastra event coordinators.</h4><br>
-<h4><a class="btn btn-danger" href="{% url erp.finance.views.toggle %}">Close Portal</a></h4><br>
-{% endif %}
-<h4>Grant permissions to only certain finance coordinators to sanction budget plan.</h4><br>
-<h4><a class="btn btn-success" href="{% url erp.finance.views.permissions %}">Pemissions</a></h4><br>
-
-<h4>Choose the deadline that needs to be displayed for the Event coords for their Budget proposal submission.</h4>
-<h6><i class="icon-warning-sign"></i>The portal is to be manually opened/closed by finance core.</h6>
-<br>
-<h5>Format: YYYY-MM-DD hrs:min:sec</h5>
-<form action="" method="POST">
-{% csrf_token %}
-<table>
-{{deadlineform}}
-</table>
-<input type="submit" class="btn btn-primary" value="Save Deadline"/>
-</form></div>
 {% if form_saved %}
 <div class="alert alert-success">
     <button type="button" class="close" data-dismiss="alert">×</button>
 	Deadline updated successfully    
 	</div>
-
 {% endif %}
 {% endif %}
 
-{% endblock %}
+    <h3>Welcome to Budget Portal</h3>
+    </br>
+    Please click on the event name whose budget plans you want to see{% if not curr_portal.opened and has_perms %} and update{% endif %}.<br><br>
 
-{% block tab2 %}    
-    <p>Just testing</p>
-{% endblock %}
+    {% for dept in departments %}
+        <!--submitted plans is true only when portal is closed and plan has been approved-->
+        <!--displayed as red button-->
+    	{% if dept.Dept_Name in submittedplans %}
+        	<a class="btn btn-danger" href="{% url finance.views.display event_name=dept.id %}">{{dept}}</a>
+    	{% endif %}
+    	{% if dept.Dept_Name not in submittedplans %}
+        	<a class="btn" href="{% url finance.views.display event_name=dept.id %}">{{dept}}</a>
+        {% endif %}
+        <!--if portal is open, then no need to check for submitted-->
+        {% if curr_portal.opened  %}<a class="btn" href="{% url finance.views.display event_name=dept.id %}">{{dept}}</a>{% endif %}
+    {% endfor %}
+
+{% endif %}
+
+<br><br>
+         
+
+{% if finance_core %}
+    <div class="label label-inverse">Finance core actions</div>
+        {% if not curr_portal.opened %}
+            <div class="well">
+                <h4>Click on 'Open Portal' to enable Shaastra event coordinators to update event budgets.</h4><br>
+                    <h4><a data-toggle="modal" href="#openModal" class="btn btn-success">Open Portal</a></h4>
+
+                    <div class="modal hide" id="openModal">
+                        <div class="modal-body">
+                            <p>  Do you want to open the portal to event coordinators? They will
+                            be able to update their plans. All finance coordinators will be able
+                            to view the plans.</p>
+                            <h5>Note: For working on the final finance plan, portal must be closed.</h5>	  
+               	    </div>
+                      <div class="modal-footer">
+                        <a class="btn btn-primary" href="{% url erp.finance.views.toggle %}">Open Portal</a>
+                        <a href="#" class="btn btn-action" data-dismiss="modal" >Cancel</a>
+     
+                      </div>
+            </div>
+    
+        <br>
+        {% endif %}
+
+        {% if curr_portal.opened %}
+
+            <div class="well">
+                <h4>Click on 'Close Portal' to disable further editing of budget plans by Shaastra event coordinators.</h4><br>
+                <h4><a data-toggle="modal" href="#closeModal" class="btn btn-danger">Close Portal</a></h4>
+
+                <div class="modal hide" id="closeModal">
+                  <div class="modal-body">
+                    <h4>  Are you sure you want to close the portal?</h4>
+                    <h5>Note: Event coordinators will not be able to edit plans.</h5>	  
+            	  </div>
+                  <div class="modal-footer">
+                    <a class="btn btn-primary" href="{% url erp.finance.views.toggle %}">Close Portal</a>
+                    <a href="#" class="btn btn-action" data-dismiss="modal" >Cancel</a>
+        
+                   </div>
+                </div>
+        {% endif %}
+
+        <h4>Grant permissions to only certain finance coordinators to sanction budget plan.</h4><br>
+        <h4><a class="btn btn-success" href="{% url erp.finance.views.permissions %}">Pemissions</a></h4><br>
+
+        <h4>Choose the deadline that needs to be displayed for the Event coords for their Budget proposal submission.</h4>
+        <h6><i class="icon-warning-sign"></i>The portal is to be manually opened/closed by finance core.</h6>
+        <br>
+        <h5>Format: YYYY-MM-DD hrs:min:sec</h5>
+        
+        <form action="" method="POST">
+            {% csrf_token %}
+            <table>
+            {{deadlineform}}
+            </table>
+            <input type="submit" class="btn btn-primary" value="Save Deadline"/>
+        </form>
+</div><!--end of well-->
+
+
+{% endif %}
+

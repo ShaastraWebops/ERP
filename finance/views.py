@@ -19,7 +19,8 @@ def budget_portal(request, plan="None"):
     curr_userprofile=userprofile.objects.get(user=request.user)
     page_owner = get_page_owner (request, owner_name=request.user)
     qms_dept=False
-    events_core=False	
+    events_core=False
+    advance=False	
     #Get Department Members' image thumbnails
     department = page_owner.get_profile ().department      
     dept_cores_list = User.objects.filter (
@@ -193,7 +194,12 @@ def budget_portal(request, plan="None"):
                 plan_finance=Budget.objects.get(name='F',department=department)
                 if plan_finance.submitted == True:
                     submitted=True            
-        return render_to_response('finance/budget_portal.html',locals(),context_instance=global_context(request))    
+
+                    """ADVANCE"""
+                    advance=True
+                        
+                    
+        return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))    
         
     elif str(department) == "Finance":
         finance=True
@@ -241,11 +247,12 @@ def budget_portal(request, plan="None"):
                 if deadlineform.is_valid():
                     deadlineform.save()
                     form_saved=True
+                    
               
             else:
     	        deadlineform=DeadlineForm(instance=deadline)
     
-        return render_to_response('finance/budget_portal.html',locals(),context_instance=global_context(request))
+        return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))
         
     """
     If user is part of QMS department then, he/she has the pemission to
@@ -266,10 +273,14 @@ def budget_portal(request, plan="None"):
                         if plan_finance.submitted == True:
                             submittedplans.append(dept.Dept_Name)
                                 	
-        return render_to_response('finance/budget_portal.html',locals(),context_instance=global_context(request))
+        return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))
     else:
         raise Http404
-        
+    advance(request)    
+
+"""
+To open or clode budget portal
+"""        
 def toggle(request):
     feedback_tab=True
     page_owner = get_page_owner (request, owner_name=request.user)
@@ -293,7 +304,9 @@ def toggle(request):
             return HttpResponseRedirect(reverse('erp.finance.views.budget_portal', kwargs={'plan': 'budget',}))       
     else:
         raise Http404  
-        
+"""
+To grant permissions to specific finance coords
+"""        
 def permissions(request):
     feedback_tab=True
     page_owner = get_page_owner (request, owner_name=request.user)
@@ -378,6 +391,7 @@ def display(request, event_name):
     """
     Display the plans and items.
     """
+    display=True
     finance=False
     feedback_tab=True
     form_saved=False
@@ -431,7 +445,7 @@ def display(request, event_name):
         item_exist = False
         if items:
             item_exist = True
-        return render_to_response('finance/display.html',locals(),context_instance=global_context(request))
+        return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))
     
   
     first_time=False
@@ -519,17 +533,20 @@ def display(request, event_name):
                     else:
                         budgetclaimform=BudgetClaimForm(instance=plan_finance)
                         itemformset=ItemFormset(queryset=qset)
-                    return render_to_response('finance/display.html',locals(),context_instance=global_context(request))
+                    return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))
                 else:
                     submitted = True
-                    return render_to_response('finance/display.html',locals(),context_instance=global_context(request))               
+                    return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))               
             else:
-                return render_to_response('finance/display.html',locals(),context_instance=global_context(request))    
+                return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))    
                         
         else:
             first_time = True
-            return render_to_response('finance/display.html',locals(),context_instance=global_context(request)) 
-       
+            return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request)) 
+ 
+"""
+Finance core can approve a plan from finance department
+"""       
 def submit(request, event):
     feedback_tab=True
     page_owner = get_page_owner (request, owner_name=request.user)
@@ -557,4 +574,4 @@ def submit(request, event):
                     plan_finance.save()
                     return HttpResponseRedirect(reverse('erp.finance.views.budget_portal', kwargs={'plan': 'budget',}))
     else:
-        raise Http404         
+        raise Http404

@@ -14,11 +14,19 @@ input{width:100px; height:25px;}
         <div class="tab-pane fade in active" id="budget">
 
             {% block tab1 %}
-            {% endblock %} 
+                {% if not display %}
+                    {% include "finance/budget_portal.html" %}
+                {% endif %}
+                {% if display %}
+                    {% include "finance/budget_display.html" %}
+                {% endif %}
+            {% endblock %}
+            
 
         </div>
         <div class="tab-pane fade" id="advance">
             {% block tab2 %}
+                {% include "finance/advance_portal.html" %}
             {% endblock %}       
         </div>
     
