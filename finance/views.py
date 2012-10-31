@@ -82,6 +82,8 @@ def advance(request, dept):
         
     if (department.is_event):
         event=True
+        if is_core(request.user):
+            events_core=True 
         """
         if is_core(request.user):
             events_core=True 
@@ -120,24 +122,29 @@ def advance(request, dept):
                     advance=True
                     curr_items = Item.objects.filter(budget=plan_finance,department=department)
                     request_items = Request.objects.filter(department=department)
-                    if not request_items:
-                        for item in curr_items:
+                    for item in curr_items:
+                        request_item1=Request.objects.filter(item=item)
+                        if not request_item1:
                             new_request=Request(request_amount=0.0, granted_amount=0.0, balance_amount=item.original_amount, item=item, department=department)
                             new_request.save() 
-                        request_items = Request.objects.filter(department=department)
+                    request_items = Request.objects.filter(department=department)
                         
                     
                     """ADVANCE PORTAL FORM"""
                     if request.method == 'POST':
+                        request_error=False
                         requested_amount = request.POST['request']
-                        curr_request = Request.objects.get(id=request.POST['id'])
-                        curr_request.request_amount=requested_amount
-                        curr_request.request_status=True
-                        curr_request.granted_status=False
-                        curr_request.read_status=False
-                        #new line not happening?
-                        curr_request.history = str(curr_request.history) + 'requested amount: '+str(requested_amount)+' on '+str(datetime.date.today())+'\n'      
-                        curr_request.save()
+                        if requested_amount:
+                            curr_request = Request.objects.get(id=request.POST['id'])
+                            curr_request.request_amount=requested_amount
+                            curr_request.request_status=True
+                            curr_request.granted_status=False
+                            curr_request.read_status=False
+                            #new line not happening?
+                            curr_request.history = str(curr_request.history) + 'requested amount: '+str(requested_amount)+' on '+str(datetime.date.today())+'\n'      
+                            curr_request.save()
+                        else:
+                            request_error=True
                         return HttpResponseRedirect(reverse('erp.finance.views.advance', kwargs={'dept': dept,}))
                         #check for error                                              
                         
@@ -212,7 +219,33 @@ def advance(request, dept):
 
          
         return render_to_response('finance/advance_portal.html',locals(),context_instance=global_context(request))
-        
+    
+    if qms_dept:
+        if curr_portal.opened == False: 
+            plans = Budget.objects.all()
+            if plans:
+                submitted_plans=Budget.objects.filter(name='F', submitted=True)
+                if submitted_plans:
+                    advance=True
+                    if dept!='0':
+                        for plan in submitted_plans:
+                            if str(plan.department.id)==dept:
+                                event_chosen = True
+           
+                    request_items = Request.objects.all() 
+                    if request_items:
+                        pending_approval = []
+                        for req in request_items:
+                            if req.request_status:
+                                pending_approval.append(req.department.Dept_Name)                                
+
+        if event_chosen:
+            event_name = Department.objects.get(id=dept)
+            plan_finance = Budget.objects.get(name='F',department=event_name) 
+            request_items = Request.objects.filter(department=event_name)  
+            items=Item.objects.all()
+        return render_to_response('finance/advance_portal.html',locals(),context_instance=global_context(request))
+         
     """
     If user is part of QMS department then, he/she has the pemission to
     view all plans from all departments, like a finance coord without
@@ -582,6 +615,7 @@ def toggle(request):
 To grant permissions to specific finance coords
 """        
 def permissions(request):
+    curr_userprofile=userprofile.objects.get(user=request.user)
     feedback_tab=True
     page_owner = get_page_owner (request, owner_name=request.user)
     #Get Department Members' image thumbnails
@@ -671,7 +705,7 @@ def display(request, event_name):
     form_saved=False
     total_amount1=0
     page_owner = get_page_owner (request, owner_name=request.user)
-
+    curr_userprofile=userprofile.objects.get(user=request.user)
     #Get Department Members' image thumbnails
     department = page_owner.get_profile ().department      
     dept_cores_list = User.objects.filter (
