@@ -1,3 +1,14 @@
+{% extends "finance/finance_base_portal.html" %}
+{% block content %}
+    <ul class="nav nav-pills">
+    <li class='active' >
+    <a href="{% url finance.views.budget_portal plan='budget'%}"><i class="icon-th-list icon-white"></i>Budget</a>
+    </li>
+    <li >
+    <a href="{% url finance.views.advance dept='0'  %}"><i class="icon-edit"></i>Advance Request</a>
+    </li>
+    </ul>
+    <hr>
 {% if event %}
 
     <!--If portal is closed, and event department no editing allowed-->
@@ -243,4 +254,4 @@ and unnecessarily increases scolling-->
 
 
 {% endif %}
-
+{% endblock %}

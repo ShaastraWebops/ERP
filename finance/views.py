@@ -12,6 +12,233 @@ from erp.department.models import *
 from django.core.urlresolvers import reverse
 from datetime import date
 
+def read(request, request_id):
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    department = curr_userprofile.department
+    if department.is_event:
+        if is_coord(request.user):
+            curr_request=Request.objects.get(id=request_id)
+            if curr_request.read_status==False:
+                curr_request.read_status=True
+                curr_request.save()
+                return HttpResponseRedirect(reverse('erp.finance.views.advance', kwargs={'dept': '0',}))
+            
+
+def advance(request, dept):
+    feedback_tab=True
+    finance_core=False
+    total_amount1=0
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    page_owner = get_page_owner (request, owner_name=request.user)
+    qms_dept=False
+    events_core=False
+    advance=False	
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
+    #To display Add Tasks and Feedback options
+    if is_core(request.user):
+        is_core1=True
+        is_visitor1=False  
+        if str(department) == "QMS":
+            qms_core=True
+            qms_dept=True
+        if str(department) == "Finance":
+            finance_core=True    
+
+    if is_supercoord(request.user):
+        user_supercoord=True
+        if str(department) == "QMS":
+            qms_supercoord=True
+            qms_dept=True             
+    
+    if is_coord(request.user):
+        user_coord=True
+        if str(department) == "QMS":
+            qms_coord=True
+            qms_dept=True 
+    
+	#Check if instance of open portal present. Otherwise make one.                
+    openportal=OpenBudgetPortal.objects.filter(id=1)
+    if openportal:
+        curr_portal=OpenBudgetPortal.objects.get(id=1)
+    else:
+        curr_portal=OpenBudgetPortal(opened=False)
+        curr_portal.save()
+
+    curr_user=request.user
+    event=False
+    finance=False
+    event_chosen=False
+        
+    if (department.is_event):
+        event=True
+        """
+        if is_core(request.user):
+            events_core=True 
+            item_exist=False
+            submitted = False
+            plans = Budget.objects.filter(department=department)
+            items = Item.objects.filter(department=department)
+            if items:
+                item_exist=True
+                if curr_portal.opened == True:
+                    budgets = plans.exclude(name='F')
+                if curr_portal.opened == False:
+                    plan_finance = Budget.objects.get(name='F',department=department)
+                    if plan_finance.submitted == True:
+                        submitted = True
+                    budgets = plans.exclude(name='F') 
+                return render_to_response('finance/event_core_view.html',locals(),context_instance=global_context(request))        
+            else:
+                return render_to_response('finance/event_core_view.html',locals(),context_instance=global_context(request)) 
+        """                   
+                          
+
+        if curr_portal.opened==False:
+            items=Item.objects.all()
+            curr_plans = Budget.objects.filter(department=department)
+            if curr_plans:
+                item_exist=True
+                plan_finance=Budget.objects.get(name='F',department=department)
+                if plan_finance.submitted == True:
+                    
+                    submitted=True 
+                    """
+                    Create an instance of request model associated with each item in the
+                    finance department approved plan
+                    """
+                    advance=True
+                    curr_items = Item.objects.filter(budget=plan_finance,department=department)
+                    request_items = Request.objects.filter(department=department)
+                    if not request_items:
+                        for item in curr_items:
+                            new_request=Request(request_amount=0.0, granted_amount=0.0, balance_amount=item.original_amount, item=item, department=department)
+                            new_request.save() 
+                        request_items = Request.objects.filter(department=department)
+                        
+                    
+                    """ADVANCE PORTAL FORM"""
+                    if request.method == 'POST':
+                        requested_amount = request.POST['request']
+                        curr_request = Request.objects.get(id=request.POST['id'])
+                        curr_request.request_amount=requested_amount
+                        curr_request.request_status=True
+                        curr_request.granted_status=False
+                        curr_request.read_status=False
+                        #new line not happening?
+                        curr_request.history = str(curr_request.history) + 'requested amount: '+str(requested_amount)+' on '+str(datetime.date.today())+'\n'      
+                        curr_request.save()
+                        return HttpResponseRedirect(reverse('erp.finance.views.advance', kwargs={'dept': dept,}))
+                        #check for error                                              
+                        
+        return render_to_response('finance/advance_portal.html',locals(),context_instance=global_context(request))    
+        
+    elif str(department) == "Finance":
+        no_request=False
+        finance=True
+        event=False
+        departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+        has_perms = False
+        
+        """
+        Checking is the finance coord logged in has permission
+        to update plan from finance department.
+        """
+        finance_coords=Permission.objects.all()
+        for eachcoord in finance_coords:
+            if curr_userprofile.name == eachcoord.coord:        
+                if eachcoord.budget_sanction==True:
+                    has_perms = True
+              
+        if is_core(request.user):
+            has_perms=True 
+            
+        """
+        Make a list of all the budget plans which have already been
+        approved. Note that this happens only when the portal is 
+        closed.
+        """    
+            
+        if curr_portal.opened == False: 
+            plans = Budget.objects.all()
+            if plans:
+                submitted_plans=Budget.objects.filter(name='F', submitted=True)
+                if submitted_plans:
+                    advance=True
+                    if dept!='0':
+                        for plan in submitted_plans:
+                            if str(plan.department.id)==dept:
+                                event_chosen = True
+           
+                    request_items = Request.objects.all() 
+                    if request_items:
+                        pending_approval = []
+                        for req in request_items:
+                            if req.request_status:
+                                pending_approval.append(req.department.Dept_Name)                                
+
+                        if event_chosen:
+                            event_name = Department.objects.get(id=dept)
+                            plan_finance = Budget.objects.get(name='F',department=event_name)
+                            items=Item.objects.filter(department=event_name)
+                            curr_items = Item.objects.filter(budget=plan_finance,department=event_name)
+                            request_items = Request.objects.filter(department=event_name)
+                            if request_items:
+                                if request.method == 'POST':
+                                    approved_amount = request.POST['request']
+                                    curr_request = Request.objects.get(id=request.POST['id'])
+                                    curr_request.granted_amount=approved_amount
+                                    curr_request.balance_amount=float(curr_request.balance_amount)-float(curr_request.granted_amount)
+                                    curr_request.request_status=False
+                                    curr_request.granted_status=True
+                                    curr_request.read_status=False
+                                    #new line not happening?
+                                    curr_request.history = str(curr_request.history)+'approved amount: '+str(approved_amount)+' on '+str(date.today())+ '\n'       
+                                    curr_request.save()
+                                    #if Response Redirect is not given then the history will be lagging
+                                    return HttpResponseRedirect(reverse('erp.finance.views.advance', kwargs={'dept': dept,}))
+                            else:
+                                no_request=True    
+
+         
+        return render_to_response('finance/advance_portal.html',locals(),context_instance=global_context(request))
+        
+    """
+    If user is part of QMS department then, he/she has the pemission to
+    view all plans from all departments, like a finance coord without
+    permission.
+       	        
+    if qms_dept:
+        departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+    	has_perms=False
+        if curr_portal.opened == False: 
+            submittedplans = []
+            plans = Budget.objects.all()
+            if plans:
+                for dept in departments:
+                    curr_plans = Budget.objects.filter(department=dept)
+                    if curr_plans:
+                        plan_finance=Budget.objects.get(name='F',department=dept)
+                        if plan_finance.submitted == True:
+                            submittedplans.append(dept.Dept_Name)
+                                	
+        return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))
+       
+    else:
+        raise Http404  
+    """
+    
+
 def budget_portal(request, plan="None"):
     feedback_tab=True
     finance_core=False
@@ -191,15 +418,40 @@ def budget_portal(request, plan="None"):
             items=Item.objects.all()
             curr_plans = Budget.objects.filter(department=department)
             if curr_plans:
+                item_exist=True
                 plan_finance=Budget.objects.get(name='F',department=department)
                 if plan_finance.submitted == True:
+                    
                     submitted=True            
-
                     """ADVANCE"""
+                    """
+                    Create an instance of request model associated with each item in the
+                    finance department approved plan
+                    """
                     advance=True
+                    curr_items = Item.objects.filter(budget=plan_finance,department=department)
+                    request_items = Request.objects.filter(department=department)
+                    if not request_items:
+                        for item in curr_items:
+                            new_request=Request(request_amount=0.0, granted_amount=0.0, balance_amount=item.original_amount, item=item, department=department)
+                            new_request.save() 
+                        request_items = Request.objects.filter(department=department)
                         
                     
-        return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))    
+                    """ADVANCE PORTAL FORM"""
+                    if request.method == 'POST':
+                        requested_amount = request.POST['request']
+                        curr_request = Request.objects.get(id=request.POST['id'])
+                        curr_request.request_amount=requested_amount
+                        curr_request.request_status=True
+                        #new line not happening?
+                        curr_request.history = str(curr_request.history) + '\n' +'requested amount: '+str(requested_amount)+' on '+str(datetime.date.today())      
+                        curr_request.save() 
+                        #if Response Redirect is not given then the history will be lagging 
+                        return HttpResponseRedirect(reverse('erp.finance.views.budget_portal', kwargs={'plan': 'budget',}))
+                                              
+                        
+        return render_to_response('finance/budget_portal.html',locals(),context_instance=global_context(request))    
         
     elif str(department) == "Finance":
         finance=True
@@ -236,6 +488,30 @@ def budget_portal(request, plan="None"):
                         plan_finance=Budget.objects.get(name='F',department=dept)
                         if plan_finance.submitted == True:
                             submittedplans.append(dept.Dept_Name)
+                submitted_plans=Budget.objects.filter(name='F', submitted=True)
+                if submitted_plans:
+                    advance=True
+                    curr_items = Item.objects.filter(budget=plan_finance,department=department)
+                    request_items = Request.objects.filter(department=department)
+                    if not request_items:
+                        for item in curr_items:
+                            new_request=Request(request_amount=0.0, granted_amount=0.0, balance_amount=item.original_amount, item=item, department=department)
+                            new_request.save() 
+                        request_items = Request.objects.filter(department=department)
+                        
+                    
+                    """ADVANCE PORTAL FORM
+                    if request.method == 'POST':
+                        requested_amount = request.POST['request']
+                        curr_request = Request.objects.get(id=request.POST['id'])
+                        curr_request.request_amount=requested_amount
+                        curr_request.request_status=True
+                        #new line not happening?
+                        curr_request.history = str(curr_request.history) + '\n' +'requested amount: '+str(requested_amount)+' on '+str(datetime.date.today())      
+                        curr_request.save() 
+                        #if Response Redirect is not given then the history will be lagging 
+                        return HttpResponseRedirect(reverse('erp.finance.views.budget_portal', kwargs={'plan': 'budget',}))"""                                
+                            
                             
         """
         Finance core has the option to set deadline.
@@ -247,12 +523,11 @@ def budget_portal(request, plan="None"):
                 if deadlineform.is_valid():
                     deadlineform.save()
                     form_saved=True
-                    
-              
+       
             else:
     	        deadlineform=DeadlineForm(instance=deadline)
     
-        return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))
+        return render_to_response('finance/budget_portal.html',locals(),context_instance=global_context(request))
         
     """
     If user is part of QMS department then, he/she has the pemission to
@@ -273,10 +548,9 @@ def budget_portal(request, plan="None"):
                         if plan_finance.submitted == True:
                             submittedplans.append(dept.Dept_Name)
                                 	
-        return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))
+        return render_to_response('finance/budget_portal.html',locals(),context_instance=global_context(request))
     else:
-        raise Http404
-    advance(request)    
+        raise Http404 
 
 """
 To open or clode budget portal
@@ -445,7 +719,7 @@ def display(request, event_name):
         item_exist = False
         if items:
             item_exist = True
-        return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))
+        return render_to_response('finance/budget_display.html',locals(),context_instance=global_context(request))
     
   
     first_time=False
@@ -533,16 +807,16 @@ def display(request, event_name):
                     else:
                         budgetclaimform=BudgetClaimForm(instance=plan_finance)
                         itemformset=ItemFormset(queryset=qset)
-                    return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))
+                    return render_to_response('finance/budget_display.html',locals(),context_instance=global_context(request))
                 else:
                     submitted = True
-                    return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))               
+                    return render_to_response('finance/budget_display.html',locals(),context_instance=global_context(request))               
             else:
-                return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request))    
+                return render_to_response('finance/budget_display.html',locals(),context_instance=global_context(request))    
                         
         else:
             first_time = True
-            return render_to_response('finance/finance_base_portal.html',locals(),context_instance=global_context(request)) 
+            return render_to_response('finance/budget_display.html',locals(),context_instance=global_context(request)) 
  
 """
 Finance core can approve a plan from finance department

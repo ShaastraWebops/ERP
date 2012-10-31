@@ -1,3 +1,5 @@
+{% extends "finance/finance_base_portal.html" %}
+{% block content %}
 <!--Display page back to budget portal home button -->
 {% if event %}
 
@@ -278,3 +280,4 @@ when event coordinators visit the bodget portal -->
 {% if first_time %}
 <h4> {{event1}} coordinators have not updated any plans. </h4>
 {% endif %}
+{% endblock %}
