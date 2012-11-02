@@ -135,19 +135,23 @@ def advance(request, dept):
                         request_error=False
                         requested_amount = request.POST['request']
                         if requested_amount:
-                            curr_request = Request.objects.get(id=request.POST['id'])
-                            curr_request.request_amount=requested_amount
-                            curr_request.request_status=True
-                            curr_request.granted_status=False
-                            curr_request.read_status=False
-                            #new line not happening?
-                            curr_request.history = str(curr_request.history) + 'requested amount: '+str(requested_amount)+' on '+str(datetime.date.today())+'\n'      
-                            curr_request.save()
+                            try:
+                                requested_amount1=float(requested_amount)
+                                curr_request = Request.objects.get(id=request.POST['id'])
+                                curr_request.request_amount=requested_amount
+                                curr_request.request_status=True
+                                curr_request.granted_status=False
+                                curr_request.read_status=False
+                                #new line not happening?
+                                curr_request.history = str(curr_request.history) + 'requested amount: '+str(requested_amount)+' on '+str(datetime.date.today())+'\n'      
+                                curr_request.save()
+                            except:
+                                request_error=True
                         else:
                             request_error=True
-                        return HttpResponseRedirect(reverse('erp.finance.views.advance', kwargs={'dept': dept,}))
+                        #return HttpResponseRedirect(reverse('erp.finance.views.advance', kwargs={'dept': dept,}))
                         #check for error                                              
-                        
+                        request_items = Request.objects.filter(department=department)
         return render_to_response('finance/advance_portal.html',locals(),context_instance=global_context(request))    
         
     elif str(department) == "Finance":
@@ -202,22 +206,30 @@ def advance(request, dept):
                             request_items = Request.objects.filter(department=event_name)
                             if request_items:
                                 if request.method == 'POST':
+                                    approved_error=False
                                     approved_amount = request.POST['request']
-                                    curr_request = Request.objects.get(id=request.POST['id'])
-                                    curr_request.granted_amount=approved_amount
-                                    curr_request.balance_amount=float(curr_request.balance_amount)-float(curr_request.granted_amount)
-                                    curr_request.request_status=False
-                                    curr_request.granted_status=True
-                                    curr_request.read_status=False
-                                    #new line not happening?
-                                    curr_request.history = str(curr_request.history)+'approved amount: '+str(approved_amount)+' on '+str(date.today())+ '\n'       
-                                    curr_request.save()
-                                    #if Response Redirect is not given then the history will be lagging
-                                    return HttpResponseRedirect(reverse('erp.finance.views.advance', kwargs={'dept': dept,}))
+                                    if approved_amount:
+                                        try:
+                                            approved_amount1=float(approved_amount)
+                                            curr_request = Request.objects.get(id=request.POST['id'])
+                                            curr_request.granted_amount=approved_amount
+                                            curr_request.balance_amount=float(curr_request.balance_amount)-float(curr_request.granted_amount)
+                                            curr_request.request_status=False
+                                            curr_request.granted_status=True
+                                            curr_request.read_status=False
+                                            #new line not happening?
+                                            curr_request.history = str(curr_request.history)+'approved amount: '+str(approved_amount)+' on '+str(date.today())+ '\n'       
+                                            curr_request.save()
+                                            #if Response Redirect is not given then the history will be lagging
+                                            #return HttpResponseRedirect(reverse('erp.finance.views.advance', kwargs={'dept': dept,}))
+                                        except:
+                                            approved_error=True
+                                    else:
+                                        approved_error=True
                             else:
                                 no_request=True    
 
-         
+                            request_items = Request.objects.filter(department=event_name)                           
         return render_to_response('finance/advance_portal.html',locals(),context_instance=global_context(request))
     
     if qms_dept:
@@ -474,16 +486,21 @@ def budget_portal(request, plan="None"):
                     """ADVANCE PORTAL FORM"""
                     if request.method == 'POST':
                         requested_amount = request.POST['request']
-                        curr_request = Request.objects.get(id=request.POST['id'])
-                        curr_request.request_amount=requested_amount
-                        curr_request.request_status=True
-                        #new line not happening?
-                        curr_request.history = str(curr_request.history) + '\n' +'requested amount: '+str(requested_amount)+' on '+str(datetime.date.today())      
-                        curr_request.save() 
-                        #if Response Redirect is not given then the history will be lagging 
-                        return HttpResponseRedirect(reverse('erp.finance.views.budget_portal', kwargs={'plan': 'budget',}))
+                        if requested_amount:
+                            try:
+                                requested_amount1=float(requested_amount)
+                                curr_request = Request.objects.get(id=request.POST['id'])
+                                curr_request.request_amount=requested_amount
+                                curr_request.request_status=True
+                                #new line not happening?
+                                curr_request.history = str(curr_request.history) + '\n' +'requested amount: '+str(requested_amount)+' on '+str(datetime.date.today())      
+                                curr_request.save() 
+                                #if Response Redirect is not given then the history will be lagging 
+                                #return HttpResponseRedirect(reverse('erp.finance.views.budget_portal', kwargs={'plan': 'budget',}))
+                            except:
+                                request_error=True
                                               
-                        
+                        request_items = Request.objects.filter(department=department)
         return render_to_response('finance/budget_portal.html',locals(),context_instance=global_context(request))    
         
     elif str(department) == "Finance":
@@ -567,7 +584,7 @@ def budget_portal(request, plan="None"):
     view all plans from all departments, like a finance coord without
     permission.
     """    	        
-    if qms_dept:
+    if qms_dept or events_core:
         departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
     	has_perms=False
         if curr_portal.opened == False: 
