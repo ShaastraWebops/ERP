@@ -138,7 +138,7 @@
                 <div id="history{{item.id}}" class="collapse">
                 {% for request in request_items %}
                     {% ifequal request.item item %}
-                        {{request.history}}</br>
+                        {{request.history|safe}}</br>
                         </br>                        
                     {% endifequal %}
   
@@ -321,7 +321,7 @@
                 <div id="history{{item.id}}" class="collapse">
                 {% for request in request_items %}
                     {% ifequal request.item item %}
-                        {{request.history}} </br> 
+                        {{request.history|safe}} </br> 
                         </br>                      
                     {% endifequal %}
   
@@ -402,7 +402,7 @@
                 <div id="history{{item.id}}" class="collapse">
                 {% for request in request_items %}
                     {% ifequal request.item item %}
-                        {{request.history}}  </br>                      
+                        {{request.history|safe}}  </br>                      
                     {% endifequal %}
   
                 {% endfor %}
@@ -513,7 +513,7 @@
                 <div id="history{{item.id}}" class="collapse">
                 {% for request in request_items %}
                     {% ifequal request.item item %}
-                        {{request.history}} </br>                       
+                        {{request.history|safe}} </br>                       
                     {% endifequal %}
   
                 {% endfor %}

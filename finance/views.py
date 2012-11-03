@@ -11,6 +11,7 @@ from erp.users.models import *
 from erp.department.models import *
 from django.core.urlresolvers import reverse
 from datetime import date
+from django.utils.safestring import mark_safe
 
 def read(request, request_id):
     curr_userprofile=userprofile.objects.get(user=request.user)
@@ -142,8 +143,7 @@ def advance(request, dept):
                                 curr_request.request_status=True
                                 curr_request.granted_status=False
                                 curr_request.read_status=False
-                                #new line not happening?
-                                curr_request.history = str(curr_request.history) + 'requested amount: '+str(requested_amount)+' on '+str(datetime.date.today())+'\n'      
+                                curr_request.history = str(curr_request.history) + 'requested: '+str(requested_amount)+' on '+str(datetime.date.today())+'<br>'
                                 curr_request.save()
                             except:
                                 request_error=True
@@ -218,7 +218,7 @@ def advance(request, dept):
                                             curr_request.granted_status=True
                                             curr_request.read_status=False
                                             #new line not happening?
-                                            curr_request.history = str(curr_request.history)+'approved amount: '+str(approved_amount)+' on '+str(date.today())+ '\n'       
+                                            curr_request.history = str(curr_request.history)+'approved: '+str(approved_amount)+' on '+str(date.today())+ '<br>'       
                                             curr_request.save()
                                             #if Response Redirect is not given then the history will be lagging
                                             #return HttpResponseRedirect(reverse('erp.finance.views.advance', kwargs={'dept': dept,}))
@@ -229,7 +229,12 @@ def advance(request, dept):
                             else:
                                 no_request=True    
 
-                            request_items = Request.objects.filter(department=event_name)                           
+                            request_items = Request.objects.filter(department=event_name)   
+                        if request_items:
+                            pending_approval = []
+                            for req in request_items:
+                                if req.request_status:
+                                    pending_approval.append(req.department.Dept_Name)                                                      
         return render_to_response('finance/advance_portal.html',locals(),context_instance=global_context(request))
     
     if qms_dept:
