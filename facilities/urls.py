@@ -4,6 +4,7 @@ from django.conf.urls.defaults import *
 
 urlpatterns=patterns('erp.facilities.views',
     (r'^test/$','test'),
+    (r'^create_items/$','create_items'),
     (r'^portal/$','portal'),
     (r'^display/$','display'),    
     (r'^approval_portal/$','approval_portal'),
