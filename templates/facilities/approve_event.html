@@ -24,6 +24,7 @@ input{width:100px; height:25px;}
 <table class="table table-striped table-bordered table-condensed" >
 
 <tr>
+{% if items %}
 {% if facilities_coord %}
 <th>Request Date</th><th>Name</th><th>Quantity</th><th>Description</th><th>Status</th><th>Approved</th><th>To Approve</th><th>Your Comment</th><th></th>
 {% endif %}
@@ -70,6 +71,9 @@ input{width:100px; height:25px;}
 {% endfor %}
 </table>
 <br/><br/>
+{% else %}
+<br/><br/><h3> No requests to display </h3><br/>
+{% endif %}
 
 {% endblock %}
 {% block javascript %}

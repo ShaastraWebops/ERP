@@ -8,7 +8,10 @@ input{width:100px; height:25px;}
 </style>
 
 <p>Yo</p>
-
+<br/><br/>
+{% for item in itemlist %}
+<p>{{item.name}}</p></br>
+{% endfor %}
 {% endblock %}
 
 {% block javascript %}

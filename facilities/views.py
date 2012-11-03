@@ -30,7 +30,7 @@ def portal(request):
             extra1=5-len(qset)
         else:
             extra1=2
-        ItemFormset=modelformset_factory(FacilitiesObject, fields=('name','description','quantity','department'),extra=extra1, can_delete=True)
+        ItemFormset=modelformset_factory(FacilitiesObject, fields=('name','description','quantity'),extra=extra1, can_delete=True)
         if request.method=='POST':
             itemformset=ItemFormset(request.POST, queryset=qset)            
             form_saved = False
@@ -45,6 +45,7 @@ def portal(request):
                                     if tempform.quantity < 0:
                                         tempform.quantity=0
                                     tempform.creator=curr_userprofile
+                                    tempform.department=form.instance.name.department
                                     tempform.request_date = datetime.date.today()
                                     tempform.save()
                                     form_saved=True
@@ -52,6 +53,7 @@ def portal(request):
                                     tempform = form.save(commit=False)
                                     tempform.creator=curr_userprofile
                                     tempform.request_date = datetime.date.today()
+                                    tempform.department=form.instance.name.department
                                     if tempform.quantity <= curr_item.approved_quantity:
                                         tempform.request_status=2
                                     tempform.save()
@@ -59,6 +61,7 @@ def portal(request):
                                 elif curr_item.request_status==2:
                                     tempform = form.save(commit=False)
                                     tempform.creator=curr_userprofile
+                                    tempform.department=form.instance.name.department
                                     tempform.request_date = datetime.date.today()
                                     if tempform.quantity > curr_item.approved_quantity:
                                         tempform.request_status=1
@@ -67,6 +70,7 @@ def portal(request):
                             except :
                                 tempform = form.save(commit=False)
                                 tempform.creator=curr_userprofile
+                                tempform.department=form.instance.name.department
                                 tempform.request_date = datetime.date.today()
                                 tempform.save()      
                                 form_saved=True           
@@ -110,8 +114,10 @@ def approval_portal(request):
     changed_objects=[] 
     new_objects=[]
     exists_objects=[]
+    special_req_dept=Department.objects.get(id=58)
     for dept in departments:
         a=FacilitiesObject.objects.filter(creator__department=dept,department=curr_userprofile.department)
+        a+=FacilitiesObject.objects.filter(creator__department=dept,department=special_req_department)
         if len(a.filter(request_status=0)) != 0:       
             new_objects.append(dept.Dept_Name)   
         elif len(a.filter(request_status=1)) != 0 :       
@@ -145,7 +151,7 @@ def display(request):
     curr_userprofile=userprofile.objects.get(user=request.user)
     page_owner = get_page_owner (request, owner_name=request.user)
     department = page_owner.get_profile ().department   
-    items = FacilitiesObject.objects.filter(creator__department=curr_userprofile.department).order_by('request_date','request_status')
+    items = FacilitiesObject.objects.filter(creator__department=curr_userprofile.department).order_by('name','request_status')
     number=0
     #number=Department.facilitiesitem_set.count()
     return render_to_response('facilities/display.html',locals(),context_instance=global_context(request))
@@ -160,7 +166,7 @@ def approve_event(request,event_name,form_saved=0,error=0):
         items = FacilitiesObject.objects.filter(creator__department=dept,department=curr_userprofile.department).order_by('request_status','request_date')
     elif curr_userprofile.department.Dept_Name == "QMS":
         qms_coord=1
-        items = FacilitiesObject.objects.filter(creator__department=dept).order_by('request_status','request_date')
+        items = FacilitiesObject.objects.filter(creator__department=dept).order_by('name','request_status')
         
     
 
@@ -191,7 +197,87 @@ def submit_approval(request,item_id):
         else:
             error=1
     return HttpResponseRedirect('/erp/facilities/approve_event/%d/%d/%d/'%(item.creator.department.id,form_saved,error))
-    
+
+
+def create_items(request):
+    facilities_tab = True
+    ga_items=['Projector-HD','Projector-Normal','Projector Screen-Standard','Table-Iron','Table-Stainless Steel','Table-Wooden',
+              'Tablecloth','Chairs-Normal','Chairs-Judges','Bouquet','White Board','Water Bottles (500ml)',
+              'Barricades','Hockey Cones','Pedestal Fans','Extension Cords','Spike Buster- 5 Amp','Spike Buster- 15 Amp',
+              'Other-GA/PA Materials','Water Bottles','Bubble Cans']  
+    materials_items=['Pen','Buzzer','Stopwatch','Whistle','Pencil','Eraser','Sharpner','Marker-Permanent',
+                           'Marker-Whiteboard(Black)','Marker-Whiteboard (Red)','Marker-Whiteboard (Blue)','Marker-Whiteboard(Green)',
+                           'Marker-OHP','Tape-Cello Tape','Tape-Duct Tape','Tape-Double Sided Tape','Tape-Electrical Insulation Tape',
+                           'Measuring Tape','Penknife','Scissors','A4 Sheets','Chalk','Stapler','Stapler Pins','Notepad',
+                           'Folders-Stick File','Folder-Box Folder','Rubber Bands','Stamp pad','OHP Sheets'] 
+    pa_items = ['Mikes-Normal','Mikes-Cordless','Mikes-Collar','Speaker-Normal','Speaker-Amplifier']
+    dept = Department.objects.get(id=57)
+    for i in ga_items:
+        try :
+            ItemList.objects.get(name=str(i))
+            print "kl"
+        except:
+            print "as"
+            a=ItemList()
+            a.name=str(i)
+            print a.name
+            a.department=dept
+            a.save()
+    for i in materials_items:
+        try :
+            ItemList.objects.get(name=str(i))
+            print "kl"
+        except:
+            print "as"
+            a=ItemList()
+            a.name=str(i)
+            print a.name
+            a.department=dept
+            a.save()
+    for i in pa_items:
+        try :
+            ItemList.objects.get(name=str(i))
+            print "kl"
+        except:
+            print "as"
+            a=ItemList()
+            a.name=str(i)
+            print a.name
+            a.department=dept
+            a.save()
+    equipment_items = ['Computers-Laptop','Computers-Desktop','Software-(In description)','Configuration-(In Description)',
+                       'WiFi-(1 or more for yes,0 for no)','LAN Cable']
+    dept = Department.objects.get(id=59)
+    for i in equipment_items:
+        try :
+            ItemList.objects.get(name=str(i))
+            print "kl"
+        except:
+            print "as"
+            a=ItemList()
+            a.name=str(i)
+            print a.name
+            a.department=dept
+            a.save()
+    other_items = ['Special-CD/DVD','Special-Weighing Machine','Special-Hacksaw Blade','Special-Chalkpowder (No. of Boxes)',
+                   'Special-Rope,Nylon( Length(m) in description)','Special-Rope-Jute( Length(m) in description)',
+                   'Special-Fire Extinguishers','Special-First Aid Box','Special-Screwdriver/Tester',
+                   'Special-Router-Normal','Special-Router-Wifi','Special-Other,Misc ( Specify in description )']
+    dept = Department.objects.get(id=58)
+    for i in other_items:
+        try :
+            ItemList.objects.get(name=str(i))
+            print "why"
+        except:
+            print "you"
+            a=ItemList()
+            a.name=str(i)
+            print a.name
+            a.department=None
+            a.save()
+    itemlist=ItemList.objects.all()
+    return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))  
+
 
 
 
