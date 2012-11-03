@@ -6,21 +6,21 @@
 </style>
 {% if updates %}
 <div class="row">
-<table class="table bordered span6">
+<table class="table bordered span7">
   <tr>
-    <th>Message</th>
-    <th>Time</th>
-    {% if not po_is_coord %}
-    <th>Author</th>
+    {% if po_is_coord %}
+    <th style="width: 20%"> Author </th>
     {% endif %}
+    <th style="width: 55%">Message</th>
+    <th style="width: 25%">Time</th>
   </tr>
   {% for update in updates %}
   <tr>
-    <td>{{ update.comment_string }}</td>
-    <td>{{ update.time_stamp }}</td>
-    {% if not po_is_coord %}
+    {% if po_is_coord %}
     <td><a href="{% url users.views.view_profile owner_name=update.author %}">{{ update.author.get_profile.name }}</a></td>
     {% endif %}
+    <td>{{ update.comment_string }}</td>
+    <td>{{ update.time_stamp }}</td>
   </tr>
   {% endfor %}
 </table>

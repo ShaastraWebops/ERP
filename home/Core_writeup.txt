@@ -1,0 +1,130 @@
+<a href="erp.shaastra.org"><h2> Shaastra | ERP </h2></a>
+
+
+
+<p>
+Shaastra proudly announces the release of its Enterprise Resource Planner (ERP). The ERP's main goal is to streamline workflow in shaastra, make things more fluid and systematic. You are part of Shaastra ERP's maiden voyage. Welcome!
+</p>
+
+<p>
+Firstly, to start things off, you'll need to login. <br>
+We've generated a random password for every user. This will allow you to access the ERP as it is closed to everyone outside Shaastra. 
+We would recommend you changing your password once you log in. Feel free to keep the password we give you if you like it. It's random and ONLY you know it.*<br>
+</p>
+<p>
+<b>
+Username:</b> <<username>>
+<b><br>Password:</b> <<password>>
+
+</p>
+<p>
+<u><h3>Using the ERP:</h3></p></u>
+
+<li><u><h4>Your Profile/actions:</h4> </u>
+
+You can change your password by accessing the <b>Actions</b> dropdown bar on the top-right of the screen. Due to some improbability problems, please change your password on the screen that asks you which department you would like to manage(i.e. the screen you see when you login) and nowhere else. We will fix this shortly. <br> 
+Once that is done, 
+Click on <b><i>Profile</b></i> on the top navigation bar. We have already updated the details we have about you. Please add/edit the details by clicking of <b><i>Edit Profile</b></i>.
+</li>
+
+<li><p> This time on in Shaastra, you have the liberty of managing each event personally. On logging in, you will be asked which event you want to manage. Click on whichever you want. This'll take you to that department. At any instant, you can change your event with the <b>Change Event</b> button on the top right.
+</p></li>
+
+
+<li><u><h4>Shaastra ERP Contact Details: </h4></u>
+
+You can now contact any core/coordinator in Shaastra from any department, anytime. No more PDFs and emails. Go to the <b><i>Contact Details</b></i> tab on the left. Getting food just got so much easier.<br>
+Note: The phone no. that people will see in the Contact Details is the one you put in when you edit your profile. Please do not add fake details.
+</li>
+<li><u><h4>Shaastra ERP Calendar: </h4></u>
+
+The Shaastra Calendar will remind you of what tasks you have given your department and when it is due. Please refer to it frequently for a summary of what tasks your coords have pending/overdue. This can be accessed from the "Calendar" tab on the left.
+<p></li>
+<u><h3>
+Shaastra ERP Dashboard:</h3></u>
+<p>
+This is the heart of the ERP. You will be spending most of your time here. The ERP works on the concept of Tasks and Subtasks. This is explained with an example below. <br>
+
+A Task is something you want to achieve. To achieve that, you need to complete a series of subtasks.
+<br><b><br>
+Example:</b><br>
+
+Events Core sets a Task: <i>"Set/Make/design/whatever the Robotics Arena"</i><br>
+Now this consists of many subtasks, each of which one or more of your coords will do. You can even assign a subtask to another deparment and get that department's core to assign it to one of her coords. Like,
+<br>
+<u>Subtask 1:</u> Contact the arena manufacturers <br>
+<u>Subtask 2:</u> See if the SAC arena is free<br>
+<u>Subtask 3:</u> Get Security vols to control the fans from rioting.<br>
+<u>Subtask 3:</u> Get me food. (?)<br>
+<br>
+So you assign Subtask 1 to 2 coords, subtask 2 to one coord, subtask 3 to the security department and subtask 4 to all your coords.
+<br>
+This is basically how it works. You can even give subtasks to other departments, and make it someone else's problem. (SEP)<br> We will cover how to create tasks shortly. <br>
+On clicking the <b><i>dashboard</b></i> tab on the left, you will see 3 tabs open up:
+
+<ul><li><h4>Timeline</h4>
+This tab lists all the tasks that you have created, along with their subtasks and comments. This allows transparency and clarity on what your department hopes to achieve as a whole. You can see each subtask of the task, and comments by your coords on what a good core you are.
+</li>
+<h4><li>Received Requests</h4>
+This tab summarizes the subtasks that OTHER departments want you to do. This will only show those subtasks that you have not assigned to one of your coords. As soon as you assign a subtask, it will go away.  
+</li>
+<h4><li>Sent Requests</h4>
+Sent requests will summarize the subtasks that you want other departments to do. That's pretty much it.</li>
+
+<h4><li>Completed Subtasks</h4>
+This tab will show you all subtasks that you had assigned to your coords that have been completed by them. A completed subtask that you think was NOT completed can again be opened and it will disappear from here. You rule your department. You decide.</li>
+
+<h4><li>Updates</h4>
+Updates are things that coords want to tell you that are not task-subtask related. You will see updates here.</li></ul>
+
+<u><h3>Shaastra ERP Department:</h3></u>
+This <b><i>Department</b></i> tab on you left accesses your department. This again opens 3 tabs:
+
+<ul><li><h4>Timeline:</h4>
+This is similar to the dashboard timeline tab. It summarizes all tasks that are there in your department and what subtasks each task consists of.
+</li>
+<li><h4>Updates:</h4>
+This is where you can view all updates in your department. 
+</li>
+<li><h4>Shout!:</h4>
+ERP presents its shoutbox! This is where you scream out to shaastra. Post a Shout on the Shoutbox and let everyone see it. 
+Note: Shouts can be seen by all coords and cores in all departments. Give deep thought to what you shout here. Please refrain from using obscenities, and insulting other hostels.
+</li>
+</ul>
+
+<h3><u>ERP Files:</h3></u>
+This can be accessed by clicking the <b><i>Files</b></i> tab on the left. This allows you to upload your files and store them on the ERP. You can view them any later time. Facilities to share the files with others will be released shortly.
+
+<h3><u> Add Task</u> </h3>
+This button on the right will get things started. You can create upto 9 separate subtasks for a task and give them each to one or all of your coords. 
+<p>
+<br> Once you click on this you'll get a nice form that you get to fill up. The 'Status' Field determines the status of the current task. Once all subtasks of this task are completed, set this to 'Completed'.</p>
+<p>
+<br> Now click on <b> Add Subtasks </b> to reveal a tiny blue, but deadly link <i>'Add a subtask'</i> that adds a subtask.<br>
+Once you click on 'Add a subtask', a subtask collapses. Fill up this nice form again. <br> You can keep doing this for as many subtasks as you want. <br>
+<ul><li>If you want to assign this subtask to your department, do so to as many coords from your department as you like. Assign the "department" field to your department.</li>
+<br><li>If you want to assign this subtask to another department, please mention so in the "department" field of the form. Please do not assign it to any coords. Once you assign a subtask to another department, it is the job of that department's core to assign the subtask.<br>
+Once you're done with all this, press "Create" you'll be taken back to your dashboard.</li></ul>
+<p>
+<br> Your dashboard will now have the task that you just created. You can modify this anytime you like. You can add subtasks to it if you remember that something needs to be added. You can edit subjects, deadlines etc. <br> Just click the task/subtask and you can view/edit it. <br> You can also add comments to the task/subtask. These are additional details/info that need not be in the task, but the person doing the task needs to know.
+<br>
+Make as many tasks as you like. We advise you to stop at 42. 
+<br>
+<h3><u>Bugs/Queries/Errors/Cups:</h3></u>
+<p>
+For such bugs and queries,
+Please contact <br>
+<b>Akshay Rangasai:</b> akshayrangasai@shaastra.org <br>
+<b>Chetan Bademi:</b> chetanbademi@shaastra.org <br> <br>
+
+or email us at <b><i>webops@shaastra.org</b></i> <br>
+
+Contact details for bugs/queries can be found in the ERP under <b><i>Contact</b></i> in the top-left.
+<br><br>
+<br>
+<i>- Shaastra Web-Operations Team 2012-13</i>
+<br><br>
+We apologise for the Hitchhiker references.<br>
+<i>
+*Conditions Apply</i>
+

@@ -33,7 +33,7 @@ class TaskForm (ModelForm):
 class SubTaskForm (ModelForm):
     class Meta:
         model = SubTask
-        exclude = ['creator', 'description', 'task', 'completion_date']
+        exclude = ['creator', 'task', 'completion_date']
         widgets = {'department':chosenforms.widgets.ChosenSelect(),'coords': chosenforms.widgets.ChosenSelectMultiple(),'status': chosenforms.widgets.ChosenSelect()}
 
 #to restrict coords for a core. Currently all coords display for a core. Code results in cups because of a cup in
@@ -56,9 +56,10 @@ class SubTaskForm (ModelForm):
             super(SubTaskForm, self).__init__(*args, **kwargs)
             print "THIS IS", editor
             self.fields['coords'].queryset = User.objects.filter(userprofile__department=editor.get_profile().department)
+            self.fields['coords'].label_from_instance = lambda obj: "%s - %s" % (obj.get_profile ().name, obj.get_profile ().nickname)
             self.fields['coords'].help_text = ''
         else:
-            super(SubTaskForm, self).__init__(editor,*args, **kwargs)
+            super(SubTaskForm, self).__init__(editor,*args, **kwargs)   
 
         
 #hack if these fields need to be formatted        

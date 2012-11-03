@@ -1,6 +1,7 @@
 from django.views.generic.simple import *
 from django.contrib import admin
 from django.conf.urls import *
+from django.conf.urls.defaults import *
 
 # TODO
 # Caution : Any non-matched url goes straight to display_portal and
@@ -10,7 +11,7 @@ urlpatterns = patterns('erp.tasks.views',
       #(r'^search/', include('haystack.urls')),
 
       (r'^create', 'edit_task'),
-      (r'^login/(?P<department>[\w ]+)/$', 'multiple_login'),
+      (r'^login/(?P<department>[^/]+)/$', 'multiple_login'),
       (r'^logout/$','multiple_logout'),
       (r'^task/(?P<task_id>[0-9]+)', 'edit_task'),
       (r'^display_task/(?P<task_id>[0-9]+)?', 'display_task'),

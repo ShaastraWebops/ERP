@@ -19,11 +19,21 @@
     <a href="{% url tasks.views.edit_task owner_name=user %}"><i class="icon-plus" id="li_task_icon"></i> Add Task </a>
 </li>
 {% endif %}
-{% if is_core1 and not is_visitor1 %}
+{% if is_core1 and not is_visitor1 and not feedback_tab %}
 <li id="li_task">
     <a href="{% url tasks.views.edit_task owner_name=user %}"><i class="icon-plus" id="li_task_icon"></i> Add Task </a>
 </li>
 {% endif %}
+<!--{% if event or finance %}
+{% endif %}-->
+
+{% if finance_tab %}
+<li id="li_finance">
+    <a href="{% url finance.views.budget_portal plan='budget'  %}"><i class="icon-star" id="li_finance_icon"></i> Finance </a>
+</li>
+{% endif %}
+
+
 <li id="li_feedback">
     <a href="{% url feedback.views.answer owner_name=user%}"><i class="icon-comment" id="li_feedback_icon"></i> Feedback </a>
 </li>

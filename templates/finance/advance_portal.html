@@ -1,0 +1,532 @@
+{% extends "finance/finance_base_portal.html" %}
+{% block content %}
+    <ul class="nav nav-pills">
+    <li  >
+    <a href="{% url finance.views.budget_portal plan='budget'%}"><i class="icon-th-list "></i>Budget</a>
+    </li>
+    <li class='active'>
+    <a href="{% url finance.views.advance dept='0'  %}"><i class="icon-edit icon-white"></i>Advance Request</a>
+    </li>
+    </ul>
+    <hr>
+    
+<!-- Event coord page -->    
+{% if advance and event %}
+    
+    {% if request_error %}
+        
+        <div class="alert">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error</strong> Please check your entered amount
+        </div>
+    {% endif %}
+    <h4>Total Amount: {{plan_finance.total_amount}}</h4>
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+	    	<tr>
+	    	<th>Item</th>
+	    	<th>Total Amount</th>
+	    	<th>Request Amount</th>
+	    	<th></th>
+	    	
+	    	<th>Balance</th>
+	    	<th>Status</th>
+	    	<th></th>
+           	</tr>
+        </thead>
+        <tbody>
+        {% for item in items %}	
+            
+            {% ifequal item.budget plan_finance %}
+        		<tr>
+	    		<td><b>{{item.name}}</b>
+                <a href="#"><span class="badge" data-toggle="collapse" data-target="#showmore{{item.id}}">Details</span></a>
+                <div id="showmore{{item.id}}" class="collapse">
+                Quantity:{{item.quantity}}<br>
+                Comments:{{item.description}}
+                </div>	    		
+                
+	    		</td>
+	    		<td>{{item.original_amount}}</td>
+	    		
+	    		<!-- request forms --> 
+                <td>
+                {% for request in request_items %}
+                
+                {% if not request.request_status %} 
+                {% ifequal request.item item %}               
+                
+            	<form action="" method="POST">
+            	  {% csrf_token %}
+	    
+            	  <fieldset>
+        	      <div class="controls">
+                  <input id="request" name="request">  
+                  </div>
+	              </fieldset>
+	            {% endifequal %}  
+	            {% endif %}
+	            {% endfor %}  <!-- request-->
+	            </td>
+	            
+	            
+                <td>
+                {% for request in request_items %}
+                
+                {% if not request.request_status %}
+                
+                    {% ifequal request.item item %}
+                        <h4><a data-toggle="modal" href="#submitmodal{{ request.id }}" class="btn btn-primary">SUBMIT</a></h4>
+                        
+                <div class="modal hide" id="submitmodal{{ request.id }}">
+                  <div class="modal-body">
+                    <h2>  Are you sure you want to request advance for {{item.name}}?</h2><br>
+                    <h4>Note: Once you have submitted an advance request, you cannot request again till the finance department approves or disapproves the current request.</h4>	  
+            	  </div>
+                  <div class="modal-footer">
+                  
+                        <input type="hidden" value="{{ request.id }}" name = 'id' />
+                        <input type="submit" class="btn btn-primary" name = 'submit' value="SUBMIT">  
+                                       
+                        <a href="#" class="btn btn-action" data-dismiss="modal" >Cancel</a>
+        
+                   </div>
+                </div>                                         
+
+
+                    {% endifequal %}  
+                {% endif %}    
+                {% endfor %}    <!--request -->               
+                </form>
+                </td>
+
+                
+                <td>
+                
+                {% for request in request_items %}
+      
+                    {% ifequal request.item item %}
+                        
+                        {{request.balance_amount}}                        
+                    {% endifequal %}
+  
+                {% endfor %}
+                </td>
+                
+                <td>
+                {% for request in request_items %}
+                    {% ifequal request.item item %}
+                    
+                        {% if request.request_status and not request.granted_status %}
+                            <h5><span style='color:#66ccff;'>Requested Rs. {{request.request_amount}}</style></h5>
+                        {% endif %} 
+                        {% if not request.request_status and request.granted_status and not request.read_status %}
+                            <h5><span style='color:#00CC33;'>Approved </style><span style='color:#00CC33;'>Rs. {{request.granted_amount}}</style></h5>
+                            <a href="{% url finance.views.read request_id=request.id%}"><span class="label label-success">MARK AS READ</span></a>
+                        {% endif %}  
+                        {% if not request.request_status and request.granted_status and request.read_status %}
+                            <h5>Recent approval  Rs. {{request.granted_amount}}</h5>
+                        {% endif %}                                                                    
+                                          
+                    {% endifequal %}
+  
+                {% endfor %}
+                </td>
+                
+                <td>
+                <a href="#"><span class="label label-inverse" data-toggle="collapse" data-target="#history{{item.id}}">History</span></a>
+                <div id="history{{item.id}}" class="collapse">
+                {% for request in request_items %}
+                    {% ifequal request.item item %}
+                        {{request.history|safe}}</br>
+                        </br>                        
+                    {% endifequal %}
+  
+                {% endfor %}
+                </div>
+                </td>
+                
+                </tr>
+                
+            {% endifequal %}			
+        {% endfor %}
+        </tbody>
+    </table>	
+    <h4>comments:</h4> <p>{{plan_finance.comment}}</p>    
+{% endif %}
+{% if item_exist and not advance and not curr_portal.opened and event %}
+    <h4>Finance department has not approved the budget yet.</h4>
+{% endif %}
+
+{% if not item_exist and not advance and not curr_portal.opened and event%}
+    <h4>There are no budget plans for your department.</h4>
+{% endif %}
+
+{% if curr_portal.opened and event%}
+    <h3>CURRENTLY CLOSED!</h3>
+    <h4>Advance requirements portal will be open only after budget portal closes and the finance department approves your event budget.</h4>
+{% endif %}
+
+<!-- finance-->
+{% if finance and advance%}
+
+<h3>The events in red have pending requests</h3>
+    
+
+    {% for plan in submitted_plans %}
+
+    	{% if plan.department.Dept_Name in pending_approval %}
+        	<a class="btn btn-danger" href="{% url finance.views.advance dept=plan.department.id %}">{{plan.department}}</a>
+    	{% endif %}
+    	{% if plan.department.Dept_Name not in pending_approval %}
+        	<a class="btn" href="{% url finance.views.advance dept=plan.department.id %}">{{plan.department}}</a>
+        {% endif %}
+
+    
+    {% endfor %}
+    <br>
+    <hr>
+
+{% if event_chosen and not no_request %}
+
+{% if has_perms %}   
+
+    {% if approved_error %}
+        
+        <div class="alert">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error</strong> Please check your entered amount
+        </div>
+    {% endif %}        
+    <h4>Total Amount: {{plan_finance.total_amount}}</h4>
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+	    	<tr>
+	    	<th>Item</th>
+	    	<th>Total Amount</th>
+	    	<th>Request Amount</th>
+	    	<th>Approve Amount</th>
+	    	<th></th>	    	
+	    	<th>Balance</th>
+	    	<th>Status</th>
+	    	<th></th>
+           	</tr>
+        </thead>
+        <tbody>
+        {% for item in items %}	
+            {% ifequal item.budget plan_finance %}
+        		<tr>
+	    		<td><b>{{item.name}}</b>
+                <a href="#"><span class="badge" data-toggle="collapse" data-target="#showmore{{item.id}}">Details</span></a>
+                <div id="showmore{{item.id}}" class="collapse">
+                Quantity:{{item.quantity}}<br>
+                Comments:{{item.description}}
+                </div>	    		
+                
+	    		</td>
+	    		<td>{{item.original_amount}}</td>
+	    		<td>
+	    		
+                {% for request in request_items %}
+                    {% ifequal request.item item %}
+                        <b>{{request.request_amount}}</b>                        
+                    {% endifequal %}
+  
+                {% endfor %}	    		
+	    		</td>
+	    		
+                <td>
+                {% for request in request_items %}
+                
+                {% if not request.granted_status %} 
+                {% ifequal request.item item %}               
+                
+            	<form action="" method="POST">
+            	  {% csrf_token %}
+	    
+            	  <fieldset>
+        	      <div class="controls">
+                  <input id="request" name="request">  
+                  </div>
+	              </fieldset>
+	            {% endifequal %}  
+	            {% endif %}
+	            {% endfor %}  
+	            </td>
+
+	    		
+	    		
+                <td>
+                {% for request in request_items %}
+                
+                {% if not request.granted_status %}
+                
+                    {% ifequal request.item item %}
+                        <h4><a data-toggle="modal" href="#submitmodal{{ request.id }}" class="btn btn-primary">SUBMIT</a></h4>
+                        
+                <div class="modal hide" id="submitmodal{{ request.id }}">
+                  <div class="modal-body">
+                    <h2>  Are you sure you want to approve advance request for {{item.name}}?</h2><br>
+                    <h4>Note: You cannot revert the approval.</h4>	  
+            	  </div>
+                  <div class="modal-footer">
+                  
+                        <input type="hidden" value="{{ request.id }}" name = 'id' />
+                        <input type="submit" class="btn btn-primary" name = 'submit' value="SUBMIT">  
+                                       
+                        <a href="#" class="btn btn-action" data-dismiss="modal" >Cancel</a>
+        
+                   </div>
+                </div>                                         
+
+
+                    {% endifequal %}  
+                {% endif %}    
+                {% endfor %}                   
+                </form>
+                </td>
+                <td>
+                {% for request in request_items %}
+                    {% ifequal request.item item %}
+                        {{request.balance_amount}}                        
+                    {% endifequal %}
+  
+                {% endfor %}
+                </td>
+                <td>
+                {% for request in request_items %}
+                    {% ifequal request.item item %}
+                    
+                        {% if request.request_status and not request.granted_status %}
+                            <h5><span style='color:#ff3333;'>Pending approval Rs. {{request.request_amount}}</style></h5>
+                        {% endif %} 
+                        {% if not request.request_status and request.granted_status and not request.read_status %}
+                            <h5><span style='color:#006600;'>Recent approval Rs. {{request.granted_amount}}</style></h5>
+                        {% endif %}
+                        {% if not request.request_status and request.granted_status and request.read_status %}
+                            <h5>Recent approval Rs. {{request.granted_amount}}</h5>
+                        {% endif %}                                                                    
+                                          
+                    {% endifequal %}
+  
+                {% endfor %}
+                                
+            
+                
+                </td>
+                <td>
+                
+                <a href="#"><span class="label label-inverse" data-toggle="collapse" data-target="#history{{item.id}}">History</span></a>
+                     
+                <div id="history{{item.id}}" class="collapse">
+                {% for request in request_items %}
+                    {% ifequal request.item item %}
+                        {{request.history|safe}} </br> 
+                        </br>                      
+                    {% endifequal %}
+  
+                {% endfor %}
+                </div>	                
+                
+                </td>
+                </tr>
+                
+            {% endifequal %}			
+        {% endfor %}
+        </tbody>
+    </table>	
+    <h4>comments:</h4> <p>{{plan_finance.comment}}</p>   
+    
+    {% endif %}<!-- has perms-->
+    
+    {% if not has_perms %}
+    
+    <h4>Total Amount: {{plan_finance.total_amount}}</h4>
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+	    	<tr>
+	    	<th>Item</th>
+	    	<th>Total Amount</th>
+	    	<th>Balance</th>
+	    	<th>Status</th>
+	    	<th></th>
+           	</tr>
+        </thead>
+        <tbody>
+        {% for item in items %}	
+            {% ifequal item.budget plan_finance %}
+        		<tr>
+	    		<td><b>{{item.name}}</b>
+                <a href="#"><span class="badge" data-toggle="collapse" data-target="#showmore{{item.id}}">Details</span></a>
+                <div id="showmore{{item.id}}" class="collapse">
+                Quantity:{{item.quantity}}<br>
+                Comments:{{item.description}}
+                </div>	    		
+                
+	    		</td>
+	    		<td>{{item.original_amount}}</td>
+	    		
+                <td>
+    {% for request in request_items %}
+                    {% ifequal request.item item %}
+                        {{request.balance_amount}}                        
+                    {% endifequal %}
+  
+                {% endfor %}
+                </td>
+                <td>
+                {% for request in request_items %}
+                    {% ifequal request.item item %}
+                    
+                        {% if request.request_status and not request.granted_status %}
+                            <h5><span style='color:#ff3333;'>Pending approval Rs. {{request.request_amount}}</style></h5>
+                        {% endif %} 
+                        {% if not request.request_status and request.granted_status and not request.read_status %}
+                            <h5><span style='color:#006600;'>Recent approval Rs. {{request.granted_amount}}</style></h5>
+                        {% endif %}
+                        {% if not request.request_status and request.granted_status and request.read_status %}
+                            <h5>Recent approval Rs. {{request.granted_amount}}</h5>
+                        {% endif %}                                                                    
+                                          
+                    {% endifequal %}
+  
+                {% endfor %}
+                                
+            
+                
+                </td>
+                <td>
+                
+                <a href="#"><span class="label label-inverse" data-toggle="collapse" data-target="#history{{item.id}}">History</span></a>
+                     
+                <div id="history{{item.id}}" class="collapse">
+                {% for request in request_items %}
+                    {% ifequal request.item item %}
+                        {{request.history|safe}}  </br>                      
+                    {% endifequal %}
+  
+                {% endfor %}
+                </div>	                
+                
+                </td>
+                </tr>
+                
+            {% endifequal %}			
+        {% endfor %}
+        </tbody>
+    </table>	
+    <h4>comments:</h4> <p>{{plan_finance.comment}}</p>   
+    
+    {% endif %}<!-- not has_perms-->
+{% endif %}    
+    
+    
+    
+    
+{% if event_chosen and no_request %}
+    <h4>The {{event_name}} coordinators have not visited the advance requirements portal.</h4>
+{% endif %} 
+    
+{% endif %}
+
+
+
+{% if qms_dept or events_core %}
+
+<h3>The events in red have pending requests</h3>
+    
+
+    {% for plan in submitted_plans %}
+
+    	{% if plan.department.Dept_Name in pending_approval %}
+        	<a class="btn btn-danger" href="{% url finance.views.advance dept=plan.department.id %}">{{plan.department}}</a>
+    	{% endif %}
+    	{% if plan.department.Dept_Name not in pending_approval %}
+        	<a class="btn" href="{% url finance.views.advance dept=plan.department.id %}">{{plan.department}}</a>
+        {% endif %}
+
+    
+    {% endfor %}
+    <br>
+    <hr>
+    
+    
+{% if event_chosen and not no_request %}
+<h4>Total Amount: {{plan_finance.total_amount}}</h4>
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+	    	<tr>
+	    	<th>Item</th>
+	    	<th>Total Amount</th>
+	    	<th>Balance</th>
+	    	<th>Status</th>
+	    	<th></th>
+           	</tr>
+        </thead>
+        <tbody>
+        {% for item in items %}	
+            {% ifequal item.budget plan_finance %}
+        		<tr>
+	    		<td><b>{{item.name}}</b>
+                <a href="#"><span class="badge" data-toggle="collapse" data-target="#showmore{{item.id}}">Details</span></a>
+                <div id="showmore{{item.id}}" class="collapse">
+                Quantity:{{item.quantity}}<br>
+                Comments:{{item.description}}
+                </div>	    		
+                
+	    		</td>
+	    		<td>{{item.original_amount}}</td>
+	    		
+                <td>
+    {% for request in request_items %}
+                    {% ifequal request.item item %}
+                        {{request.balance_amount}}                        
+                    {% endifequal %}
+  
+                {% endfor %}
+                </td>
+                <td>
+                {% for request in request_items %}
+                    {% ifequal request.item item %}
+                    
+                        {% if request.request_status and not request.granted_status %}
+                            <h5><span style='color:#ff3333;'>Pending approval Rs. {{request.request_amount}}</style></h5>
+                        {% endif %} 
+                        {% if not request.request_status and request.granted_status and not request.read_status %}
+                            <h5><span style='color:#006600;'>Recent approval Rs. {{request.granted_amount}}</style></h5>
+                        {% endif %}
+                        {% if not request.request_status and request.granted_status and request.read_status %}
+                            <h5>Recent approval Rs. {{request.granted_amount}}</h5>
+                        {% endif %}                                                                    
+                                          
+                    {% endifequal %}
+  
+                {% endfor %}
+                                
+            
+                
+                </td>
+                <td>
+                
+                <a href="#"><span class="label label-inverse" data-toggle="collapse" data-target="#history{{item.id}}">History</span></a>
+                     
+                <div id="history{{item.id}}" class="collapse">
+                {% for request in request_items %}
+                    {% ifequal request.item item %}
+                        {{request.history|safe}} </br>                       
+                    {% endifequal %}
+  
+                {% endfor %}
+                </div>	                
+                
+                </td>
+                </tr>
+                
+            {% endifequal %}			
+        {% endfor %}
+        </tbody>
+    </table>	
+    <h4>comments:</h4> <p>{{plan_finance.comment}}</p>   
+{% endif %}    
+{% endif %}<!-- qms-->
+{% endblock %}

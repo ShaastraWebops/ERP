@@ -2,6 +2,7 @@ from django.shortcuts import render_to_response, redirect
 #from django.http import HttpResponse, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
+from django.contrib.auth.views import password_reset
 from django.template.loader import get_template
 from django.template.context import Context, RequestContext
 from django.utils.translation import ugettext as _
@@ -64,8 +65,8 @@ def login(request):
                                          owner_name = user.username)
                 else:
                     invalid_login_message="Incorrect username or password. Please try again."
-                    print "the user has not logged in -invalid "
                     request.session['invalid_login'] = True
+                    print "the user has not logged in -invalid "
                     print request.path
                     return render_to_response('home/login.html', locals(), context_instance= global_context(request))
                     #return HttpResponseRedirect (request.path)
@@ -73,7 +74,6 @@ def login(request):
                     form = forms.UserLoginForm ()
         else:
             pass
-    
     return render_to_response('home/login.html', locals(), context_instance= global_context(request))
     
 def logout (request):
@@ -91,40 +91,5 @@ def logout (request):
     return render_to_response('home/login.html', locals(), context_instance= global_context(request))
 
 def forgot_password(request):
-
-    forgot_form=forgot_password_form()
-    if request.method == 'POST':
-        data = request.POST.copy()
-        form =forms. forgot_password_form (data)
-        print "checking details for forgot_password"
-        if form.is_valid():
-            try:
-                print form.cleaned_data['email_id'] , "is the username entered"
-                user=User.objects.get(username=form.cleaned_data['username'] , email=form.cleaned_data['email_id'])
-                print "the user with this name and emailid exists "
-                invalid_login_message ="such and such a username exists dotn worry"
-                # here to send email to the coord
-                coordname=form.cleaned_data['username']
-                hyperlink=settings.SITE_URL+"/testonly_ignore"
-                mail_header="follow the link and change your password , once you log in"
-                email_id=form.cleaned_data['email_id']
-                mail=[email_id,]
-                invalid_message="if it stops here there is some problem in getting mail template"
-                mail_template=get_template("home/forgot_password_mail.html")
-                invalid_login_message ="We have tried to mail you but then there is some internal problem ,get_template works"
-                body=mail_template.render(Context({'coordname':coordname,
-                                                   'SITE_URL':hyperlink,
-                                                   'new_password':"password"
-                                                   }))
-                invalid_message="body ban gayi , send_mail mai gadbad"
-                send_mail(mail_header,body,'noreply@shaastra.org',mail,fail_silently=False)
-                #message=mail_coord(hyperlink ,mail_header ,coordname ,  "home/forgot_password_mail.html",mail)
-                invalid_login_message ="We have mailed you your new password if any further problem contact the webops dept"                
-                return render_to_response('home/login.html', locals(), context_instance= global_context(request))
-        
-            except:
-                pass #invalid_login_message= "details given by u dont match , please for further clarification contact webops  dept"
-    else:
-        print "problem in forgot_password_view"
-    form = forms.UserLoginForm ()    
-    return render_to_response('home/forgot_password.html', locals(), context_instance= global_context(request))
+    return password_reset(request,password_reset_form=ModifiedPasswordResetForm)
+    

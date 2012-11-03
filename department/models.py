@@ -53,7 +53,7 @@ DEP_CHOICES = (
 ("Symposium", "Symposium"),
 ("Exhibitions", "Exhibitions"),
 ("IITM Ideas Challenge", "IITM Ideas Challenge"),
-("GA/PA Materials", "GA/PA Materials"),
+("GA PA Materials", "GA/PA Materials"),
 ("Production", "Production"),
 ("Equipment", "Equipment"),
 ("Catering", "Catering"),
@@ -66,13 +66,26 @@ DEP_CHOICES = (
 ("Sponsorship and PR", "Sponsorship and PR"),
 ("Vishesh", "Vishesh"),
 ("Newsletter and PR", "Newsletter and PR"),
+("HTW", "How Things Work"),
+("Auto Quiz", "Auto Quiz"),
+("Simchamp", "Simchamp"),
+("Ornithopter Workshop", "Ornithopter Workshop"),
+("Electronics Workshop", "Electronics Workshop"),
+("Robotics Workshop", "Robotics Workshop"),
+("3D Animation Workshop", "3D Animation Workshop"),
+("Research Expo", "Research Expo"),
+("Shaastra School Quiz", "Shaastra School Quiz"),
 )
 
 # This is the initial department model
 class Department(models.Model):
     Dept_Name= models.CharField(max_length=50,choices=DEP_CHOICES,default='Events')
+
     # In case of multiple owners
     owner = models.ManyToManyField(User, blank=True, null=True)
+
+    is_event=models.BooleanField(default=True)
+
     def __str__(self):
         return self.Dept_Name
         

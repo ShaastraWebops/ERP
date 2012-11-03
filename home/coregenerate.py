@@ -8,9 +8,9 @@ import random
 from time import sleep
 from erp.dashboard.create_test_data import create_group, create_user, parse_user_info_list, create_depts
 
-OUT_FILE="home/coredetailsdone.csv"
+OUT_FILE="home/cocaslogins.csv"
 
-def supercoreAssociations (users_file_name = 'coredetailsdone.csv'):
+def supercoreAssociations (users_file_name = 'cocaslogins.csv'):
     supercore = None
     details=csv.reader(open(users_file_name, 'rb'))
     line=details.next()
