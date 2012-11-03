@@ -26,15 +26,15 @@ input{width:100px; height:25px;}
 <tr>
 {% if items %}
 {% if facilities_coord %}
-<th>Request Date</th><th>Name</th><th>Quantity</th><th>Description</th><th>Status</th><th>Approved</th><th>To Approve</th><th>Your Comment</th><th></th>
+<th>Request Date</th><th>Round</th><th>Name</th><th>Quantity</th><th>Description</th><th>Status</th><th>Approved</th><th>To Approve</th><th>Your Comment</th><th></th>
 {% endif %}
 {% if qms_coord %}
-<th>Request Date</th><th>Name</th><th>Quantity</th><th>Target Department</th><th>Description</th><th>Status</th><th>Approved</th><th>Approved By </th><th>Facilities Comments</th>
+<th>Request Date</th><th>Round</th><th>Name</th><th>Quantity</th><th>Target Department</th><th>Description</th><th>Status</th><th>Approved</th><th>Approved By </th><th>Facilities Comments</th>
 {% endif %}
 </tr>
 {% for item in items %}
 <tr>
-    <td>{{item.request_date}}</td>
+    <td>{{item.request_date}}</td><td>{{item.roundno}}</td>
     <td><div style="word-wrap: break-word;">{{item.name}}</div></td>
     <td>{{item.quantity}}</td>
     {% if qms_coord %}

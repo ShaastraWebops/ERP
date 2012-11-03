@@ -7,10 +7,16 @@ textarea{ width: 250px; height: 60px;}
 input{width:100px; height:25px;}
 </style>
 <div class="pull-left">
-        <a  class="btn " href="{% url facilities.views.portal %}" >Go Back To the Request Portal</a>
-        </div>
-        <br/><br/><br/>
+
+    <a  class="btn " href="{% url facilities.views.portal roundno=roundno %}" >Go back to Portal</a>
+    </div>
+    <br/><br/><br/>
+<h4>Round {{roundno}}</h4>
+    <br/><br/>
+
 <table class="table table-striped table-bordered table-condensed" style="table-layout:fixed" >
+
+
 <tr>
 <th>Request Date</th><th>Name</th><th>Description</th><th>Department</th><th>Quantity</th><th>Approved</th><th>Status</th><th>Comment</th><th>Approved By</tj>
 </tr>
