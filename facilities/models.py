@@ -14,7 +14,7 @@ class ItemList(models.Model):
 
 class FacilitiesObject(models.Model):
     creator = models.ForeignKey(userprofile)
-    department = models.ForeignKey(Department,limit_choices_to = Q(id__range=(57,62)))
+    department = models.ForeignKey(Department,null = True,limit_choices_to = Q(id__range=(57,62)))
     name = models.ForeignKey(ItemList)
     quantity=models.IntegerField(blank=True,null=True)
     approved_quantity = models.IntegerField(default=0)

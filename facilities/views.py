@@ -21,6 +21,8 @@ def portal(request):
     curr_userprofile=userprofile.objects.get(user=request.user)
     page_owner = get_page_owner (request, owner_name=request.user)
     department = page_owner.get_profile ().department      
+    
+    special_req_dept=Department.objects.get(id=58)
     if is_facilities_coord(request.user):
 
         return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal")
@@ -48,7 +50,10 @@ def portal(request):
                                     if tempform.quantity < 0:
                                         tempform.quantity=0
                                     tempform.creator=curr_userprofile
-                                    tempform.department=form.instance.name.department
+                                    if form.instance.name.department == special_req_dept:
+                                    	tempform.department=None
+                                    else :
+                                    	tempform.department=form.instance.name.department
                                     tempform.request_date = datetime.date.today()
                                     tempform.save()
                                     form_saved=True
@@ -56,7 +61,10 @@ def portal(request):
                                     tempform = form.save(commit=False)
                                     tempform.creator=curr_userprofile
                                     tempform.request_date = datetime.date.today()
-                                    tempform.department=form.instance.name.department
+                                    if form.instance.name.department == special_req_dept:
+                                    	tempform.department=None
+                                    else :
+                                    	tempform.department=form.instance.name.department
                                     if tempform.quantity <= curr_item.approved_quantity:
                                         tempform.request_status=2
                                     tempform.save()
@@ -64,7 +72,10 @@ def portal(request):
                                 elif curr_item.request_status==2:
                                     tempform = form.save(commit=False)
                                     tempform.creator=curr_userprofile
-                                    tempform.department=form.instance.name.department
+                                    if form.instance.name.department == special_req_dept:
+                                    	tempform.department=None
+                                    else :
+                                    	tempform.department=form.instance.name.department
                                     tempform.request_date = datetime.date.today()
                                     if tempform.quantity > curr_item.approved_quantity:
                                         tempform.request_status=1
@@ -73,7 +84,10 @@ def portal(request):
                             except :
                                 tempform = form.save(commit=False)
                                 tempform.creator=curr_userprofile
-                                tempform.department=form.instance.name.department
+                                if form.instance.name.department == special_req_dept:
+                               	    tempform.department=None
+                                else :
+                                    tempform.department=form.instance.name.department
                                 tempform.request_date = datetime.date.today()
                                 tempform.save()      
                                 form_saved=True           
@@ -120,12 +134,12 @@ def approval_portal(request):
     special_req_dept=Department.objects.get(id=58)
     for dept in departments:
         a=FacilitiesObject.objects.filter(creator__department=dept,department=curr_userprofile.department)
-        a+=FacilitiesObject.objects.filter(creator__department=dept,department=special_req_department)
-        if len(a.filter(request_status=0)) != 0:       
+        b=FacilitiesObject.objects.filter(creator__department=dept,name__department=special_req_dept)
+        if len(a.filter(request_status=0)) + len(b.filter(request_status=0)) != 0:       
             new_objects.append(dept.Dept_Name)   
-        elif len(a.filter(request_status=1)) != 0 :       
+        elif len(a.filter(request_status=1)) + len(b.filter(request_status=1)) != 0 :       
             changed_objects.append(dept.Dept_Name) 
-        elif len(a) !=0:
+        elif len(a) + len(b) !=0:
             exists_objects.append(dept.Dept_Name)
             
     return render_to_response('facilities/approval_portal.html',locals(),context_instance=global_context(request)) 
@@ -278,10 +292,7 @@ def create_items(request):
             a=ItemList()
             a.name=str(i)
             print a.name
-            a.department=None
+            a.department=dept
             a.save()
     itemlist=ItemList.objects.all()
-    return render_to_response(SITE_URL + 'facilities/test.html',locals(),context_instance=global_context(request))  
-
-
-
+    return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))  
