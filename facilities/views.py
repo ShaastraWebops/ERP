@@ -14,9 +14,9 @@ from erp.facilities.forms import *
 
 def test(request):
     facilities_tab = True
-    return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))    
-
-def portal(request):
+    return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))  
+  
+def facilities_home(request):
     curr_userprofile=userprofile.objects.get(user=request.user)
     page_owner = get_page_owner (request, owner_name=request.user)
     department = page_owner.get_profile ().department      
@@ -24,8 +24,41 @@ def portal(request):
         return HttpResponseRedirect("/erp/facilities/approval_portal")
     if department.Dept_Name=="QMS":
         return HttpResponseRedirect("/erp/facilities/qms_visible_portal")
+    
+    eventrounds=EventRound.objects.filter(department=department)
+    return render_to_response('facilities/home.html',locals(),context_instance=global_context(request))    
+
+def add_round(request):
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    page_owner = get_page_owner (request, owner_name=request.user)
+    department = page_owner.get_profile ().department 
+    try :
+        print "c"
+        exist = EventRound.objects.get(department=department,number=1)
+        print "x"
+        allround = EventRound.objects.filter(department=department).order_by('-number')
+        print allround[0].number
+        e=EventRound()
+        e.number = allround[0].number + 1
+        e.department=department 
+        e.save()
+        print "f"
+    except:
+        print "b"
+        e=EventRound()
+        e.number=1
+        e.department=department 
+        e.save()
+        
+    return HttpResponseRedirect("/erp/facilities/facilities_home")
+
+def portal(request,roundno):
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    page_owner = get_page_owner (request, owner_name=request.user)
+    department = page_owner.get_profile ().department 
+    
     if department.is_event:
-        qset = FacilitiesObject.objects.filter(creator__department=curr_userprofile.department)
+        qset = FacilitiesObject.objects.filter(creator__department=curr_userprofile.department,roundno=roundno)
         if len(qset)<5:
             extra1=5-len(qset)
         else:
@@ -44,6 +77,7 @@ def portal(request):
                                     tempform = form.save(commit=False)
                                     if tempform.quantity < 0:
                                         tempform.quantity=0
+                                    tempform.roundno=roundno
                                     tempform.creator=curr_userprofile
                                     tempform.department=form.instance.name.department
                                     tempform.request_date = datetime.date.today()
@@ -54,6 +88,7 @@ def portal(request):
                                     tempform.creator=curr_userprofile
                                     tempform.request_date = datetime.date.today()
                                     tempform.department=form.instance.name.department
+                                    tempform.roundno=roundno
                                     if tempform.quantity <= curr_item.approved_quantity:
                                         tempform.request_status=2
                                     tempform.save()
@@ -62,6 +97,7 @@ def portal(request):
                                     tempform = form.save(commit=False)
                                     tempform.creator=curr_userprofile
                                     tempform.department=form.instance.name.department
+                                    tempform.roundno=roundno
                                     tempform.request_date = datetime.date.today()
                                     if tempform.quantity > curr_item.approved_quantity:
                                         tempform.request_status=1
@@ -70,6 +106,7 @@ def portal(request):
                             except :
                                 tempform = form.save(commit=False)
                                 tempform.creator=curr_userprofile
+                                tempform.roundno=roundno
                                 tempform.department=form.instance.name.department
                                 tempform.request_date = datetime.date.today()
                                 tempform.save()      
@@ -83,7 +120,7 @@ def portal(request):
                                 else :
                                     error2 = 1
                       
-                qset = FacilitiesObject.objects.filter(creator__department=curr_userprofile.department)
+                qset = FacilitiesObject.objects.filter(creator__department=curr_userprofile.department,roundno=roundno)
                 #if 'add_more_items' in request.POST: 
                              
                 if len(qset)<5:
@@ -98,7 +135,7 @@ def portal(request):
                 ItemFormset=modelformset_factory(FacilitiesObject, fields=('name','description','quantity','department'),extra=extra1, can_delete=True)
                 itemformset=ItemFormset(queryset=qset)  
             else:
-                items=FacilitiesObject.objects.all()
+                items=FacilitiesObject.objects.filter(roundno=roundno)
                 error=True        
         else:            
             itemformset=ItemFormset(queryset=qset)
@@ -117,12 +154,12 @@ def approval_portal(request):
     special_req_dept=Department.objects.get(id=58)
     for dept in departments:
         a=FacilitiesObject.objects.filter(creator__department=dept,department=curr_userprofile.department)
-        a+=FacilitiesObject.objects.filter(creator__department=dept,department=special_req_department)
-        if len(a.filter(request_status=0)) != 0:       
+        b=FacilitiesObject.objects.filter(creator__department=dept,department=special_req_dept)
+        if len(a.filter(request_status=0)) + len(b.filter(request_status=0)) != 0:       
             new_objects.append(dept.Dept_Name)   
-        elif len(a.filter(request_status=1)) != 0 :       
+        elif len(a.filter(request_status=1)) + len(b.filter(request_status=1)) != 0 :       
             changed_objects.append(dept.Dept_Name) 
-        elif len(a) !=0:
+        elif len(a) + len(b) !=0:
             exists_objects.append(dept.Dept_Name)
             
     return render_to_response('facilities/approval_portal.html',locals(),context_instance=global_context(request)) 
@@ -147,13 +184,12 @@ def qms_visible_portal(request):
             
     return render_to_response('facilities/approval_portal.html',locals(),context_instance=global_context(request)) 
     
-def display(request):
+def display(request,roundno):
     curr_userprofile=userprofile.objects.get(user=request.user)
     page_owner = get_page_owner (request, owner_name=request.user)
     department = page_owner.get_profile ().department   
-    items = FacilitiesObject.objects.filter(creator__department=curr_userprofile.department).order_by('name','request_status')
-    number=0
-    #number=Department.facilitiesitem_set.count()
+    items = FacilitiesObject.objects.filter(creator__department=curr_userprofile.department,roundno=roundno).order_by('name','request_status')
+    
     return render_to_response('facilities/display.html',locals(),context_instance=global_context(request))
 
 def approve_event(request,event_name,form_saved=0,error=0):
@@ -166,7 +202,7 @@ def approve_event(request,event_name,form_saved=0,error=0):
         items = FacilitiesObject.objects.filter(creator__department=dept,department=curr_userprofile.department).order_by('request_status','request_date')
     elif curr_userprofile.department.Dept_Name == "QMS":
         qms_coord=1
-        items = FacilitiesObject.objects.filter(creator__department=dept).order_by('name','request_status')
+        items = FacilitiesObject.objects.filter(creator__department=dept).order_by('-roundno','name','request_status')
         
     
 

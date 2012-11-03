@@ -6,12 +6,17 @@
 textarea{ width: 250px; height: 60px;}
 input{width:100px; height:25px;}
 </style>
+
 <h2>Facilities Portal</h2>
+<h4>Round {{roundno}}</h4><br/>
     {% if department.is_event %}
         <div class="pull-right">
-        <a  class="btn " href="{% url facilities.views.display %}" >Display all requests</a>
+        <a  class="btn " href="{% url facilities.views.display roundno=roundno%}" >Display all requests</a>
         </div>
-        <br/><br/><br/>
+    <div class="pull-left">
+    <a  class="btn " href="{% url facilities.views.facilities_home %}" >Go back to Facilities Home</a>
+    </div>
+    <br/><br/><br/>
         {% if form_saved %}
         <div class="alert alert-success">
             <button type="button" class="close" data-dismiss="alert">×</button>
