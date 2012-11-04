@@ -196,40 +196,39 @@ def advance(request, dept):
                     if request_items:
                         for req in request_items:
                             if req.request_status:
-                                pending_approval.append(req.department.Dept_Name)                                
-
-                        if event_chosen:
-                            event_name = Department.objects.get(id=dept)
-                            plan_finance = Budget.objects.get(name='F',department=event_name)
-                            items=Item.objects.filter(department=event_name)
-                            curr_items = Item.objects.filter(budget=plan_finance,department=event_name)
-                            request_items = Request.objects.filter(department=event_name)
-                            if request_items:
-                                if request.method == 'POST':
-                                    approved_error=False
-                                    approved_amount = request.POST['request']
-                                    if approved_amount:
-                                        try:
-                                            approved_amount1=float(approved_amount)
-                                            curr_request = Request.objects.get(id=request.POST['id'])
-                                            curr_request.granted_amount=approved_amount
-                                            curr_request.balance_amount=float(curr_request.balance_amount)-float(curr_request.granted_amount)
-                                            curr_request.request_status=False
-                                            curr_request.granted_status=True
-                                            curr_request.read_status=False
-                                            #new line not happening?
-                                            curr_request.history = str(curr_request.history)+'approved: '+str(approved_amount)+' on '+str(date.today())+ '<br>'       
-                                            curr_request.save()
-                                            #if Response Redirect is not given then the history will be lagging
-                                            #return HttpResponseRedirect(reverse('erp.finance.views.advance', kwargs={'dept': dept,}))
-                                        except:
+                                pending_approval.append(req.department.Dept_Name)
+                    if event_chosen:
+                        event_name = Department.objects.get(id=dept)
+                        plan_finance = Budget.objects.get(name='F',department=event_name)
+                        items=Item.objects.filter(department=event_name)
+                        curr_items = Item.objects.filter(budget=plan_finance,department=event_name)
+                        request_items = Request.objects.filter(department=event_name)
+                        if request_items:
+                            if request.method == 'POST':
+                                approved_error=False
+                                approved_amount = request.POST['request']
+                                if approved_amount:
+                                    try:
+                                        approved_amount1=float(approved_amount)
+                                        curr_request = Request.objects.get(id=request.POST['id'])
+                                        curr_request.granted_amount=approved_amount
+                                        curr_request.balance_amount=float(curr_request.balance_amount)-float(curr_request.granted_amount)
+                                        curr_request.request_status=False
+                                        curr_request.granted_status=True
+                                        curr_request.read_status=False
+                                        #new line not happening?
+                                        curr_request.history = str(curr_request.history)+'approved: '+str(approved_amount)+' on '+str(date.today())+ '<br>'       
+                                        curr_request.save()
+                                        #if Response Redirect is not given then the history will be lagging
+                                        #return HttpResponseRedirect(reverse('erp.finance.views.advance', kwargs={'dept': dept,}))
+                                    except:
                                             approved_error=True
-                                    else:
-                                        approved_error=True
-                            else:
-                                no_request=True    
+                                else:
+                                    approved_error=True
+                        else:
+                            no_request=True    
 
-                            request_items = Request.objects.filter(department=event_name)   
+                        request_items = Request.objects.filter(department=event_name)   
                         if request_items:
                             pending_approval = []
                             for req in request_items:
