@@ -1,6 +1,6 @@
 {% extends "finance/finance_base_portal.html" %}
 
-{% block tab1 %}
+{% block content %}
 
 {% if not item_exist and events_core %}
 <h4>There are no budget plans yet.</h4>
@@ -75,9 +75,5 @@
 
 {% endif %}
 
-{% endblock %}
-
-{% block tab2 %}    
-    <p>Just testing</p>
-{% endblock %}     
+{% endblock %}   
 
