@@ -186,6 +186,7 @@ def advance(request, dept):
                 submitted_plans=Budget.objects.filter(name='F', submitted=True)
                 if submitted_plans:
                     advance=True
+                    pending_approval = []                    
                     if dept!='0':
                         for plan in submitted_plans:
                             if str(plan.department.id)==dept:
@@ -193,7 +194,6 @@ def advance(request, dept):
            
                     request_items = Request.objects.all() 
                     if request_items:
-                        pending_approval = []
                         for req in request_items:
                             if req.request_status:
                                 pending_approval.append(req.department.Dept_Name)                                

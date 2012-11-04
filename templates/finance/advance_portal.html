@@ -238,7 +238,7 @@
                 <td>
                 {% for request in request_items %}
                 
-                {% if not request.granted_status %} 
+                {% if not request.granted_status and request.request_status %} 
                 {% ifequal request.item item %}               
                 
             	<form action="" method="POST">
@@ -259,7 +259,7 @@
                 <td>
                 {% for request in request_items %}
                 
-                {% if not request.granted_status %}
+                {% if not request.granted_status and request.request_status %}
                 
                     {% ifequal request.item item %}
                         <h4><a data-toggle="modal" href="#submitmodal{{ request.id }}" class="btn btn-primary">SUBMIT</a></h4>
