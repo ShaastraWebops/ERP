@@ -9,6 +9,7 @@ from erp.facilities.models import *
 from erp.facilities.forms import *
 from django.forms.models import modelformset_factory
 from django.contrib.auth.models import User
+from erp.misc.helper import *
 from erp.misc.util import *
 from erp.facilities.forms import *
 from settings import SITE_URL
@@ -24,7 +25,11 @@ def facilities_home(request):
     
     special_req_dept=Department.objects.get(id=58)
     if is_facilities_coord(request.user):
-
+    	if is_core(request.user):
+            return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal")
+        if  is_supercoord(request.user):
+            return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal")
+        
         return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal")
     if department.Dept_Name=="QMS":
         return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal")
@@ -61,6 +66,7 @@ def portal(request,roundno):
     curr_userprofile=userprofile.objects.get(user=request.user)
     page_owner = get_page_owner (request, owner_name=request.user)
     department = page_owner.get_profile ().department 
+    special_req_dept=Department.objects.get(id=58)
     
     if department.is_event:
         qset = FacilitiesObject.objects.filter(creator__department=curr_userprofile.department,roundno=roundno)
@@ -152,7 +158,7 @@ def portal(request,roundno):
                  #       extra1=5-len(qset)
                   #  else:
                    #     extra1=0
-                ItemFormset=modelformset_factory(FacilitiesObject, fields=('name','description','quantity','department'),extra=extra1, can_delete=True)
+                ItemFormset=modelformset_factory(FacilitiesObject, fields=('name','description','quantity'),extra=extra1, can_delete=True)
                 itemformset=ItemFormset(queryset=qset)  
             else:
                 items=FacilitiesObject.objects.filter(roundno=roundno)
@@ -169,6 +175,7 @@ def approval_portal(request):
     department = page_owner.get_profile ().department
     departments=Department.objects.filter(is_event=True).order_by('Dept_Name')   
     changed_objects=[] 
+
     new_objects=[]
     exists_objects=[]
     special_req_dept=Department.objects.get(id=58)
@@ -214,14 +221,22 @@ def display(request,roundno):
 
 def approve_event(request,event_name,form_saved=0,error=0):
     qms_coord=0
+    editable=0
     dept=Department.objects.get(id=event_name)
     facilities_coord=0
     curr_userprofile=userprofile.objects.get(user=request.user)
     if is_facilities_coord(request.user):
-        facilities_coord=1
-        items = FacilitiesObject.objects.filter(creator__department=dept,department=curr_userprofile.department).order_by('request_status','request_date')
+    	if is_core(request.user):
+    	    editable=1
+    	    items = FacilitiesObject.objects.filter(creator__department=dept).order_by('-roundno','name','request_status')
+    	if is_supercoord(request.user):
+    	    editable=1
+    	    items = FacilitiesObject.objects.filter(creator__department=dept).order_by('-roundno','name','request_status')
+    	else:
+            items = FacilitiesObject.objects.filter(creator__department=dept,department=curr_userprofile.department).order_by('-roundno','name','request_status','request_date')
     elif curr_userprofile.department.Dept_Name == "QMS":
         qms_coord=1
+        editable=1
         items = FacilitiesObject.objects.filter(creator__department=dept).order_by('-roundno','name','request_status')
         
     
