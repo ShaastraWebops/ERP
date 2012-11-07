@@ -13,6 +13,7 @@ from erp.misc.helper import *
 from erp.misc.util import *
 from erp.facilities.forms import *
 from settings import SITE_URL
+from pdfGeneratingViews import generatePDF
 
 def test(request):
     facilities_tab = True
@@ -350,3 +351,5 @@ def create_items(request):
             a.save()
     itemlist=ItemList.objects.all()
     return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))  
+    
+
