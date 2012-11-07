@@ -353,4 +353,3 @@ def create_items(request):
     itemlist=ItemList.objects.all()
     return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))  
     
-

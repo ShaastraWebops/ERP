@@ -92,70 +92,73 @@ def generateOverallPDF(request):
     for event in eventsList:
     
         # Get all rounds for the event
-        facilitiesObjects = FacilitesObject.objects.filter(creator__department = event).order_by('-round')
-        totalRounds = facilitiesObjects[0].round
-
-        for roundNum in range(1, totalRounds+1):  # This range will generate: [1, 2, ..., totalRounds]
-        
-            # Get all Facilities required during the round
-            Round_FacilitesList = FacilitesObject.objects.filter(creator__department = event).filter(roundno = roundNum).order_by('department')
-            
-            # Construct the table data
-            tableData = [ ['Name', 'Qty.', 'Approved Qty.', ], ]
-            for facility in Round_FacilitiesList:
-                tableData.append([facility.name, 
-                                  facility.quantity,
-                                  facility.approved_quantity,])
-            t = Table(tableData, repeatRows = 1)
-            
-            # Set the table style
-            tableStyle = TableStyle([('FONTNAME', (0,1), (-1,-1), 'Times-Roman'),   # Font style for Table Data
-                                     ('FONTNAME', (0,0), (-1,0), 'Times-Bold'),     # Font style for Table Header
-                                     ('FONTSIZE', (0,0), (-1,-1), 12),
-                                     ('ALIGN', (0,0), (-1,-1), 'CENTRE'),
-                                     ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-                                     ('GRID', (0,0), (-1,-1), 1, colors.black),
-                                     ])
-            t.setStyle(tableStyle)
-            
-            # Set the font for the event title
-            lineheight = PDFSetFont(pdf, 'Times-Roman', 14)
-
-            availableWidth = A4Width - 2*cm  # Leaving margins of 1 cm on both sides
-            availableHeight = y - (lineheight + 0.2*cm)  # (lineheight + 0.2*cm) subtracted to include title height
-            tableWidth, tableHeight = t.wrap(availableWidth, availableHeight) # find required space
-            if tableHeight <= availableHeight:
-
-                # Paint the event title
-                pdf.drawString(x, y, event.Dept_Name + '  -  Round ' + roundNum)
-                # Add spacing
-                y -= (lineheight + 0.2*cm)
-
-                t.drawOn(pdf, x, y-tableHeight)
-                y -= (tableHeight + cm)  # Find next position for painting
-            else:
-                pdf.showPage()
-                pageNo += 1
-                y = initNewPDFPage(pdf, doc_title, pageNo, A4)
-
-                # Set the font for the event title
-                lineheight = PDFSetFont(pdf, 'Times-Roman', 14)            
-                # Paint the event title
-                pdf.drawString(x, y, event.Dept_Name + '  -  Round ' + roundNum)
-                # Add spacing
-                y -= (lineheight + 0.2*cm)
-
-                availableHeight = y - (lineheight + 0.2*cm)  # (lineheight + 0.2*cm) subtracted to include title height
-                tableWidth, tableHeight = t.wrap(availableWidth, availableHeight)
-
-                t.drawOn(pdf, x, y-tableHeight)
-                y -= (tableHeight + cm)  # Find next position for painting
-
-        pdf.showPage()
-        
-    pdf.showPage()
-    pdf.save()
+        facilitiesObjects = FacilitiesObject.objects.filter(creator__department = event).order_by('-roundno')
+        try:
+		totalRounds = facilitiesObjects[0].roundno
+		
+		for roundNum in range(1, totalRounds+1):  # This range will generate: [1, 2, ..., totalRounds]
+		
+		    # Get all Facilities required during the round
+		    Round_FacilitesList = FacilitesObject.objects.filter(creator__department = event).filter(roundno = roundNum).order_by('department')
+		    
+		    # Construct the table data
+		    tableData = [ ['Name', 'Qty.', 'Approved Qty.', ], ]
+		    for facility in Round_FacilitiesList:
+		        tableData.append([facility.name, 
+		                          facility.quantity,
+		                          facility.approved_quantity,])
+		    t = Table(tableData, repeatRows = 1)
+		    
+		    # Set the table style
+		    tableStyle = TableStyle([('FONTNAME', (0,1), (-1,-1), 'Times-Roman'),   # Font style for Table Data
+		                             ('FONTNAME', (0,0), (-1,0), 'Times-Bold'),     # Font style for Table Header
+		                             ('FONTSIZE', (0,0), (-1,-1), 12),
+		                             ('ALIGN', (0,0), (-1,-1), 'CENTRE'),
+		                             ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+		                             ('GRID', (0,0), (-1,-1), 1, colors.black),
+		                             ])
+		    t.setStyle(tableStyle)
+		    
+		    # Set the font for the event title
+		    lineheight = PDFSetFont(pdf, 'Times-Roman', 14)
+		
+		    availableWidth = A4Width - 2*cm  # Leaving margins of 1 cm on both sides
+		    availableHeight = y - (lineheight + 0.2*cm)  # (lineheight + 0.2*cm) subtracted to include title height
+		    tableWidth, tableHeight = t.wrap(availableWidth, availableHeight) # find required space
+		    if tableHeight <= availableHeight:
+		
+		        # Paint the event title
+		        pdf.drawString(x, y, event.Dept_Name + '  -  Round ' + roundNum)
+		        # Add spacing
+		        y -= (lineheight + 0.2*cm)
+		
+		        t.drawOn(pdf, x, y-tableHeight)
+		        y -= (tableHeight + cm)  # Find next position for painting
+		    else:
+		        pdf.showPage()
+		        pageNo += 1
+		        y = initNewPDFPage(pdf, doc_title, pageNo, A4)
+		
+		        # Set the font for the event title
+		        lineheight = PDFSetFont(pdf, 'Times-Roman', 14)            
+		        # Paint the event title
+		        pdf.drawString(x, y, event.Dept_Name + '  -  Round ' + roundNum)
+		        # Add spacing
+		        y -= (lineheight + 0.2*cm)
+		
+		        availableHeight = y - (lineheight + 0.2*cm)  # (lineheight + 0.2*cm) subtracted to include title height
+		        tableWidth, tableHeight = t.wrap(availableWidth, availableHeight)
+		
+		        t.drawOn(pdf, x, y-tableHeight)
+		        y -= (tableHeight + cm)  # Find next position for painting
+		
+		pdf.showPage()
+		
+		pdf.showPage()
+		pdf.save()
     
+        except:
+            pass
     return response
     
 @login_required
@@ -197,8 +200,9 @@ def generateEventPDF(request, event_id):
     for event in eventsList:
     
         # Get all rounds for the event
-        facilitiesObjects = FacilitesObject.objects.filter(creator__department = event).order_by('-round')
-        totalRounds = facilitiesObjects[0].round
+        facilitiesObjects = FacilitesObject.objects.filter(creator__department = event).order_by('-roundno')
+        
+        totalRounds = facilitiesObjects[0].roundno
 
         for roundNum in range(1, totalRounds+1):  # This range will generate: [1, 2, ..., totalRounds]
         
@@ -260,5 +264,4 @@ def generateEventPDF(request, event_id):
         
     pdf.showPage()
     pdf.save()
-    
     return response
