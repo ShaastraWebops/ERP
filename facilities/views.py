@@ -13,7 +13,8 @@ from erp.misc.helper import *
 from erp.misc.util import *
 from erp.facilities.forms import *
 from settings import SITE_URL
-from pdfGeneratingViews import generatePDF
+from pdfGeneratingViews import generateOverallPDF
+from pdfGeneratingViews import generateEventPDF
 
 def test(request):
     facilities_tab = True
