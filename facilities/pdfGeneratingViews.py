@@ -94,9 +94,8 @@ def generateOverallPDF(request):
         # Get all rounds for the event
         facilitiesObjects = FacilitiesObject.objects.filter(creator__department = event).order_by('-roundno')
         try:
-		totalRounds = facilitiesObjects[0].roundno
-		
-		for roundNum in range(1, totalRounds+1):  # This range will generate: [1, 2, ..., totalRounds]
+	        totalRounds = facilitiesObjects[0].roundno
+	        for roundNum in range(1, totalRounds+1):  # This range will generate: [1, 2, ..., totalRounds]
 		
 		    # Get all Facilities required during the round
 		    Round_FacilitesList = FacilitesObject.objects.filter(creator__department = event).filter(roundno = roundNum).order_by('department')
@@ -152,13 +151,14 @@ def generateOverallPDF(request):
 		        t.drawOn(pdf, x, y-tableHeight)
 		        y -= (tableHeight + cm)  # Find next position for painting
 		
-		pdf.showPage()
-		
-		pdf.showPage()
-		pdf.save()
+	            pdf.showPage()
+	        
+                pdf.showPage()
+                pdf.save()
     
         except:
             pass
+            
     return response
     
 @login_required
