@@ -190,7 +190,7 @@ def generateEventPDF(request, event_id):
     
     # Get the event object
     try:
-        eventList = Department.objects.filter(is_event = 1).filter(pk = event_id)
+        eventList = Department.objects.filter(is_event = 1).filter(pk = int(event_id))
     except:
         assert False
     
