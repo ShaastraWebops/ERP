@@ -34,6 +34,9 @@ input{width:100px; height:25px;}
 <li/><p>White indicates an Event which has absolutely no requests. Ever.</p>
 </li>
 </ol>
+<div class="pull-right">
+<a  class="btn " href="{% url facilities.pdfGeneratingViews.generateOverallPDF %}" >Generate a PDF summary</a>
+</div>
 {% endblock %}
 {% block javascript %}
 {{ block.super }}
