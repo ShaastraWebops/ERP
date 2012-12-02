@@ -46,10 +46,7 @@ urlpatterns = patterns('',
 	(r'^erp/(?P<owner_name>\w+)/feedback/', include('erp.feedback.urls')),
 	(r'^erp/feedback/', include('erp.feedback.urls')),
 	(r'^erp/finance_portal/',include('erp.finance.urls')),
-<<<<<<< HEAD
-=======
 	(r'^erp/facilities/',include('erp.facilities.urls')),
->>>>>>> facilities_release
     (r'^erp/(?P<owner_name>\w+)/users/', include('erp.users.urls')),
     (r'^erp/(?P<owner_name>\w+)/dashboard/',include('erp.dashboard.urls')),	
     (r'^erp/(?P<owner_name>\w+)/', include('erp.tasks.urls')),
