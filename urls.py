@@ -16,9 +16,9 @@ from django.conf.urls import *
 from tasks.views import *
 from django.conf.urls.defaults import *
 
-haystack.autodiscover()
-dajaxice_autodiscover()
-admin.autodiscover()
+#haystack.autodiscover()
+#dajaxice_autodiscover()
+#admin.autodiscover()
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -46,13 +46,17 @@ urlpatterns = patterns('',
 	(r'^erp/(?P<owner_name>\w+)/feedback/', include('erp.feedback.urls')),
 	(r'^erp/feedback/', include('erp.feedback.urls')),
 	(r'^erp/finance_portal/',include('erp.finance.urls')),
+<<<<<<< HEAD
+=======
+	(r'^erp/facilities/',include('erp.facilities.urls')),
+>>>>>>> facilities_release
     (r'^erp/(?P<owner_name>\w+)/users/', include('erp.users.urls')),
     (r'^erp/(?P<owner_name>\w+)/dashboard/',include('erp.dashboard.urls')),	
     (r'^erp/(?P<owner_name>\w+)/', include('erp.tasks.urls')),
     (r'^erp/forgot_password/$', 'erp.home.views.forgot_password'),
     #(r'^loaddata/$', 'erp.dashboard.views.load_data'), #used to load test data into db.
     
-    (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
+    (r'^erp/media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
     
     #(r'^now/sign.html$', sign_in, ),
     # Examples:

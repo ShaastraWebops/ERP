@@ -46,6 +46,13 @@ def is_coord (user):
         return True
     return False
 
+def is_facilities_coord(user):
+    if user.get_profile().department.id == 57:
+        return True
+    elif user.get_profile().department.id in range(59,62):
+        return True
+    return False
+
 def get_page_owner (request, owner_name):
     """
     If owner_name is passed, return page owner, if he exists. If user

@@ -30,6 +30,13 @@
 {% if finance_tab %}
 <li id="li_finance">
     <a href="{% url finance.views.budget_portal plan='budget'  %}"><i class="icon-briefcase" id="li_finance_icon"></i> Finance </a>
+
+</li>
+{% endif %}
+
+{% if facilities_tab %}
+<li id="li_facilities">
+    <a href="{% url facilities.views.facilities_home  %}"><i class="icon-pencil" id="li_facilities_icon"></i> Facilities </a>
 </li>
 {% endif %}
 
