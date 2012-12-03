@@ -13,5 +13,9 @@ urlpatterns=patterns('erp.facilities.views',
     (r'^qms_visible_portal/$','qms_visible_portal'),
     (r'^approve_event/(?P<event_name>\d+)/(?P<form_saved>\d+)/(?P<error>\d+)/$','approve_event'),
     (r'^submit_approval/(?P<item_id>\d+)/$','submit_approval'),
+    (r'^eventpdf/(?P<event_id>\d+)/$', 'generateEventPDF'),
+)
+urlpatterns+=patterns('',
+    (r'^overallpdf/$', 'erp.facilities.pdfGeneratingViews.generateOverallPDF'),
 )
         
