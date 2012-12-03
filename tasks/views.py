@@ -126,6 +126,9 @@ def get_timeline (user):
         for subtask in subtasks:
             if subtask.task not in tasks:
                 tasks.append(subtask.task)
+        for x in Task.objects.filter (creator__userprofile__department = user_dept).all():
+            if x not in tasks:
+                tasks.append(x)
         for x in Task.objects.filter (creator = user).all():
             if x not in tasks:
                 tasks.append(x)

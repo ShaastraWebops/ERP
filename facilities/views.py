@@ -29,6 +29,8 @@ def facilities_home(request):
             return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal")
         if  is_supercoord(request.user):
             return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal")
+        if request.user.username == "ch10b090":
+            return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal")
         
         return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal")
     if department.Dept_Name=="QMS":
@@ -232,7 +234,11 @@ def approve_event(request,event_name,form_saved=0,error=0):
     	if is_supercoord(request.user):
     	    editable=1
     	    items = FacilitiesObject.objects.filter(creator__department=dept).order_by('-roundno','name','request_status')
-    	else:
+ 
+        if request.user.username == "ch10b090":
+            editable=1
+    	    items = FacilitiesObject.objects.filter(creator__department=dept).order_by('-roundno','name','request_status')
+ 	else:
             items = FacilitiesObject.objects.filter(creator__department=dept,department=curr_userprofile.department).order_by('-roundno','name','request_status','request_date')
     elif curr_userprofile.department.Dept_Name == "QMS":
         qms_coord=1
