@@ -7,13 +7,14 @@ textarea{ width: 250px; height: 60px;}
 input{width:100px; height:25px;}
 </style>
 
-<p>Yo</p>
-<br/><br/>
-<!--
-{% for item in itemlist %}
-<p>{{item.name}}</p></br>
+<div class="pull-right">
+<a  class="btn " href="{% url facilities.views.add_round event_id=dept.id %}" >Add A New Round</a>
+</div>
+<br/>
+{% for round in eventrounds %}
+<a class="btn btn-inverse" href="{% url facilities.views.approve_event round_id=round.id form_saved=0 error=0 %}">{{round.name}}</a>
+
 {% endfor %}
--->
 {% endblock %}
 
 {% block javascript %}

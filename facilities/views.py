@@ -26,44 +26,25 @@ def facilities_home(request):
     department = page_owner.get_profile ().department      
     
     special_req_dept=Department.objects.get(id=58)
-    if is_facilities_coord(request.user):
+    '''if is_facilities_coord(request.user):
     	if is_core(request.user):
-            return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal")
-        if  is_supercoord(request.user):
-            return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal")
+            return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal/")
+        if is_supercoord(request.user):
+            return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal/")
+        if request.user.username == "ch10b090":
+            return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal/")
+        if request.user.username == "ce10b084":
+            return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal/")
+
         
-        return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal")
-    if department.Dept_Name=="QMS":
-        return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal")
-
-    
-    eventrounds=EventRound.objects.filter(department=department)
-    return render_to_response('facilities/home.html',locals(),context_instance=global_context(request))    
-
-def add_round(request):
-    curr_userprofile=userprofile.objects.get(user=request.user)
-    page_owner = get_page_owner (request, owner_name=request.user)
-    department = page_owner.get_profile ().department 
-    try :
-        print "c"
-        exist = EventRound.objects.get(department=department,number=1)
-        print "x"
-        allround = EventRound.objects.filter(department=department).order_by('-number')
-        print allround[0].number
-        e=EventRound()
-        e.number = allround[0].number + 1
-        e.department=department 
-        e.save()
-        print "f"
-    except:
-        print "b"
-        e=EventRound()
-        e.number=1
-        e.department=department 
-        e.save()
         
-    return HttpResponseRedirect(SITE_URL + "erp/facilities/facilities_home")
+        return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal/")'''
+   # if department.Dept_Name=="QMS":
+   #     return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal/")
 
+    return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal/")   
+
+#Redundant
 def portal(request,roundno):
     curr_userprofile=userprofile.objects.get(user=request.user)
     page_owner = get_page_owner (request, owner_name=request.user)
@@ -171,9 +152,9 @@ def portal(request,roundno):
     return render_to_response('facilities/portal.html',locals(),context_instance=global_context(request))
 
 def approval_portal(request):
-    curr_userprofile=userprofile.objects.get(user=request.user)
     curr_user = request.user
     page_owner = get_page_owner (request, owner_name=request.user)
+    curr_userprofile=userprofile.objects.get(user=request.user)
     department = page_owner.get_profile ().department
     departments=Department.objects.filter(is_event=True).order_by('Dept_Name')   
     changed_objects=[] 
@@ -181,7 +162,12 @@ def approval_portal(request):
     new_objects=[]
     exists_objects=[]
     special_req_dept=Department.objects.get(id=58)
+    exist_dept=[]
     for dept in departments:
+        a=EventRound.objects.filter(department=dept)
+        if len(a)!=0:
+            exist_dept.append(dept)
+    '''for dept in departments:
         a=FacilitiesObject.objects.filter(creator__department=dept,department=curr_userprofile.department)
         b=FacilitiesObject.objects.filter(creator__department=dept,name__department=special_req_dept)
         if len(a.filter(request_status=0)) + len(b.filter(request_status=0)) != 0:       
@@ -189,7 +175,8 @@ def approval_portal(request):
         elif len(a.filter(request_status=1)) + len(b.filter(request_status=1)) != 0 :       
             changed_objects.append(dept.Dept_Name) 
         elif len(a) + len(b) !=0:
-            exists_objects.append(dept.Dept_Name)
+            exists_objects.append(dept.Dept_Name)'''
+    
             
     return render_to_response('facilities/approval_portal.html',locals(),context_instance=global_context(request)) 
 
@@ -202,17 +189,61 @@ def qms_visible_portal(request):
     changed_objects=[] 
     new_objects=[]
     exists_objects=[]
-    for dept in departments:
+    
+    ''''for dept in departments:
         a=FacilitiesObject.objects.filter(creator__department=dept)
         if len(a.filter(request_status=0)) != 0:       
             new_objects.append(dept.Dept_Name)   
         elif len(a.filter(request_status=1)) != 0 :       
             changed_objects.append(dept.Dept_Name) 
         elif len(a) !=0:
-            exists_objects.append(dept.Dept_Name)
+            exists_objects.append(dept.Dept_Name)'''
+    
             
     return render_to_response('facilities/approval_portal.html',locals(),context_instance=global_context(request)) 
     
+def round_home(request,event_id):
+    dept = Department.objects.get(id = event_id)
+    eventrounds=EventRound.objects.filter(department=dept)
+    return render_to_response('facilities/round_home.html',locals(),context_instance=global_context(request))
+ 
+def add_round(request,event_id):
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    page_owner = get_page_owner (request, owner_name=request.user)
+    department = Department.objects.get(id=event_id) 
+    try :
+        print "c"
+        exist = EventRound.objects.get(department=department,number=1)
+        print "x"
+        allround = EventRound.objects.filter(department=department).order_by('-number')
+        print allround[0].number
+        e=EventRound()
+        e.number = allround[0].number + 1
+        e.department=department
+        e.name = "Round " + str(e.number)
+        e.save()
+        print "f"
+    except:
+        print "b"
+        e=EventRound()
+        e.number=1
+        e.department=department 
+        e.name = "Round " + str(e.number)
+        e.save()
+        
+    return HttpResponseRedirect(SITE_URL + "erp/facilities/round_home/" + str(department.id))   
+
+def delete_round(request,round_id):
+    rounder = EventRound.objects.get(id=round_id)
+    department=rounder.department
+    try:
+        rounder.delete()
+    except:
+        pass
+    return HttpResponseRedirect(SITE_URL + "erp/facilities/round_home/" + str(department.id))
+    
+
+ 
 def display(request,roundno):
     curr_userprofile=userprofile.objects.get(user=request.user)
     page_owner = get_page_owner (request, owner_name=request.user)
@@ -221,13 +252,67 @@ def display(request,roundno):
     
     return render_to_response('facilities/display.html',locals(),context_instance=global_context(request))
 
-def approve_event(request,event_name,form_saved=0,error=0):
+def approve_event(request,round_id,form_saved=0,error=0):
+    curr_userprofile=userprofile.objects.get(user=request.user)
     qms_coord=0
     editable=0
-    dept=Department.objects.get(id=event_name)
+    print "a"
+    rounder = EventRound.objects.get(id = round_id)
+    dept=rounder.department
     facilities_coord=0
-    curr_userprofile=userprofile.objects.get(user=request.user)
-    if is_facilities_coord(request.user):
+    items = FacilitiesObject.objects.filter(event_round = rounder)
+   
+    if is_core(request.user) and is_facilities_coord(request.user):
+        editable = 1
+    if request.user.username == "ch10b090":
+        editable = 1
+    if request.user.username == "ce10b084":
+        editable = 1
+    if curr_userprofile.department.id==57:
+        editable = 1
+        
+    form_saved
+    if request.method == "POST":
+        form_saved=0
+        error=0
+        try:        
+            round_form=RoundForm(request.POST)
+            form=round_form.save(commit=False)
+            form.department=rounder.department
+            form.number=rounder.number
+            form.id=rounder.id
+            form.save()
+            form_saved=1
+            
+            rounder=form
+        except:
+            error=1
+        return HttpResponseRedirect(SITE_URL + 'erp/facilities/approve_event/%d/%d/%d/'%(rounder.id,form_saved,error))
+    round_form = RoundForm(instance=rounder)
+    request_form=ApprovalForm()
+    return render_to_response('facilities/approve_event.html',locals(),context_instance=global_context(request))  
+       
+    
+    '''
+    request_form = ApprovalForm()
+    ItemFormset=modelformset_factory(EventRound, fields=('name','date','hour','minute'))
+    qset=EventRound.objects.filter(id=round_id)
+    if request.method=="POST":
+        itemform=ItemFormset(request.POST, queryset=qset)            
+        form_saved = False
+        if itemform.is_valid():
+            if itemform.has_changed():
+                tempform = itemform.save(commit=False)
+                tempform.number = rounder.number
+                tempform.department = rounder.department
+                tempform.save()
+                form_saved=1
+        else:
+            error=1
+    itemform=ItemFormset(queryset=qset)'''
+
+    '''if is_facilities_coord(request.user):
+        
     	if is_core(request.user):
     	    editable=1
     	    items = FacilitiesObject.objects.filter(creator__department=dept).order_by('-roundno','name','request_status')
@@ -239,13 +324,36 @@ def approve_event(request,event_name,form_saved=0,error=0):
     elif curr_userprofile.department.Dept_Name == "QMS":
         qms_coord=1
         editable=1
-        items = FacilitiesObject.objects.filter(creator__department=dept).order_by('-roundno','name','request_status')
-        
+        items = FacilitiesObject.objects.filter(creator__department=dept).order_by('-roundno','name','request_status')'''
+
+def submit_round(request,round_id):
+    form_saved=0
+    error=0
+    rounder = EventRound.objects.get(id=round_id)
+    if request.method== 'POST':
+        round_form = RoundForm(request.POST)
+        if round_form.is_valid():
+            rounder.name
     
+def submit_approval(request,item_id):
+    form_saved=0
+    error=0
+    item = FacilitiesObject.objects.get(id=item_id)
+    if request.method == 'POST':
+        approval_form = ApprovalForm(request.POST)
+        if approval_form.is_valid():    
+            item.quantity = approval_form.cleaned_data['approved_number']
+            item.rec_fac = approval_form.cleaned_data['approved_rec_fac']
+            try:
+                item.save()
+                form_saved=1
+            except:
+                error=1
+        else:
+            error=1
+    return HttpResponseRedirect(SITE_URL + 'erp/facilities/approve_event/%d/%d/%d/'%(item.event_round.id,form_saved,error))        
 
-    request_form = ApprovalForm()
-    return render_to_response('facilities/approve_event.html',locals(),context_instance=global_context(request))
-
+'''
 def submit_approval(request,item_id):
 
     item = FacilitiesObject.objects.get(id=item_id)
@@ -271,8 +379,7 @@ def submit_approval(request,item_id):
         else:
             error=1
     return HttpResponseRedirect(SITE_URL + 'erp/facilities/approve_event/%d/%d/%d/'%(item.creator.department.id,form_saved,error))
-
-
+'''
 
 def create_items(request):
     facilities_tab = True
@@ -297,6 +404,7 @@ def create_items(request):
             a.name=str(i)
             print a.name
             a.department=dept
+            
             a.save()
     for i in materials_items:
         try :
@@ -352,4 +460,53 @@ def create_items(request):
             a.save()
     itemlist=ItemList.objects.all()
     return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))  
+
+def create_rounds(request):
+    departments = Department.objects.filter(is_event=True)
+    itemlist=ItemList.objects.all()
+    new_list =[]
+    for department in departments:
+    
+        try :
+            print "c"
+            exist = EventRound.objects.get(department=department,number=1)
+            print "x"
+            allround = EventRound.objects.filter(department=department).order_by('-number')
+            print allround[0].number
+            e=EventRound()
+            e.number = allround[0].number + 1
+            e.department=department
+            e.name = "Round " + str(e.number)
+            e.save()
+            new_list.append(e)
+            print "f"
+        except:
+            print "b"
+            e=EventRound()
+            e.number=1
+            e.department=department 
+            e.name = "Round " + str(e.number)
+            new_list.append(e)
+            e.save()
+    print "Round Generation Complete "
+    for rounder in new_list:
+        print rounder.department
+        print "\n\n"
+        for item in itemlist:
+            fac_obj=FacilitiesObject(department=rounder.department,event_round=rounder,name=item)
+            fac_obj.save()
+            print item.name
+    '''for rounder in EventRound.objects.filter(id=1):
+        print rounder.department
+        print "\n\n"
+        for item in itemlist:
+            fac_obj=FacilitiesObject(department=rounder.department,event_round=rounder,name=item)
+            fac_obj.save()
+            print item.name'''
+    return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))  
+
+    
+        
+        
+    
     
