@@ -211,25 +211,30 @@ def add_round(request,event_id):
     curr_userprofile=userprofile.objects.get(user=request.user)
     page_owner = get_page_owner (request, owner_name=request.user)
     department = Department.objects.get(id=event_id) 
+    e=EventRound()
     try :
         print "c"
         exist = EventRound.objects.get(department=department,number=1)
         print "x"
         allround = EventRound.objects.filter(department=department).order_by('-number')
         print allround[0].number
-        e=EventRound()
         e.number = allround[0].number + 1
         e.department=department
         e.name = "Round " + str(e.number)
+        p=e.id
         e.save()
         print "f"
     except:
         print "b"
-        e=EventRound()
         e.number=1
         e.department=department 
         e.name = "Round " + str(e.number)
+        p=e.id
         e.save()
+    items = ItemList.objects.all()
+    for item in items:
+        a=FacilitiesObject(department=department,event_round=e,name=item)
+        a.save()
         
     return HttpResponseRedirect(SITE_URL + "erp/facilities/round_home/" + str(department.id))   
 
