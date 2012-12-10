@@ -100,7 +100,7 @@ def global_context(request):
                 if is_facilities_coord(curr_user):
                     facilities_tab=True
                 if department.is_event:
-                    #facilities_tab=True
+                    facilities_tab=True
                     finance_tab=True
 
             if is_supercoord(curr_user):
@@ -114,7 +114,7 @@ def global_context(request):
                     facilities_tab=True
                 if department.is_event:
                     finance_tab=True     
-                    #facilities_tab=True       
+                    facilities_tab=True       
             if is_coord(curr_user):
                 if str(curr_userprofile.department) == 'QMS':
                     qms_coord= True
@@ -125,7 +125,7 @@ def global_context(request):
                 if department.is_event:
                     finance_tab=True
                     print "foo"
-                    #facilities_tab=True
+                    facilities_tab=True
                 if str(curr_userprofile.department) == 'Finance':
                     finance_tab=True
             if request.user.username=="ee11b075":

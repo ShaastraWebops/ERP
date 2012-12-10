@@ -10,7 +10,7 @@ input{width:100px; height:25px;}
 
 <h2>{{dept.Dept_Name}} - {{rounder.name}}</h2>
 
-{% if editable %}
+{% if editable or event_editable %}
     <h3>{{rounder.name}}</h3><br/>
     <a class="btn btn-primary" href={% url facilities.excelViews.generate_round_excel round_id=rounder.id %}>Download an Excel Summary Of Round</a>
     <div class="pull-right">
@@ -41,7 +41,7 @@ input{width:100px; height:25px;}
     <td>Start of Round</td><td>{{round_form.start_date}}</td><td>{{round_form.start_hour}}</td><td>{{round_form.start_minute}}</td>
     </tr><tr><td>End of Round</td><td>{{round_form.end_date}}</td><td>{{round_form.end_hour}}</td><td>{{round_form.end_minute}}</td>
     </tr></table>
-    <p>Decription:</p>{{round_form.description}}<br/>
+    <p>Description:</p>{{round_form.description}}<br/>
     <div class="pull-right">
     <input type="submit" class="btn btn-info" name={{item.id}} value="Submit Round Details "/>
     </div>

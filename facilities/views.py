@@ -40,8 +40,10 @@ def facilities_home(request):
         
         
         return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal/")'''
-   # if department.Dept_Name=="QMS":
-   #     return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal/")
+    # if department.Dept_Name=="QMS":
+    #     return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal/")
+    if curr_userprofile.department.is_event:
+        return HttpResponseRedirect(SITE_URL + "erp/facilities/round_home/"+str(curr_userprofile.department.id))         
 
     return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal/")   
 
@@ -279,6 +281,8 @@ def approve_event(request,round_id,form_saved=0,error=0):
         editable = 1
     if curr_userprofile.department.id==57:
         editable = 1
+    if curr_userprofile.department.id == dept.id:
+        event_editable=1
         
     form_saved
     if request.method == "POST":
