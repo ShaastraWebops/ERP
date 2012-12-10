@@ -98,6 +98,8 @@ def optimize_excel(request,day_number):
     book = Workbook()
     sheet1 = book.add_sheet('Required before 1PM')
     sheet2 = book.add_sheet('Recovered before 1PM')
+    sheet3 = book.add_sheet('Required after 1PM')
+    sheet4 = book.add_sheet('Recovered after 1PM')
     sheet1.row(1).height=int(255*3)
     sheet1.write(1,1,"Venue Specific Item Requirements before 1 PM",
                         easyxf('font: height 440, name Arial, bold True;'
@@ -109,30 +111,56 @@ def optimize_excel(request,day_number):
                         easyxf('font: height 440, name Arial, bold True;'
                                 # 'borders: left thick, right thick, top thick, bottom thick;'
                                 # 'pattern: pattern solid, fore_colour white;'
+                                ))    
+    sheet3.write(1,1,"Venue Specific Item Recoveries before 1 PM",
+                        easyxf('font: height 440, name Arial, bold True;'
+                                # 'borders: left thick, right thick, top thick, bottom thick;'
+                                # 'pattern: pattern solid, fore_colour white;'
                                 ))
+    sheet3.row(1).height=int(255*3)
+    sheet4.write(1,1,"Venue Specific Item Recoveries before 1 PM",
+                        easyxf('font: height 440, name Arial, bold True;'
+                                # 'borders: left thick, right thick, top thick, bottom thick;'
+                                # 'pattern: pattern solid, fore_colour white;'
+                                ))
+    sheet4.row(1).height=int(255*3)
     i=1
     sheet1.row(4).height=int(255*2)
     sheet2.row(4).height=int(255*2)
+    sheet3.row(4).height=int(255*2)
+    sheet4.row(4).height=int(255*2)
     for ven in VENUE_CHOICES:
         venue=ven[0]
         sheet1.col(i+1).width=int(0.87/0.18*255*3.5) 
         sheet1.write(4,i+1,venue,style_head)
         sheet2.col(i+1).width=int(0.87/0.18*255*3.5) 
         sheet2.write(4,i+1,venue,style_head)
+        sheet3.col(i+1).width=int(0.87/0.18*255*3.5) 
+        sheet3.write(4,i+1,venue,style_head)
+        sheet4.col(i+1).width=int(0.87/0.18*255*3.5) 
+        sheet4.write(4,i+1,venue,style_head)
         i=i+1
     items = ItemList.objects.all()
     sheet1.col(1).width=int(0.87/0.18*255*10) 
-    sheet2.col(1).width=int(0.87/0.18*255*10) 
+    sheet2.col(1).width=int(0.87/0.18*255*10)
+    sheet3.col(1).width=int(0.87/0.18*255*10) 
+    sheet4.col(1).width=int(0.87/0.18*255*10)  
     i=0
     for item in items:
         sheet1.row(i+5).height=int(255*2.5)
         sheet1.write(i+5,1,item.name,style_head)
         sheet2.row(i+5).height=int(255*2.5)
         sheet2.write(i+5,1,item.name,style_head)
+        sheet3.row(i+5).height=int(255*2.5)
+        sheet3.write(i+5,1,item.name,style_head)
+        sheet4.row(i+5).height=int(255*2.5)
+        sheet4.write(i+5,1,item.name,style_head)
         i=i+1
     for i in (2,3,9,12,15):
         sheet1.col(i+1).width=int(0.87/0.18*255*5.3)
         sheet2.col(i+1).width=int(0.87/0.18*255*5.3)
+        sheet3.col(i+1).width=int(0.87/0.18*255*5.3)
+        sheet4.col(i+1).width=int(0.87/0.18*255*5.3)
     '''=0
     for ven in VENUE_CHOICES:
         i=0
@@ -145,13 +173,12 @@ def optimize_excel(request,day_number):
             sheet1.write(i+5,j+2,rounder.name,style_body)
             i=i+1
         j=j+1'''
-    i=0
+    '''i=0
     j=0
     a=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
     b=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
     c=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
     d=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
-    i=0
     for item in items:        
         j=0
         print item.name
@@ -176,7 +203,58 @@ def optimize_excel(request,day_number):
             sheet1.write(i+5,j+2,a[i][j],style_body)
             sheet2.write(i+5,j+2,b[i][j],style_body)
             j=j+1
+        i=i+1'''
+    a=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    b=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    c=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    d=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    '''for item in items:        
+        j=0
+        print item.name'''
+    i=0
+    for ven in VENUE_CHOICES:
+        venue=ven[0]
+        print venue
+        all_rounds = EventRound.objects.filter(start_date=date_str,venue=venue)
+        alter_rounds = all_rounds.filter(start_hour__lt=13)
+        first_rounds = alter_rounds.filter(end_hour__lt=13)
+        second_rounds = alter_rounds.filter(end_hour__gt=13)
+        third_rounds = all_rounds.filter(start_hour__gt=13)
+        print first_rounds
+        for rounder in first_rounds:
+            objs=rounder.facilitiesobject_set.exclude(quantity=0)
+            for obj in objs:
+                print "foo"
+                number=obj.name.id-1
+                a[number][i]=a[number][i]+obj.quantity
+                b[number][i]=b[number][i]+obj.quantity*obj.rec_fac
+        for rounder in second_rounds:
+            objs=rounder.facilitiesobject_set.exclude(quantity=0)
+            for obj in objs:
+                print "bar"
+                number=obj.name.id-1
+                a[number][i]=a[number][i]+obj.quantity
+                d[number][i]=d[number][i]+obj.quantity*obj.rec_fac
+        for rounder in third_rounds:
+            objs=rounder.facilitiesobject_set.exclude(quantity=0)
+            for obj in objs:
+                print "lot"
+                number=obj.name.id-1
+                c[number][i]=c[number][i]+obj.quantity
+                d[number][i]=d[number][i]+obj.quantity*obj.rec_fac  
         i=i+1
+    i=0
+    j=0
+    for item in items:
+        j=0
+        for ven in VENUE_CHOICES:
+            sheet1.write(i+5,j+2,a[i][j],style_body)
+            sheet2.write(i+5,j+2,b[i][j],style_body) 
+            sheet3.write(i+5,j+2,c[i][j],style_body)
+            sheet4.write(i+5,j+2,d[i][j],style_body)      
+            j=j+1
+        i=i+1              
+    print a
     book.save(response)
     return response
 
