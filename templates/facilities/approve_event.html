@@ -12,7 +12,7 @@ input{width:100px; height:25px;}
 
 {% if editable or event_editable %}
     <h3>{{rounder.name}}</h3><br/>
-    <a class="btn btn-primary" href={% url facilities.excelViews.generate_round_excel round_id=rounder.id %}>Download an Excel Summary Of Round</a>
+    <a class="btn btn-primary" href={% url facilities.excelViews.generate_round_excel round_id=rounder.id %}>Download an Excel Summary Of Round Requirements</a>
     <div class="pull-right">
     <a class="btn btn-danger" href={% url facilities.views.delete_round round_id=rounder.id %}>Delete Round</a>
     </div><br/><br/>
