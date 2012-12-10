@@ -12,7 +12,7 @@ input{width:100px; height:25px;}
 
 {% if editable %}
     <h3>{{rounder.name}}</h3><br/>
-    <a class="btn btn-success" href={% url facilities.excelViews.generate_round_excel round_id=rounder.id %}>Download an Excel Summary Of Round</a>
+    <a class="btn btn-primary" href={% url facilities.excelViews.generate_round_excel round_id=rounder.id %}>Download an Excel Summary Of Round</a>
     <div class="pull-right">
     <a class="btn btn-danger" href={% url facilities.views.delete_round round_id=rounder.id %}>Delete Round</a>
     </div><br/><br/>
@@ -41,6 +41,7 @@ input{width:100px; height:25px;}
     <td>Start of Round</td><td>{{round_form.start_date}}</td><td>{{round_form.start_hour}}</td><td>{{round_form.start_minute}}</td>
     </tr><tr><td>End of Round</td><td>{{round_form.end_date}}</td><td>{{round_form.end_hour}}</td><td>{{round_form.end_minute}}</td>
     </tr></table>
+    <p>Decription:</p>{{round_form.description}}<br/>
     <div class="pull-right">
     <input type="submit" class="btn btn-info" name={{item.id}} value="Submit Round Details "/>
     </div>
@@ -57,7 +58,8 @@ input{width:100px; height:25px;}
     <tr>
     <td>Start of Round</td><td>{{rounder.start_date}}</td><td>{{rounder.start_hour}}:{{rounder.start_minute}}</td>
     </tr><tr><td>End of Round</td><td>{{rounder.end_date}}</td><td>{{rounder.end_hour}}:{{rounder.end_minute}}</td>
-    </tr></table></h4>
+    </tr></table>
+    <p>Decription:</p>{{rounder.description}}</h4>
 {% endif %}
 <br/><br/>
 
@@ -73,7 +75,7 @@ input{width:100px; height:25px;}
 <h4>Edit Item Requirements</h4>
 <table class="table table-striped table-bordered table-condensed">
 <tr>
-<th>Name</th><th>Quantity</th><th>Recovery Factor</th>
+<th>Item Type</th><th>Name</th><th>Quantity</th><th>Recovery Factor</th>
 {% if editable %}
     <th>Modified Quantity</th><th>Modfied Recovery Factor</th><th></th>
 {% endif %}
@@ -81,7 +83,7 @@ input{width:100px; height:25px;}
 
 {% for item in items %}
     <tr>
-    <td>{{item.name}}</td><td>{{item.quantity}}</td><td>{{item.rec_fac}}</td>
+    <td>{{item.name.target}}</td><td>{{item.name}}</td><td>{{item.quantity}}</td><td>{{item.rec_fac}}</td>
     {% if editable %}
         <form action="{{site_url}}erp/facilities/submit_approval/{{item.id}}/" method="POST">
         {% csrf_token %}

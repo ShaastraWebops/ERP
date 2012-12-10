@@ -4,8 +4,6 @@ from django.conf.urls.defaults import *
 
 urlpatterns=patterns('erp.facilities.views',
     (r'^test/$','test'),
-    (r'^create_items/$','create_items'),
-    (r'^create_rounds/$','create_rounds'),
     (r'^facilities_home/$','facilities_home'),
     (r'^portal/(?P<roundno>\d+)/$','portal'),
     (r'^display/(?P<roundno>\d+)/$','display'),    
@@ -22,8 +20,12 @@ urlpatterns=patterns('erp.facilities.views',
     
 )
 urlpatterns+=patterns('',
+    (r'^create_items/$','erp.facilities.initViews.create_items'),
+    (r'^use_data/$','erp.facilities.initViews.use_data'),
+    (r'^create_rounds/$','erp.facilities.initViews.create_rounds'),
     (r'^overallpdf/$', 'erp.facilities.pdfGeneratingViews.generateOverallPDF'),
     (r'^test_excel/$', 'erp.facilities.excelViews.test_excel'),
     (r'^generate_round_excel/(?P<round_id>\d+)/$', 'erp.facilities.excelViews.generate_round_excel'),
+    (r'^optimize_excel/(?P<day_number>\d+)/$', 'erp.facilities.excelViews.optimize_excel')
 )
         

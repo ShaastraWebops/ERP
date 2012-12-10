@@ -3,16 +3,20 @@ from xlwt import Workbook, easyxf
 from django.http import HttpResponse, HttpResponseForbidden
 from erp.facilities.models import *
 from erp.department.models import Department
-    
+from erp.facilities.models import DATE_CHOICES,VENUE_CHOICES
+from django.db.models import Q
+ 
 
-
-
+style_body = easyxf('font: height 200, name Arial ;''borders: left thick, right thick, top thin, bottom thin;')
+style_head = easyxf('font: height 280, name Arial, bold True;''borders: left thick, right thick, top thick, bottom thick;')
+style_end = easyxf('borders: top thick;')
+   
 def test_excel(request):
     response = HttpResponse(mimetype="application/ms-excel")
     response['Content-Disposition'] = 'attachment; filename=%s' % 'TestExcel.xls'
 
     book = Workbook()
-    sheet1 = book.add_sheet1('A Date')
+    sheet1 = book.add_sheet('A Date')
     sheet1.row(1).height=int(255*1.5)
     sheet1.col(1).width=int(0.87/0.18*255*3.2)
     sheet1.write(1,1,date(2009,3,18),easyxf(
@@ -57,9 +61,7 @@ def generate_round_excel(request,round_id):
     sheet1.row(5).height=int(255*1.5)    
     sheet1.write(5,1,"End :- " + str(rounder.end_hour) + ":"+str(rounder.end_minute)+"  "+rounder.end_date,
                                                  easyxf('font: height 300, name Arial, bold True;')) 
-    style_body = easyxf('font: height 200, name Arial ;''borders: left thick, right thick, top thin, bottom thin;')
-    style_head = easyxf('font: height 280, name Arial, bold True;''borders: left thick, right thick, top thick, bottom thick;')
-    style_end = easyxf('borders: top thick;')
+
     sheet1.row(7).height=int(255*1.35)
     sheet1.col(1).width=int(0.87/0.18*255*8.5)  
     sheet1.write(7,1,'Item name',style_head) 
@@ -85,5 +87,100 @@ def generate_round_excel(request,round_id):
 
     book.save(response)
     return response
+
+def optimize_excel(request,day_number):
+    date_str = DATE_CHOICES[(int(day_number)-5)][0]
+    date_str_1,date_str_2 = date_str.split(',')
+    date_str_name = date_str_1+date_str_2
+    response = HttpResponse(mimetype="application/ms-excel")
+    response['Content-Disposition'] = 'attachment; filename=%s Optimized Facilities.xls' %date_str_name
+
+    book = Workbook()
+    sheet1 = book.add_sheet('Required before 1PM')
+    sheet2 = book.add_sheet('Recovered before 1PM')
+    sheet1.row(1).height=int(255*3)
+    sheet1.write(1,1,"Venue Specific Item Requirements before 1 PM",
+                        easyxf('font: height 440, name Arial, bold True;'
+                                # 'borders: left thick, right thick, top thick, bottom thick;'
+                                # 'pattern: pattern solid, fore_colour white;'
+                                ))
+    sheet2.row(1).height=int(255*3)
+    sheet2.write(1,1,"Venue Specific Item Recoveries before 1 PM",
+                        easyxf('font: height 440, name Arial, bold True;'
+                                # 'borders: left thick, right thick, top thick, bottom thick;'
+                                # 'pattern: pattern solid, fore_colour white;'
+                                ))
+    i=1
+    sheet1.row(4).height=int(255*2)
+    sheet2.row(4).height=int(255*2)
+    for ven in VENUE_CHOICES:
+        venue=ven[0]
+        sheet1.col(i+1).width=int(0.87/0.18*255*3.5) 
+        sheet1.write(4,i+1,venue,style_head)
+        sheet2.col(i+1).width=int(0.87/0.18*255*3.5) 
+        sheet2.write(4,i+1,venue,style_head)
+        i=i+1
+    items = ItemList.objects.all()
+    sheet1.col(1).width=int(0.87/0.18*255*10) 
+    sheet2.col(1).width=int(0.87/0.18*255*10) 
+    i=0
+    for item in items:
+        sheet1.row(i+5).height=int(255*2.5)
+        sheet1.write(i+5,1,item.name,style_head)
+        sheet2.row(i+5).height=int(255*2.5)
+        sheet2.write(i+5,1,item.name,style_head)
+        i=i+1
+    for i in (2,3,9,12,15):
+        sheet1.col(i+1).width=int(0.87/0.18*255*5.3)
+        sheet2.col(i+1).width=int(0.87/0.18*255*5.3)
+    '''=0
+    for ven in VENUE_CHOICES:
+        i=0
+        venue=ven[0]
+        rounds = EventRound.objects.filter(start_date=date_str,venue=venue)
+        for rounder in rounds:
+            items = rounder.facilitiesobject_set.all()
+            print items
+        for rounder in rounds:
+            sheet1.write(i+5,j+2,rounder.name,style_body)
+            i=i+1
+        j=j+1'''
+    i=0
+    j=0
+    a=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    b=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    c=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    d=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    i=0
+    for item in items:        
+        j=0
+        print item.name
+        for ven in VENUE_CHOICES:
+            rounds = EventRound.objects.filter(start_date=date_str,venue=venue)
+            venue=ven[0]
+            print venue
+            all_obj = FacilitiesObject.objects.filter(name=item)
+            for obj in all_obj:
+                rounder=obj.event_round
+                print rounder.name
+                if rounder in rounds:
+                    if rounder.start_hour<13:
+                        a[i][j]=a[i][j]+obj.quantity 
+                        if rounder.end_hour<13:
+                            b[i][j]=b[i][j]+obj.quantity*obj.rec_fac
+                        else:
+                            d[i][j]=d[i][j]+obj.quantity*obj.rec_fac
+                    else:
+                        c[i][j]=c[i][j]+obj.quantity
+                        d[i][j]=d[i][j]+obj.quantity*obj.rec_fac
+            sheet1.write(i+5,j+2,a[i][j],style_body)
+            sheet2.write(i+5,j+2,b[i][j],style_body)
+            j=j+1
+        i=i+1
+    book.save(response)
+    return response
+
+    
+
 
     

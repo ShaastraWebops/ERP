@@ -15,6 +15,7 @@ from erp.facilities.forms import *
 from settings import SITE_URL
 from pdfGeneratingViews import generateOverallPDF
 from pdfGeneratingViews import generateEventPDF
+from erp.facilities.models import DATE_CHOICES
 
 def test(request):
     facilities_tab = True
@@ -152,7 +153,8 @@ def portal(request,roundno):
     return render_to_response('facilities/portal.html',locals(),context_instance=global_context(request))
 
 def approval_portal(request):
-    curr_user = request.user
+    date_list=[]
+    date_list=range(5,len(DATE_CHOICES)+5)
     page_owner = get_page_owner (request, owner_name=request.user)
     curr_userprofile=userprofile.objects.get(user=request.user)
     department = page_owner.get_profile ().department
@@ -273,6 +275,8 @@ def approve_event(request,round_id,form_saved=0,error=0):
         editable = 1
     if request.user.username == "ce10b084":
         editable = 1
+    if request.user.username == "ee11b075":
+        editable = 1
     if curr_userprofile.department.id==57:
         editable = 1
         
@@ -386,132 +390,7 @@ def submit_approval(request,item_id):
     return HttpResponseRedirect(SITE_URL + 'erp/facilities/approve_event/%d/%d/%d/'%(item.creator.department.id,form_saved,error))
 '''
 
-def create_items(request):
-    facilities_tab = True
-    ga_items=['Projector-HD','Projector-Normal','Projector Screen-Standard','Table-Iron','Table-Stainless Steel','Table-Wooden',
-              'Tablecloth','Chairs-Normal','Chairs-Judges','Bouquet','White Board','Water Bottles (500ml)',
-              'Barricades','Hockey Cones','Pedestal Fans','Extension Cords','Spike Buster- 5 Amp','Spike Buster- 15 Amp',
-              'Other-GA/PA Materials','Water Bottles','Bubble Cans']  
-    materials_items=['Pen','Buzzer','Stopwatch','Whistle','Pencil','Eraser','Sharpner','Marker-Permanent',
-                           'Marker-Whiteboard(Black)','Marker-Whiteboard (Red)','Marker-Whiteboard (Blue)','Marker-Whiteboard(Green)',
-                           'Marker-OHP','Tape-Cello Tape','Tape-Duct Tape','Tape-Double Sided Tape','Tape-Electrical Insulation Tape',
-                           'Measuring Tape','Penknife','Scissors','A4 Sheets','Chalk','Stapler','Stapler Pins','Notepad',
-                           'Folders-Stick File','Folder-Box Folder','Rubber Bands','Stamp pad','OHP Sheets'] 
-    pa_items = ['Mikes-Normal','Mikes-Cordless','Mikes-Collar','Speaker-Normal','Speaker-Amplifier']
-    dept = Department.objects.get(id=57)
-    for i in ga_items:
-        try :
-            ItemList.objects.get(name=str(i))
-            print "kl"
-        except:
-            print "as"
-            a=ItemList()
-            a.name=str(i)
-            print a.name
-            a.department=dept
-            
-            a.save()
-    for i in materials_items:
-        try :
-            ItemList.objects.get(name=str(i))
-            print "kl"
-        except:
-            print "as"
-            a=ItemList()
-            a.name=str(i)
-            print a.name
-            a.department=dept
-            a.save()
-    for i in pa_items:
-        try :
-            ItemList.objects.get(name=str(i))
-            print "kl"
-        except:
-            print "as"
-            a=ItemList()
-            a.name=str(i)
-            print a.name
-            a.department=dept
-            a.save()
-    equipment_items = ['Computers-Laptop','Computers-Desktop','Software-(In description)','Configuration-(In Description)',
-                       'WiFi-(1 or more for yes,0 for no)','LAN Cable']
-    dept = Department.objects.get(id=59)
-    for i in equipment_items:
-        try :
-            ItemList.objects.get(name=str(i))
-            print "kl"
-        except:
-            print "as"
-            a=ItemList()
-            a.name=str(i)
-            print a.name
-            a.department=dept
-            a.save()
-    other_items = ['Special-CD/DVD','Special-Weighing Machine','Special-Hacksaw Blade','Special-Chalkpowder (No. of Boxes)',
-                   'Special-Rope,Nylon( Length(m) in description)','Special-Rope-Jute( Length(m) in description)',
-                   'Special-Fire Extinguishers','Special-First Aid Box','Special-Screwdriver/Tester',
-                   'Special-Router-Normal','Special-Router-Wifi','Special-Other,Misc ( Specify in description )']
-    dept = Department.objects.get(id=58)
-    for i in other_items:
-        try :
-            ItemList.objects.get(name=str(i))
-            print "why"
-        except:
-            print "you"
-            a=ItemList()
-            a.name=str(i)
-            print a.name
-            a.department=dept
-            a.save()
-    itemlist=ItemList.objects.all()
-    return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))  
-
-def create_rounds(request):
-    departments = Department.objects.filter(is_event=True)
-    itemlist=ItemList.objects.all()
-    new_list =[]
-    for department in departments:
-    
-        try :
-            print "c"
-            exist = EventRound.objects.get(department=department,number=1)
-            print "x"
-            allround = EventRound.objects.filter(department=department).order_by('-number')
-            print allround[0].number
-            e=EventRound()
-            e.number = allround[0].number + 1
-            e.department=department
-            e.name = "Round " + str(e.number)
-            e.save()
-            new_list.append(e)
-            print "f"
-        except:
-            print "b"
-            e=EventRound()
-            e.number=1
-            e.department=department 
-            e.name = "Round " + str(e.number)
-            new_list.append(e)
-            e.save()
-    print "Round Generation Complete "
-    for rounder in new_list:
-        print rounder.department
-        print "\n\n"
-        for item in itemlist:
-            fac_obj=FacilitiesObject(department=rounder.department,event_round=rounder,name=item)
-            fac_obj.save()
-            print item.name
-    '''for rounder in EventRound.objects.filter(id=1):
-        print rounder.department
-        print "\n\n"
-        for item in itemlist:
-            fac_obj=FacilitiesObject(department=rounder.department,event_round=rounder,name=item)
-            fac_obj.save()
-            print item.name'''
-    return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))  
-
-    
-        
+       
         
     
     
