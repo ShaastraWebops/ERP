@@ -283,6 +283,8 @@ def approve_event(request,round_id,form_saved=0,error=0):
         editable = 1
     if curr_userprofile.department.id == dept.id:
         event_editable=1
+    if curr_userprofile.department.Dept_Name =="QMS":
+        event_editable=1
         
     form_saved
     if request.method == "POST":
