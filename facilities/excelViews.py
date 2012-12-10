@@ -227,21 +227,21 @@ def optimize_excel(request,day_number):
                 print "foo"
                 number=obj.name.id-1
                 a[number][i]=a[number][i]+obj.quantity
-                b[number][i]=b[number][i]+obj.quantity*obj.rec_fac
+                b[number][i]=b[number][i]+int(obj.quantity*obj.rec_fac)
         for rounder in second_rounds:
             objs=rounder.facilitiesobject_set.exclude(quantity=0)
             for obj in objs:
                 print "bar"
                 number=obj.name.id-1
                 a[number][i]=a[number][i]+obj.quantity
-                d[number][i]=d[number][i]+obj.quantity*obj.rec_fac
+                d[number][i]=d[number][i]+int(obj.quantity*obj.rec_fac)
         for rounder in third_rounds:
             objs=rounder.facilitiesobject_set.exclude(quantity=0)
             for obj in objs:
                 print "lot"
                 number=obj.name.id-1
                 c[number][i]=c[number][i]+obj.quantity
-                d[number][i]=d[number][i]+obj.quantity*obj.rec_fac  
+                d[number][i]=d[number][i]+int(obj.quantity*obj.rec_fac)
         i=i+1
     i=0
     j=0

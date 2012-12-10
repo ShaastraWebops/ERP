@@ -169,7 +169,7 @@ def use_data(request):
             continue
         print row[0]
         e=EventRound()
-        e.description = "Location - " + row[1] +" ; Venue - " + row[2]
+        e.description = "Round - " + row[1] +" ; Venue - " + row[2]
         try :
             print "c"
             exist = EventRound.objects.get(department=department,number=1)
@@ -178,7 +178,7 @@ def use_data(request):
             print allround[0].number
             e.number = allround[0].number + 1
             e.department=department
-            if row[1] is null:
+            if row[1] is not '':
                 e.name = "Round " + str(e.number)
             else:
                 e.name = row[1]
@@ -188,7 +188,7 @@ def use_data(request):
             print "b"
             e.number=1
             e.department=department 
-            if row[1] is null:
+            if row[1] is not '':
                 e.name = "Round " + str(e.number)
             else:
                 e.name = row[1]
