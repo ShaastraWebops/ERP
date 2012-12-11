@@ -1,0 +1,72 @@
+{% extends "base_portal.html" %}
+
+{% block title %}
+
+{{ block.super }}
+Department Portal | {{ po_dept_name }}
+{% endblock title %}
+
+{% block content-heading %}
+<div class="content-heading">
+    <h1>Portal - {{ po_dept_name }} Department </h1>
+</div>
+{% endblock content-heading %}
+
+{% block tabs %}
+
+<div class="tabbable span8">
+   {% include "prizes/prize_table.html" %}
+{% load dajaxice_templatetags %}
+{% dajaxice_js_import %}	
+<form method="post" action="/">
+{% csrf_token %}
+Name
+<input id="name1" type="text" /> <br>
+Position
+<input id="position1" type="text" /><br>
+Other details
+<input id="details1" type="text" /><br>
+<button id ="submit" type="button" class = "btn btn-inverse" onclick="prize(id=1);">Submit</button>
+</form>
+<form method="post" action="/">
+{% csrf_token %}
+Name
+<input id="name2" type="text" /> <br>
+Position
+<input id="position2" type="text" /><br>
+Other details
+<input id="details2" type="text" /><br>
+<button id ="submit" type="button" class = "btn btn-inverse" onclick="prize(id=2);">Submit</button>
+</form>
+</div>
+
+{% endblock tabs %}
+    
+{% block javascript %}
+{{ block.super }}
+
+
+<script type="text/javascript">
+			function prize(id) {
+			    name='#name'+id; position='#position'+id; details='#details'+id;
+			    name=$(name).val()
+			    position=$(position).val()
+			    details=$(details).val()
+				Dajaxice.prizes.submit(Dajax.process,{
+					'name' : name,
+                    'position' : position,
+                    'details' : details,
+   				});
+			}
+
+        </script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_department");
+    var e = document.getElementById("li_department_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+{% endblock javascript%}

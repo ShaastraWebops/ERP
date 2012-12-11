@@ -5,6 +5,9 @@
 <li id="li_department">
     <a href="{% url tasks.views.display_department_portal owner_name=user %}"><i class="icon-bullhorn" id="li_department_icon"></i> Department </a>
 </li>
+<li id="li_prize">
+   <a href="{% url prizes.views.prize_details owner_name=user %}"> Prize details</a>
+</li>
 <li id="li_contact">
     <a href="{% url dashboard.views.display_contacts owner_name=user%}"><i class="icon-th-list" id="li_contact_icon"></i> Contact Details </a>
 </li>
