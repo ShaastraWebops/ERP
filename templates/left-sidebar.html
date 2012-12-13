@@ -8,6 +8,9 @@
 <li id="li_prize">
    <a href="{% url prizes.views.prize_details owner_name=user %}"> Prize details</a>
 </li>
+<li id="li_prize_assign">
+   <a href="{% url prizes.views.prize_assign owner_name=user %}"> Assign Prizes</a>
+</li>
 <li id="li_contact">
     <a href="{% url dashboard.views.display_contacts owner_name=user%}"><i class="icon-th-list" id="li_contact_icon"></i> Contact Details </a>
 </li>
