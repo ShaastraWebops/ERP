@@ -227,11 +227,11 @@ def optimize_excel(request,day_number):
         sheet3.col(i+1).width=int(0.87/0.18*255*5.3)
         sheet4.col(i+1).width=int(0.87/0.18*255*5.3)
     
-    i=0
     a=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
     b=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
     c=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
     d=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    i=0
     for ven in VENUE_CHOICES:
         venue=ven[0]
         print venue
@@ -246,6 +246,12 @@ def optimize_excel(request,day_number):
             for obj in objs:
                 print "foo"
                 number=obj.name.id-1
+                
+                print len(VENUE_CHOICES)
+                print len(items)
+                print number
+                print i
+                print "\n\n\n"
                 a[number][i]=a[number][i]+obj.quantity
                 b[number][i]=b[number][i]+int(obj.quantity*obj.rec_fac)
         for rounder in second_rounds:
@@ -253,6 +259,11 @@ def optimize_excel(request,day_number):
             for obj in objs:
                 print "bar"
                 number=obj.name.id-1
+                print len(VENUE_CHOICES)
+                print len(items)
+                print number
+                print i
+                print "\n\n\n"
                 a[number][i]=a[number][i]+obj.quantity
                 d[number][i]=d[number][i]+int(obj.quantity*obj.rec_fac)
         for rounder in third_rounds:
@@ -260,6 +271,11 @@ def optimize_excel(request,day_number):
             for obj in objs:
                 print "lot"
                 number=obj.name.id-1
+                print len(VENUE_CHOICES)
+                print len(items)
+                print number
+                print i
+                print "\n\n\n"
                 c[number][i]=c[number][i]+obj.quantity
                 d[number][i]=d[number][i]+int(obj.quantity*obj.rec_fac)
         i=i+1
