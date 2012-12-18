@@ -45,4 +45,15 @@ class Permission(models.Model):
 class Deadline(models.Model):
     budget_portal_deadline=models.DateTimeField()
     
-               
+'''   
+class Reimb(models.Model):
+    given_amount=models.FloatField()
+    balance_amount=models.FloatField()
+    department=models.ForeignKey(Department)
+'''    
+class Bill(models.Model):
+    number=models.CharField(max_length=20)
+    detail=models.TextField(blank=True)
+    vendor=models.TextField(blank=True)
+    amount=models.FloatField()
+    department=models.ForeignKey(Department)

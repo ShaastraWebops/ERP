@@ -904,3 +904,83 @@ def submit(request, event):
                     return HttpResponseRedirect(reverse('erp.finance.views.budget_portal', kwargs={'plan': 'budget',}))
     else:
         raise Http404
+         
+def reimb(request):
+    feedback_tab=True
+    finance_core=False
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    page_owner = get_page_owner (request, owner_name=request.user)
+    qms_dept=False
+    events_core=False
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
+    #To display Add Tasks and Feedback options
+    if is_core(request.user):
+        is_core1=True
+        is_visitor1=False  
+        if str(department) == "QMS":
+            qms_core=True
+            qms_dept=True
+        if str(department) == "Finance":
+            finance_core=True    
+
+    if is_supercoord(request.user):
+        user_supercoord=True
+        if str(department) == "QMS":
+            qms_supercoord=True
+            qms_dept=True             
+    
+    if is_coord(request.user):
+        user_coord=True
+        if str(department) == "QMS":
+            qms_coord=True
+            qms_dept=True 
+    event_coord=False
+    if (department.is_event):
+        if user_coord:
+            event_coord=True       
+            items = Item.objects.filter(department=department)        
+            plan_finance=Budget.objects.get(name='F',department=department)
+            requests=Request.objects.filter(department=department)
+            balance_amount=0
+            for request1 in requests:
+                balance_amount+=request1.balance_amount
+            given_amount=plan_finance.total_amount - balance_amount
+            extra=1
+            BillFormset=modelformset_factory(Bill,fields=('number','detail','vendor','amount'),extra=extra, can_delete=True)
+            qset=Bill.objects.filter(department=department)
+            if request.method== 'POST':
+                error=False
+                form_saved=False
+                billformset=BillFormset(request.POST, queryset=qset)
+                if billformset.is_valid():
+                    for form in billformset.forms:
+                        form_saved=True
+                        if form.has_changed():
+                            if not form in billformset.deleted_forms:
+                                form_instance=form.save(commit=False)
+                                form_instance.department=department
+                                form_instance.save()
+                            else:
+                                if Bill.objects.filter(id=form.instance.id):
+                                    current_bill=Bill.objects.filter(id=form.instance.id)
+                                    current_bill.delete()
+                    if 'add_more_bills' in request.POST:
+                        extra=2
+                else:
+                    error=True
+            BillFormset=modelformset_factory(Bill,fields=('number','detail','vendor','amount'),extra=extra, can_delete=True)
+            qset=Bill.objects.filter(department=department)
+            billformset=BillFormset(queryset=qset)
+                                    
+    return render_to_response('finance/reimbursement_portal.html',locals(),context_instance=global_context(request))

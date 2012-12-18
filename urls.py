@@ -53,7 +53,7 @@ urlpatterns = patterns('',
     (r'^erp/forgot_password/$', 'erp.home.views.forgot_password'),
     #(r'^loaddata/$', 'erp.dashboard.views.load_data'), #used to load test data into db.
     
-    (r'^erp/media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
+    (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
     
     #(r'^now/sign.html$', sign_in, ),
     # Examples:
