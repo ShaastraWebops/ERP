@@ -946,6 +946,13 @@ def reimb(request):
             qms_coord=True
             qms_dept=True 
     event_coord=False
+    
+    open_reimb_portal=OpenReimbPortal.objects.all()
+    if not open_reimb_portal:
+        open_reimb_portal1=OpenReimbPortal(opened=False)
+        open_reimb_portal1.save()
+        
+    open_reimb_portal=OpenReimbPortal.objects.get(id=1)
     if (department.is_event):
         if user_coord:
             event_coord=True       
@@ -957,15 +964,26 @@ def reimb(request):
                 balance_amount+=request1.balance_amount
             given_amount=plan_finance.total_amount - balance_amount
             extra=1
+            bills=Bill.objects.filter(department=department)
             BillFormset=modelformset_factory(Bill,fields=('number','detail','vendor','amount'),extra=extra, can_delete=True)
             qset=Bill.objects.filter(department=department)
+            reimbs=Reimb.objects.filter(department=department)
+            if not reimbs:
+                reimb_instance=Reimb(amount=0,department=department)
+                reimb_instance.save()
+            curr_reimb_instance=Reimb.objects.get(department=department)
+            reimb_instance=Reimb.objects.get(department=department)
             if request.method== 'POST':
-                error=False
-                form_saved=False
+                error1=False
+                form_saved1=False
+                error2=False
+                form_saved2=False
+
+                reimbform=ReimbForm(request.POST, instance=curr_reimb_instance)
                 billformset=BillFormset(request.POST, queryset=qset)
                 if billformset.is_valid():
                     for form in billformset.forms:
-                        form_saved=True
+                        form_saved1=True
                         if form.has_changed():
                             if not form in billformset.deleted_forms:
                                 form_instance=form.save(commit=False)
@@ -978,9 +996,162 @@ def reimb(request):
                     if 'add_more_bills' in request.POST:
                         extra=2
                 else:
-                    error=True
+                    error1=True
+                if reimbform.is_valid():
+                    form_saved2=True
+                    reimbform1=reimbform.save(commit=False)
+                    reimbform1.department=department
+                    reimbform1.save()
+                else:
+                    error2=True
             BillFormset=modelformset_factory(Bill,fields=('number','detail','vendor','amount'),extra=extra, can_delete=True)
             qset=Bill.objects.filter(department=department)
             billformset=BillFormset(queryset=qset)
-                                    
+            curr_reimb_instance=Reimb.objects.get(department=department)
+            reimbform=ReimbForm(instance=curr_reimb_instance)
+            
+    if str(department) == "Finance":
+        finance=True
+        has_perms = False
+        departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+        finance_coords=Permission.objects.all()
+        for eachcoord in finance_coords:
+            if curr_userprofile.name == eachcoord.coord:        
+                if eachcoord.budget_sanction==True:
+                    has_perms = True
+              
+        if is_core(request.user):
+            has_perms=True
+            
+        if has_perms:
+            reimbs1=Reimb.objects.all().order_by('department')
+            
+    if qms_dept:
+        departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+        
+        
+    if finance_core:
+        if request.method=='POST':
+            if 'open_portal' in request.POST:
+                if open_reimb_portal.opened:
+                    open_reimb_portal.opened=False
+                    open_reimb_portal.save()
+                    
+                else:
+                    open_reimb_portal.opened=True
+                    open_reimb_portal.save() 
+                     
     return render_to_response('finance/reimbursement_portal.html',locals(),context_instance=global_context(request))
+    
+    
+def reimb_finance(request,dept_id):
+    feedback_tab=True
+    finance_core=False
+    curr_userprofile=userprofile.objects.get(user=request.user)
+    page_owner = get_page_owner (request, owner_name=request.user)
+    qms_dept=False
+    events_core=False
+    #Get Department Members' image thumbnails
+    department = page_owner.get_profile ().department      
+    dept_cores_list = User.objects.filter (
+        groups__name = 'Cores',
+        userprofile__department = department)
+    dept_supercoords_list = User.objects.filter (
+        groups__name = 'Supercoords',
+        userprofile__department = department)
+    dept_coords_list = User.objects.filter (
+        groups__name = 'Coords',
+        userprofile__department = department)
+
+    #To display Add Tasks and Feedback options
+    if is_core(request.user):
+        is_core1=True
+        is_visitor1=False  
+        if str(department) == "QMS":
+            qms_core=True
+            qms_dept=True
+        if str(department) == "Finance":
+            finance_core=True    
+
+    if is_supercoord(request.user):
+        user_supercoord=True
+        if str(department) == "QMS":
+            qms_supercoord=True
+            qms_dept=True             
+    
+    if is_coord(request.user):
+        user_coord=True
+        if str(department) == "QMS":
+            qms_coord=True
+            qms_dept=True 
+    event_coord=False
+    
+    open_reimb_portal=OpenReimbPortal.objects.get(id=1)
+    if str(department) == "Finance":
+        finance=True
+        has_perms = False
+        departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+        finance_coords=Permission.objects.all()
+        for eachcoord in finance_coords:
+            if curr_userprofile.name == eachcoord.coord:        
+                if eachcoord.budget_sanction==True:
+                    has_perms = True
+          
+        if is_core(request.user):
+            has_perms=True
+        
+        if has_perms:
+            event_department=Department.objects.get(id=dept_id)
+            plan_finance=Budget.objects.get(name='F',department=event_department)
+            departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+            requests=Request.objects.filter(department=event_department)
+            balance_amount=0
+            for request1 in requests:
+                balance_amount+=request1.balance_amount
+            given_amount=plan_finance.total_amount - balance_amount
+            error=False
+            form_saved=False
+            
+            bills=Bill.objects.filter(department=event_department)
+            reimb_instance=Reimb.objects.get(department=event_department)
+            items = Item.objects.filter(department=event_department)        
+            
+            curr_reimb=Reimb.objects.get(department=event_department)
+            reimbform1=ReimbForm1(instance=curr_reimb)
+            if request.method=="POST":
+                reimbform1=ReimbForm1(request.POST, instance=curr_reimb)
+                if reimbform1.is_valid():
+                    form_saved=True
+                    reimbform1.save()
+                else:
+                    error=True
+                    
+        if not has_perms:
+            event_department=Department.objects.get(id=dept_id)
+            plan_finance=Budget.objects.get(name='F',department=event_department)
+            departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+            requests=Request.objects.filter(department=event_department)
+            balance_amount=0
+            for request1 in requests:
+                balance_amount+=request1.balance_amount
+            given_amount=plan_finance.total_amount - balance_amount
+            bills=Bill.objects.filter(department=event_department)
+            reimb_instance=Reimb.objects.get(department=event_department)
+            items = Item.objects.filter(department=event_department)        
+            curr_reimb=Reimb.objects.get(department=event_department)
+            
+    if qms_dept:
+        event_department=Department.objects.get(id=dept_id)
+        plan_finance=Budget.objects.get(name='F',department=event_department)
+        departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+        requests=Request.objects.filter(department=event_department)
+        balance_amount=0
+        for request1 in requests:
+            balance_amount+=request1.balance_amount
+        given_amount=plan_finance.total_amount - balance_amount
+        bills=Bill.objects.filter(department=event_department)
+        reimb_instance=Reimb.objects.get(department=event_department)
+        items = Item.objects.filter(department=event_department)        
+        curr_reimb=Reimb.objects.get(department=event_department)
+            
+    return render_to_response('finance/reimbursement_portal_finance.html',locals(),context_instance=global_context(request))

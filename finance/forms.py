@@ -10,6 +10,16 @@ class BudgetClaimForm(ModelForm):
 		fields=('comment',)
         #widgets={'name':chosenforms.widgets.ChosenSelect()}
         
+class ReimbForm(ModelForm):
+    class Meta:
+        model=Reimb
+        fields=('amount',)
+        
+class ReimbForm1(ModelForm):
+    class Meta:
+        model=Reimb
+        fields=('status','comment',)
+        
 class PermissionForm(ModelForm):
     class Meta:
         model = Permission

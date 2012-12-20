@@ -3,6 +3,13 @@ from erp.department.models import Department
 from erp.users.models import userprofile
 # Create your models here.
 
+STAT_CHOICES=(
+('Y','Paid'),
+('N','Pending Approval'),
+)
+
+DEFAULT_CHOICE='N'
+
 class Budget(models.Model):
     name = models.CharField(max_length=1)
     total_amount = models.FloatField(blank=True,null=True)
@@ -44,16 +51,19 @@ class Permission(models.Model):
     
 class Deadline(models.Model):
     budget_portal_deadline=models.DateTimeField()
-    
-'''   
+       
 class Reimb(models.Model):
-    given_amount=models.FloatField()
-    balance_amount=models.FloatField()
+    amount=models.FloatField()
+    status=models.CharField(max_length=1, choices=STAT_CHOICES, default=DEFAULT_CHOICE)
+    comment=models.TextField(blank=True)
     department=models.ForeignKey(Department)
-'''    
+
 class Bill(models.Model):
     number=models.CharField(max_length=20)
     detail=models.TextField(blank=True)
     vendor=models.TextField(blank=True)
     amount=models.FloatField()
     department=models.ForeignKey(Department)
+    
+class OpenReimbPortal(models.Model):
+    opened=models.BooleanField(default=False)

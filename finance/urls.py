@@ -10,6 +10,7 @@ urlpatterns=patterns('erp.finance.views',
     (r'^perms/$','permissions'),
     (r'^advance/(?P<dept>\d+)$','advance'), 
     (r'^reimbursement/$','reimb'),
+    (r'^reimbursement/(?P<dept_id>\d+)$','reimb_finance'),
     (r'^read/(?P<request_id>\d+)$','read'),        
 	(r'^(?P<plan>\w+)/$','budget_portal'),
 

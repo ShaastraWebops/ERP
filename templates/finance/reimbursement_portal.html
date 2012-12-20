@@ -12,7 +12,18 @@
     </li>
     </ul>
     <hr>
-    {% if event_coord %}
+{% if event_coord %}
+
+{% if open_reimb_portal.opened %}
+    <div class="well">
+    {% if open_reimb_portal.opened %}
+    <h4>The Reimbursement Portal is CURRENTLY OPENED for the Event Coordinators to submit their bills and to claim their Reimbursement</h4>
+    </br>
+    {% else %}
+    <h4>The Reimbursement Portal is CURRENTLY CLOSED for the Event Coordinators</h4>
+    </br>
+    {% endif %}
+    </div>
     <h4>Total Budget Sanctioned: {{plan_finance.total_amount}}</h4>
     <div class="accordian-heading pull-right">
     <a data-toggle="collapse" href="#plan"><h4>View Event Budget</h4></a>
@@ -70,6 +81,7 @@
     <tr>
     </tbody>
     </table>
+    <h4>Total Amount to be Riembursed: {{reimbform}}</h4>
     <div class="pull-right">
     <input type='submit' value="Save and Add More Bills" class="btn btn-info" name="add_more_bills" />
     </div>
@@ -79,14 +91,14 @@
     </form>
     </br>
     </br>
-    {% if form_saved %}
+    {% if form_saved1 and form_saved2 %}
         <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert">×</button>
 	    Saved Successfully    
 	    </div>
     {% endif %}
     
-    {% if error %}
+    {% if error1 or error2 %}
         <div class="alert">
         <button type="button" class="close" data-dismiss="alert">×</button>
 	    <strong>Error</strong>
@@ -94,5 +106,127 @@
 	    </div>
     {% endif %}
     
-   {% endif %}
+    
+{% endif %}
+
+{% if not open_reimb_portal.opened %}
+    <div class="well">
+    {% if open_reimb_portal.opened %}
+    <h4>The Reimbursement Portal is CURRENTLY OPENED for the Event Coordinators to submit their bills and to claim their Reimbursement</h4>
+    </br>
+    {% else %}
+    <h4>The Reimbursement Portal is CURRENTLY CLOSED for the Event Coordinators</h4>
+    </br>
+    {% endif %}
+    </div>
+
+ <h4>Total Budget Sanctioned: {{plan_finance.total_amount}}</h4>
+    
+    <div class="accordian-heading pull-left">
+    <a data-toggle="collapse" href="#plan"><h4>View Event Budget </h4></a>
+    </div>
+    <div id="plan" class="accordian-body collapse">
+    </br>
+    <table class="table table-striped table-bordered table-condensed pull-left">
+        <thead>
+	    	<tr>
+	    	<th>Items Name</th>
+	    	<th>Description</th>
+	    	<th>Quantity</th>
+	    	<th>Amount</th>	
+           	</tr>
+        </thead>
+        <tbody>
+        {% for item in items %}	
+            {% ifequal item.budget plan_finance %}
+        		<tr>
+	    		<td>{{item.name}}</td>
+	    		<td>{{item.description}}</td>
+	    		<td>{{item.quantity}}</td>
+	    		<td>{{item.original_amount}}</td>
+                </tr>
+            {% endifequal %}			
+        {% endfor %}
+        </tbody>
+    </table>	
+    <h5>comments:</h5> <p>{{plan_finance.comment}}</p>    
+    </div>
+    
+    </br>
+    <h4>Total Amount Given so far: {{given_amount}}</h4>
+    <h4>Balance Amount left: {{balance_amount}}</h4></br>
+    <div class="accordian-heading pull-left">
+    <a data-toggle="collapse" href="#reimb_detail"><h4>View Event's Reimbursement Claim </h4></a>
+    </div>
+    <div id="reimb_detail" class="accordian-body collapse">
+    </br>
+    <table class="table table-condensed table-bordered">
+    <thead>
+    <th>Bill Number</th>
+    <th>Details</th>
+    <th>Vendor</th>
+    <th>Amount</th>
+    </thead>
+    <tbody>
+    {% for bill in bills %}
+    <tr>
+    <td>{{bill.number}}</td>
+    <td>{{bill.detail}}</td>
+    <td>{{bill.vendor}}</td>
+    <td>{{bill.amount}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    </div>
+    </br>
+    <h4>Total Amount to be Reimbursed: {{reimb_instance.amount}}</h4></br>
+    <b style="font-size:14px;">Status:</b>
+    {% if reimb_instance.status == "Y" %}
+	<td><span class="label label-success">Paid</span></td>
+	{% endif %}
+	{% if reimb_instance.status == "N" %}
+	<td><span class="label label-important">Pending Approval</span></td>
+	{% endif %}
+	</br>
+    <b style="font-size:14px;">Finance Department's Comment: </b>{{reimb_instance.comment}}
+
+
+{% endif %}   
+{% endif %}
+
+{% if finance or qms_dept %}
+{% for dept in departments %}
+<a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
+{% endfor %}
+<hr>
+<div class="well">
+    {% if open_reimb_portal.opened %}
+    <h4>The Reimbursement Portal is CURRENTLY OPENED for the Event Coordinators to submit their bills and to claim their Reimbursement</h4>
+    </br>
+    {% else %}
+    <h4>The Reimbursement Portal is CURRENTLY CLOSED for the Event Coordinators</h4>
+    </br>
+    {% endif %}
+    </div>
+{% endif %}
+
+{% if finance_core %}
+<div class="label label-inverse">Finance Core Actions </div>
+<div class="well">
+<form action='' method="POST">
+{% csrf_token %}
+{% if open_reimb_portal.opened %}
+<input class="btn btn-danger " type="submit" name="open_portal" value="Close Reimbursement Portal">
+</br>Once the Reimbursement portal is closed the Event Coords can no longer edit their Bill submission and Reimbursement claim. </br>Closing the Reimbursement Portal enables the finance Coordinators with permission to Pay and Comment on the Events Reimbursement Claim.
+{% endif %}
+{% if not open_reimb_portal.opened %}
+<input class="btn btn-success " type="submit" name="open_portal" value="Open Reimbursement Portal">
+</br>This allows the Event coords to submit their bills and Claim Reimbursement for their Events.
+{% endif %}
+
+</form>
+</div>
+{% endif %}
+   
 {% endblock %}
