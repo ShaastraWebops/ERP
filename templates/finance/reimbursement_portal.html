@@ -8,7 +8,7 @@
     <a href="{% url finance.views.advance dept='0'  %}"><i class="icon-edit"></i>Advance Request</a>
     </li>
     <li class='active'>
-    <a href="{% url finance.views.reimb %}"><i class="icon-edit icon-white"></i>Reimbursement</a>
+    <a href="{% url finance.views.reimb %}"><i class="icon-ok-sign icon-white"></i>Reimbursement</a>
     </li>
     </ul>
     <hr>
@@ -18,7 +18,8 @@
     <div class="well">
     {% if open_reimb_portal.opened %}
     <h4>The Reimbursement Portal is CURRENTLY OPENED for the Event Coordinators to submit their bills and to claim their Reimbursement</h4>
-    </br>
+    <span class="pull-right label label-important"><b style="font-size:14px;"> Deadline: </b>{{reimb_deadline.deadline}}</span></br>
+    
     {% else %}
     <h4>The Reimbursement Portal is CURRENTLY CLOSED for the Event Coordinators</h4>
     </br>
@@ -196,8 +197,14 @@
 {% endif %}
 
 {% if finance or qms_dept %}
+<h6> All the events in white have Pending Approval and the events in green have been paid the reimbursement.</h6>
 {% for dept in departments %}
+
+{% if dept.Dept_Name in event_pending %}
 <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
+{% else %}
+<a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
+{% endif %}
 {% endfor %}
 <hr>
 <div class="well">
@@ -218,13 +225,18 @@
 {% csrf_token %}
 {% if open_reimb_portal.opened %}
 <input class="btn btn-danger " type="submit" name="open_portal" value="Close Reimbursement Portal">
-</br>Once the Reimbursement portal is closed the Event Coords can no longer edit their Bill submission and Reimbursement claim. </br>Closing the Reimbursement Portal enables the finance Coordinators with permission to Pay and Comment on the Events Reimbursement Claim.
+</br></br>Once the Reimbursement portal is closed the Event Coords can no longer edit their Bill submission and Reimbursement claim. </br>Closing the Reimbursement Portal enables the finance Coordinators with permission to Pay and Comment on the Events Reimbursement Claim.
 {% endif %}
 {% if not open_reimb_portal.opened %}
 <input class="btn btn-success " type="submit" name="open_portal" value="Open Reimbursement Portal">
-</br>This allows the Event coords to submit their bills and Claim Reimbursement for their Events.
+</br></br>Opening the Reimbursement portal allows the Event coordinators to submit their bills and Claim Reimbursement for their Events.
 {% endif %}
-
+<hr>
+Choose the <strong>deadline</strong> that needs to be displayed for the Event coords for their Reimbursement Claim submission.
+{{reimb_deadline_form}}
+</br>
+Format: YYYY-MM-DD hrs:min:sec</br>
+<input type="submit" class="btn btn-primary" value="Save Deadline"/>
 </form>
 </div>
 {% endif %}

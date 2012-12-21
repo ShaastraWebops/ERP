@@ -51,6 +51,9 @@ class Permission(models.Model):
     
 class Deadline(models.Model):
     budget_portal_deadline=models.DateTimeField()
+    
+class ReimbDeadline(models.Model):
+    deadline=models.DateTimeField()
        
 class Reimb(models.Model):
     amount=models.FloatField()

@@ -8,7 +8,7 @@
     <a href="{% url finance.views.advance dept='0'  %}"><i class="icon-edit"></i>Advance Request</a>
     </li>
     <li class='active'>
-    <a href="{% url finance.views.reimb %}"><i class="icon-edit icon-white"></i>Reimbursement</a>
+    <a href="{% url finance.views.reimb %}"><i class="icon-ok-sign icon-white"></i>Reimbursement</a>
     </li>
     </ul>
     <div class="pull-right">
@@ -17,13 +17,21 @@
     <hr>
 {% if has_perms %}
 {% if not open_reimb_portal.opened %}
+<h6> All the events in white have Pending Approval and the events in green have been paid the reimbursement.</h6>
     {% for dept in departments %}
-    {% ifequal dept event_department %}
-    <a class="btn btn-info" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
+{% if dept.Dept_Name in event_pending %}
+{% ifequal dept event_department %}
+    <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong>{{dept}}</strong></a>
     {% else %}
     <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
+{% endifequal %}
+{% else %}
+{% ifequal dept event_department %}
+    <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong style="font-size:15px;">{{dept}}</strong></a>
+    {% else %}
+    <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
     {% endifequal %}
-    
+{% endif %}
     {% endfor %}
     <hr>
     <div class="well">
@@ -125,15 +133,23 @@
 {% if open_reimb_portal.opened %}
 
 
-{% for dept in departments %}
-    {% ifequal dept event_department %}
-    <a class="btn btn-info" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
+<h6> All the events in white have Pending Approval and the events in green have been paid the reimbursement.</h6>
+    {% for dept in departments %}
+{% if dept.Dept_Name in event_pending %}
+{% ifequal dept event_department %}
+    <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong>{{dept}}</strong></a>
     {% else %}
     <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
+{% endifequal %}
+{% else %}
+{% ifequal dept event_department %}
+    <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong style="font-size:15px;">{{dept}}</strong></a>
+    {% else %}
+    <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
     {% endifequal %}
-    
+{% endif %}
     {% endfor %}
-    <hr>
+
     <div class="well">
     {% if open_reimb_portal.opened %}
     <h4>The Reimbursement Portal is CURRENTLY OPENED for the Event Coordinators to submit their bills and to claim their Reimbursement</h4>
@@ -219,14 +235,23 @@
 {% if finance %}
 {% if not has_perms %}
 
+   <h6> All the events in white have Pending Approval and the events in green have been paid the reimbursement.</h6>
     {% for dept in departments %}
-    {% ifequal dept event_department %}
-    <a class="btn btn-info" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
+{% if dept.Dept_Name in event_pending %}
+{% ifequal dept event_department %}
+    <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong>{{dept}}</strong></a>
     {% else %}
     <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
+{% endifequal %}
+{% else %}
+{% ifequal dept event_department %}
+    <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong style="font-size:15px;">{{dept}}</strong></a>
+    {% else %}
+    <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
     {% endifequal %}
-    
+{% endif %}
     {% endfor %}
+
     <hr>
     <div class="well">
     {% if open_reimb_portal.opened %}
@@ -312,14 +337,23 @@
 {% endif %}
     
 {% if qms_dept %}
-{% for dept in departments %}
-    {% ifequal dept event_department %}
-    <a class="btn btn-info" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
+<h6> All the events in white have Pending Approval and the events in green have been paid the reimbursement.</h6>
+    {% for dept in departments %}
+{% if dept.Dept_Name in event_pending %}
+{% ifequal dept event_department %}
+    <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong>{{dept}}</strong></a>
     {% else %}
     <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
+{% endifequal %}
+{% else %}
+{% ifequal dept event_department %}
+    <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong style="font-size:15px;">{{dept}}</strong></a>
+    {% else %}
+    <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
     {% endifequal %}
-    
+{% endif %}
     {% endfor %}
+
     <hr>
     <div class="well">
     {% if open_reimb_portal.opened %}

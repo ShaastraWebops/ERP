@@ -953,11 +953,17 @@ def reimb(request):
         open_reimb_portal1.save()
         
     open_reimb_portal=OpenReimbPortal.objects.get(id=1)
+    reimb_deadline=ReimbDeadline.objects.all()
+    if not reimb_deadline:
+        reimb_deadline=ReimbDeadline(deadline=date.today())
+        reimb_deadline.save()
+    reimb_deadline=ReimbDeadline.objects.get(id=1)
     if (department.is_event):
         if user_coord:
             event_coord=True       
             items = Item.objects.filter(department=department)        
             plan_finance=Budget.objects.get(name='F',department=department)
+            reimb_deadline=ReimbDeadline.objects.get(id=1) 
             requests=Request.objects.filter(department=department)
             balance_amount=0
             for request1 in requests:
@@ -1015,6 +1021,11 @@ def reimb(request):
         has_perms = False
         departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
         finance_coords=Permission.objects.all()
+        reimb_pending=Reimb.objects.filter(status='N')
+        reimb_paid=Reimb.objects.filter(status='Y')
+        event_pending=[]
+        for reimb_pending1 in reimb_pending:
+            event_pending.append(reimb_pending1.department.Dept_Name)
         for eachcoord in finance_coords:
             if curr_userprofile.name == eachcoord.coord:        
                 if eachcoord.budget_sanction==True:
@@ -1028,10 +1039,29 @@ def reimb(request):
             
     if qms_dept:
         departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+        reimb_pending=Reimb.objects.filter(status='N')
+        reimb_paid=Reimb.objects.filter(status='Y')
+        event_pending=[]
+        for reimb_pending1 in reimb_pending:
+            event_pending.append(reimb_pending1.department.Dept_Name)
+
         
         
     if finance_core:
+        reimb_deadline=ReimbDeadline.objects.all()
+        if not reimb_deadline:
+            reimb_deadline=ReimbDeadline(deadline=date.today())
+            reimb_deadline.save()
+        reimb_deadline=ReimbDeadline.objects.get(id=1)
+        reimb_deadline_form=ReimbDeadlineForm(instance=reimb_deadline)
         if request.method=='POST':
+            deadline_error=False
+            reimb_deadline_form=ReimbDeadlineForm(request.POST, instance=reimb_deadline)
+            if reimb_deadline_form.is_valid():
+                reimb_deadline_form.save()
+                
+            else:
+                deadline_error=True
             if 'open_portal' in request.POST:
                 if open_reimb_portal.opened:
                     open_reimb_portal.opened=False
@@ -1039,7 +1069,9 @@ def reimb(request):
                     
                 else:
                     open_reimb_portal.opened=True
-                    open_reimb_portal.save() 
+                    open_reimb_portal.save()
+        reimb_deadline=ReimbDeadline.objects.get(id=1)           
+        reimb_deadline_form=ReimbDeadlineForm(instance=reimb_deadline)  
                      
     return render_to_response('finance/reimbursement_portal.html',locals(),context_instance=global_context(request))
     
@@ -1092,6 +1124,12 @@ def reimb_finance(request,dept_id):
         has_perms = False
         departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
         finance_coords=Permission.objects.all()
+        reimb_pending=Reimb.objects.filter(status='N')
+        reimb_paid=Reimb.objects.filter(status='Y')
+        event_pending=[]
+        for reimb_pending1 in reimb_pending:
+            event_pending.append(reimb_pending1.department.Dept_Name)
+
         for eachcoord in finance_coords:
             if curr_userprofile.name == eachcoord.coord:        
                 if eachcoord.budget_sanction==True:
@@ -1126,6 +1164,12 @@ def reimb_finance(request,dept_id):
                 else:
                     error=True
                     
+            reimb_pending=Reimb.objects.filter(status='N')
+            reimb_paid=Reimb.objects.filter(status='Y')
+            event_pending=[]
+            for reimb_pending1 in reimb_pending:
+                event_pending.append(reimb_pending1.department.Dept_Name)
+                    
         if not has_perms:
             event_department=Department.objects.get(id=dept_id)
             plan_finance=Budget.objects.get(name='F',department=event_department)
@@ -1144,6 +1188,12 @@ def reimb_finance(request,dept_id):
         event_department=Department.objects.get(id=dept_id)
         plan_finance=Budget.objects.get(name='F',department=event_department)
         departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+        reimb_pending=Reimb.objects.filter(status='N')
+        reimb_paid=Reimb.objects.filter(status='Y')
+        event_pending=[]
+        for reimb_pending1 in reimb_pending:
+            event_pending.append(reimb_pending1.department.Dept_Name)
+
         requests=Request.objects.filter(department=event_department)
         balance_amount=0
         for request1 in requests:

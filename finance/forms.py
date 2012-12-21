@@ -31,5 +31,10 @@ class PermissionForm(ModelForm):
             
 class DeadlineForm(ModelForm):
     class Meta:
-        model=Deadline             
+        model=Deadline     
+        
+class ReimbDeadlineForm(ModelForm):
+    class Meta:
+        model=ReimbDeadline
+                
 		
