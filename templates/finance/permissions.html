@@ -3,7 +3,6 @@
 
 <form action="" method="POST">
 {% csrf_token %}
-
 	
 <h4>Finance coords</h4>
 {{permissionformset.management_form}}
@@ -30,22 +29,17 @@
 <input type="submit" class="btn btn-primary" value="Save Changes"/>
 </form>
 
+
 {% if perms %}
 <div class="alert alert-success">
     <button type="button" class="close" data-dismiss="alert">×</button>
 	Permissions changed    
 </div>
-
 {% endif %}
 
 {% endblock %}
 
-{% block tabs %}
-{% endblock %}
-{% block form_stuff %}
 <br>
-
-{% endblock %}
 
 {% block javascript %}
 {{ block.super }}

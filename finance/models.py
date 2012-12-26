@@ -20,9 +20,20 @@ class Item(models.Model):
     description = models.TextField(blank=True)
     comment = models.TextField(blank=True)
     original_amount = models.FloatField()
-    request_amount = models.FloatField(blank=True, null=True)
-    balance_amount = models.FloatField(blank=True, null=True)   
-    request_status = models.BooleanField(default=False)  
+    #request_amount = models.FloatField(blank=True, null=True)
+    #balance_amount = models.FloatField(blank=True, null=True)   
+    #request_status = models.BooleanField(default=False)  
+    
+class Request(models.Model):
+    request_status = models.BooleanField(default=False)
+    granted_status = models.BooleanField(default=False)
+    request_amount = models.FloatField()
+    granted_amount = models.FloatField()
+    balance_amount = models.FloatField()
+    read_status = models.BooleanField(default=False)
+    history = models.TextField() 
+    item = models.ForeignKey(Item)  
+    department = models.ForeignKey(Department)           
     
 class OpenBudgetPortal(models.Model):
     opened = models.BooleanField(default=False)

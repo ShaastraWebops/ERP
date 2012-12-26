@@ -1,0 +1,19 @@
+<table class="table">
+<tr>
+<th> Cheque No. </th>
+<th> Name </th>
+<th> Position </th>
+<th> Other details </th>
+<th> Department </th>
+</tr>
+{%for prize in prizes%}
+<tr>
+<td>{{ prize.cheque }} </td>
+<td>{{ prize.Name }} </td>
+<td>{{ prize.Position }} </td>
+<td>{{ prize.details }} </td>
+<td>{{ prize.event }} </td>
+</tr>
+{% endfor %}
+</table>
+

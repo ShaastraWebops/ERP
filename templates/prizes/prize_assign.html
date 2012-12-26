@@ -1,0 +1,78 @@
+{% extends "base_portal.html" %}
+
+{% block title %}
+
+{{ block.super }}
+Department Portal | {{ po_dept_name }}
+{% endblock title %}
+
+{% block content-heading %}
+<div class="content-heading">
+    <h1>Portal - {{ po_dept_name }} Department </h1>
+</div>
+{% endblock content-heading %}
+
+{% block tabs %}
+
+<div class="tabbable span8">       
+<div class="row">
+
+    <div class="well">
+    <center>    
+        <form method="post" action="/">
+            {% csrf_token %}
+            ID<br>
+            <input id="id" type="text" /> <br>
+            Cheque No<br>
+            <input id="serial" type="text" /><br>
+            <button id ="submit" type="button" class = "btn btn-inverse" onclick="assign();">Submit</button>
+        </form>
+    </center>
+    </div>
+
+</div>
+<br>    
+<div class="row">
+    <center>
+    <div class="">
+        <h5> To edit, simply re-enter the ID and cheque no.</h>
+    </div>
+    </center><br>
+   <div id="assign_table">
+       {% include "prizes/assign_table.html" %}
+   </div>
+
+</div>
+
+
+
+{% endblock tabs %}
+    
+{% block javascript %}
+{{ block.super }}
+
+{% load dajaxice_templatetags %}
+{% dajaxice_js_import %}	
+
+<script type="text/javascript">
+			function assign() {
+			    id='#id'; serial='#serial';
+			    id=$(id).val()
+			    serial=$(serial).val()
+			    Dajaxice.prizes.assign(Dajax.process,{
+					'id' : id,
+                    'serial' : serial,
+   				});
+			}
+
+        </script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_prize_assign");
+    var e = document.getElementById("li_prize_assign_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+{% endblock javascript%}

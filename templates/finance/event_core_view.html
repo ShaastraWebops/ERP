@@ -1,6 +1,6 @@
-{% extends "base_portal.html" %}
-{% block body %}
+{% extends "finance/finance_base_portal.html" %}
 
+{% block content %}
 
 {% if not item_exist and events_core %}
 <h4>There are no budget plans yet.</h4>
@@ -75,27 +75,5 @@
 
 {% endif %}
 
-{% endblock %}
+{% endblock %}   
 
-{% block javascript %}
-{{ block.super }}
-
-<script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function() {
-    var d = document.getElementById("li_finance");
-    var e = document.getElementById("li_finance_icon");
-    d.className = "active";
-    e.className = e.className + " icon-white";
- });
-</script>
-
-<script type="text/javascript">  //initialise django-chosen
-$(document).ready(function() {
-    $('select').chosen();
-});
-</script>
-{% endblock javascript %}
-{% block display_stuff %}
-{% endblock %}

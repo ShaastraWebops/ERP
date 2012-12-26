@@ -1,0 +1,99 @@
+{% extends "base_portal.html" %}
+{% block body %}
+
+
+<style>
+textarea{ width: 250px; height: 60px;}
+input{width:100px; height:25px;}
+</style>
+
+<h2>Facilities Portal</h2>
+<h4>Round {{roundno}}</h4><br/>
+    {% if department.is_event %}
+        <div class="pull-right">
+        <a  class="btn " href="{% url facilities.views.display roundno=roundno%}" >Display all requests</a>
+        </div>
+    <div class="pull-left">
+    <a  class="btn " href="{% url facilities.views.facilities_home %}" >Go back to Facilities Home</a>
+    </div>
+    <br/><br/><br/>
+        {% if form_saved %}
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+	        Plan saved successfully    
+	        </div>
+
+        {% endif %}
+        {% if error2 %}
+            <div class="alert">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error</strong> You cannot delete partially / fully approved requests.
+            </div>
+        {% endif %}
+        {% if error %}
+            <div class="alert">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Error</strong> Data not saved, Please check your inputs
+            </div>
+        {% endif %}
+        <br/><br/>
+
+        <form action="" method="POST">
+        {% csrf_token %}
+        <h4>Items</h4>
+        {{itemformset.management_form}}
+           <table class="table table-condensed table-striped table-bordered"> 
+	        <thead>
+	        <tr>
+		        <th>Name</th>
+		        <th>Description</th>
+		        <th>Quantity</th><th></th>
+		        <th>Delete?</th>
+	        </tr>	
+	        </thead>
+        <tbody>
+
+
+
+        <div class="budgettextarea">
+	        {% for itemform in itemformset %}
+        <tr>
+		        {% for field in itemform %}
+			        <td>{{field}}</td>
+		        {% endfor %}
+        </tr>  
+	        {% endfor%}
+        </tbody>
+        </div>
+        </table>
+        <br/><br/>
+
+        <div class="pull-right">
+        <input type="submit" class="btn btn-info" name="add_more_items" value="Save and add more items"/>
+        </div>
+        </form>
+    {% endif %}
+
+{% endblock %}
+{% block javascript %}
+{{ block.super }}
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/dynamic-formset.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_facilities");
+    var e = document.getElementById("li_facilities_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+
+<script type="text/javascript">  //initialise django-chosen
+$(document).ready(function() {
+    $('select').chosen();
+});
+</script>
+{% endblock javascript %}
+{% block display_stuff %}
+{% endblock %}
