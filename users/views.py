@@ -12,7 +12,8 @@ from erp.users.models import *
 from erp.misc.util import *
 from erp.misc.helper import *
 from erp.department.models import *
-from erp.dashboard.forms import *			
+from erp.dashboard.forms import *
+from django.forms.models import modelformset_factory			
 from django.contrib.auth.models import Group,Permission
 import sha,random,datetime
 from erp.users.forms import *
@@ -326,5 +327,14 @@ def change_password(request, owner_name=None):
                 failed=True  
         else:            
             invalid=True
-    return render_to_response('users/change_password.html', locals(), context_instance = global_context(request))            
+    return render_to_response('users/change_password.html', locals(), context_instance = global_context(request))
+    
+def testmodelformsetview(request, owner_name=None):
+    TestModelFormset = modelformset_factory(TestModel, fields=('attr_a',), extra=25)
+    if request.method == 'POST':
+        testmodelformset = TestModelFormset (request.POST)
+        if testmodelformset.is_valid ():
+            testmodelformset.save()
+    testmodelformset = TestModelFormset(queryset=TestModel.objects.none())    
+    return render_to_response('users/testmodelformset.html', locals(), context_instance = global_context(request))
 

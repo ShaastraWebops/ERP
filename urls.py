@@ -50,7 +50,7 @@ urlpatterns = patterns('',
     (r'^erp/(?P<owner_name>\w+)/dashboard/',include('erp.dashboard.urls')),	
     (r'^erp/(?P<owner_name>\w+)/', include('erp.tasks.urls')),
     (r'^erp/forgot_password/$', 'erp.home.views.forgot_password'),
-    #(r'^loaddata/$', 'erp.dashboard.views.load_data'), #used to load test data into db.
+    (r'^loaddata/$', 'erp.dashboard.views.load_data'), #used to load test data into db.
     
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
     
