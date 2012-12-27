@@ -12,4 +12,13 @@ def prize_details(request,owner_name=None):
 def prize_assign(request,owner_name=None):
     prizes=Prize.objects.filter(event=request.user.get_profile ().department)
     return render_to_response('prizes/prize_assign.html',locals(),context_instance=global_context(request))
-
+    
+    
+def testmodelformsetview(request, owner_name=None):
+    TestModelFormset = modelformset_factory(TestModel, fields=('attr_a',), extra=25)
+    if request.method == 'POST':
+        testmodelformset = TestModelFormset (request.POST)
+        if testmodelformset.is_valid ():
+            testmodelformset.save()
+    testmodelformset = TestModelFormset(queryset=TestModel.objects.none())    
+    return render_to_response('prizes/testmodelformset.html', locals(), context_instance = global_context(request))

@@ -10,7 +10,6 @@ urlpatterns = patterns('erp.users.views',
       (r'^profile/$', 'view_profile'),
       (r'^edit_profile/$', 'handle_profile'),
       (r'^change_password/$','change_password'),
-      (r'^testmodelformset/$','testmodelformsetview'),
       (r'^search/', include('haystack.urls')),
 
 )

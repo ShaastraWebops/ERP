@@ -87,11 +87,6 @@ class invitation(models.Model):
     class Admin:
 	pass
 
-class TestModel(models.Model):
-    attr_a = models.CharField(max_length=50)
-    attr_b = models.CharField(max_length=50)
-    attr_c = models.CharField(max_length=50)
-
 class userphoto(models.Model):
     name=models.ForeignKey(User)
     photo_path=models.FileField(upload_to=settings.MEDIA_ROOT)
