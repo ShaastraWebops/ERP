@@ -30,9 +30,9 @@ class Participant(models.Model):
                               help_text='Your branch of study')
     mobile_number = models.CharField(max_length=15, null=True,
             help_text='Please enter your current mobile number')
-    college = models.ForeignKey(College, null=True, blank=True)
+    college = models.CharField(max_length=100)
     college_roll = models.CharField(max_length=40, null=True)
-    registered_events = models.ManyToManyField(Event,
+    events = models.ManyToManyField(Department,
             related_name='participants', null=True)
 
 """

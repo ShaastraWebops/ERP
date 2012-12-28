@@ -3,7 +3,8 @@
 from django.shortcuts import render_to_response, redirect, HttpResponseRedirect
 from django.template.context import Context, RequestContext
 from erp.misc.util import *
-from erp.prizes.models import Prize
+from erp.prizes.models import *
+from django.forms.models import modelformset_factory
 
 def prize_details(request,owner_name=None):
     prizes=Prize.objects.filter(event=request.user.get_profile ().department).order_by('-pk')
@@ -14,11 +15,11 @@ def prize_assign(request,owner_name=None):
     return render_to_response('prizes/prize_assign.html',locals(),context_instance=global_context(request))
     
     
-def testmodelformsetview(request, owner_name=None):
-    TestModelFormset = modelformset_factory(TestModel, fields=('attr_a',), extra=25)
+def registerparticipants(request, owner_name=None):
+    ParticipantFormset = modelformset_factory(Participant, fields=('barcode',), extra=25)
     if request.method == 'POST':
-        testmodelformset = TestModelFormset (request.POST)
+        participantformset = ParticipantFormset (request.POST)
         if testmodelformset.is_valid ():
-            testmodelformset.save()
-    testmodelformset = TestModelFormset(queryset=TestModel.objects.none())    
-    return render_to_response('prizes/testmodelformset.html', locals(), context_instance = global_context(request))
+            participantformset.save()
+    participantformset = ParticipantFormset(queryset=Participant.objects.none())    
+    return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
