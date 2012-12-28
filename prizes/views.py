@@ -19,7 +19,11 @@ def registerparticipants(request, owner_name=None):
     ParticipantFormset = modelformset_factory(Participant, fields=('barcode',), extra=25)
     if request.method == 'POST':
         participantformset = ParticipantFormset (request.POST)
-        if testmodelformset.is_valid ():
-            participantformset.save()
+        if participantformset.is_valid ():
+            registered_participants = participantformset.save(commit=False)
+            for registered_participant in registered_participants:
+                for participant in Participant.objects.all():
+                    if (registered_participant == participant):
+                        participant.events.append(request.user.userprofile_set.all()[0].department);
     participantformset = ParticipantFormset(queryset=Participant.objects.none())    
     return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
