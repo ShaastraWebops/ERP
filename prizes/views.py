@@ -11,8 +11,18 @@ def prize_details(request,owner_name=None):
     return render_to_response('prizes/prize_base.html',locals(),context_instance=global_context(request))
 
 def prize_assign(request,owner_name=None):
-    prizes=Prize.objects.filter(event=request.user.get_profile ().department)
-    return render_to_response('prizes/prize_assign.html',locals(),context_instance=global_context(request))
+    WinnerFormset = modelformset_factory(Prize,exclude=('event','user','cheque'), extra=3)
+    if request.method == 'POST':
+        winnerformset = WinnerFormset (request.POST)
+        if winnerformset.is_valid ():
+            winners = winnerformset.save(commit=False)
+            for winner in winners:
+                winner.participant=Participant.objects.get(barcode=registered_participant.barcode)
+                winner.user=request.user
+                winner.save()
+    winnerList = Prize.objects.filter(event=request.user.userprofile_set.all()[0].department)
+    winnerformset = WinnerFormset(queryset=Prize.objects.none()) 
+    return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
     
     
 def registerparticipants(request, owner_name=None):

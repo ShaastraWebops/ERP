@@ -17,6 +17,9 @@
 <li id="li_files">
     <a href="{% url dashboard.views.upload_file owner_name=page_owner%}"><i class="icon-folder-close" id="li_files_icon"></i> Files </a>
 </li>
+<li id="li_files">
+    <a href="{% url prizes.views.registerparticipants owner_name=page_owner%}"><i class="icon-folder-close" id="li_files_icon"></i> Cucumber </a>
+</li>
 <li id="li_calendar">
     <a href="{% url dashboard.views.display_calendar owner_name=page_owner%}"><i class="icon-calendar" id="li_calendar_icon"></i> Calendar </a>
 </li>

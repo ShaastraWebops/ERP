@@ -8,7 +8,7 @@ class Participant(models.Model):
     """
     The participant's data.
     """
-    barcode = models.CharField(max_length=100)
+    barcode = models.CharField(max_length=100,blank=True)
     name = models.CharField(max_length=100)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES,
                               default='F')
@@ -23,7 +23,7 @@ class Participant(models.Model):
             related_name='participants', null=True)
     
     def __str__(self):
-        return self.barcode
+        return self.name
         
 class Prize(models.Model):
     """

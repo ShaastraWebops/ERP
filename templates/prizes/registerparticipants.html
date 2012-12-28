@@ -9,7 +9,7 @@
         Scan the barcodes of participants registering for the event <b>"{{ request.user.userprofile_set.all.0.department }}"</b>:<br/><br/>
         <form action="" method="POST">
         {% csrf_token %}
-        {{ participantformset.management_form }}
+        {{ winnerformset.management_form }}
         <table>
         {% for participantform in participantformset %}
             <tr><td>{{ forloop.counter }}.&emsp;</td>
