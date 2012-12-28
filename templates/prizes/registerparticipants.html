@@ -1,0 +1,57 @@
+{% extends "base_portal.html" %}
+
+{% block tabs %}
+
+<div class="tabbable span8">
+    <div class="tab-content">
+    <div class="row">
+    <div class="span5">
+        Scan the barcodes of participants registering for the event <b>"{{ request.user.userprofile_set.all.0.department }}"</b>:<br/><br/>
+        <form action="" method="POST">
+        {% csrf_token %}
+        {{ participantformset.management_form }}
+        <table>
+        {% for participantform in participantformset %}
+            <tr><td>{{ forloop.counter }}.&emsp;</td>
+            <td>
+                <table><tr>
+                {% for field in participantform.visible_fields %}
+                   <td>{{ field }}</td>
+                {% endfor %}
+                </tr></table>
+            </td></tr>
+                {% for field in participantform.hidden_fields %}
+                    {{ field }}
+                {% endfor %}
+        {% endfor %}
+        </table>
+        <br/>
+        <input type="submit" class="btn btn-primary" name="submit_continue" value="Submit and continue"/>
+        </form>
+    </div>
+    <div class="span3">
+    <h4>Registered Participants:</h4><br/><br/>
+    <table class="table">
+    <tr><th>S.No.</th><th>Name</th><th>Barcode</th></tr>
+    {% for participant in participantList %}
+    <tr><td>{{ forloop.counter }}.</td><td>{{ participant.name }}</td><td>{{ participant.barcode }}</td></tr>
+    {% endfor %}
+    </table>
+    </div>    
+    </div>
+    </div><!-- /.tab-content -->
+</div><!-- /.tabbable -->
+
+{% endblock tabs %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_dashboard");
+    var e = document.getElementById("li_dashboard_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+{% endblock javascript%}
