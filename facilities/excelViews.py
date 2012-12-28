@@ -236,8 +236,8 @@ def optimize_excel(request,day_number):
         venue=ven[0]
         print venue
         all_rounds = EventRound.objects.filter(start_date=date_str,venue=venue)
-        alter_rounds = all_rounds.filter(start_hour__lt=13)
-        first_rounds = alter_rounds.filter(end_hour__lt=13)
+        alter_rounds = all_rounds.filter(start_hour__lte=13)
+        first_rounds = alter_rounds.filter(end_hour__lte=13)
         second_rounds = alter_rounds.filter(end_hour__gt=13)
         third_rounds = all_rounds.filter(start_hour__gt=13)
         print first_rounds
@@ -246,12 +246,7 @@ def optimize_excel(request,day_number):
             for obj in objs:
                 print "foo"
                 number=obj.name.id-1
-                
-                print len(VENUE_CHOICES)
-                print len(items)
-                print number
-                print i
-                print "\n\n\n"
+               
                 a[number][i]=a[number][i]+obj.quantity
                 b[number][i]=b[number][i]+int(obj.quantity*obj.rec_fac)
         for rounder in second_rounds:
@@ -259,11 +254,7 @@ def optimize_excel(request,day_number):
             for obj in objs:
                 print "bar"
                 number=obj.name.id-1
-                print len(VENUE_CHOICES)
-                print len(items)
-                print number
-                print i
-                print "\n\n\n"
+                
                 a[number][i]=a[number][i]+obj.quantity
                 d[number][i]=d[number][i]+int(obj.quantity*obj.rec_fac)
         for rounder in third_rounds:
@@ -271,11 +262,7 @@ def optimize_excel(request,day_number):
             for obj in objs:
                 print "lot"
                 number=obj.name.id-1
-                print len(VENUE_CHOICES)
-                print len(items)
-                print number
-                print i
-                print "\n\n\n"
+                
                 c[number][i]=c[number][i]+obj.quantity
                 d[number][i]=d[number][i]+int(obj.quantity*obj.rec_fac)
         i=i+1

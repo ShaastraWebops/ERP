@@ -23,6 +23,15 @@ def create_items(request):
     pa_items = ['Mikes-Normal','Mikes-Cordless','Mikes-Collar','Speaker-Normal','Speaker-Amplifier']
     water_items=['Water Bottles','Bubble Cans']
     dept = Department.objects.get(id=57)
+    j=1
+    string=[]
+    with open('facilities/recfac.csv', 'rb') as csvfile:
+        read = csv.reader(csvfile, delimiter=',')
+        print '\n\n'   
+        for row in read:
+            string.append(row)
+    print string
+    print float(string[10][1])
     for i in ga_items:
         try :
             ItemList.objects.get(name=str(i))
@@ -32,9 +41,12 @@ def create_items(request):
             a=ItemList()
             a.name=str(i)
             print a.name
+            a.rec_fac=float(string[j][1])
+            print string[j][1]
+            print a.rec_fac
             a.department=dept
             a.target="GA"
-            
+            j=j+1
             a.save()
     for i in pa_items:
         try :
@@ -45,8 +57,12 @@ def create_items(request):
             a=ItemList()
             a.name=str(i)
             print a.name
+            a.rec_fac=float(string[j][1])
+            print float(string[j][1])
+            print a.rec_fac
             a.department=dept
             a.target="PA"
+            j=j+1
             a.save()
     for i in water_items:
         try :
@@ -57,8 +73,12 @@ def create_items(request):
             a=ItemList()
             a.name=str(i)
             print a.name
+            a.rec_fac=float(string[j][1])
+            print float(string[j][1])
+            print a.rec_fac
             a.department=dept
             a.target="Water"
+            j=j+1
             a.save()
 
     for i in materials_items:
@@ -70,8 +90,12 @@ def create_items(request):
             a=ItemList()
             a.name=str(i)
             print a.name
+            a.rec_fac=float(string[j][1])
+            print float(string[j][1])
+            print a.rec_fac
             a.department=dept
             a.target="Materials"
+            j=j+1
             a.save()
     equipment_items = ['Computers-Laptop','Computers-Desktop']
     dept = Department.objects.get(id=59)
@@ -84,8 +108,12 @@ def create_items(request):
             a=ItemList()
             a.name=str(i)
             print a.name
+            a.rec_fac=float(string[j][1])
+            print float(string[j][1])
+            print a.rec_fac
             a.department=dept
             a.target="Equipment"
+            j=j+1
             a.save()
     other_items = ['Special-CD/DVD','Special-Weighing Machine','Special-Hacksaw Blade','Special-Chalkpowder (No. of Boxes)',
                    'Special-Rope,Nylon (Length m)','Special-Rope-Jute (Length m)',
@@ -101,8 +129,12 @@ def create_items(request):
             a=ItemList()
             a.name=str(i)
             print a.name
+            a.rec_fac=float(string[j][1])
+            print float(string[j][1])
+            print a.rec_fac
             a.department=dept
             a.target="Special"
+            j=j+1
             a.save()
     itemlist=ItemList.objects.all()
     return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))  
@@ -153,7 +185,7 @@ def create_rounds(request):
 
 def use_data(request): 
     string =[]
-    with open('facilities/lrd.csv', 'rb') as csvfile:
+    with open('facilities/dryrun.csv', 'rb') as csvfile:
         read = csv.reader(csvfile, delimiter=',')
         print '\n\n'   
         for row in read:
@@ -199,7 +231,7 @@ def use_data(request):
                 number = int(row[i])
             else:
                 number=0
-            a=FacilitiesObject(department=department,event_round=e,name=item,quantity=number)
+            a=FacilitiesObject(department=department,event_round=e,name=item,quantity=number,rec_fac=item.rec_fac)
             a.save()
             i=i+1
     

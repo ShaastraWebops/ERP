@@ -34,6 +34,7 @@ class EventRound(models.Model):
 
 class ItemList(models.Model):
     name = models.CharField(max_length = 50,blank=True)
+    rec_fac = models.DecimalField(max_digits=7,decimal_places=6,default=1)
     department = models.ForeignKey(Department,null=True)
     target=models.CharField(max_length = 25,blank=True)
     def __str__(self):
