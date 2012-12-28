@@ -35,4 +35,7 @@ class Prize(models.Model):
     details = models.CharField(max_length=250)
     cheque = models.CharField(max_length=15)
     # User who is uploading the entry
-    user = models.ForeignKey(User)        
+    user = models.ForeignKey(User)  
+    
+    def __str__(self):
+        return self.participant + self.event + self.position      
