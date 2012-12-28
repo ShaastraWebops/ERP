@@ -23,6 +23,6 @@ def registerparticipants(request, owner_name=None):
             registered_participants = participantformset.save(commit=False)
             for registered_participant in registered_participants:
                 participant = Participant.objects.get(barcode=registered_participant.barcode):
-                participant.events.append(request.user.userprofile_set.all()[0].department);
+                participant.events.add(request.user.userprofile_set.all()[0].department);
     participantformset = ParticipantFormset(queryset=Participant.objects.none())    
     return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
