@@ -29,9 +29,9 @@
     <div class="span3">
     <h4>Winners:</h4><br/><br/>
     <table class="table">
-    <tr><th>S.No.</th><th>Name</th><th>Barcode</th></tr>
+    <tr><th>S.No.</th><th>Name</th><th>Position</th><th>Details</th><th>Barcode</th></tr>
     {% for winner in winnerList %}
-    <tr><td>{{ forloop.counter }}.</td><td>{{ winner.participant.name }}</td><td>{{ winner.participant.barcode }}</td></tr>
+    <tr><td>{{ forloop.counter }}.</td><td>{{ winner.participant.name }}</td><td>{{ winner.position }}</td><td>{{ winner.details }}</td><td>{{ winner.participant.barcode }}</td></tr>
     {% endfor %}
     </table>
     </div> 

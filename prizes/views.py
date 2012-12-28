@@ -7,20 +7,45 @@ from erp.prizes.models import *
 from django.forms.models import modelformset_factory
 
 def prize_details(request,owner_name=None):
-    prizes=Prize.objects.filter(event=request.user.get_profile ().department).order_by('-pk')
-    return render_to_response('prizes/prize_base.html',locals(),context_instance=global_context(request))
-
-def prize_assign(request,owner_name=None):
-    WinnerFormset = modelformset_factory(Prize,exclude=('event','user','cheque'), extra=3)
+    WinnerFormset = modelformset_factory(Prize,fields=('participant','cheque'), extra=10)
+    eventname=request.user.userprofile_set.all()[0].department
     if request.method == 'POST':
         winnerformset = WinnerFormset (request.POST)
         if winnerformset.is_valid ():
             winners = winnerformset.save(commit=False)
             for winner in winners:
-                winner.participant=Participant.objects.get(barcode=registered_participant.barcode)
-                winner.user=request.user
-                winner.save()
-    winnerList = Prize.objects.filter(event=request.user.userprofile_set.all()[0].department)
+                try:    
+                    exists=Prize.objects.get(participant=winner.participant,event=eventname)
+                    exists.user=request.user
+                    exists.cheque=winner.cheque
+                    exists.save()
+                except:
+                    winner.user=request.user
+                    winner.event=eventname
+                    winner.save()
+    winnerList = Prize.objects.filter(event=eventname)
+    winnerformset = WinnerFormset(queryset=Prize.objects.none()) 
+    return render_to_response('prizes/assign_table.html',locals(),context_instance=global_context(request))
+
+def prize_assign(request,owner_name=None):
+    WinnerFormset = modelformset_factory(Prize,exclude=('event','user','cheque'), extra=3)
+    eventname=request.user.userprofile_set.all()[0].department
+    if request.method == 'POST':
+        winnerformset = WinnerFormset (request.POST)
+        if winnerformset.is_valid ():
+            winners = winnerformset.save(commit=False)
+            for winner in winners:
+                try:    
+                    exists=Prize.objects.get(participant=winner.participant,event=eventname)
+                    exists.user=request.user
+                    exists.details=winner.details
+                    exists.position=winner.position
+                    exists.save()
+                except:
+                    winner.user=request.user
+                    winner.event=eventname
+                    winner.save()
+    winnerList = Prize.objects.filter(event=eventname)
     winnerformset = WinnerFormset(queryset=Prize.objects.none()) 
     return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
     

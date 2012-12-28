@@ -1,21 +1,53 @@
-<table class="table">
-<tr>
-<th> ID </th>
-<th> Cheque No. </th>
-<th> Name </th>
-<th> Position </th>
-<th> Other details </th>
-<th> Department </th>
-</tr>
-{%for prize in prizes%}
-<tr>
-<td>{{ prize.pk }} </td>
-<td>{{ prize.cheque }} </td>
-<td>{{ prize.Name }} </td>
-<td>{{ prize.Position }} </td>
-<td>{{ prize.details }} </td>
-<td>{{ prize.event }} </td>
-</tr>
-{% endfor %}
-</table>
+{% extends "base_portal.html" %}
 
+{% block tabs %}
+
+<div class="tabbable span8">
+    <div class="tab-content">
+    <div class="row">
+    <div class="span5">
+         Put winners da:<br/><br/>
+        <form action="" method="POST">
+        {% csrf_token %}
+        {{ winnerformset.management_form }}
+        <table>
+        {% for winnerform in winnerformset %}
+            <tr><td>{{ forloop.counter }}.&emsp;</td>
+            <td>
+          {{winnerform.as_table}}
+            </td></tr>
+                {% for field in winnerform.hidden_fields %}
+                    {{ field }}
+                {% endfor %}
+        {% endfor %}
+        </table>
+        <br/>
+        <input type="submit" class="btn btn-primary" name="submit_continue" value="Submit and continue"/>
+        </form>
+    </div>
+    </div>
+    <div class="span3">
+    <h4>Winners:</h4><br/><br/>
+    <table class="table">
+    <tr><th>S.No.</th><th>Name</th><th>Position</th><th>Cheque No</th><th>Barcode</th></tr>
+    {% for winner in winnerList %}
+    <tr><td>{{ forloop.counter }}.</td><td>{{ winner.participant.name }}</td><td>{{ winner.position }}</td><td>{{ winner.cheque }}</td><td>{{ winner.participant.barcode }}</td></tr>
+    {% endfor %}
+    </table>
+    </div> 
+    </div><!-- /.tab-content -->
+</div><!-- /.tabbable -->
+
+{% endblock tabs %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_dashboard");
+    var e = document.getElementById("li_dashboard_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+{% endblock javascript%}
