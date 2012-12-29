@@ -79,7 +79,7 @@ def generate_round_excel(request,round_id):
     for item in items:
         sheet1.write(i+8,1,item.name.name,style_body)
         sheet1.write(i+8,2,str(item.quantity),style_body)
-        sheet1.write(i+8,3,str(int(item.quantity*item.rec_fac)),style_body)
+        sheet1.write(i+8,3,str(int(item.quantity*item.name.rec_fac)),style_body)
         i=i+1
     sheet1.write(i+8,1,'',style_end)
     sheet1.write(i+8,2,'',style_end)
@@ -142,7 +142,7 @@ def generate_event_excel(request,event_id):
         for item in items:
             sheet[i].write(j+8,1,item.name.name,style_body)
             sheet[i].write(j+8,2,str(item.quantity),style_body)
-            sheet[i].write(j+8,3,str(int(item.quantity*item.rec_fac)),style_body)
+            sheet[i].write(j+8,3,str(int(item.quantity*item.name.rec_fac)),style_body)
             j=j+1
         sheet[i].write(j+8,1,'',style_end)
         sheet[i].write(j+8,2,'',style_end)
@@ -248,7 +248,7 @@ def optimize_excel(request,day_number):
                 number=obj.name.id-1
                
                 a[number][i]=a[number][i]+obj.quantity
-                b[number][i]=b[number][i]+int(obj.quantity*obj.rec_fac)
+                b[number][i]=b[number][i]+int(obj.quantity*obj.name.rec_fac)
         for rounder in second_rounds:
             objs=rounder.facilitiesobject_set.exclude(quantity=0)
             for obj in objs:
@@ -256,7 +256,7 @@ def optimize_excel(request,day_number):
                 number=obj.name.id-1
                 
                 a[number][i]=a[number][i]+obj.quantity
-                d[number][i]=d[number][i]+int(obj.quantity*obj.rec_fac)
+                d[number][i]=d[number][i]+int(obj.quantity*obj.name.rec_fac)
         for rounder in third_rounds:
             objs=rounder.facilitiesobject_set.exclude(quantity=0)
             for obj in objs:
@@ -264,7 +264,7 @@ def optimize_excel(request,day_number):
                 number=obj.name.id-1
                 
                 c[number][i]=c[number][i]+obj.quantity
-                d[number][i]=d[number][i]+int(obj.quantity*obj.rec_fac)
+                d[number][i]=d[number][i]+int(obj.quantity*obj.name.rec_fac)
         i=i+1
     i=0
     j=0

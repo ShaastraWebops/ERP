@@ -52,5 +52,4 @@ class FacilitiesObject(models.Model):
     #request_status = models.IntegerField(default=0)  
     #request_date = models.DateField(blank=True)
     #approved_by = models.CharField(max_length=50,blank=True)
-    rec_fac = models.DecimalField(max_digits=7,decimal_places=6,default=1)
 

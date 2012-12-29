@@ -7,7 +7,6 @@ from chosen import forms as chosenforms
 
 class ApprovalForm(forms.Form):
     approved_number = forms.IntegerField()
-    approved_rec_fac = forms.DecimalField()
     #comment = forms.CharField(max_length=100,widget=forms.Textarea)
 
 class RoundForm(ModelForm):

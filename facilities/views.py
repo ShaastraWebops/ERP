@@ -358,7 +358,6 @@ def submit_approval(request,item_id):
         approval_form = ApprovalForm(request.POST)
         if approval_form.is_valid():    
             item.quantity = approval_form.cleaned_data['approved_number']
-            item.rec_fac = approval_form.cleaned_data['approved_rec_fac']
             try:
                 item.save()
                 form_saved=1
