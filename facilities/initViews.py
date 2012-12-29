@@ -191,8 +191,9 @@ def use_data(request):
             print "Does Not Exist"
             continue
         print row[0]
-        
-        round_name=row[1]
+        round_name="Round 1"
+        if row[1] is not '':
+            round_name=row[1]
         gen=0   
         print "\n\n"
         try:
@@ -236,6 +237,7 @@ def use_data(request):
                 number=0
             if gen==0:
                 a=FacilitiesObject(department=department,event_round=e,name=item,quantity=number)
+
             else:
                 a=FacilitiesObject.objects.get(department=department,event_round=e,name=item)
                 a.quantity=number

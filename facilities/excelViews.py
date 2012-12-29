@@ -314,9 +314,9 @@ def optimize_excel(request,day_number):
                     if rounder.start_hour<13:
                         a[i][j]=a[i][j]+obj.quantity 
                         if rounder.end_hour<13:
-                            b[i][j]=b[i][j]+obj.quantity*obj.rec_fac
+                            b[i][j]=b[i][j]+obj.quantity*obj.name.rec_fac
                         else:
-                            d[i][j]=d[i][j]+obj.quantity*obj.rec_fac
+                            d[i][j]=d[i][j]+obj.quantity*obj.name.rec_fac
                     else:
                         c[i][j]=c[i][j]+obj.quantity
                         d[i][j]=d[i][j]+obj.quantity*obj.rec_fac
