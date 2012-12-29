@@ -382,9 +382,9 @@ def optimize_all(request):
         sheet1.col(i+1).width=int(0.87/0.18*255*5.3)
         sheet2.col(i+1).width=int(0.87/0.18*255*5.3)
         sheet3.col(i+1).width=int(0.87/0.18*255*5.3)'''
-    a=[ [0 for j in range(len(items))] for j in DATE_CHOICES ]
-    b=[ [0 for j in range(len(items))] for j in DATE_CHOICES ]
-    c=[ [0 for j in range(len(items))] for j in range(len(DATE_CHOICES)-1) ]
+    a=[ [0 for i in range(len(items))] for j in DATE_CHOICES ]
+    b=[ [0 for i in range(len(items))] for j in DATE_CHOICES ]
+    c=[ [0 for i in range(len(items))] for j in range(len(DATE_CHOICES)-1) ]
     rounds_all=[]
     for date in date_list:
         rounds_all.append(EventRound.objects.filter(start_date=date))
@@ -395,13 +395,15 @@ def optimize_all(request):
             objs = rounder.facilitiesobject_set.exclude(quantity=0)
             j=0
             for obj in objs:
-                a[i][j] = a[i][j]+obj.quantity
-                b[i][j] = b[i][j]+int(obj.quantity*obj.name.rec_fac)
+                number=obj.name.id-1
+                a[i][number] = a[i][number]+obj.quantity
+                b[i][number] = b[i][number]+int(obj.quantity*obj.name.rec_fac)
                 j=j+1
                 
         i=i+1
     i=0
     j=0
+    print a[0][1]
     for i in range(len(DATE_CHOICES)-1):
         for j in range(len(items)):
             c[i][j] = a[i+1][j] - b[i][j]
