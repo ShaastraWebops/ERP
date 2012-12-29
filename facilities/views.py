@@ -42,6 +42,8 @@ def facilities_home(request):
         return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal/")'''
     # if department.Dept_Name=="QMS":
     #     return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal/")
+    if request.user.username=="ee11b075":
+        return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal/")  
     if curr_userprofile.department.is_event:
         return HttpResponseRedirect(SITE_URL + "erp/facilities/round_home/"+str(curr_userprofile.department.id))         
 
