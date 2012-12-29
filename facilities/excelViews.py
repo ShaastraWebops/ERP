@@ -165,6 +165,8 @@ def optimize_excel(request,day_number):
     sheet2 = book.add_sheet('Recovered before 1PM')
     sheet3 = book.add_sheet('Required after 1PM')
     sheet4 = book.add_sheet('Recovered after 1PM')
+    sheet5 = book.add_sheet('Total Requirements')
+    sheet6 = book.add_sheet('Total Recovery')
     sheet1.row(1).height=int(255*3)
     sheet1.write(1,1,"Venue Specific Item Requirements before 1 PM",
                         easyxf('font: height 440, name Arial, bold True;'
@@ -189,11 +191,26 @@ def optimize_excel(request,day_number):
                                 # 'pattern: pattern solid, fore_colour white;'
                                 ))
     sheet4.row(1).height=int(255*3)
+    sheet5.write(1,1,"Venue Specific Item Recoveries before 1 PM",
+                        easyxf('font: height 440, name Arial, bold True;'
+                                # 'borders: left thick, right thick, top thick, bottom thick;'
+                                # 'pattern: pattern solid, fore_colour white;'
+                                ))
+    sheet5.row(1).height=int(255*3)
+    sheet6.write(1,1,"Venue Specific Item Recoveries before 1 PM",
+                        easyxf('font: height 440, name Arial, bold True;'
+                                # 'borders: left thick, right thick, top thick, bottom thick;'
+                                # 'pattern: pattern solid, fore_colour white;'
+                                ))
+    sheet6.row(1).height=int(255*3)
+
     i=1
     sheet1.row(4).height=int(255*2)
     sheet2.row(4).height=int(255*2)
     sheet3.row(4).height=int(255*2)
     sheet4.row(4).height=int(255*2)
+    sheet5.row(4).height=int(255*2)
+    sheet6.row(4).height=int(255*2)
     for ven in VENUE_CHOICES:
         venue=ven[0]
         sheet1.col(i+1).width=int(0.87/0.18*255*3.5) 
@@ -204,12 +221,18 @@ def optimize_excel(request,day_number):
         sheet3.write(4,i+1,venue,style_head)
         sheet4.col(i+1).width=int(0.87/0.18*255*3.5) 
         sheet4.write(4,i+1,venue,style_head)
+        sheet5.col(i+1).width=int(0.87/0.18*255*3.5) 
+        sheet5.write(4,i+1,venue,style_head)
+        sheet6.col(i+1).width=int(0.87/0.18*255*3.5) 
+        sheet6.write(4,i+1,venue,style_head)
         i=i+1
     items = ItemList.objects.all()
     sheet1.col(1).width=int(0.87/0.18*255*10) 
     sheet2.col(1).width=int(0.87/0.18*255*10)
     sheet3.col(1).width=int(0.87/0.18*255*10) 
-    sheet4.col(1).width=int(0.87/0.18*255*10)  
+    sheet4.col(1).width=int(0.87/0.18*255*10)
+    sheet5.col(1).width=int(0.87/0.18*255*10) 
+    sheet6.col(1).width=int(0.87/0.18*255*10)   
     i=0
     for item in items:
         sheet1.row(i+5).height=int(255*2.5)
@@ -220,17 +243,26 @@ def optimize_excel(request,day_number):
         sheet3.write(i+5,1,item.name,style_head)
         sheet4.row(i+5).height=int(255*2.5)
         sheet4.write(i+5,1,item.name,style_head)
+        sheet5.row(i+5).height=int(255*2.5)
+        sheet5.write(i+5,1,item.name,style_head)
+        sheet6.row(i+5).height=int(255*2.5)
+        sheet6.write(i+5,1,item.name,style_head)
         i=i+1
     for i in (2,3,9,12,15):
         sheet1.col(i+1).width=int(0.87/0.18*255*5.3)
         sheet2.col(i+1).width=int(0.87/0.18*255*5.3)
         sheet3.col(i+1).width=int(0.87/0.18*255*5.3)
         sheet4.col(i+1).width=int(0.87/0.18*255*5.3)
+        sheet5.col(i+1).width=int(0.87/0.18*255*5.3)
+        sheet6.col(i+1).width=int(0.87/0.18*255*5.3)
     
     a=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
     b=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
     c=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
     d=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    e=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    f=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    
     i=0
     for ven in VENUE_CHOICES:
         venue=ven[0]
@@ -249,6 +281,9 @@ def optimize_excel(request,day_number):
                
                 a[number][i]=a[number][i]+obj.quantity
                 b[number][i]=b[number][i]+int(obj.quantity*obj.name.rec_fac)
+                e[number][i]=e[number][i]+obj.quantity
+                f[number][i]=f[number][i]+int(obj.quantity*obj.name.rec_fac)
+                
         for rounder in second_rounds:
             objs=rounder.facilitiesobject_set.exclude(quantity=0)
             for obj in objs:
@@ -257,6 +292,8 @@ def optimize_excel(request,day_number):
                 
                 a[number][i]=a[number][i]+obj.quantity
                 d[number][i]=d[number][i]+int(obj.quantity*obj.name.rec_fac)
+                e[number][i]=e[number][i]+obj.quantity
+                f[number][i]=f[number][i]+int(obj.quantity*obj.name.rec_fac)
         for rounder in third_rounds:
             objs=rounder.facilitiesobject_set.exclude(quantity=0)
             for obj in objs:
@@ -265,6 +302,8 @@ def optimize_excel(request,day_number):
                 
                 c[number][i]=c[number][i]+obj.quantity
                 d[number][i]=d[number][i]+int(obj.quantity*obj.name.rec_fac)
+                e[number][i]=e[number][i]+obj.quantity
+                f[number][i]=f[number][i]+int(obj.quantity*obj.name.rec_fac)
         i=i+1
     i=0
     j=0
@@ -274,60 +313,191 @@ def optimize_excel(request,day_number):
             sheet1.write(i+5,j+2,a[i][j],style_body)
             sheet2.write(i+5,j+2,b[i][j],style_body) 
             sheet3.write(i+5,j+2,c[i][j],style_body)
-            sheet4.write(i+5,j+2,d[i][j],style_body)      
+            sheet4.write(i+5,j+2,d[i][j],style_body) 
+            sheet5.write(i+5,j+2,e[i][j],style_body)  
+            sheet6.write(i+5,j+2,f[i][j],style_body)       
             j=j+1
         i=i+1              
     print a
     book.save(response)
     return response
 
-    '''=0
-    for ven in VENUE_CHOICES:
-        i=0
+def optimize_all(request):
+    date_list=[]
+    for date in DATE_CHOICES:
+        date_list.append(date[0])
+    print date_list
+    response = HttpResponse(mimetype="application/ms-excel")
+    response['Content-Disposition'] = 'attachment; filename=Date Based Facilities Optimization.xls' 
+
+    book = Workbook()
+    sheet1 = book.add_sheet('6th January, 2012')
+    sheet2 = book.add_sheet('7th January, 2012')
+    sheet3 = book.add_sheet('8th January, 2012')
+    sheet1.row(1).height=int(255*3)
+    sheet1.write(1,1,"Requirements of 6th - Recovery of 5th January, 2012",
+                        easyxf('font: height 440, name Arial, bold True;'
+                                # 'borders: left thick, right thick, top thick, bottom thick;'
+                                # 'pattern: pattern solid, fore_colour white;'
+                                ))
+    sheet2.row(1).height=int(255*3)
+    sheet2.write(1,1,"Requirements of 7th - Recovery of 6th January, 2012",
+                        easyxf('font: height 440, name Arial, bold True;'
+                                # 'borders: left thick, right thick, top thick, bottom thick;'
+                                # 'pattern: pattern solid, fore_colour white;'
+                                ))    
+    sheet3.write(1,1,"Requirements of 8th - Recovery of 7th January, 2012",
+                        easyxf('font: height 440, name Arial, bold True;'
+                                # 'borders: left thick, right thick, top thick, bottom thick;'
+                                # 'pattern: pattern solid, fore_colour white;'
+                                ))
+    sheet3.row(1).height=int(255*3)
+    i=1
+    sheet1.row(4).height=int(255*2)
+    sheet2.row(4).height=int(255*2)
+    sheet3.row(4).height=int(255*2)
+    '''for ven in VENUE_CHOICES:
         venue=ven[0]
-        rounds = EventRound.objects.filter(start_date=date_str,venue=venue)
-        for rounder in rounds:
-            items = rounder.facilitiesobject_set.all()
-            print items
-        for rounder in rounds:
-            sheet1.write(i+5,j+2,rounder.name,style_body)
-            i=i+1
-        j=j+1'''
-    '''i=0
+        sheet1.col(i+1).width=int(0.87/0.18*255*3.5) 
+        sheet1.write(4,i+1,venue,style_head)
+        sheet2.col(i+1).width=int(0.87/0.18*255*3.5) 
+        sheet2.write(4,i+1,venue,style_head)
+        sheet3.col(i+1).width=int(0.87/0.18*255*3.5) 
+        sheet3.write(4,i+1,venue,style_head)
+        i=i+1'''
+    items = ItemList.objects.all()
+    sheet1.col(1).width=int(0.87/0.18*255*10) 
+    sheet2.col(1).width=int(0.87/0.18*255*10)
+    sheet3.col(1).width=int(0.87/0.18*255*10) 
+    i=0
+    for item in items:
+        sheet1.row(i+5).height=int(255*2.5)
+        sheet1.write(i+5,1,item.name,style_head)
+        sheet2.row(i+5).height=int(255*2.5)
+        sheet2.write(i+5,1,item.name,style_head)
+        sheet3.row(i+5).height=int(255*2.5)
+        sheet3.write(i+5,1,item.name,style_head)
+        i=i+1
+    '''for i in (2,3,9,12,15):
+        sheet1.col(i+1).width=int(0.87/0.18*255*5.3)
+        sheet2.col(i+1).width=int(0.87/0.18*255*5.3)
+        sheet3.col(i+1).width=int(0.87/0.18*255*5.3)'''
+    a=[ [0 for j in range(len(items))] for j in DATE_CHOICES ]
+    b=[ [0 for j in range(len(items))] for j in DATE_CHOICES ]
+    c=[ [0 for j in range(len(items))] for j in range(len(DATE_CHOICES)-1) ]
+    rounds_all=[]
+    for date in date_list:
+        rounds_all.append(EventRound.objects.filter(start_date=date))
+    i=0
     j=0
+    for rounds in rounds_all:
+        for rounder in rounds:
+            objs = rounder.facilitiesobject_set.exclude(quantity=0)
+            j=0
+            for obj in objs:
+                a[i][j] = a[i][j]+obj.quantity
+                b[i][j] = b[i][j]+int(obj.quantity*obj.name.rec_fac)
+                j=j+1
+                
+        i=i+1
+    i=0
+    j=0
+    for i in range(len(DATE_CHOICES)-1):
+        for j in range(len(items)):
+            c[i][j] = a[i+1][j] - b[i][j]
+    j=0        
+    for item in items:
+        sheet1.write(j+5,2,c[0][j],style_body)
+        sheet2.write(j+5,2,c[1][j],style_body) 
+        sheet3.write(j+5,2,c[2][j],style_body)       
+        j=j+1   
+    book.save(response)
+    return response
+
+'''
+def optimize_all(request):
+    date_list=[]
+    for date in DATE_CHOICES:
+        date_list.append(date[0])
+    print date_list
+    response = HttpResponse(mimetype="application/ms-excel")
+    response['Content-Disposition'] = 'attachment; filename=Date Based Facilities Optimization.xls' 
+
+    book = Workbook()
+    sheet1 = book.add_sheet('Required before 1PM')
+    sheet2 = book.add_sheet('Recovered before 1PM')
+    sheet3 = book.add_sheet('Required after 1PM')
+    sheet1.row(1).height=int(255*3)
+    sheet1.write(1,1,"Venue Specific Item Requirements before 1 PM",
+                        easyxf('font: height 440, name Arial, bold True;'
+                                # 'borders: left thick, right thick, top thick, bottom thick;'
+                                # 'pattern: pattern solid, fore_colour white;'
+                                ))
+    sheet2.row(1).height=int(255*3)
+    sheet2.write(1,1,"Venue Specific Item Recoveries before 1 PM",
+                        easyxf('font: height 440, name Arial, bold True;'
+                                # 'borders: left thick, right thick, top thick, bottom thick;'
+                                # 'pattern: pattern solid, fore_colour white;'
+                                ))    
+    sheet3.write(1,1,"Venue Specific Item Recoveries before 1 PM",
+                        easyxf('font: height 440, name Arial, bold True;'
+                                # 'borders: left thick, right thick, top thick, bottom thick;'
+                                # 'pattern: pattern solid, fore_colour white;'
+                                ))
+    sheet3.row(1).height=int(255*3)
+    i=1
+    sheet1.row(4).height=int(255*2)
+    sheet2.row(4).height=int(255*2)
+    sheet3.row(4).height=int(255*2)
+    for ven in VENUE_CHOICES:
+        venue=ven[0]
+        sheet1.col(i+1).width=int(0.87/0.18*255*3.5) 
+        sheet1.write(4,i+1,venue,style_head)
+        sheet2.col(i+1).width=int(0.87/0.18*255*3.5) 
+        sheet2.write(4,i+1,venue,style_head)
+        sheet3.col(i+1).width=int(0.87/0.18*255*3.5) 
+        sheet3.write(4,i+1,venue,style_head)
+        i=i+1
+    items = ItemList.objects.all()
+    sheet1.col(1).width=int(0.87/0.18*255*10) 
+    sheet2.col(1).width=int(0.87/0.18*255*10)
+    sheet3.col(1).width=int(0.87/0.18*255*10) 
+    i=0
+    for item in items:
+        sheet1.row(i+5).height=int(255*2.5)
+        sheet1.write(i+5,1,item.name,style_head)
+        sheet2.row(i+5).height=int(255*2.5)
+        sheet2.write(i+5,1,item.name,style_head)
+        sheet3.row(i+5).height=int(255*2.5)
+        sheet3.write(i+5,1,item.name,style_head)
+        i=i+1
+    for i in (2,3,9,12,15):
+        sheet1.col(i+1).width=int(0.87/0.18*255*5.3)
+        sheet2.col(i+1).width=int(0.87/0.18*255*5.3)
+        sheet3.col(i+1).width=int(0.87/0.18*255*5.3)
     a=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
     b=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
     c=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
     d=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
-    for item in items:        
+    e=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    f=[ [ 0 for i in range(len(VENUE_CHOICES)) ] for j in range(len(items))]
+    i=0
+    j=0
+    for item in items:
         j=0
-        print item.name
         for ven in VENUE_CHOICES:
-            rounds = EventRound.objects.filter(start_date=date_str,venue=venue)
-            venue=ven[0]
-            print venue
-            all_obj = FacilitiesObject.objects.filter(name=item)
-            for obj in all_obj:
-                rounder=obj.event_round
-                print rounder.name
-                if rounder in rounds:
-                    if rounder.start_hour<13:
-                        a[i][j]=a[i][j]+obj.quantity 
-                        if rounder.end_hour<13:
-                            b[i][j]=b[i][j]+obj.quantity*obj.name.rec_fac
-                        else:
-                            d[i][j]=d[i][j]+obj.quantity*obj.name.rec_fac
-                    else:
-                        c[i][j]=c[i][j]+obj.quantity
-                        d[i][j]=d[i][j]+obj.quantity*obj.rec_fac
             sheet1.write(i+5,j+2,a[i][j],style_body)
-            sheet2.write(i+5,j+2,b[i][j],style_body)
+            sheet2.write(i+5,j+2,b[i][j],style_body) 
+            sheet3.write(i+5,j+2,c[i][j],style_body)       
             j=j+1
-        i=i+1'''
+        i=i+1              
+    print a
+    book.save(response)
+    return response
+'''
     
-    '''for item in items:        
-        j=0
-        print item.name'''
+
+
 
     
 

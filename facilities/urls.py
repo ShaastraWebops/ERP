@@ -28,6 +28,7 @@ urlpatterns+=patterns('',
     (r'^test_excel/$', 'erp.facilities.excelViews.test_excel'),
     (r'^generate_round_excel/(?P<round_id>\d+)/$', 'erp.facilities.excelViews.generate_round_excel'),
     (r'^generate_event_excel/(?P<event_id>\d+)/$', 'erp.facilities.excelViews.generate_event_excel'),
-    (r'^optimize_excel/(?P<day_number>\d+)/$', 'erp.facilities.excelViews.optimize_excel')
+    (r'^optimize_excel/(?P<day_number>\d+)/$', 'erp.facilities.excelViews.optimize_excel'),
+    (r'^optimize_all/$', 'erp.facilities.excelViews.optimize_all'),
 )
         
