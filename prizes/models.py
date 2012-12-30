@@ -32,6 +32,8 @@ class BarcodeMap(models.Model):
     barcode = models.CharField(max_length=128,blank=True)
     shaastra_id = models.ForeignKey(Participant, null=True)  
     
+    def __str__(self):
+        return self.barcode
         
 class Prize(models.Model):
     """

@@ -7,8 +7,11 @@ from erp.prizes.models import *
 from django.contrib.auth.models import User
 #from chosen import widgets as chosenwidgets
 
-class TaskCommentForm (ModelForm):
-	comment_string=forms.CharField(label='Comments',widget=forms.Textarea)
-	class Meta:
-		model=TaskComment
-		exclude=('author','task')	
+class BarcodeForm (ModelForm):
+    class Meta:
+        model=BarcodeMap
+        widgets = {'shaastra_id':chosenforms.widgets.ChosenSelect()}
+		
+    def __init__(self, *args, **kwargs):
+        super(BarcodeForm, self).__init__(*args, **kwargs)
+        #self.fields['shaastra_id'].widget = chosenforms.widgets.ChosenSelect()

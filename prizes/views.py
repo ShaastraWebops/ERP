@@ -4,22 +4,18 @@ from django.shortcuts import render_to_response, redirect, HttpResponseRedirect
 from django.template.context import Context, RequestContext
 from erp.misc.util import *
 from erp.prizes.models import *
+from erp.prizes.forms import *
 from django.forms.models import modelformset_factory
 
-# TODO
-"""def assign_barcode(request,owner_name=None):
-    ParticipantFormset = modelformset_factory(Participant, fields=('barcode',), extra=25)
+def assign_barcode(request,owner_name=None):
+    BarcodeFormset = modelformset_factory(BarcodeMap, form=BarcodeForm, extra=10)
     if request.method == 'POST':
-        participantformset = ParticipantFormset (request.POST)
-        if participantformset.is_valid ():
-            registered_participants = participantformset.save(commit=False)
-            for registered_participant in registered_participants:
-                participant = Participant.objects.get(barcode=registered_participant.barcode)
-                participant.events.add(request.user.userprofile_set.all()[0].department);
-    participantList = Participant.objects.filter(events=request.user.userprofile_set.all()[0].department)
-    participantformset = ParticipantFormset(queryset=Participant.objects.none())    
-    return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))    
-"""
+        barcodeformset = BarcodeFormset (request.POST)
+        if barcodeformset.is_valid ():
+            barcodes=barcodeformset.save()
+    barcodeformset =BarcodeFormset(queryset=BarcodeMap.objects.none())    
+    return render_to_response('prizes/hospiregistration.html', locals(), context_instance = global_context(request))    
+
 
 def prize_details(request,owner_name=None):
     WinnerFormset = modelformset_factory(Prize,fields=('participant','cheque'), extra=10)
