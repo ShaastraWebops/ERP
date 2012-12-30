@@ -48,7 +48,6 @@
 
 {% block javascript %}
 {{ block.super }}
-<script src="{{ MEDIA_URL }}js/chosen.jquery_ready.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     var d = document.getElementById("li_barcode_assign");
@@ -56,5 +55,6 @@ $(document).ready(function() {
     d.className = "active";
     e.className = e.className + " icon-white";
  });
+$('.chzn-select').chosen();
 </script>
 {% endblock javascript%}

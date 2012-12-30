@@ -14,5 +14,9 @@ class BarcodeForm (ModelForm):
 		
     def __init__(self, *args, **kwargs):
         super(BarcodeForm, self).__init__(*args, **kwargs)
-        # This doesn't seem to work. Added in Meta instead
-        # self.fields['shaastra_id'].widget = chosenforms.widgets.ChosenSelect()
+        self.fields['shaastra_id'].label = "Shaastra ID"
+        
+class PrizeForm (ModelForm):
+    class Meta:
+        model=Prize
+        widgets = {'participant':chosenforms.widgets.ChosenSelect()}        

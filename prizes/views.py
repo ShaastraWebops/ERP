@@ -20,7 +20,7 @@ def assign_barcode(request,owner_name=None):
 
 
 def prize_details(request,owner_name=None):
-    WinnerFormset = modelformset_factory(Prize,fields=('participant','cheque'), extra=10)
+    WinnerFormset = modelformset_factory(Prize, fields=('participant','cheque'), form=PrizeForm, extra=10)
     eventname=request.user.userprofile_set.all()[0].department
     if request.method == 'POST':
         winnerformset = WinnerFormset (request.POST)
@@ -41,7 +41,7 @@ def prize_details(request,owner_name=None):
     return render_to_response('prizes/assign_table.html',locals(),context_instance=global_context(request))
 
 def prize_assign(request,owner_name=None):
-    WinnerFormset = modelformset_factory(Prize,exclude=('event','user','cheque'), extra=3)
+    WinnerFormset = modelformset_factory(Prize, exclude=('event','user','cheque'), form=PrizeForm, extra=3)
     eventname=request.user.userprofile_set.all()[0].department
     if request.method == 'POST':
         winnerformset = WinnerFormset (request.POST)
@@ -64,14 +64,24 @@ def prize_assign(request,owner_name=None):
     
     
 def registerparticipants(request, owner_name=None):
-    ParticipantFormset = modelformset_factory(Participant, fields=('barcode',), extra=25)
+    BarcodeMapFormset = modelformset_factory(BarcodeMap, form=BarcodeForm, extra=25)
+    eventname = request.user.userprofile_set.all()[0].department
     if request.method == 'POST':
-        participantformset = ParticipantFormset (request.POST)
-        if participantformset.is_valid ():
-            registered_participants = participantformset.save(commit=False)
-            for registered_participant in registered_participants:
-                participant = Participant.objects.get(barcode=registered_participant.barcode)
-                participant.events.add(request.user.userprofile_set.all()[0].department);
-    participantList = Participant.objects.filter(events=request.user.userprofile_set.all()[0].department)
-    participantformset = ParticipantFormset(queryset=Participant.objects.none())    
+        barcodemapformset = BarcodeMapFormset (request.POST)
+        if barcodemapformset.is_valid ():
+            barcodemaps = barcodemapformset.save(commit=False)
+            for barcodemap in barcodemaps:
+                try:
+                    participant = BarcodeMap.objects.get(barcode=barcodemap.barcode).shaastra_id
+                except:
+                    #if a barcode isn't filled in, or a mapping doesn't exist.
+                    try:
+                        participant = Participant.objects.get(shaastra_id=barcodemap.shaastra_id)
+                    except:
+                        #The shaastra ID wasn't filled => incorrect barcode.
+                        error = barcodemap.barcode
+                        return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
+                participant.events.add(eventname)
+    participantList = Participant.objects.filter(events=eventname)
+    barcodemapformset = BarcodeMapFormset(queryset=BarcodeMap.objects.none())    
     return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))

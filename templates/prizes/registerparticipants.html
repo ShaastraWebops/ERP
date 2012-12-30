@@ -6,37 +6,43 @@
     <div class="tab-content">
     <div class="row">
     <div class="span5">
-        Scan the barcodes of participants registering for the event <b>"{{ request.user.userprofile_set.all.0.department }}"</b>:<br/><br/>
+    <div class="well">
+        <center><h4>Event Registration</h4>
+        Scan the barcodes (or choose the Shaastra ID) of participants registering for the event <b>"{{ eventname }}"</b>:</center>
+    </div>
+    </div>
+    </div>
+    <div class="row">
+    <div class="span5">
+        {% if error %}
+        <span style="color:#FF0000">Error: Incorrect barcode entered - {{ error }}<br/>Please enter the correct barcode, or enter the Shaastra ID instead.</span>
+        {% endif %}
         <form action="" method="POST">
         {% csrf_token %}
-        {{ winnerformset.management_form }}
+        {{ barcodemapformset.management_form }}
         <table>
-        {% for participantform in participantformset %}
-            <tr><td>{{ forloop.counter }}.&emsp;</td>
-            <td>
-                <table><tr>
-                {% for field in participantform.visible_fields %}
-                   <td>{{ field }}</td>
-                {% endfor %}
-                </tr></table>
-            </td></tr>
-                {% for field in participantform.hidden_fields %}
-                    {{ field }}
-                {% endfor %}
+        {% for barcodemapform in barcodemapformset %}
+            <tr><td>{{ forloop.counter }}.</td></tr>
+            {{ barcodemapform.as_table }}
         {% endfor %}
         </table>
         <br/>
-        <input type="submit" class="btn btn-primary" name="submit_continue" value="Submit and continue"/>
+        <input id="formset_submit" type="submit" class="btn btn-primary" name="submit_continue" value="Submit and continue"/>
         </form>
     </div>
     <div class="span3">
-    <h4>Registered Participants:</h4><br/><br/>
+    <h4>Registered Participants:</h4><br/>
     <table class="table">
+    {% if participarticipantList %}
+    <br/>
     <tr><th>S.No.</th><th>Name</th><th>Barcode</th></tr>
     {% for participant in participantList %}
     <tr><td>{{ forloop.counter }}.</td><td>{{ participant.name }}</td><td>{{ participant.barcode }}</td></tr>
     {% endfor %}
     </table>
+    {% else %}
+    No participants registered.
+    {% endif %}
     </div>    
     </div>
     </div><!-- /.tab-content -->
@@ -48,10 +54,11 @@
 {{ block.super }}
 <script type="text/javascript">
 $(document).ready(function() {
-    var d = document.getElementById("li_dashboard");
-    var e = document.getElementById("li_dashboard_icon");
+    var d = document.getElementById("li_eventregn");
+    var e = document.getElementById("li_eventregn_icon");
     d.className = "active";
     e.className = e.className + " icon-white";
  });
+$('.chzn-select').chosen();
 </script>
 {% endblock javascript%}
