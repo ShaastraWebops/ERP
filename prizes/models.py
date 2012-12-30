@@ -8,7 +8,6 @@ class Participant(models.Model):
     """
     The participant's data.
     """
-    barcode = models.CharField(max_length=100,blank=True)
     name = models.CharField(max_length=100)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES,
                               default='F')
@@ -19,11 +18,20 @@ class Participant(models.Model):
             help_text='Please enter your current mobile number')
     college = models.CharField(max_length=100)
     college_roll = models.CharField(max_length=40, null=True)
+    shaastra_id = models.CharField(max_length=30, blank=True)
     events = models.ManyToManyField(Department,
             related_name='participants', null=True)
     
     def __str__(self):
-        return self.name
+        return self.shaastra_id
+
+class BarcodeMap(models.Model):
+    """
+    Maps barcode to participant
+    """
+    barcode = models.CharField(max_length=128,blank=True)
+    shaastra_id = models.ForeignKey(Participant, null=True)  
+    
         
 class Prize(models.Model):
     """
