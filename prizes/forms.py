@@ -14,4 +14,5 @@ class BarcodeForm (ModelForm):
 		
     def __init__(self, *args, **kwargs):
         super(BarcodeForm, self).__init__(*args, **kwargs)
-        #self.fields['shaastra_id'].widget = chosenforms.widgets.ChosenSelect()
+        # This doesn't seem to work. Added in Meta instead
+        # self.fields['shaastra_id'].widget = chosenforms.widgets.ChosenSelect()
