@@ -17,6 +17,9 @@ class BarcodeForm (ModelForm):
         self.fields['shaastra_id'].label = "Shaastra ID"
         
 class PrizeForm (ModelForm):
+    barcode=forms.CharField(required=False)
     class Meta:
         model=Prize
-        widgets = {'participant':chosenforms.widgets.ChosenSelect()}        
+        widgets = {'participant':chosenforms.widgets.ChosenSelect()}  
+        exclude=('event','user','cheque')
+              

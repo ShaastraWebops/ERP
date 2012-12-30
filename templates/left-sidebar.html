@@ -6,14 +6,15 @@
     <a href="{% url tasks.views.display_department_portal owner_name=user %}"><i class="icon-bullhorn" id="li_department_icon"></i> Department </a>
 </li>
 <li id="li_barcode_assign">
-   <a href="{% url prizes.views.assign_barcode owner_name=user %}"><i class="icon-barcode" id="li_barcode_assign_icon"></i> Assign barcode</a>
-</li>
-<li id="li_prize">
-   <a href="{% url prizes.views.prize_details owner_name=user %}"> <i class="icon-certificate" id="li_prize_icon"></i> Prize details</a>
+   <a href="{% url prizes.views.assign_barcode owner_name=user %}"><i class="icon-barcode" id="li_barcode_assign_icon"></i> Barcode</a>
 </li>
 <li id="li_prize_assign">
-   <a href="{% url prizes.views.prize_assign owner_name=user %}"><i class="icon-barcode" id="li_prize_assign_icon"></i> Assign Prizes</a>
+   <a href="{% url prizes.views.prize_assign owner_name=user %}"><i class="icon-gift" id="li_prize_assign_icon"></i> Prizes</a>
 </li>
+<li id="li_cheque_assign">
+   <a href="{% url prizes.views.cheque_assign owner_name=user %}"> <i class="icon-certificate" id="li_cheque_assign_icon"></i> Cheques</a>
+</li>
+
 <li id="li_contact">
     <a href="{% url dashboard.views.display_contacts owner_name=user%}"><i class="icon-th-list" id="li_contact_icon"></i> Contact Details </a>
 </li>

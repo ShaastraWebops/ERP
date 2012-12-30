@@ -5,7 +5,7 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('erp.prizes.views',     
       (r'^prize/$', 'prize_assign'),
-      (r'^$', 'prize_details'),
+      (r'^$', 'cheque_assign'),
       (r'^registerparticipants/$','registerparticipants'),
       (r'^assign/$','assign_barcode'),  
 )

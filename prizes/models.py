@@ -39,13 +39,13 @@ class Prize(models.Model):
     """
     The winner's details and cheque nos
     """
-    participant = models.ForeignKey(Participant)
-    position = models.CharField(max_length=10)
+    participant = models.ForeignKey(Participant,blank=True, null=True)
+    position = models.CharField(max_length=10,blank=True)
     event = models.ForeignKey(Department)
-    details = models.CharField(max_length=250)
-    cheque = models.CharField(max_length=15)
+    details = models.CharField(max_length=250,blank=True)
+    cheque = models.CharField(max_length=15,blank=True)
     # User who is uploading the entry
     user = models.ForeignKey(User)  
     
     def __str__(self):
-        return self.participant + self.event + self.position      
+        return self.participant.shaastra_id

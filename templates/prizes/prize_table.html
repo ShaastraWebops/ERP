@@ -5,13 +5,24 @@
 <div class="tabbable span8">
     <div class="tab-content">
     <div class="row">
-    <div class="span5">
-         Put winners da:<br/><br/>
+   
+         <div class="well span5 offset1">
+      <center>  <h4>Choose the winners of your event!</h4> 
+       <br/>
+       
+       Submitting a form will save all entries and a new form will load.<br> 
+       <br /> Please enter either the person's ShaastraID or the barcode. Entering both may cause conflicts.
+       <u>Please submit as often as possible to save work.</u>
+       <br/>
+       </center>
+       </div>
+        <div class="span5 offset1">
         <form action="" method="POST">
         {% csrf_token %}
         {{ winnerformset.management_form }}
-        <table>
+        
         {% for winnerform in winnerformset %}
+        <table class="table table-bordered table-striped table-condensed">
             <tr><td>{{ forloop.counter }}.&emsp;</td>
             <td>
           {{winnerform.as_table}}
@@ -19,19 +30,21 @@
                 {% for field in winnerform.hidden_fields %}
                     {{ field }}
                 {% endfor %}
-        {% endfor %}
         </table>
+        {% endfor %}
+        
         <br/>
-        <input type="submit" class="btn btn-primary" name="submit_continue" value="Submit and continue"/>
+       <center> <input type="submit" class="btn btn-primary" name="submit_continue" value="Submit and continue"/></center>
         </form>
     </div>
     </div>
-    <div class="span3">
-    <h4>Winners:</h4><br/><br/>
-    <table class="table">
-    <tr><th>S.No.</th><th>Name</th><th>Position</th><th>Details</th><th>Barcode</th></tr>
+<br /><br /><br />
+    <div class="span6 offset">
+    <center><h4>Winners saved to database:</h4><br/><br/></center>
+    <table class="table table-striped table-bordered">
+    <tr><th>S.No.</th><th>Name</th><th>Position</th><th>Details</th></tr>
     {% for winner in winnerList %}
-    <tr><td>{{ forloop.counter }}.</td><td>{{ winner.participant.name }}</td><td>{{ winner.position }}</td><td>{{ winner.details }}</td><td>{{ winner.participant.barcode }}</td></tr>
+    <tr><td>{{ forloop.counter }}.</td><td>{{ winner.participant.name }}</td><td>{{ winner.position }}</td><td>{{ winner.details }}</td></tr>
     {% endfor %}
     </table>
     </div> 
@@ -44,8 +57,8 @@
 {{ block.super }}
 <script type="text/javascript">
 $(document).ready(function() {
-    var d = document.getElementById("li_dashboard");
-    var e = document.getElementById("li_dashboard_icon");
+    var d = document.getElementById("li_prize_assign");
+    var e = document.getElementById("li_prize_assign_icon");
     d.className = "active";
     e.className = e.className + " icon-white";
  });
