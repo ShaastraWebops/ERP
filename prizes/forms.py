@@ -4,6 +4,7 @@ from models import *
 from django import forms
 from chosen import forms as chosenforms
 from erp.prizes.models import *
+from department.models import *
 from django.contrib.auth.models import User
 #from chosen import widgets as chosenwidgets
 
@@ -15,6 +16,7 @@ class BarcodeForm (ModelForm):
     def __init__(self, *args, **kwargs):
         super(BarcodeForm, self).__init__(*args, **kwargs)
         self.fields['shaastra_id'].label = "Shaastra ID"
+
         
 class PrizeForm (ModelForm):
     barcode=forms.CharField(required=False)
@@ -22,4 +24,10 @@ class PrizeForm (ModelForm):
         model=Prize
         widgets = {'participant':chosenforms.widgets.ChosenSelect()}  
         exclude=('event','user','cheque')
-              
+
+        
+class ChequeForm (ModelForm):
+    class Meta:
+        model=Prize
+        widgets = {'participant':chosenforms.widgets.ChosenSelect()}  
+        exclude=('event','user','details','position')
