@@ -47,7 +47,9 @@ def prize_assign(request,owner_name=None,event_name=None):
                     winner.user=request.user
                     winner.save()
     winnerList = Prize.objects.filter(event=eventname)         #updated list                               
-    winnerformset = WinnerFormset(queryset=Prize.objects.none()) 
+    winnerformset = WinnerFormset(queryset=Prize.objects.none())
+    for form in winnerformset:
+        form.fields['participant'].queryset=Participant.objects.filter(events=eventname)
     return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
 
 def cheque_assign(request,owner_name=None,event_name=None):
