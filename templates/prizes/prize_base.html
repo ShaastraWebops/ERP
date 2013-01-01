@@ -1,0 +1,93 @@
+{% extends "base_portal.html" %}
+
+{% block title %}
+
+{{ block.super }}
+Department Portal | {{ po_dept_name }}
+{% endblock title %}
+
+{% block content-heading %}
+<div class="content-heading">
+    <h1>Portal - {{ po_dept_name }} Department </h1>
+</div>
+{% endblock content-heading %}
+
+{% block tabs %}
+
+<div class="tabbable span8">       
+<div class="row">
+
+    <div class="well span3">
+        <form method="post" action="/">
+            {% csrf_token %}
+            Name<br>
+            <input id="name1" type="text" /> <br>
+            Position<br>
+            <input id="position1" type="text" /><br>
+            Other details<br>
+            <input id="details1" type="text" /><br>
+            <button id ="submit" type="button" class = "btn btn-inverse" onclick="prize(id=1);">Submit</button>
+        </form>
+    </div>
+
+
+    <div class="well span3">
+        <form method="post" action="/">
+            {% csrf_token %}
+            Name<br>
+            <input id="name2" type="text" /> <br>
+            Position<br>
+            <input id="position2" type="text" /><br>
+            Other details<br>
+            <input id="details2" type="text" /><br>
+            <button id ="submit" type="button" class = "btn btn-inverse" onclick="prize(id=2);">Submit</button>
+        </form>
+    </div>
+</div>
+<br>    
+<div class="row">
+    <div class="well">
+        <h6> NOTE: If the details appear in the table below, please do not submit the details again. They have been saved. </h6>
+        <h5> You can submit entries simultaneously without affecting each other </h5>
+    </div>
+
+   <div id="prize_table">
+       {% include "prizes/prize_table.html" %}
+   </div>
+
+</div>
+
+
+
+{% endblock tabs %}
+    
+{% block javascript %}
+{{ block.super }}
+
+{% load dajaxice_templatetags %}
+{% dajaxice_js_import %}	
+
+<script type="text/javascript">
+			function prize(id) {
+			    name='#name'+id; position='#position'+id; details='#details'+id;
+			    name=$(name).val()
+			    position=$(position).val()
+			    details=$(details).val()
+				Dajaxice.prizes.submit(Dajax.process,{
+					'name' : name,
+                    'position' : position,
+                    'details' : details,
+   				});
+			}
+
+        </script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_prize");
+    var e = document.getElementById("li_prize_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+</script>
+{% endblock javascript%}
