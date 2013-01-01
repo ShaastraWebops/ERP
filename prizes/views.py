@@ -22,6 +22,8 @@ def assign_barcode(request,owner_name=None):
 def prize_assign(request,owner_name=None):
     WinnerFormset = modelformset_factory(Prize, form=PrizeForm, extra=3)
     eventname=request.user.userprofile_set.all()[0].department
+    #if error is reached, a winnerList will still be displayed. formset will have the unsubmitted data.
+    winnerList = Prize.objects.filter(event=eventname)
     if request.method == 'POST':
         winnerformset = WinnerFormset (request.POST)
         if winnerformset.is_valid ():
@@ -30,12 +32,17 @@ def prize_assign(request,owner_name=None):
                     barcode = winnerform.cleaned_data.get('barcode')
                     winner=winnerform.save(commit=False)
                     if barcode:
-                        participant=BarcodeMap.objects.get(barcode=barcode).shaastra_id
-                        winner.participant=participant
+                        try:
+                            participant=BarcodeMap.objects.get(barcode=barcode).shaastra_id
+                            winner.participant=participant
+                        except:
+                            #incorrect barcode
+                            error = barcode
+                            return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
                     winner.event=eventname
                     winner.user=request.user
-                    winner.save()           
-    winnerList = Prize.objects.filter(event=eventname)
+                    winner.save()
+    winnerList = Prize.objects.filter(event=eventname)         #updated list                               
     winnerformset = WinnerFormset(queryset=Prize.objects.none()) 
     return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
 
@@ -54,6 +61,8 @@ def cheque_assign(request,owner_name=None):
 def registerparticipants(request, owner_name=None):
     BarcodeMapFormset = modelformset_factory(BarcodeMap, form=BarcodeForm, extra=25)
     eventname = request.user.userprofile_set.all()[0].department
+    #if error is reached, a winnerList will still be displayed. formset will have the unsubmitted data.    
+    participantList = Participant.objects.filter(events=eventname)
     if request.method == 'POST':
         barcodemapformset = BarcodeMapFormset (request.POST)
         if barcodemapformset.is_valid ():
@@ -70,6 +79,6 @@ def registerparticipants(request, owner_name=None):
                         error = barcodemap.barcode
                         return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
                 participant.events.add(eventname)
-    participantList = Participant.objects.filter(events=eventname)
+    participantList = Participant.objects.filter(events=eventname)      #updated list
     barcodemapformset = BarcodeMapFormset(queryset=BarcodeMap.objects.none())    
     return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))

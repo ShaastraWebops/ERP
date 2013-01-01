@@ -9,7 +9,6 @@
          <div class="well span5 offset1">
       <center>  <h4>Choose the winners of your event!</h4> 
        <br/>
-       
        Submitting a form will save all entries and a new form will load.<br> 
        <br /> Please enter either the person's ShaastraID or the barcode. Entering both may cause conflicts.
        <u>Please submit as often as possible to save work.</u>
@@ -17,6 +16,9 @@
        </center>
        </div>
         <div class="span5 offset1">
+        {% if error %}
+            <span style="color:#FF0000">Error: Incorrect barcode entered - {{ error }}<br/>Please enter the correct barcode, or enter the Shaastra ID instead.</span>
+        {% endif %}
         <form action="" method="POST">
         {% csrf_token %}
         {{ winnerformset.management_form }}
