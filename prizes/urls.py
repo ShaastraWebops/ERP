@@ -8,6 +8,7 @@ urlpatterns = patterns('erp.prizes.views',
       (r'^cheque/$', 'cheque_assign'),
       (r'^cheque/(?P<event_name>\d{1,3})/$', 'cheque_assign'),
       (r'^registerparticipants/$','registerparticipants'),
+      (r'^registerparticipants/(?P<event_name>\d{1,3})/$','registerparticipants'),
       (r'^assign/$','assign_barcode'),  
 )
 
