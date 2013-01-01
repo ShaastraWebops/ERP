@@ -49,3 +49,52 @@ class Prize(models.Model):
     
     def __str__(self):
         return self.participant.shaastra_id
+
+class College(models.Model):
+
+    name = models.CharField(max_length=255,
+                            help_text='The name of your college. Please refrain from using short forms.'
+                            )
+    city = models.CharField(max_length=30,
+                            help_text='The name of the city where your college is located. Please refrain from using short forms.'
+                            )
+    state = models.CharField(max_length=40,help_text='The state where your college is located. Select from the drop down list'
+                             )
+
+    def __unicode__(self):
+        return '%s, %s, %s' % (self.name, self.city, self.state)
+
+    class Admin:
+        pass
+
+    class Meta:
+        db_table='users_college'
+
+class ParticipantUser(models.Model):
+    user=models.ForeignKey(User)
+    gender = models.CharField(max_length=1,
+                              default='F')
+    age = models.IntegerField(default=18)
+    branch = models.CharField(max_length=50, blank=True, null=True,
+                              help_text='Your branch of study')
+    mobile_number = models.CharField(max_length=15, null=True,
+            help_text='Please enter your current mobile number')
+    college = models.ForeignKey(College, null=True, blank=True)
+    college_roll = models.CharField(max_length=40, null=True)
+
+    shaastra_id = models.CharField(max_length = 20, unique = True, null=True)
+
+    activation_key = models.CharField(max_length=40, null=True)
+    key_expires = models.DateTimeField(null=True)
+    want_accomodation = models.BooleanField(default=False, help_text = "This doesn't guarantee accommodation during Shaastra.")
+    is_core = models.BooleanField(default=False)
+    is_hospi = models.BooleanField(default=False)
+    facebook_id = models.CharField(max_length=20)
+    access_token = models.CharField(max_length=250)
+
+    class Admin:
+        pass
+        
+    class Meta:
+        db_table='users_userprofile'
+
