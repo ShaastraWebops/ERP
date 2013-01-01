@@ -9,21 +9,27 @@ input{width:100px; height:25px;}
 <h4>Please click on the event name whose facilities requirements you want to see</h4>
 
 {% for dept in departments %}
-	{% if dept.Dept_Name in new_objects %}
-	<a class="btn btn-danger" href="{% url facilities.views.approve_event event_name=dept.id form_saved=0 error=0 %}">{{dept}}</a>
-	{% endif %}
-	{% if dept.Dept_Name in changed_objects %}
-	<a class="btn btn-warning" href="{% url facilities.views.approve_event event_name=dept.id form_saved=0 error=0 %}">{{dept}}</a>
-	{% endif %}
-	{% if dept.Dept_Name in exists_objects %}
-	<a class="btn btn-success" href="{% url facilities.views.approve_event event_name=dept.id form_saved=0 error=0 %}">{{dept}}</a>
-    {% endif %}
-	{% if dept.Dept_Name not in exists_objects %}
-	<a class="btn" href="{% url facilities.views.approve_event event_name=dept.id form_saved=0 error=0 %}">{{dept}}</a>
+    {% if dept in exist_dept %}
+        <a class="btn btn-success" href="{% url facilities.views.round_home event_id=dept.id %}">{{dept}}</a>
+    {% else %}
+        <a class="btn" href={% url facilities.views.round_home event_id=dept.id %}>{{dept}}</a>
     {% endif %}
 {% endfor %}
+
 <br/><br/>
 <b>Note on colour codes :-</b><br/>
+<ol>
+<li><p>Green indicates an Event with rounds, and with facilities requirements</p>
+</li>
+<li><p>White indicates an Event which currently has no rounds, and thus no facilities requirements</p></li></ol>
+
+<div class="pull-right">
+{% for dat in date_list %}
+    <a  class="btn btn-primary" href="{% url facilities.excelViews.optimize_excel day_number=dat %}" >Download Optimized item allotment for {{dat}} January, 2012</a><br/><br/>
+{% endfor %}
+    <a  class="btn btn-primary" href="{% url facilities.excelViews.optimize_all %}" >Download Day Based Facilities Optimization</a><br/><br/>
+</div>
+<!--<b>Note on colour codes :-</b><br/>
 <ol>
 <li><p>Red indicates an Event with item requests, atleast one of which has no nummber of items approved</p>
 </li>
@@ -33,10 +39,13 @@ input{width:100px; height:25px;}
 </li>
 <li/><p>White indicates an Event which has absolutely no requests. Ever.</p>
 </li>
-</ol>
+</ol>-->
+
+<!--
 <div class="pull-right">
 <a  class="btn " href="{% url facilities.pdfGeneratingViews.generateOverallPDF %}" >Generate a PDF summary</a>
-</div>
+</div>-->
+
 {% endblock %}
 {% block javascript %}
 {{ block.super }}
@@ -60,3 +69,16 @@ $(document).ready(function() {
 {% endblock javascript %}
 {% block display_stuff %}
 {% endblock %}
+
+	<!--{% if dept.Dept_Name in new_objects %}
+	<a class="btn btn-danger" href="{% url facilities.views.round_home event_name=dept.id form_saved=0 error=0 %}">{{dept}}</a>
+	{% endif %}
+	{% if dept.Dept_Name in changed_objects %}
+	<a class="btn btn-warning" href="{% url facilities.views.round_home event_name=dept.id form_saved=0 error=0 %}">{{dept}}</a>
+	{% endif %}
+	{% if dept.Dept_Name in exists_objects %}
+	<a class="btn btn-success" href="{% url facilities.views.round_home event_name=dept.id form_saved=0 error=0 %}">{{dept}}</a>
+    {% endif %}
+	{% if dept.Dept_Name not in exists_objects %}
+	<a class="btn" href="{% url facilities.views.round_home event_name=dept.id form_saved=0 error=0 %}">{{dept}}</a>
+    {% endif %}-->

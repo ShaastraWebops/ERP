@@ -6,14 +6,19 @@
 textarea{ width: 250px; height: 60px;}
 input{width:100px; height:25px;}
 </style>
-
-<p>Yo</p>
+<h2>{{dept.Dept_Name}} - Facilities Home</h2>
+<div class="pull-right">
+<a  class="btn " href="{% url facilities.views.add_round event_id=dept.id %}" >Add A New Round</a>
+</div>
 <br/><br/>
-<!--
-{% for item in itemlist %}
-<p>{{item.name}}</p></br>
+{% for round in eventrounds %}
+<a class="btn btn-inverse" href="{% url facilities.views.approve_event round_id=round.id form_saved=0 error=0 %}">{{round.name}}</a>
+
 {% endfor %}
--->
+<br/><br/>
+<div class="pull-right">
+    <a class="btn btn-primary" href={% url facilities.excelViews.generate_event_excel event_id=dept.id %}>Download an Excel Summary Of   Event Requirements</a>
+    </div>
 {% endblock %}
 
 {% block javascript %}
