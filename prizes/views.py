@@ -5,6 +5,7 @@ from django.template.context import Context, RequestContext
 from erp.misc.util import *
 from erp.prizes.models import *
 from erp.prizes.forms import *
+from erp.department.models import *
 from django.forms.models import modelformset_factory
 
 def assign_barcode(request,owner_name=None):
@@ -39,15 +40,28 @@ def prize_assign(request,owner_name=None):
     winnerformset = WinnerFormset(queryset=Prize.objects.none()) 
     return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
 
-def cheque_assign(request,owner_name=None):
-    WinnerFormset = modelformset_factory(Prize, fields=('participant','cheque'),form=PrizeForm, extra=10)
-    eventname=request.user.userprofile_set.all()[0].department
+def cheque_assign(request,owner_name=None,event_name=None):
+    if not event_name:
+        events=Department.objects.all()#.filter(is_event=True)
+        return render_to_response('prizes/cheque_event.html',locals(),context_instance=global_context(request))
+    WinnerFormset = modelformset_factory(Prize, fields=('participant','cheque'),form=ChequeForm, extra=10)
+    eventname=Department.objects.filter(id=event_name)
+    print eventname
     if request.method == 'POST':
         winnerformset = WinnerFormset (request.POST)
         if winnerformset.is_valid ():
-            winners = winnerformset.save()
+            winners = winnerformset.save(commit=False)
+            for winner in winners:
+                try:
+                    obj=Prize.objects.get(event=eventname, participant=winner.participant)
+                    obj.cheque=winner.cheque
+                    obj.save()
+                except:
+                    pass
     winnerList = Prize.objects.filter(event=eventname)
-    winnerformset = WinnerFormset(queryset=Prize.objects.none()) 
+    winnerformset = WinnerFormset(queryset=Prize.objects.none())
+    for form in winnerformset:
+        form.fields['participant'].queryset=Participant.objects.filter(prize__event=eventname)
     return render_to_response('prizes/cheque_table.html',locals(),context_instance=global_context(request))
 
     
