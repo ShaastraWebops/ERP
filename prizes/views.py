@@ -49,11 +49,10 @@ def prize_assign(request,owner_name=None):
 
 def cheque_assign(request,owner_name=None,event_name=None):
     if not event_name:
-        events=Department.objects.all()#.filter(is_event=True)
+        events=Department.objects.filter(is_event=True)
         return render_to_response('prizes/cheque_event.html',locals(),context_instance=global_context(request))
     WinnerFormset = modelformset_factory(Prize, fields=('participant','cheque'),form=ChequeForm, extra=10)
     eventname=Department.objects.filter(id=event_name)
-    print eventname
     if request.method == 'POST':
         winnerformset = WinnerFormset (request.POST)
         if winnerformset.is_valid ():
