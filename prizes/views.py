@@ -143,7 +143,7 @@ def registerparticipants(request, owner_name=None, event_name=None):
     except:
         return redirect('erp.prizes.views.fillEventDetails', owner_name = request.user)
     BarcodeMapFormset = modelformset_factory(BarcodeMap, form=EventRegnForm, extra=eventdetails.team_nos)
-    uploadform=DocumentForm()
+    uploadform=DocumentForm()   
     #if error is reached, a participantList will still be displayed. formset will have the unsubmitted data.    
     participantList = Participant.objects.filter(events=eventname)
     if request.method == 'POST':
