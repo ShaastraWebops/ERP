@@ -20,21 +20,34 @@ def upload_file(request,owner_name=None,event_name=None):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
+            valid = True
+            shaastra_ids=[]
+            barcodes=[]
+            shaastra_ids_errors=[]
+            barcodes_errors=[]
             f = request.FILES['docfile']
             data = [row for row in csv.reader(f.read().splitlines())]
             for row in data:
                 print row
                 if len(row[0])==5:
-                    new=BarcodeMap.objects.filter(barcode=row[0])[0].shaastra_id
-                    new.events.add(event) 
-                    new.save()
+                    try:
+                        new=BarcodeMap.objects.filter(barcode=row[0])[0].shaastra_id
+                        new.events.add(event) 
+                        new.save()
+                        barcodes.append(row[0])
+                    except:
+                        barcodes_errors.append(row[0])
                 else:
-                    new=Participant.objects.filter(shaastra_id=row[1])[0]
-                    new.events.add(event)
-                    new.save()
+                    try:
+                        new=Participant.objects.filter(shaastra_id=row[1])[0]
+                        new.events.add(event)
+                        new.save()
+                        shaastra_ids.append(row[1])                                  
+                    except:
+                        shaastra_ids_errors.append(row[1])
     else:
         form = DocumentForm() 
-    return HttpResponseRedirect('/erp/prizes/%s/registerparticipants/%s/' % (str(request.user),event_name))
+    return render_to_response('prizes/uploads.html',locals(),context_instance=global_context(request))
 
 
 def assign_barcode(request,owner_name=None):

@@ -1,0 +1,38 @@
+{% extends "base_portal.html" %}
+
+{%block tabs%}
+
+{% if not valid %}
+<div class="well">
+Your file isn't valid! Please check if it's a CSV file in the proper format
+</div>
+{% endif %}
+
+<div class="well">
+{% for id in shaastra_ids_errors %}
+These Shaastra Ids were not added. <br />
+{{id}}
+{%endfor%}
+</div>
+
+<div class="well">
+{% for id in shaastra_ids %}
+These Shaastra Ids were successfully added. <br />
+{{id}}
+{%endfor%}
+</div>
+
+<div class="well">
+{%for barcode in barcodes%}
+These Barcodes were successfully added. <br />
+{{barcode}}
+{%endfor%}
+</div>
+
+<div class="well">
+{% for id in barcodes_errors %}
+These Barcodes were not added. <br />
+{{id}}
+{%endfor%}
+</div>
+{%endblock%}
