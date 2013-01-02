@@ -21,7 +21,7 @@
         {{ eventdetailsform }}
         <br/>
         <input id="submit" type="submit" class="btn btn-primary pull-left" name="submit_continue" value="Save"/>
-        <a id="participants" class="btn btn-primary pull-right" href="{% url prizes.views.prize_assign owner_name=request.user event_name=eventname.pk %}">Prizes &raquo;</a>
+        <a id="participants" class="btn btn-primary pull-right" href="{% url prizes.views.choosePosition owner_name=request.user event_name=eventname.pk %}">Prizes &raquo;</a>
         </form>
     </div>
     </div>

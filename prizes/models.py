@@ -39,7 +39,13 @@ class Prize(models.Model):
     """
     The winner's details and cheque nos
     """
-    participant = models.ForeignKey(Participant,blank=True, null=True)
+    participant_1 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_1')
+    participant_2 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_2')
+    participant_3 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_3')
+    participant_4 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_4')
+    participant_5 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_5')
+    participant_6 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_6')
+    participant_7 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_7')
     position = models.CharField(max_length=10,blank=True)
     event = models.ForeignKey(Department)
     details = models.CharField(max_length=250,blank=True)

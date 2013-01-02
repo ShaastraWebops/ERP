@@ -52,7 +52,7 @@ def assign_barcode(request,owner_name=None):
     barcodeformset =BarcodeFormset(queryset=BarcodeMap.objects.none())    
     return render_to_response('prizes/hospiregistration.html', locals(), context_instance = global_context(request))    
 
-
+"""
 def prize_assign(request,owner_name=None,event_name=None):
     try:
         eventname=Department.objects.get(id=event_name)
@@ -87,6 +87,52 @@ def prize_assign(request,owner_name=None,event_name=None):
     for form in winnerformset:
         form.fields['participant'].queryset=Participant.objects.filter(events=eventname)
     return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
+"""
+def prize_assign(request, owner_name=None, event_name=None, position=None):
+    try:
+        eventname=Department.objects.get(id=event_name)
+        eventdetails = EventDetails.objects.get(event = eventname)
+    except:
+        return redirect('erp.prizes.views.fillEventDetails', owner_name = request.user, event_name=event_name)
+    if not position or (int(position)-1) not in range(eventdetails.finalist_nos):
+        return redirect('erp.prizes.views.choosePosition', owner_name = request.user, event_name=event_name)
+    #if error is reached, a winnerList will still be displayed. formset will have the unsubmitted data.
+    if request.method == 'POST':
+        try:
+            prize = Prize.objects.get(event=eventname, position=position)
+            prizeform = PrizeForm(request.POST, instance=prize)
+        except:
+            prizeform = PrizeForm(request.POST)
+        if  prizeform.is_valid():
+            prize = prizeform.save(commit=False)
+            prize.event = eventname
+            prize.user=request.user
+            prize.position = position
+            prize.save()
+            success = True
+     
+    try:
+        prize = Prize.objects.get(event=eventname, position=position)         #updated list                              
+        prizeform = PrizeForm(instance=prize, eventdetails=eventdetails, position=position)
+    except:
+        prizeform = PrizeForm(eventdetails=eventdetails, position=position)
+    prizeform.fields['participant_1'].queryset=Participant.objects.filter(events=eventname)
+    prizeform.fields['participant_2'].queryset=Participant.objects.filter(events=eventname)
+    prizeform.fields['participant_3'].queryset=Participant.objects.filter(events=eventname)
+    prizeform.fields['participant_4'].queryset=Participant.objects.filter(events=eventname)
+    prizeform.fields['participant_5'].queryset=Participant.objects.filter(events=eventname)
+    prizeform.fields['participant_6'].queryset=Participant.objects.filter(events=eventname)
+    prizeform.fields['participant_7'].queryset=Participant.objects.filter(events=eventname)
+    return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
+
+def choosePosition(request,owner_name=None,event_name=None):
+    try:
+        eventname=Department.objects.get(id=event_name)
+        eventdetails = EventDetails.objects.get(event = eventname)
+    except:
+        return redirect('erp.prizes.views.fillEventDetails', owner_name = request.user)
+    positions= [i+1 for i in range(eventdetails.finalist_nos)]
+    return render_to_response('prizes/choose_position.html',locals(),context_instance=global_context(request))    
 
 def cheque_assign(request,owner_name=None,event_name=None):
     if not event_name:
