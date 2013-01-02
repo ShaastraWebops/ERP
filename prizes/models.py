@@ -67,6 +67,8 @@ class EventDetails(models.Model):
     def __str__(self):
         return self.event.Dept_Name
       
+
+
 class College(models.Model):
 
     name = models.CharField(max_length=255,
@@ -121,3 +123,4 @@ class Team(models.Model):
                 
     def __unicode__(self):
         return self.name
+
