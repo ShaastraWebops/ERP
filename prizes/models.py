@@ -49,7 +49,18 @@ class Prize(models.Model):
     
     def __str__(self):
         return self.participant.shaastra_id
+        
+class EventDetails(models.Model):
+    event = models.ForeignKey(Department)
+    team_nos = models.IntegerField()
+    max_members = models.IntegerField()
+    winner_nos = models.IntegerField(blank=True, null=True)
+    finalist_nos = models.IntegerField(blank=True, null=True)
+    certificate_nos = models.IntegerField(blank=True, null=True)
 
+    def __str__(self):
+        return self.event.Dept_Name
+        
 class College(models.Model):
 
     name = models.CharField(max_length=255,
@@ -97,4 +108,10 @@ class ParticipantUser(models.Model):
         
     class Meta:
         db_table='users_userprofile'
-
+        
+class Team(models.Model):
+    name = models.CharField(max_length = 250)
+    events = models.ManyToManyField(Department, null=True)
+                
+    def __unicode__(self):
+        return self.name

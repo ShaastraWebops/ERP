@@ -15,7 +15,6 @@
     <div class="span offset1">
         <form action="" method="POST">
         {% csrf_token %}
-     
         {{ barcodeformset.management_form }}
         
         <table class="table-condensed table-striped">
@@ -34,7 +33,8 @@
             {%endfor%}
 
         </table>
-     <table>
+
+        <table>    
            <tr>
                 {% for field in barcodeform.hidden_fields %}
                 <td> {{ field }} </td>
