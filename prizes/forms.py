@@ -17,10 +17,13 @@ class BarcodeForm (ModelForm):
    
     def save(self,commit=True):
         try:
-            shid=self.cleaned_data['shaastra_id']
+            shid=self.cleaned_data['shaastra_id']  
+            barcode=self.cleaned_data['barcode']  
             instance=Participant.objects.filter(shaastra_id=shid)[0]
             self.instance.shaastra_id=instance        
             return super(BarcodeForm, self).save()
+        except KeyError:
+            return True
         except:
             msg='ShaastraID not found. Recheck this ID or remove it to save other entries.'
             self._errors['shaastra_id'] = ErrorList([msg])

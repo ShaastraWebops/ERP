@@ -19,7 +19,7 @@ def assign_barcode(request,owner_name=None):
                     if not barcodes:
                         return render_to_response('prizes/hospiregistration.html', locals(), context_instance = global_context(request))    
                 else:
-                    form=BarcodeForm()
+                    print form.fields
     barcodeformset =BarcodeFormset(queryset=BarcodeMap.objects.none())    
     return render_to_response('prizes/hospiregistration.html', locals(), context_instance = global_context(request))    
 
