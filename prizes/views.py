@@ -50,7 +50,8 @@ def prize_assign(request,owner_name=None):
 def cheque_assign(request,owner_name=None,event_name=None):
     if not event_name:
         events=Department.objects.filter(is_event=True)
-        return render_to_response('prizes/cheque_event.html',locals(),context_instance=global_context(request))
+        page_name = "Assign Cheques"
+        return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
     WinnerFormset = modelformset_factory(Prize, fields=('participant','cheque'),form=ChequeForm, extra=10)
     eventname=Department.objects.filter(id=event_name)
     if request.method == 'POST':
@@ -70,12 +71,35 @@ def cheque_assign(request,owner_name=None,event_name=None):
         form.fields['participant'].queryset=Participant.objects.filter(prize__event=eventname)
     return render_to_response('prizes/cheque_table.html',locals(),context_instance=global_context(request))
 
+def fillEventDetails(request, owner_name=None, event_name=None):
+    try:
+        eventname=Department.objects.get(id=event_name)
+    except:
+        events=Department.objects.filter(is_event=True)
+        page_name = "Event Details"
+        return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
+    if request.method == 'POST':
+        eventdetailsform = EventDetailsForm(request.POST, event=eventname.Dept_Name)
+        if eventdetailsform.is_valid():
+            eventdetails = eventdetailsform.save(commit=False)
+            eventdetails.event = eventname
+            eventdetails.save()
+            success = True
+    try:
+        eventdetails = EventDetails.object.get(event=eventname)
+        eventdetailsform = EventDetailsForm(instance=eventdetails, event=eventname.Dept_Name)
+    except:    
+        eventdetailsform = EventDetailsForm(event=eventname.Dept_Name)
+    return render_to_response('prizes/event_details.html', locals(), context_instance = global_context(request))    
+
+
 def registerparticipants(request, owner_name=None, event_name=None):
     try:
         eventname=Department.objects.get(id=event_name)
     except:
         events=Department.objects.filter(is_event=True)
-        return render_to_response('prizes/registration_event.html',locals(),context_instance=global_context(request))
+        page_name = "View Participants"
+        return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
     BarcodeMapFormset = modelformset_factory(BarcodeMap, form=BarcodeForm, extra=25)
     #if error is reached, a participantList will still be displayed. formset will have the unsubmitted data.    
     participantList = Participant.objects.filter(events=eventname)

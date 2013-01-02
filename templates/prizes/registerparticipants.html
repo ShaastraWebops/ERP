@@ -16,7 +16,10 @@
     <div class="row">
     <div class="span5">
         {% if error %}
-            <span style="color:#FF0000">Error: Incorrect barcode entered - {{ error }}<br/>Please enter the correct barcode, or enter the Shaastra ID instead.</span>
+            <div class="alert alert-error fade in">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                Incorrect barcode entered - <b>{{ error }}</b><br/>Please enter the correct barcode, or enter the Shaastra ID instead.
+            </div>
         {% endif %}
         <form action="" method="POST">
         {% csrf_token %}
