@@ -13,7 +13,13 @@ def assign_barcode(request,owner_name=None):
     if request.method == 'POST':
         barcodeformset = BarcodeFormset (request.POST)
         if barcodeformset.is_valid ():
-            barcodes=barcodeformset.save()
+            for form in barcodeformset:
+                barcodes=form.save()
+                if not isinstance(barcodes, BarcodeMap):
+                    if not barcodes:
+                        return render_to_response('prizes/hospiregistration.html', locals(), context_instance = global_context(request))    
+                else:
+                    form=BarcodeForm()
     barcodeformset =BarcodeFormset(queryset=BarcodeMap.objects.none())    
     return render_to_response('prizes/hospiregistration.html', locals(), context_instance = global_context(request))    
 
@@ -83,17 +89,21 @@ def fillEventDetails(request, owner_name=None, event_name=None):
         page_name = "Event Details"
         return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
     if request.method == 'POST':
-        eventdetailsform = EventDetailsForm(request.POST, event=eventname.Dept_Name)
+        try:
+            eventdetails = EventDetails.objects.get(event=eventname)
+            eventdetailsform = EventDetailsForm(request.POST, instance=eventdetails)
+        except:    
+            eventdetailsform = EventDetailsForm(request.POST)
         if eventdetailsform.is_valid():
             eventdetails = eventdetailsform.save(commit=False)
             eventdetails.event = eventname
             eventdetails.save()
             success = True
     try:
-        eventdetails = EventDetails.object.get(event=eventname)
-        eventdetailsform = EventDetailsForm(instance=eventdetails, event=eventname.Dept_Name)
-    except:    
-        eventdetailsform = EventDetailsForm(event=eventname.Dept_Name)
+        eventdetails = EventDetails.objects.get(event=eventname)
+        eventdetailsform = EventDetailsForm(instance=eventdetails, event=eventname)
+    except:
+        eventdetailsform = EventDetailsForm(event=eventname)
     return render_to_response('prizes/event_details.html', locals(), context_instance = global_context(request))    
 
 

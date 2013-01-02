@@ -6,6 +6,8 @@ from chosen import forms as chosenforms
 from erp.prizes.models import *
 from department.models import *
 from django.contrib.auth.models import User
+from django.forms.util import ErrorList
+
 #from chosen import widgets as chosenwidgets
 
 # Get Shaastra IDS
@@ -14,11 +16,16 @@ class BarcodeForm (ModelForm):
     shaastra_id=forms.CharField(required=True)
    
     def save(self,commit=True):
-        shid=self.cleaned_data['shaastra_id']
-        instance=Participant.objects.filter(shaastra_id=shid)[0]
-        self.instance.shaastra_id=instance        
-        return super(BarcodeForm, self).save()
-    
+        try:
+            shid=self.cleaned_data['shaastra_id']
+            instance=Participant.objects.filter(shaastra_id=shid)[0]
+            self.instance.shaastra_id=instance        
+            return super(BarcodeForm, self).save()
+        except:
+            msg='ShaastraID not found. Recheck this ID or remove it to save other entries.'
+            self._errors['shaastra_id'] = ErrorList([msg])
+            return False
+            
     class Meta: 
         model=BarcodeMap
         exclude=('shaastra_id')    
@@ -62,6 +69,8 @@ class EventDetailsForm (ModelForm):
         self.fields['winner_nos'].label = "Number of Places with Cash Prize and Cerificate (1st, 2nd, 3rd etc.)"
         self.fields['finalist_nos'].label = "Number of Finalist Teams (inclusive of the winners)"
         self.fields['certificate_nos'].label = "Number of Participant Certificates"
-        if(event is not None):
-            if(event.find("Workshop") == -1):
-                self.fields['certificate_nos'].widget = self.fields['certificate_nos'].hidden_widget()   
+        if isinstance(event, Department):
+            if(event.Dept_Name.find("Workshop") == -1):
+                self.fields['certificate_nos'].widget = self.fields['certificate_nos'].hidden_widget()
+        else:
+            super(EventDetailsForm, self).__init__(event,*args, **kwargs)                  
