@@ -28,6 +28,7 @@ class BarcodeForm (ModelForm):
         self.fields['shaastra_id'].label = "Shaastra ID"
         self.fields['shaastra_id'].widget.attrs['data-provide'] = "typeahead"
         self.fields['shaastra_id'].widget.attrs['data-items'] = "10"
+        self.fields['shaastra_id'].widget.attrs['data-source'] = '["Alpha","Mike","Foxtrot"]'
         #import pickle
         #f = open('ids.txt','rb')
         #ids = pickle.load(f)    

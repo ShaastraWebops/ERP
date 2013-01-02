@@ -15,9 +15,6 @@
     <div class="span4 offset1">
         <form action="" method="POST">
         {% csrf_token %}
-     {% load filtertags %}
-
-    {% finalfilter escape %}
         {{ barcodeformset.management_form }}
         
         <table class="table-condensed table-striped">
@@ -33,7 +30,6 @@
             {%endfor%}
 
         </table>
-        {% endfinalfilter %}
         <table>    
            <tr>
                 {% for field in barcodeform.hidden_fields %}

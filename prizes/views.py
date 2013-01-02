@@ -21,7 +21,8 @@ def assign_barcode(request,owner_name=None):
 def prize_assign(request,owner_name=None,event_name=None):
     if not event_name:
         events=Department.objects.filter(is_event=True)
-        return render_to_response('prizes/prize_event.html',locals(),context_instance=global_context(request))
+        page_name = "Assign Prizes"
+        return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
     WinnerFormset = modelformset_factory(Prize, form=PrizeForm, extra=3)
     eventname=Department.objects.filter(id=event_name)
     #if error is reached, a winnerList will still be displayed. formset will have the unsubmitted data.
