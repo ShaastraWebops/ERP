@@ -67,12 +67,14 @@ def assign_barcode(request,owner_name=None):
 
 
 def prize_assign(request,owner_name=None,event_name=None):
-    if not event_name:
+    try:
+        eventname=Department.objects.get(id=event_name)
+    except:
         events=Department.objects.filter(is_event=True)
         page_name = "Assign Prizes"
         return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
+        
     WinnerFormset = modelformset_factory(Prize, form=PrizeForm, extra=3)
-    eventname=Department.objects.filter(id=event_name)
     #if error is reached, a winnerList will still be displayed. formset will have the unsubmitted data.
     winnerList = Prize.objects.filter(event=eventname)
     if request.method == 'POST':
@@ -152,24 +154,25 @@ def fillEventDetails(request, owner_name=None, event_name=None):
 def registerparticipants(request, owner_name=None, event_name=None):
     try:
         eventname = Department.objects.get(id=event_name)
-        eventdetails = EventDetails.objects.get(event=eventname)
     except:
-        return redirect('erp.prizes.views.fillEventDetails', owner_name = request.user)
-    BarcodeMapFormset = modelformset_factory(BarcodeMap, form=EventRegnForm, extra=eventdetails.team_nos)
+        events=Department.objects.filter(is_event=True)
+        page_name = "Event Registration"
+        return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
+    BarcodeMapFormset = modelformset_factory(BarcodeMap, form=BarcodeForm, extra=25)
     uploadform=DocumentForm()   
     #if error is reached, a participantList will still be displayed. formset will have the unsubmitted data.    
     participantList = Participant.objects.filter(events=eventname)
     if request.method == 'POST':
         barcodemapformset = BarcodeMapFormset (request.POST)
         if barcodemapformset.is_valid ():
-            for forms in barcodemapformset:
-                teamname = form.cleaned_data.get('team_id')
-                try:
-                    team = Team.objects.get(name=teamname)
-                except:
-                    team = Team(name=teamname)
-                    team.save()
-                team.events.add(eventname)
+            #for forms in barcodemapformset:
+            #    teamname = form.cleaned_data.get('team_id')
+            #    try:
+            #        team = Team.objects.get(name=teamname)
+            #    except:
+            #        team = Team(name=teamname)
+            #        team.save()
+            #   team.events.add(eventname)
             barcodemaps = barcodemapformset.save(commit=False)
             for barcodemap in barcodemaps:
                 try:
@@ -184,7 +187,7 @@ def registerparticipants(request, owner_name=None, event_name=None):
                         return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
                 participant.events.add(eventname)
     participantList = Participant.objects.filter(events=eventname)      #updated list
-    teamList = Team.objects.filter(events=eventname)
-    barcodemapformset = BarcodeMapFormset(queryset=BarcodeMap.objects.filter(shaastra_id__events=eventname))
+    #teamList = Team.objects.filter(events=eventname)
+    barcodemapformset = BarcodeMapFormset(queryset=BarcodeMap.objects.none())
     idList = [str(elem.shaastra_id) for elem in Participant.objects.all()] 
     return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))

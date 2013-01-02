@@ -7,7 +7,7 @@
     <div class="row">
     <div class="span7">
         <center><h4>Event Details for {{ eventname }}</h4>
-        To save the entered details click 'Save'. To view/edit the registered participants for this event, click on 'Registered Participants'.</center><br/>
+        To save the entered details click 'Save'. To view/edit the prizes for this event, click on 'Prizes'.</center><br/>
         
         {% if success %}
         <div class="alert alert-info fade in">
@@ -21,7 +21,7 @@
         {{ eventdetailsform }}
         <br/>
         <input id="submit" type="submit" class="btn btn-primary pull-left" name="submit_continue" value="Save"/>
-        <a id="participants" class="btn btn-primary pull-right" href="{% url prizes.views.registerparticipants owner_name=request.user event_name=eventname.pk %}">Registered Participants &raquo;</a>
+        <a id="participants" class="btn btn-primary pull-right" href="{% url prizes.views.prize_assign owner_name=request.user event_name=eventname.pk %}">Prizes &raquo;</a>
         </form>
     </div>
     </div>
@@ -34,8 +34,8 @@
 {{ block.super }}
 <script type="text/javascript">
 $(document).ready(function() {
-    var d = document.getElementById("li_eventregn");
-    var e = document.getElementById("li_eventregn_icon");
+    var d = document.getElementById("li_prize_assign");
+    var e = document.getElementById("li_prize_assign_icon");
     d.className = "active";
     e.className = e.className + " icon-white";
  });
