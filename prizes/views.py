@@ -13,7 +13,13 @@ def assign_barcode(request,owner_name=None):
     if request.method == 'POST':
         barcodeformset = BarcodeFormset (request.POST)
         if barcodeformset.is_valid ():
-            barcodes=barcodeformset.save()
+            for form in barcodeformset:
+                barcodes=form.save()
+                if not isinstance(barcodes, BarcodeMap):
+                    if not barcodes:
+                        return render_to_response('prizes/hospiregistration.html', locals(), context_instance = global_context(request))    
+                else:
+                    form=BarcodeForm()
     barcodeformset =BarcodeFormset(queryset=BarcodeMap.objects.none())    
     return render_to_response('prizes/hospiregistration.html', locals(), context_instance = global_context(request))    
 

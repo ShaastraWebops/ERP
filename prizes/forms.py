@@ -6,6 +6,8 @@ from chosen import forms as chosenforms
 from erp.prizes.models import *
 from department.models import *
 from django.contrib.auth.models import User
+from django.forms.util import ErrorList
+
 #from chosen import widgets as chosenwidgets
 
 # Get Shaastra IDS
@@ -14,11 +16,16 @@ class BarcodeForm (ModelForm):
     shaastra_id=forms.CharField(required=True)
    
     def save(self,commit=True):
-        shid=self.cleaned_data['shaastra_id']
-        instance=Participant.objects.filter(shaastra_id=shid)[0]
-        self.instance.shaastra_id=instance        
-        return super(BarcodeForm, self).save()
-    
+        try:
+            shid=self.cleaned_data['shaastra_id']
+            instance=Participant.objects.filter(shaastra_id=shid)[0]
+            self.instance.shaastra_id=instance        
+            return super(BarcodeForm, self).save()
+        except:
+            msg='ShaastraID not found. Recheck this ID or remove it to save other entries.'
+            self._errors['shaastra_id'] = ErrorList([msg])
+            return False
+            
     class Meta: 
         model=BarcodeMap
         exclude=('shaastra_id')    
@@ -28,10 +35,8 @@ class BarcodeForm (ModelForm):
         self.fields['shaastra_id'].label = "Shaastra ID"
         self.fields['shaastra_id'].widget.attrs['data-provide'] = "typeahead"
         self.fields['shaastra_id'].widget.attrs['data-items'] = "10"
-        #import pickle
-        #f = open('ids.txt','rb')
-        #ids = pickle.load(f)    
-        #self.fields['shaastra_id'].widget.attrs['data-source']=  str(ids)
+        #ids = [str(elem.shaastra_id) for elem in Participant.objects.all()]
+        self.fields['shaastra_id'].widget.attrs['data-source']= ''
 
         
 class PrizeForm (ModelForm):

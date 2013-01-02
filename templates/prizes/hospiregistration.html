@@ -12,29 +12,29 @@
        <br/>
        </center>
        </div>
-    <div class="span4 offset1">
+    <div class="span offset1">
         <form action="" method="POST">
         {% csrf_token %}
-     {% load filtertags %}
-
-    {% finalfilter escape %}
+     
         {{ barcodeformset.management_form }}
         
         <table class="table-condensed table-striped">
-            <tr><th>S.No</th><th> Barcode </th> <th> Paticipant Shaastra ID </th></tr>
+            <tr><th>S.No</th><th> Barcode </th> <th> Paticipant Shaastra ID </th><th>Errors(If any)</th></tr>
             <tr>
             
             {% for barcodeform in barcodeformset %}
                 <td>{{ forloop.counter }}.&emsp;</td>
                 {% for field in barcodeform.visible_fields %}
                    <td>{{ field }}</td>
+                   {% if field.errors %}
+                   <td>{{field.errors}}</td>
+                   {% endif %}
                 {% endfor %}
             </tr>
             {%endfor%}
 
         </table>
-        {% endfinalfilter %}
-        <table>    
+     <table>
            <tr>
                 {% for field in barcodeform.hidden_fields %}
                 <td> {{ field }} </td>
