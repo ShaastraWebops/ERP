@@ -15,10 +15,15 @@
     <div class="span4 offset1">
         <form action="" method="POST">
         {% csrf_token %}
+     {% load filtertags %}
+
+    {% finalfilter escape %}
         {{ barcodeformset.management_form }}
+        
         <table class="table-condensed table-striped">
             <tr><th>S.No</th><th> Barcode </th> <th> Paticipant Shaastra ID </th></tr>
             <tr>
+            
             {% for barcodeform in barcodeformset %}
                 <td>{{ forloop.counter }}.&emsp;</td>
                 {% for field in barcodeform.visible_fields %}
@@ -26,7 +31,9 @@
                 {% endfor %}
             </tr>
             {%endfor%}
+
         </table>
+        {% endfinalfilter %}
         <table>    
            <tr>
                 {% for field in barcodeform.hidden_fields %}
