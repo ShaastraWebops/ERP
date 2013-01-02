@@ -75,7 +75,7 @@ def advance(request, dept):
     else:
         curr_portal=OpenBudgetPortal(opened=False)
         curr_portal.save()
-
+        
     curr_user=request.user
     event=False
     finance=False
@@ -152,6 +152,17 @@ def advance(request, dept):
                         #return HttpResponseRedirect(reverse('erp.finance.views.advance', kwargs={'dept': dept,}))
                         #check for error                                              
                         request_items = Request.objects.filter(department=department)
+        
+        #Also check if reimbursement portal is open, then advance requirements
+        #is automatically closed    
+        open_reimb_portal=OpenReimbPortal.objects.all()
+        if not open_reimb_portal:
+            open_reimb_portal1=OpenReimbPortal(opened=False)
+            open_reimb_portal1.save()        
+        open_reimb_portal=OpenReimbPortal.objects.get(id=1)
+        if open_reimb_portal.opened==True:
+            advance=False   
+                                
         return render_to_response('finance/advance_portal.html',locals(),context_instance=global_context(request))    
         
     elif str(department) == "Finance":
@@ -233,7 +244,18 @@ def advance(request, dept):
                             pending_approval = []
                             for req in request_items:
                                 if req.request_status:
-                                    pending_approval.append(req.department.Dept_Name)                                                      
+                                    pending_approval.append(req.department.Dept_Name)    
+                                    
+        #Also check if reimbursement portal is open, then advance requirements
+        #is automatically closed    
+        open_reimb_portal=OpenReimbPortal.objects.all()
+        if not open_reimb_portal:
+            open_reimb_portal1=OpenReimbPortal(opened=False)
+            open_reimb_portal1.save()        
+        open_reimb_portal=OpenReimbPortal.objects.get(id=1)
+        if open_reimb_portal.opened==True:
+            advance=False   
+                                                                                                  
         return render_to_response('finance/advance_portal.html',locals(),context_instance=global_context(request))
     
     if qms_dept:
@@ -260,6 +282,17 @@ def advance(request, dept):
             plan_finance = Budget.objects.get(name='F',department=event_name) 
             request_items = Request.objects.filter(department=event_name)  
             items=Item.objects.all()
+            
+        #Also check if reimbursement portal is open, then advance requirements
+        #is automatically closed    
+        open_reimb_portal=OpenReimbPortal.objects.all()
+        if not open_reimb_portal:
+            open_reimb_portal1=OpenReimbPortal(opened=False)
+            open_reimb_portal1.save()        
+        open_reimb_portal=OpenReimbPortal.objects.get(id=1)
+        if open_reimb_portal.opened==True:
+            advance=False   
+                        
         return render_to_response('finance/advance_portal.html',locals(),context_instance=global_context(request))
          
     """

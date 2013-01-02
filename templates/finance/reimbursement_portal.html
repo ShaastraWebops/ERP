@@ -224,12 +224,42 @@
 <form action='' method="POST">
 {% csrf_token %}
 {% if open_reimb_portal.opened %}
+
+            <div class="well">
+                    <h4><a data-toggle="modal" href="#openModal" class="btn btn-danger">Close Reimbursement Portal</a></h4>
+
+                    <div class="modal hide" id="openModal">
+                        <div class="modal-body">
+                            <p> Once the Reimbursement portal is closed the Event Coords can no longer edit their Bill submission and Reimbursement claim. </br>Closing the Reimbursement Portal enables the finance Coordinators with permission to Pay and Comment on the Events Reimbursement Claim.</p>	  
+               	    </div>
+                      <div class="modal-footer">
+                        <input class="btn btn-danger " type="submit" name="open_portal" value="Close Portal">
+                        <a href="#" class="btn btn-action" data-dismiss="modal" >Cancel</a>
+     
+                      </div>
+            </div>
+<!--            
 <input class="btn btn-danger " type="submit" name="open_portal" value="Close Reimbursement Portal">
-</br></br>Once the Reimbursement portal is closed the Event Coords can no longer edit their Bill submission and Reimbursement claim. </br>Closing the Reimbursement Portal enables the finance Coordinators with permission to Pay and Comment on the Events Reimbursement Claim.
+</br></br>Once the Reimbursement portal is closed the Event Coords can no longer edit their Bill submission and Reimbursement claim. </br>Closing the Reimbursement Portal enables the finance Coordinators with permission to Pay and Comment on the Events Reimbursement Claim.-->
 {% endif %}
 {% if not open_reimb_portal.opened %}
-<input class="btn btn-success " type="submit" name="open_portal" value="Open Reimbursement Portal">
-</br></br>Opening the Reimbursement portal allows the Event coordinators to submit their bills and Claim Reimbursement for their Events.
+
+            <div class="well">
+                    <h4><a data-toggle="modal" href="#openModal" class="btn btn-success">Open Reimbursement Portal</a></h4>
+
+                    <div class="modal hide" id="openModal">
+                        <div class="modal-body">
+                            <p> Opening the Reimbursement portal allows the Event coordinators to submit their bills and Claim Reimbursement for their Events. </p>	  <h5>Note that this automatically closes the advance requirements portal</h5>
+               	    </div>
+                      <div class="modal-footer">
+                        <input class="btn btn-success " type="submit" name="open_portal" value="Open Portal">
+                        <a href="#" class="btn btn-action" data-dismiss="modal" >Cancel</a>
+     
+                      </div>
+            </div>
+            
+<!--<input class="btn btn-success " type="submit" name="open_portal" value="Open Reimbursement Portal">
+</br></br>Opening the Reimbursement portal allows the Event coordinators to submit their bills and Claim Reimbursement for their Events.-->
 {% endif %}
 <hr>
 Choose the <strong>deadline</strong> that needs to be displayed for the Event coords for their Reimbursement Claim submission.
