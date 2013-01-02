@@ -1,0 +1,12 @@
+{% extends "base_portal.html" %}
+
+{% block tabs %}
+<center><h4>{{ page_name }} - Choose Event</h4></center><br/>
+
+<table class="table">
+{% for event in events %}
+<tr><td>
+<a href="{{ request.path }}{{ event.id }}/">{{event.Dept_Name}}</a><br />
+</tr></td>
+{% endfor %}
+{% endblock %}
