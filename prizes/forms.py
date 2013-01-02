@@ -11,7 +11,13 @@ from django.forms.util import ErrorList
 #from chosen import widgets as chosenwidgets
 
 # Get Shaastra IDS
-
+    
+class DocumentForm(forms.Form):
+    docfile = forms.FileField(
+        label='Select a file',
+        help_text='Max. 2.5 MB'
+    )
+    
 class BarcodeForm (ModelForm):
     shaastra_id=forms.CharField(required=True)
    

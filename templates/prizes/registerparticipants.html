@@ -32,6 +32,18 @@
         </form>
     </div>
     <div class="span3">
+    <form action="{% url prizes.views.upload_file owner_name=user event_name=event_name %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ uploadform.non_field_errors }}</p>
+            <p>{{ uploadform.docfile.label_tag }} {{ uploadform.docfile.help_text }}</p>
+            <p>
+                {{ uploadform.docfile.errors }}
+                {{ uploadform.docfile }}
+            </p>
+            <p><input type="submit" class="btn btn-primary" value="Upload" /></p>
+        </form>
+    </div>
+    <div class="span3">
     <h4>Registered Participants:</h4><br/>
     <table class="table">
     {% if participarticipantList %}

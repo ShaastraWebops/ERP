@@ -4,6 +4,8 @@ from django.conf.urls import *
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('erp.prizes.views',     
+      (r'^upload/$', 'upload_file'),
+      (r'^prize/(?P<event_name>\d{1,3})/$', 'upload_file'),
       (r'^prize/$', 'prize_assign'),
       (r'^prize/(?P<event_name>\d{1,3})/$', 'prize_assign'),
       (r'^cheque/$', 'cheque_assign'),

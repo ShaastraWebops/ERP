@@ -7,6 +7,35 @@ from erp.prizes.models import *
 from erp.prizes.forms import *
 from erp.department.models import *
 from django.forms.models import modelformset_factory
+import csv
+# Function to handle an uploaded file.
+from erp.prizes.file import handle_uploaded_file
+
+
+def upload_file(request,owner_name=None,event_name=None):
+    if not event_name:
+        events=Department.objects.filter(is_event=True)
+        return render_to_response('prizes/registration_event.html',locals(),context_instance=global_context(request))
+    event=Department.objects.filter(id=event_name)[0]
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            f = request.FILES['docfile']
+            data = [row for row in csv.reader(f.read().splitlines())]
+            for row in data:
+                print row
+                if len(row[0])==5:
+                    new=BarcodeMap.objects.filter(barcode=row[0])[0].shaastra_id
+                    new.events.add(event) 
+                    new.save()
+                else:
+                    new=Participant.objects.filter(shaastra_id=row[1])[0]
+                    new.events.add(event)
+                    new.save()
+    else:
+        form = DocumentForm() 
+    return HttpResponseRedirect('/erp/prizes/%s/registerparticipants/%s/' % (str(request.user),event_name))
+
 
 def assign_barcode(request,owner_name=None):
     BarcodeFormset = modelformset_factory(BarcodeMap, form=BarcodeForm, extra=10)
@@ -85,6 +114,7 @@ def registerparticipants(request, owner_name=None, event_name=None):
     except:
         events=Department.objects.filter(is_event=True)
         return render_to_response('prizes/registration_event.html',locals(),context_instance=global_context(request))
+    uploadform=DocumentForm() 
     BarcodeMapFormset = modelformset_factory(BarcodeMap, form=BarcodeForm, extra=25)
     #if error is reached, a participantList will still be displayed. formset will have the unsubmitted data.    
     participantList = Participant.objects.filter(events=eventname)
