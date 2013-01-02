@@ -8,14 +8,30 @@ from department.models import *
 from django.contrib.auth.models import User
 #from chosen import widgets as chosenwidgets
 
+# Get Shaastra IDS
+
 class BarcodeForm (ModelForm):
-    class Meta:
+    shaastra_id=forms.CharField(required=True)
+   
+    def save(self,commit=True):
+        shid=self.cleaned_data['shaastra_id']
+        instance=Participant.objects.filter(shaastra_id=shid)[0]
+        self.instance.shaastra_id=instance        
+        return super(BarcodeForm, self).save()
+    
+    class Meta: 
         model=BarcodeMap
-        widgets = {'shaastra_id':chosenforms.widgets.ChosenSelect()}
+        exclude=('shaastra_id')    
 		
     def __init__(self, *args, **kwargs):
         super(BarcodeForm, self).__init__(*args, **kwargs)
         self.fields['shaastra_id'].label = "Shaastra ID"
+        self.fields['shaastra_id'].widget.attrs['data-provide'] = "typeahead"
+        self.fields['shaastra_id'].widget.attrs['data-items'] = "10"
+        #import pickle
+        #f = open('ids.txt','rb')
+        #ids = pickle.load(f)    
+        #self.fields['shaastra_id'].widget.attrs['data-source']=  str(ids)
 
         
 class PrizeForm (ModelForm):
