@@ -65,4 +65,8 @@ $(document).ready(function() {
  });
 $('.chzn-select').chosen();
 </script>
+<script>  
+ var subjects = {{ idList|safe }}
+$('.search').typeahead({source: subjects})  
+</script>  
 {% endblock javascript%}

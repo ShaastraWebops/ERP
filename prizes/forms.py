@@ -11,9 +11,8 @@ from django.forms.util import ErrorList
 #from chosen import widgets as chosenwidgets
 
 # Get Shaastra IDS
-
 class BarcodeForm (ModelForm):
-    shaastra_id=forms.CharField(required=True)
+    shaastra_id=forms.CharField(max_length = 250)
    
     def save(self,commit=True):
         try:
@@ -35,13 +34,24 @@ class BarcodeForm (ModelForm):
         self.fields['shaastra_id'].label = "Shaastra ID"
         self.fields['shaastra_id'].widget.attrs['data-provide'] = "typeahead"
         self.fields['shaastra_id'].widget.attrs['data-items'] = "10"
-        self.fields['shaastra_id'].widget.attrs['data-source'] = '["Alpha","Mike","Foxtrot"]'
+        self.fields['shaastra_id'].widget.attrs['class'] = "search"
+        #test = str([str(elem.shaastra_id) for elem in Participant.objects.all()])
+        #print test
+        #self.fields['shaastra_id'].widget.attrs['data-source'] = test
         #import pickle
         #f = open('ids.txt','rb')
         #ids = pickle.load(f)    
         #self.fields['shaastra_id'].widget.attrs['data-source']=  str(ids)
 
-        
+
+class EventRegnForm(BarcodeForm):
+    def __init__(self, *args, **kwargs):
+        super(EventRegnForm, self).__init__(*args, **kwargs)
+        self.fields['team_id']=forms.ModelChoiceField(queryset=Team.objects.all())
+        self.fields['team_id'].label = "Team ID"
+        self.fields['team_id'].widget = chosenforms.widgets.ChosenSelect()
+
+
 class PrizeForm (ModelForm):
     barcode=forms.CharField(required=False)
     class Meta:

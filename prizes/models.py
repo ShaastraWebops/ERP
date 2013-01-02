@@ -108,4 +108,10 @@ class ParticipantUser(models.Model):
         
     class Meta:
         db_table='users_userprofile'
-
+        
+class Team(models.Model):
+    name = models.CharField(max_length = 250)
+    events = models.ManyToManyField(Department, null=True)
+                
+    def __unicode__(self):
+        return self.name

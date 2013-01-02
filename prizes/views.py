@@ -109,17 +109,24 @@ def fillEventDetails(request, owner_name=None, event_name=None):
 
 def registerparticipants(request, owner_name=None, event_name=None):
     try:
-        eventname=Department.objects.get(id=event_name)
+        eventname = Department.objects.get(id=event_name)
+        eventdetails = EventDetails.objects.get(event=eventname)
     except:
-        events=Department.objects.filter(is_event=True)
-        page_name = "View Participants"
-        return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
-    BarcodeMapFormset = modelformset_factory(BarcodeMap, form=BarcodeForm, extra=25)
+        return redirect('erp.prizes.views.fillEventDetails', owner_name = request.user)
+    BarcodeMapFormset = modelformset_factory(BarcodeMap, form=EventRegnForm, extra=eventdetails.team_nos)
     #if error is reached, a participantList will still be displayed. formset will have the unsubmitted data.    
     participantList = Participant.objects.filter(events=eventname)
     if request.method == 'POST':
         barcodemapformset = BarcodeMapFormset (request.POST)
         if barcodemapformset.is_valid ():
+            for forms in barcodemapformset:
+                teamname = form.cleaned_data.get('team_id')
+                try:
+                    team = Team.objects.get(name=teamname)
+                except:
+                    team = Team(name=teamname)
+                    team.save()
+                team.events.add(eventname)
             barcodemaps = barcodemapformset.save(commit=False)
             for barcodemap in barcodemaps:
                 try:
@@ -134,5 +141,7 @@ def registerparticipants(request, owner_name=None, event_name=None):
                         return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
                 participant.events.add(eventname)
     participantList = Participant.objects.filter(events=eventname)      #updated list
-    barcodemapformset = BarcodeMapFormset(queryset=BarcodeMap.objects.none())    
+    teamList = Team.objects.filter(events=eventname)
+    barcodemapformset = BarcodeMapFormset(queryset=BarcodeMap.objects.filter(shaastra_id__events=eventname))
+    idList = [str(elem.shaastra_id) for elem in Participant.objects.all()] 
     return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
