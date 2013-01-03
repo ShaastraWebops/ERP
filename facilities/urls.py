@@ -16,7 +16,7 @@ urlpatterns=patterns('erp.facilities.views',
     (r'^approve_event/(?P<round_id>\d+)/(?P<form_saved>\d+)/(?P<error>\d+)/$','approve_event'),
     (r'^submit_approval/(?P<item_id>\d+)/$','submit_approval'),
     (r'^submit_round/(?P<round_id>\d+)/$','submit_round'),
-    
+    (r'^eventparticipationpdf/(?P<dept_id>\d+)/$','event_participation_pdf'),
     
 )
 urlpatterns+=patterns('',

@@ -16,6 +16,7 @@ from settings import SITE_URL
 from pdfGeneratingViews import generateOverallPDF
 from pdfGeneratingViews import generateEventPDF
 from erp.facilities.models import DATE_CHOICES
+from erp.facilities.eventParticipationPDF import generateEventParticipationPDF
 
 def test(request):
     facilities_tab = True
@@ -397,7 +398,7 @@ def submit_approval(request,item_id):
     return HttpResponseRedirect(SITE_URL + 'erp/facilities/approve_event/%d/%d/%d/'%(item.creator.department.id,form_saved,error))
 '''
 
-       
-        
-    
-    
+def event_participation_pdf(request, dept_id):
+    dept_id = int(dept_id)
+    return generateEventParticipationPDF(dept_id)
+
