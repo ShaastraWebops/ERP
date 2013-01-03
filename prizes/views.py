@@ -147,7 +147,7 @@ def choosePosition(request,owner_name=None,event_name=None):
         return redirect('erp.prizes.views.fillEventDetails', owner_name = request.user)
     positions= [i+1 for i in range(eventdetails.finalist_nos)]
     finalist_details = Prize.objects.filter(event=eventname)
-    if str(request.user.get_profile().department) == 'QMS':
+    if str(request.user.get_profile().department) == 'QMS' or str(request.user.get_profile().department) == 'Finance':
         QMS = True
     return render_to_response('prizes/choose_position.html',locals(),context_instance=global_context(request))    
 
