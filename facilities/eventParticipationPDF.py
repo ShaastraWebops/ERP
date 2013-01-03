@@ -3,7 +3,7 @@
 
 """This module contains the views that generate the PDFs for the DTV Picker feature."""
 
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.contrib.auth.decorators import login_required
 
 from erp.prizes.models import Participant, BarcodeMap
