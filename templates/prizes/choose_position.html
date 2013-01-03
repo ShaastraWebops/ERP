@@ -24,42 +24,43 @@
 <td>
 <table class="table table-bordered">
 <tr>
+<th>Name</th>
 <th>Shaastra ID</th>
 <th>Barcode</th>
 </tr>
 {% if finalist.participant_1.shaastra_id %}
 <tr>
-<td>{{ finalist.participant_1.shaastra_id }}</td><td>{{ finalist.participant_1.barcode }}</td>
+<td>{{ finalist.participant_1.name }}</td><td>{{ finalist.participant_1.shaastra_id }}</td><td>{{ finalist.participant_1.barcodemap_set.all.0.barcode }}</td>
 </tr>
 {% endif %}
 {% if finalist.participant_2.shaastra_id %}
 <tr>
-<td>{{ finalist.participant_2.shaastra_id }}</td><td>{{ finalist.participant_2.barcode }}</td>
+<td>{{ finalist.participant_2.name }}</td><td>{{ finalist.participant_2.shaastra_id }}</td><td>{{ finalist.participant_2.barcodemap_set.all.0.barcode }}</td>
 </tr>
 {% endif %}
 {% if finalist.participant_3.shaastra_id %}
 <tr>
-<td>{{ finalist.participant_3.shaastra_id }}</td><td>{{ finalist.participant_3.barcode }}</td>
+<td>{{ finalist.participant_3.name }}</td><td>{{ finalist.participant_3.shaastra_id }}</td><td>{{ finalist.participant_3.barcodemap_set.all.0.barcode }}</td>
 </tr>
 {% endif %}
 {% if finalist.participant_4.shaastra_id %}
 <tr>
-<td>{{ finalist.participant_4.shaastra_id }}</td><td>{{ finalist.participant_4.barcode }}</td>
+<td>{{ finalist.participant_4.name }}</td><td>{{ finalist.participant_4.shaastra_id }}</td><td>{{ finalist.participant_4.barcodemap_set.all.0.barcode }}</td>
 </tr>
 {% endif %}
 {% if finalist.participant_5.shaastra_id %}
 <tr>
-<td>{{ finalist.participant_5.shaastra_id }}</td><td>{{ finalist.participant_5.barcode }}</td>
+<td>{{ finalist.participant_5.name }}</td><td>{{ finalist.participant_5.shaastra_id }}</td><td>{{ finalist.participant_5.barcodemap_set.all.0.barcode }}</td>
 </tr>
 {% endif %}
 {% if finalist.participant_6.shaastra_id %}
 <tr>
-<td>{{ finalist.participant_6.shaastra_id }}</td><td>{{ finalist.participant_6.barcode }}</td>
+<td>{{ finalist.participant_6.name }}</td><td>{{ finalist.participant_6.shaastra_id }}</td><td>{{ finalist.participant_6.barcodemap_set.all.0.barcode }}</td>
 </tr>
 {% endif %}
 {% if finalist.participant_7.shaastra_id %}
 <tr>
-<td>{{ finalist.participant_7.shaastra_id }}</td><td>{{ finalist.participant_7.barcode }}</td>
+<td>{{ finalist.participant_7.name }}</td><td>{{ finalist.participant_7.shaastra_id }}</td><td>{{ finalist.participant_7.barcodemap_set.all.0.barcode }}</td>
 </tr>
 {% endif %}
 </table>

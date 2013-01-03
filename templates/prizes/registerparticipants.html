@@ -51,9 +51,9 @@
     <table class="table">
     {% if participantList %}
     <br/>
-    <tr><th>S.No.</th><th>Name</th><th>Barcode</th></tr>
+    <tr><th>S.No.</th><th>Name</th><th>Shaastra ID</th><th>Barcode</th></tr>
     {% for participant in participantList %}
-    <tr><td>{{ forloop.counter }}.</td><td>{{ participant.name }}</td><td>{{ participant.barcode }}</td></tr>
+    <tr><td>{{ forloop.counter }}.</td><td>{{ participant.name }}</td><td>{{ participant.shaastra_id }}</td><td>{{ participant.barcodemap_set.all.0.barcode }}</td></tr>
     {% endfor %}
     </table>
     {% else %}

@@ -11,7 +11,6 @@ import csv
 # Function to handle an uploaded file.
 from erp.prizes.file import handle_uploaded_file
 
-
 def upload_file(request,owner_name=None,event_name=None):
     if not event_name:
         events=Department.objects.filter(is_event=True)
@@ -49,7 +48,6 @@ def upload_file(request,owner_name=None,event_name=None):
         form = DocumentForm() 
     return render_to_response('prizes/uploads.html',locals(),context_instance=global_context(request))
 
-
 def assign_barcode(request,owner_name=None):
     BarcodeFormset = modelformset_factory(BarcodeMap, form=BarcodeForm, extra=10)
     if request.method == 'POST':
@@ -65,42 +63,6 @@ def assign_barcode(request,owner_name=None):
     barcodeformset =BarcodeFormset(queryset=BarcodeMap.objects.none())    
     return render_to_response('prizes/hospiregistration.html', locals(), context_instance = global_context(request))    
 
-"""
-def prize_assign(request,owner_name=None,event_name=None):
-    try:
-        eventname=Department.objects.get(id=event_name)
-    except:
-        events=Department.objects.filter(is_event=True)
-        page_name = "Assign Prizes"
-        return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
-        
-    WinnerFormset = modelformset_factory(Prize, form=PrizeForm, extra=3)
-    #if error is reached, a winnerList will still be displayed. formset will have the unsubmitted data.
-    winnerList = Prize.objects.filter(event=eventname)
-    if request.method == 'POST':
-        winnerformset = WinnerFormset (request.POST)
-        if winnerformset.is_valid ():
-            for winnerform in winnerformset:
-                if winnerform.has_changed():
-                    barcode = winnerform.cleaned_data.get('barcode')
-                    winner=winnerform.save(commit=False)
-                    if barcode:
-                        try:
-                            participant=BarcodeMap.objects.get(barcode=barcode).shaastra_id
-                            winner.participant=participant
-                        except:
-                            #incorrect barcode
-                            error = barcode
-                            return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
-                    winner.event=eventname
-                    winner.user=request.user
-                    winner.save()
-    winnerList = Prize.objects.filter(event=eventname)         #updated list                               
-    winnerformset = WinnerFormset(queryset=Prize.objects.none())
-    for form in winnerformset:
-        form.fields['participant'].queryset=Participant.objects.filter(events=eventname)
-    return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
-"""
 def prize_assign(request, owner_name=None, event_name=None, position=None):
     try:
         eventname=Department.objects.get(id=event_name)
@@ -146,30 +108,6 @@ def choosePosition(request,owner_name=None,event_name=None):
     if str(request.user.get_profile().department) == 'QMS':
         QMS = True
     return render_to_response('prizes/choose_position.html',locals(),context_instance=global_context(request))    
-
-def cheque_assign(request,owner_name=None,event_name=None):
-    if not event_name:
-        events=Department.objects.filter(is_event=True)
-        page_name = "Assign Cheques"
-        return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
-    WinnerFormset = modelformset_factory(Prize, fields=('participant','cheque'),form=ChequeForm, extra=10)
-    eventname=Department.objects.filter(id=event_name)
-    if request.method == 'POST':
-        winnerformset = WinnerFormset (request.POST)
-        if winnerformset.is_valid ():
-            winners = winnerformset.save(commit=False)
-            for winner in winners:
-                try:
-                    obj=Prize.objects.get(event=eventname, participant=winner.participant)
-                    obj.cheque=winner.cheque
-                    obj.save()
-                except:
-                    pass
-    winnerList = Prize.objects.filter(event=eventname)
-    winnerformset = WinnerFormset(queryset=Prize.objects.none())
-    for form in winnerformset:
-        form.fields['participant'].queryset=Participant.objects.filter(prize__event=eventname)
-    return render_to_response('prizes/cheque_table.html',locals(),context_instance=global_context(request))
 
 def fillEventDetails(request, owner_name=None, event_name=None):
     try:
@@ -239,3 +177,66 @@ def registerparticipants(request, owner_name=None, event_name=None):
     barcodemapformset = BarcodeMapFormset(queryset=BarcodeMap.objects.none())
     idList = [str(elem.shaastra_id) for elem in Participant.objects.all()] 
     return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
+    
+"""
+def cheque_assign(request,owner_name=None,event_name=None):
+    if not event_name:
+        events=Department.objects.filter(is_event=True)
+        page_name = "Assign Cheques"
+        return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
+    WinnerFormset = modelformset_factory(Prize, fields=('participant','cheque'),form=ChequeForm, extra=10)
+    eventname=Department.objects.filter(id=event_name)
+    if request.method == 'POST':
+        winnerformset = WinnerFormset (request.POST)
+        if winnerformset.is_valid ():
+            winners = winnerformset.save(commit=False)
+            for winner in winners:
+                try:
+                    obj=Prize.objects.get(event=eventname, participant=winner.participant)
+                    obj.cheque=winner.cheque
+                    obj.save()
+                except:
+                    pass
+    winnerList = Prize.objects.filter(event=eventname)
+    winnerformset = WinnerFormset(queryset=Prize.objects.none())
+    for form in winnerformset:
+        form.fields['participant'].queryset=Participant.objects.filter(prize__event=eventname)
+    return render_to_response('prizes/cheque_table.html',locals(),context_instance=global_context(request))
+"""
+
+"""
+def prize_assign(request,owner_name=None,event_name=None):
+    try:
+        eventname=Department.objects.get(id=event_name)
+    except:
+        events=Department.objects.filter(is_event=True)
+        page_name = "Assign Prizes"
+        return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
+        
+    WinnerFormset = modelformset_factory(Prize, form=PrizeForm, extra=3)
+    #if error is reached, a winnerList will still be displayed. formset will have the unsubmitted data.
+    winnerList = Prize.objects.filter(event=eventname)
+    if request.method == 'POST':
+        winnerformset = WinnerFormset (request.POST)
+        if winnerformset.is_valid ():
+            for winnerform in winnerformset:
+                if winnerform.has_changed():
+                    barcode = winnerform.cleaned_data.get('barcode')
+                    winner=winnerform.save(commit=False)
+                    if barcode:
+                        try:
+                            participant=BarcodeMap.objects.get(barcode=barcode).shaastra_id
+                            winner.participant=participant
+                        except:
+                            #incorrect barcode
+                            error = barcode
+                            return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
+                    winner.event=eventname
+                    winner.user=request.user
+                    winner.save()
+    winnerList = Prize.objects.filter(event=eventname)         #updated list                               
+    winnerformset = WinnerFormset(queryset=Prize.objects.none())
+    for form in winnerformset:
+        form.fields['participant'].queryset=Participant.objects.filter(events=eventname)
+    return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
+"""
