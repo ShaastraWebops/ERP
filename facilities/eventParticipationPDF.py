@@ -82,7 +82,7 @@ def generateEventParticipationPDF(department_id):
         raise Http404('Department not found.')
 
     participantsList = department.participants.all()
-    if not participants:
+    if not participantsList:
         return HttpResponse('The event has no participants.')
 
     # Create the HttpResponse object with the appropriate PDF headers.
@@ -127,7 +127,7 @@ def generateEventParticipationPDF(department_id):
         'College',
         ]]
     sNo = 0
-    for particpant in ParticipantsList:
+    for participant in participantsList:
         sNo += 1
         tableData.append([
             sNo,
