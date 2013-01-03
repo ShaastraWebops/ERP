@@ -9,6 +9,7 @@ from erp.facilities.models import *
 from erp.facilities.forms import *
 from django.forms.models import modelformset_factory
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from erp.misc.helper import *
 from erp.misc.util import *
 from erp.facilities.forms import *
