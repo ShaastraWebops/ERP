@@ -159,9 +159,7 @@ def generateEventParticipationPDF(department_id):
     availableWidth = A4Width - 2 * cm  # Leaving margins of 1 cm on both sides
     availableHeight = y
     tableSplit = t.split(availableWidth, availableHeight)  # find required space
-    for splitPortion in tableSplit
-
-
+    for splitPortion in tableSplit:
         (tableWidth, tableHeight) = splitPortion.wrap(availableWidth, availableHeight)
         splitPortion.drawOn(pdf, x, y - tableHeight)
         pdf.showPage()
