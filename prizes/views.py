@@ -11,6 +11,48 @@ import csv
 # Function to handle an uploaded file.
 from erp.prizes.file import handle_uploaded_file
 
+def display_portal(request,owner_name=None,shaastra_id=None):
+    if shaastra_id:
+        try:
+            participant=Participant.objects.filter(shaastra_id=shaastra_id)[0]
+            try:
+                values={'barcode':BarcodeMap.objects.filter(shaastra_id=participant)[0].barcode}
+                form=ParticipantForm(instance=participant,initial=values)
+            except:
+                form=ParticipantForm(instance=participant)
+            return render_to_response('prizes/display_prize.html',locals(),context_instance=global_context(request))   
+        except:
+            not_exists=True
+            return render_to_response('prizes/display_prize.html',locals(),context_instance=global_context(request))   
+    else:
+        HttpResponseRedirect('/')
+
+
+def assign_barcode_new(request,owner_name=None,shaastra_id=None):
+    form=DetailForm()
+    if request.method == 'POST':
+        form=DetailForm(request.POST)
+        part=ParticipantForm(request.POST)
+        if part.is_valid():
+            participant=Participant.objects.filter(shaastra_id=part.cleaned_data['shaastra_id'])[0]
+            new=BarcodeMap()
+            new.shaastra_id=participant
+            new.barcode=part.cleaned_data['barcode']
+            new.save()
+            form=DetailForm()
+            saved=True
+        else:
+            if form.is_valid():
+                participant=Participant.objects.filter(shaastra_id=form.cleaned_data['shaastra_id'])
+                if len(participant)==0 or len(form.cleaned_data['barcode'])!=5:
+                    not_exists=True
+                    return render_to_response('prizes/display_profile.html',locals(),context_instance=global_context(request))
+                else:
+                    values={'barcode':form.cleaned_data['barcode']}
+                    participantform=ParticipantForm(instance=participant[0],initial=values)
+                    
+    return render_to_response('prizes/display_profile.html',locals(),context_instance=global_context(request))
+        
 def upload_file(request,owner_name=None,event_name=None):
     if not event_name:
         events=Department.objects.filter(is_event=True)

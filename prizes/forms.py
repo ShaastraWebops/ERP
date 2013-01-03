@@ -12,7 +12,18 @@ from django.forms.util import ErrorList
 
 # Get Shaastra IDS
 
-    
+class DetailForm (ModelForm):
+    shaastra_id=forms.CharField(max_length = 250)            
+    class Meta: 
+        model=BarcodeMap
+        exclude=('shaastra_id')    
+		
+class ParticipantForm (ModelForm):
+    barcode=forms.CharField(max_length = 250)
+    class Meta: 
+        model=Participant  
+        exclude=('events')
+
 class DocumentForm(forms.Form):
     docfile = forms.FileField(
         label='Select a file',

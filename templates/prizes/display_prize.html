@@ -1,0 +1,10 @@
+{% extends "base_portal.html" %}
+{% block tabs %}
+{% if not not_exists %}
+<table class="table table-striped">
+{{form.as_table}}
+</table>
+{% else %}
+Invalid ShaastraID
+{%endif%}
+{% endblock %}

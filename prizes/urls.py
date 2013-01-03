@@ -4,6 +4,8 @@ from django.conf.urls import *
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('erp.prizes.views',     
+      (r'^assign_new/$','assign_barcode_new'),
+      (r'^display/(?P<shaastra_id>\w+)/$','display_portal'), 
       (r'^upload/$', 'upload_file'),
       (r'^upload/(?P<event_name>\d{1,3})/$', 'upload_file'),
       (r'^eventdetails/$','fillEventDetails'),
