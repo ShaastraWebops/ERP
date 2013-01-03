@@ -398,6 +398,7 @@ def submit_approval(request,item_id):
     return HttpResponseRedirect(SITE_URL + 'erp/facilities/approve_event/%d/%d/%d/'%(item.creator.department.id,form_saved,error))
 '''
 
+@login_required
 def event_participation_pdf(request, dept_id):
     dept_id = int(dept_id)
     return generateEventParticipationPDF(dept_id)

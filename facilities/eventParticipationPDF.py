@@ -70,7 +70,6 @@ def initNewPDFPage(pdf, doc_title, page_no, (pageWidth, pageHeight)):
     return y
 
 
-@login_required
 def generateEventParticipationPDF(department_id):
     """
     Generates and returns a PDF containing the DTV Summary (by venue).
