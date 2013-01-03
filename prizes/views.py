@@ -118,6 +118,9 @@ def prize_assign(request, owner_name=None, event_name=None, position=None):
             prizeform = PrizeForm(request.POST)
         if  prizeform.is_valid():
             prize = prizeform.save(commit=False)
+            if not isinstance(prize, Prize):
+                if not prize:
+                    return render_to_response('prizes/prize_table.html', locals(), context_instance = global_context(request))            
             prize.event = eventname
             prize.user=request.user
             prize.position = position
@@ -129,13 +132,7 @@ def prize_assign(request, owner_name=None, event_name=None, position=None):
         prizeform = PrizeForm(instance=prize, eventdetails=eventdetails, position=position)
     except:
         prizeform = PrizeForm(eventdetails=eventdetails, position=position)
-    prizeform.fields['participant_1'].queryset=Participant.objects.filter(events=eventname)
-    prizeform.fields['participant_2'].queryset=Participant.objects.filter(events=eventname)
-    prizeform.fields['participant_3'].queryset=Participant.objects.filter(events=eventname)
-    prizeform.fields['participant_4'].queryset=Participant.objects.filter(events=eventname)
-    prizeform.fields['participant_5'].queryset=Participant.objects.filter(events=eventname)
-    prizeform.fields['participant_6'].queryset=Participant.objects.filter(events=eventname)
-    prizeform.fields['participant_7'].queryset=Participant.objects.filter(events=eventname)
+    idList = [str(elem.shaastra_id) for elem in Participant.objects.filter(events=eventname)]    
     return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
 
 def choosePosition(request,owner_name=None,event_name=None):
@@ -145,6 +142,9 @@ def choosePosition(request,owner_name=None,event_name=None):
     except:
         return redirect('erp.prizes.views.fillEventDetails', owner_name = request.user)
     positions= [i+1 for i in range(eventdetails.finalist_nos)]
+    finalist_details = Prize.objects.filter(event=eventname)
+    if str(request.user.get_profile().department) == 'QMS':
+        QMS = True
     return render_to_response('prizes/choose_position.html',locals(),context_instance=global_context(request))    
 
 def cheque_assign(request,owner_name=None,event_name=None):
@@ -178,6 +178,8 @@ def fillEventDetails(request, owner_name=None, event_name=None):
         events=Department.objects.filter(is_event=True)
         page_name = "Event Details"
         return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
+    if str(request.user.get_profile().department) == 'Hospitality':
+        return redirect('erp.prizes.views.choosePosition', owner_name = request.user, event_name=event_name)
     if request.method == 'POST':
         try:
             eventdetails = EventDetails.objects.get(event=eventname)

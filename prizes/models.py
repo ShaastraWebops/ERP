@@ -54,7 +54,7 @@ class Prize(models.Model):
     user = models.ForeignKey(User)  
     
     def __str__(self):
-        return self.participant.shaastra_id
+        return self.participant_1.shaastra_id
         
 class EventDetails(models.Model):
     event = models.ForeignKey(Department)

@@ -64,20 +64,132 @@ class EventRegnForm(BarcodeForm):
 
 
 class PrizeForm (ModelForm):
+    participant_1=forms.CharField(max_length = 250, required=False)
+    participant_2=forms.CharField(max_length = 250, required=False)
+    participant_3=forms.CharField(max_length = 250, required=False)
+    participant_4=forms.CharField(max_length = 250, required=False)
+    participant_5=forms.CharField(max_length = 250, required=False)
+    participant_6=forms.CharField(max_length = 250, required=False)
+    participant_7=forms.CharField(max_length = 250, required=False)
+    
+    def save(self,commit=True):
+        try:
+            shid = self.cleaned_data['participant_1']
+            if shid:
+                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                self.instance.participant_1 = instance
+        except KeyError:
+            return True
+        except:
+            msg='ShaastraID not found.'
+            self._errors['participant_1'] = ErrorList([msg])
+            return False
+                    
+        try:    
+            shid = self.cleaned_data['participant_2']
+            if shid:
+                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                self.instance.participant_2 = instance
+        except KeyError:
+            return True
+        except:
+            msg='ShaastraID not found.'
+            self._errors['participant_2'] = ErrorList([msg])
+            return False
+                        
+        try:    
+            shid = self.cleaned_data['participant_3']
+            if shid:
+                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                self.instance.participant_3 = instance
+        except KeyError:
+            return True
+        except:
+            msg='ShaastraID not found.'
+            self._errors['participant_3'] = ErrorList([msg])
+            return False
+                        
+        try:    
+            shid = self.cleaned_data['participant_4']
+            if shid:
+                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                self.instance.participant_4 = instance
+        except KeyError:
+            return True
+        except:
+            msg='ShaastraID not found.'
+            self._errors['participant_4'] = ErrorList([msg])
+            return False
+                        
+        try:    
+            shid = self.cleaned_data['participant_5']
+            if shid:
+                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                self.instance.participant_5 = instance                                                
+        except KeyError:
+            return True
+        except:
+            msg='ShaastraID not found.'
+            self._errors['participant_5'] = ErrorList([msg])
+            return False
+                        
+        try:    
+            shid = self.cleaned_data['participant_6']
+            if shid:
+                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                self.instance.participant_6 = instance
+        except KeyError:
+            return True
+        except:
+            msg='ShaastraID not found.'
+            self._errors['participant_6'] = ErrorList([msg])
+            return False
+                        
+        try:    
+            shid = self.cleaned_data['participant_7']
+            if shid:
+                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                self.instance.participant_7 = instance
+         
+            return super(PrizeForm, self).save()
+        except KeyError:
+            return True
+        except:
+            msg='ShaastraID not found.'
+            self._errors['participant_7'] = ErrorList([msg])
+            return False
+
     class Meta:
         model=Prize
-        exclude=('event','user','position')
-        widgets = {'participant_1':chosenforms.widgets.ChosenSelect(),
-                  'participant_2':chosenforms.widgets.ChosenSelect(),
-                  'participant_3':chosenforms.widgets.ChosenSelect(),
-                  'participant_4':chosenforms.widgets.ChosenSelect(),
-                  'participant_5':chosenforms.widgets.ChosenSelect(),
-                  'participant_6':chosenforms.widgets.ChosenSelect(),
-                  'participant_7':chosenforms.widgets.ChosenSelect(),
-                  }
+        fields = ('details', 'cheque',)
 
-    def __init__(self, eventdetails=None, position=None, *args, **kwargs):
+    def __init__(self, eventdetails=None, position=None, instance=None, *args, **kwargs):
+        kwargs['instance'] = instance
         super(PrizeForm, self).__init__(*args, **kwargs)
+        
+        self.fields['participant_1'].widget.attrs['class'] = "search"
+        self.fields['participant_2'].widget.attrs['class'] = "search"
+        self.fields['participant_3'].widget.attrs['class'] = "search"
+        self.fields['participant_4'].widget.attrs['class'] = "search"
+        self.fields['participant_5'].widget.attrs['class'] = "search"
+        self.fields['participant_6'].widget.attrs['class'] = "search"
+        self.fields['participant_7'].widget.attrs['class'] = "search"
+        
+        if isinstance(instance, Prize):
+            if instance.participant_1:
+                self.fields['participant_1'].widget.attrs['value'] = str(instance.participant_1.shaastra_id)
+            if instance.participant_2:
+                self.fields['participant_2'].widget.attrs['value'] = str(instance.participant_2.shaastra_id)
+            if instance.participant_3:
+                self.fields['participant_3'].widget.attrs['value'] = str(instance.participant_3.shaastra_id)
+            if instance.participant_4:
+                self.fields['participant_4'].widget.attrs['value'] = str(instance.participant_4.shaastra_id)
+            if instance.participant_5:
+                self.fields['participant_5'].widget.attrs['value'] = str(instance.participant_5.shaastra_id)
+            if instance.participant_6:
+                self.fields['participant_6'].widget.attrs['value'] = str(instance.participant_6.shaastra_id)
+            if instance.participant_7:
+                self.fields['participant_7'].widget.attrs['value'] = str(instance.participant_7.shaastra_id)
         if isinstance(eventdetails, EventDetails):
             if(int(position) > int(eventdetails.winner_nos)):
                 self.fields['cheque'].widget = self.fields['cheque'].hidden_widget()
