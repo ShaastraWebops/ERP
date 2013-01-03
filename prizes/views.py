@@ -11,6 +11,23 @@ import csv
 # Function to handle an uploaded file.
 from erp.prizes.file import handle_uploaded_file
 
+def display_portal(request,owner_name=None,shaastra_id=None):
+    if shaastra_id:
+        try:
+            participant=Participant.objects.filter(shaastra_id=shaastra_id)[0]
+            try:
+                values={'barcode':BarcodeMap.objects.filter(shaastra_id=participant)[0].barcode}
+                form=ParticipantForm(instance=participant,initial=values)
+            except:
+                form=ParticipantForm(instance=participant)
+            return render_to_response('prizes/display_prize.html',locals(),context_instance=global_context(request))   
+        except:
+            not_exists=True
+            return render_to_response('prizes/display_prize.html',locals(),context_instance=global_context(request))   
+    else:
+        HttpResponseRedirect('/')
+
+
 def assign_barcode_new(request,owner_name=None,shaastra_id=None):
     form=DetailForm()
     if request.method == 'POST':
