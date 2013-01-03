@@ -15,6 +15,10 @@
    <a href="{% url prizes.views.fillEventDetails owner_name=user %}"><i class="icon-gift" id="li_prize_assign_icon"></i> Prizes</a>
 </li>
 {% endif %}
+<li id="li_prize_assign">
+   <a href="{% url prizes.views.assign_barcode_new owner_name=user %}"><i class="icon-gift" id="li_prize_assign_icon"></i>BarcodeNEW</a>
+</li>
+
 {% if qms %}
 <li id="li_eventregn">
     <a href="{% url prizes.views.registerparticipants owner_name=page_owner%}"><i class="icon-check" id="li_eventregn_icon"></i> Event Registration </a>

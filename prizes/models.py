@@ -65,9 +65,7 @@ class EventDetails(models.Model):
     certificate_nos = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return self.event.Dept_Name
-      
-
+        return self.event.Dept_Name      
 
 class College(models.Model):
 

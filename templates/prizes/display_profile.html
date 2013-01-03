@@ -1,0 +1,44 @@
+{% extends "base_portal.html" %}
+
+{% block tabs %}
+
+{% if not not_exists %}
+{% if participantform %}
+<h3>Please do <i><u><b>NOT</b></u></i> change anything in the below form. It is solely for confirmation purposes.<br></h4>
+<div class="well">
+<form action="" method="POST">
+{% csrf_token %}
+<table class="table">
+{% for field in participantform.visible_fields %}
+<tr><td>{{field.label}}</td>
+<td>{{field}}</td></tr>
+{%endfor%}
+</table>
+<input type="submit" class="btn btn-primary btn-large offset1" name="submit_continue" value="Confirm"/>
+</form>
+<a href="{% url erp.prizes.views.assign_barcode_new owner_name=user %}"> Go Back </a>
+</center>
+</div>
+{% endif %}
+{% endif %}
+
+{% if saved %}
+<span class="label label-success">Saved entry</span><br />
+<br />{% endif %}
+
+
+{% if not_exists %}
+<span class="label label-important">Invalid ShaastraID/Barcode</span><br />
+<br />{% endif %}
+{% if not participantform %}
+<form action="" method="POST">
+{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" class="btn btn-primary btn-large offset1" name="submit_continue" value="Submit and continue"/>
+</form>
+{% endif %}
+
+
+{% endblock %}
+
+
