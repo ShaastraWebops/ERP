@@ -46,6 +46,7 @@ def assign_barcode_new(request,owner_name=None,shaastra_id=None):
         else:
             if form.is_valid():
                 participant=Participant.objects.filter(shaastra_id=form.cleaned_data['shaastra_id'])
+                print "participant", participant
                 try:
                     college = str(participant.college)
                 except:

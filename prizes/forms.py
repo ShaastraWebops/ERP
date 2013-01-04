@@ -23,15 +23,20 @@ class DetailForm (ModelForm):
         self.fields['shaastra_id'].widget.attrs['class'] = "search"    
 		
 class ParticipantForm (ModelForm):
-    barcode=forms.CharField(max_length = 250,required=False)
-    college=forms.CharField(max_length = 250,required=False)
-    college_roll=forms.CharField(max_length = 250,required=False)
-    name=forms.CharField(max_length = 250,required=False)
-    mobile_number=forms.CharField(max_length = 250,required=False)
+    barcode=forms.CharField(max_length = 250,required=False,widget = forms.TextInput(attrs={'readonly':'readonly'}))
+    college=forms.CharField(max_length = 250,required=False,widget = forms.TextInput(attrs={'readonly':'readonly'}))
+    college_roll=forms.CharField(max_length = 250,required=False,widget = forms.TextInput(attrs={'readonly':'readonly'}))
+    name=forms.CharField(max_length = 250,required=False,widget = forms.TextInput(attrs={'readonly':'readonly'}))
+    mobile_number=forms.CharField(max_length = 250,required=False,widget = forms.TextInput(attrs={'readonly':'readonly'}))
     
     class Meta: 
         model=Participant  
         exclude=('events','college','college_roll','name','mobile_number')
+    
+    def __init__(self, *args, **kwargs):
+        super(ParticipantForm, self).__init__(*args, **kwargs)
+        self.fields['branch'].widget.attrs['readonly'] = 'readonly'
+        self.fields['shaastra_id'].widget.attrs['readonly'] = 'readonly'
 
 class DocumentForm(forms.Form):
     docfile = forms.FileField(
