@@ -1,0 +1,23 @@
+{% extends "base_portal.html" %}
+
+{% block tabs %}
+<center><h4>PDFgeneration - Choose Event</h4></center><br/>
+<table class="table">
+{% for event in events %}
+<tr><td>
+<a href="{% url prizes.views.event_participation_pdf owner_name=user event_id=event.id %}">{{event.Dept_Name}}</a>
+</td></tr>
+{% endfor %}
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_gen_pdf");
+    var e = document.getElementById("li_gen_pdf_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+ </script>
+{% endblock %}
