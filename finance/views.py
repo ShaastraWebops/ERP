@@ -1193,8 +1193,7 @@ def reimb_finance(request,dept_id):
         if has_perms:
             event_department=Department.objects.get(id=dept_id)
             plan_finance=Budget.objects.get(name='F',department=event_department)
-            if not plan_finance:
-                
+            
             departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
             requests=Request.objects.filter(department=event_department)
             balance_amount=0
