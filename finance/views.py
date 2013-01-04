@@ -1171,7 +1171,9 @@ def reimb_finance(request,dept_id):
     departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
     submitted_depts = []
     for dept in departments:
-       submitted_depts.append(dept.Dept_Name)  
+        for plan in submitted_plans:
+            if plan.department==dept: 
+                submitted_depts.append(dept.Dept_Name)
            
     if str(department) == "Finance":
         finance=True
