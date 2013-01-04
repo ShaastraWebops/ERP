@@ -7,6 +7,7 @@ from erp.prizes.models import *
 from department.models import *
 from django.contrib.auth.models import User
 from django.forms.util import ErrorList
+import re
 
 #from chosen import widgets as chosenwidgets
 
@@ -80,6 +81,7 @@ class BarcodeForm (ModelForm):
         #ids = pickle.load(f)    
         #self.fields['shaastra_id'].widget.attrs['data-source']=  str(ids)
 
+result = re.compile(r'^[^\W\d_]{2}\d{2}[^\W\d_]{1}\d{3}$')
 class EventRegnForm (ModelForm):
     shaastra_id=forms.CharField(max_length = 250, required=False)
    
@@ -88,7 +90,14 @@ class EventRegnForm (ModelForm):
             shid=self.cleaned_data['shaastra_id']  
             barcode=self.cleaned_data['barcode']
             if shid:
-                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                if result.match(shid):
+                    try:
+                        instance=Participant.objects.filter(shaastra_id=shid)[0]
+                    except:
+                        instance = Participant(name='InstiJunta', gender='F', age=18, college='IIT Madras', college_roll=shid, shaastra_id=shid)
+                        instance.save()
+                else:
+                    instance=Participant.objects.filter(shaastra_id=shid)[0]
                 self.instance.shaastra_id=instance        
             return super(EventRegnForm, self).save(commit)
         except KeyError:

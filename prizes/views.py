@@ -7,6 +7,7 @@ from erp.prizes.models import *
 from erp.prizes.forms import *
 from erp.department.models import *
 from django.forms.models import modelformset_factory
+from django.contrib.auth.decorators import login_required
 import csv
 import itertools
 import datetime
@@ -14,6 +15,7 @@ import re
 # Function to handle an uploaded file.
 from erp.prizes.file import handle_uploaded_file
 
+@login_required
 def display_portal(request,owner_name=None,shaastra_id=None):
     if shaastra_id:
         try:
@@ -30,7 +32,7 @@ def display_portal(request,owner_name=None,shaastra_id=None):
     else:
         HttpResponseRedirect('/')
 
-
+@login_required
 def assign_barcode_new(request,owner_name=None,shaastra_id=None):
     form=DetailForm()
     if request.method == 'POST':
@@ -80,6 +82,7 @@ def assign_barcode_new(request,owner_name=None,shaastra_id=None):
     idList = [str(elem.shaastra_id) for elem in Participant.objects.all()]                
     return render_to_response('prizes/display_profile.html',locals(),context_instance=global_context(request))
         
+@login_required
 def upload_file(request,owner_name=None,event_name=None):
     if not event_name:
         events=Department.objects.filter(is_event=True)
@@ -117,6 +120,7 @@ def upload_file(request,owner_name=None,event_name=None):
         form = DocumentForm() 
     return render_to_response('prizes/uploads.html',locals(),context_instance=global_context(request))
 
+@login_required
 def assign_barcode(request,owner_name=None):
     BarcodeFormset = modelformset_factory(BarcodeMap, form=BarcodeForm, extra=10)
     if request.method == 'POST':
@@ -132,6 +136,7 @@ def assign_barcode(request,owner_name=None):
     barcodeformset =BarcodeFormset(queryset=BarcodeMap.objects.none())    
     return render_to_response('prizes/hospiregistration.html', locals(), context_instance = global_context(request))    
 
+@login_required
 def prize_assign(request, owner_name=None, event_name=None, position=None):
     try:
         eventname=Department.objects.get(id=event_name)
@@ -166,6 +171,7 @@ def prize_assign(request, owner_name=None, event_name=None, position=None):
     idList = [str(elem.shaastra_id) for elem in Participant.objects.filter(events=eventname)]    
     return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
 
+@login_required
 def choosePosition(request,owner_name=None,event_name=None):
     try:
         eventname=Department.objects.get(id=event_name)
@@ -178,24 +184,15 @@ def choosePosition(request,owner_name=None,event_name=None):
         PPM = True
     return render_to_response('prizes/choose_position.html',locals(),context_instance=global_context(request))    
 
+@login_required
 def fillEventDetails(request, owner_name=None, event_name=None):
     try:
         eventname=Department.objects.get(id=event_name)
     except:
         events=list(Department.objects.filter(is_event=True))
         page_name = "Event Details"
-        classvalue = []
-        for i in range(int(events[-1].pk)):
-            classvalue.append('incomplete')
         
-        f = open("prizes/finalevents.txt", 'r')
-        for line in f:
-            event_id = line.strip('\n').split(',')[0]
-            classvalue[int(event_id)-1] = 'complete'
-        f.close()
-        
-        eventList = itertools.izip(classvalue, events)
-        return render_to_response('prizes/eventdetailschoices.html',locals(),context_instance=global_context(request))
+        return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
 
     if str(request.user.get_profile().department) == 'Hospitality':
         return redirect('erp.prizes.views.choosePosition', owner_name = request.user, event_name=event_name)
@@ -217,6 +214,7 @@ def fillEventDetails(request, owner_name=None, event_name=None):
         eventdetailsform = EventDetailsForm(event=eventname)
     return render_to_response('prizes/event_details.html', locals(), context_instance = global_context(request))    
 
+@login_required
 def registerparticipants(request, owner_name=None, event_name=None):
     try:
         eventname = Department.objects.get(id=event_name)
@@ -273,17 +271,23 @@ def registerparticipants(request, owner_name=None, event_name=None):
     idList = [str(elem.shaastra_id) for elem in Participant.objects.all()] 
     return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
 
+@login_required
 def setFinal(request, owner_name=None, event_name=None):
     try:
         eventname=Department.objects.get(id=event_name)
         timestamp = str(datetime.datetime.now())
-        f = open('prizes/finalevents.txt', 'a')
+        f = open('prizes/finalevents.txt', 'a+')
+        for line in f:
+            if (event_name == line.strip('\n').split(',')[0]):
+                f.close()
+                return redirect('erp.prizes.views.fillEventDetails', owner_name = request.user)
         f.write(event_name + ',' + eventname.Dept_Name + ',' + timestamp +'\n')
         f.close()
     except:
         pass
     return redirect('erp.prizes.views.fillEventDetails', owner_name = request.user)
 
+@login_required
 def viewFinal(request, owner_name=None):
     try:
         eventdata = []
