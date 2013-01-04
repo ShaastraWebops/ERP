@@ -1116,6 +1116,7 @@ def reimb_finance(request,dept_id):
     page_owner = get_page_owner (request, owner_name=request.user)
     qms_dept=False
     events_core=False
+    not_visit=False
     #Get Department Members' image thumbnails
     department = page_owner.get_profile ().department      
     dept_cores_list = User.objects.filter (
@@ -1185,6 +1186,8 @@ def reimb_finance(request,dept_id):
             
             bills=Bill.objects.filter(department=event_department)
             reimb_instance=Reimb.objects.get(department=event_department)
+            if not reimb_instance:
+                not_visit=True
             items = Item.objects.filter(department=event_department)        
             
             curr_reimb=Reimb.objects.get(department=event_department)
@@ -1214,6 +1217,8 @@ def reimb_finance(request,dept_id):
             given_amount=plan_finance.total_amount - balance_amount
             bills=Bill.objects.filter(department=event_department)
             reimb_instance=Reimb.objects.get(department=event_department)
+            if not reimb_instance:
+                not_visit=True            
             items = Item.objects.filter(department=event_department)        
             curr_reimb=Reimb.objects.get(department=event_department)
             
@@ -1234,6 +1239,8 @@ def reimb_finance(request,dept_id):
         given_amount=plan_finance.total_amount - balance_amount
         bills=Bill.objects.filter(department=event_department)
         reimb_instance=Reimb.objects.get(department=event_department)
+        if not reimb_instance:
+            not_visit=True
         items = Item.objects.filter(department=event_department)        
         curr_reimb=Reimb.objects.get(department=event_department)
             

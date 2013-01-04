@@ -12,7 +12,7 @@
     </li>
     </ul>
     <div class="pull-right">
-    <a class="label" href={% url finance.views.reimb %}> &lt Back</a>
+    <a class="btn btn-info" href={% url finance.views.reimb %}> &lt Back</a>
     </div>
     <hr>
 {% if has_perms %}
@@ -34,6 +34,9 @@
 {% endif %}
     {% endfor %}
     <hr>
+    
+    {% if not not_visit %}	
+    
     <div class="well">
     {% if open_reimb_portal.opened %}
     <h4>The Reimbursement Portal is CURRENTLY OPENED for the Event Coordinators to submit their bills and to claim their Reimbursement</h4>
@@ -128,12 +131,16 @@
     <input type="submit" value="Comment" class="btn btn-primary"/>
     </div>
     </form>
+    {% else %}
+    <h4>{{event_department}} have not visited the reimbursement portal.</h4>
+    {% endif %}
+    
 {% endif %}
 
 {% if open_reimb_portal.opened %}
 
 
-<h6> All the events in white have Pending Approval and the events in green have been paid the reimbursement.</h6>
+<h6> All the events in white have Pending Approval.</h6>
     {% for dept in departments %}
 {% if dept.Dept_Name in event_pending %}
 {% ifequal dept event_department %}
@@ -149,6 +156,8 @@
     {% endifequal %}
 {% endif %}
     {% endfor %}
+
+{% if not not_visit %}	
 
     <div class="well">
     {% if open_reimb_portal.opened %}
@@ -230,12 +239,17 @@
 	</br>
     <b style="font-size:14px;">Finance Department's Comment: </b>{{reimb_instance.comment}}
 
+    {% else %}
+    <h4>{{event_department}} have not visited the reimbursement portal.</h4>
+    {% endif %}
+    
 {% endif %}
 {% endif %}
+
 {% if finance %}
 {% if not has_perms %}
 
-   <h6> All the events in white have Pending Approval and the events in green have been paid the reimbursement.</h6>
+   <h6> All the events in white have Pending Approval.</h6>
     {% for dept in departments %}
 {% if dept.Dept_Name in event_pending %}
 {% ifequal dept event_department %}
@@ -253,6 +267,8 @@
     {% endfor %}
 
     <hr>
+    {% if not not_visit %}
+    
     <div class="well">
     {% if open_reimb_portal.opened %}
     <h4>The Reimbursement Portal is CURRENTLY OPENED for the Event Coordinators to submit their bills and to claim their Reimbursement</h4>
@@ -333,6 +349,10 @@
 	{% endif %}
 	</br>
     <b style="font-size:14px;">Finance Department's Comment: </b>{{reimb_instance.comment}}
+    
+    {% else %}
+    <h4>{{event_department}} have not visited the reimbursement portal.</h4>
+    {% endif %}
 {% endif %}
 {% endif %}
     
@@ -355,6 +375,7 @@
     {% endfor %}
 
     <hr>
+    
     <div class="well">
     {% if open_reimb_portal.opened %}
     <h4>The Reimbursement Portal is CURRENTLY OPENED for the Event Coordinators to submit their bills and to claim their Reimbursement</h4>
@@ -364,6 +385,8 @@
     </br>
     {% endif %}
     </div>
+    
+    {% if not not_visit %}
     <h4>Total Budget Sanctioned: {{plan_finance.total_amount}}</h4>
     
     <div class="accordian-heading pull-left">
@@ -434,5 +457,9 @@
 	{% endif %}
 	</br>
 	    <b style="font-size:14px;">Finance Department's Comment: </b>{{reimb_instance.comment}}
+    {% else %}
+    <h4>{{event_department}} have not visited the reimbursement portal.</h4>
+    {% endif %}	    
+	    
 {% endif %}
 {% endblock %}
