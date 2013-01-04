@@ -14,6 +14,17 @@ import datetime
 import re
 # Function to handle an uploaded file.
 from erp.prizes.file import handle_uploaded_file
+from erp.prizes.eventParticipationPDF import generateEventParticipationPDF
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def event_participation_pdf(request,owner_name=None, event_id=None):
+    if not event_id:
+        events=Department.objects.filter(is_event=True)
+        return render_to_response("prizes/generate_pdf.html", locals(), context_instance=global_context(request))
+    event_id = int(event_id)
+    return generateEventParticipationPDF(event_id)
+
 
 @login_required
 def display_portal(request,owner_name=None,shaastra_id=None):
