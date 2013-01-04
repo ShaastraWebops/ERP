@@ -1,7 +1,7 @@
 {% extends "base_portal.html" %}
 
 {% block tabs %}
-{% if QMS %}
+{% if PPM %}
 <center><h4>Choose finalist (Position No.):</h4></center><br/>
 <table class="table">
 {% for position in positions %}
@@ -70,4 +70,8 @@
 <td>{{ finalist.cheque }}</td>
 </tr>
 {% endfor %}
+</table>
+{% if PPM %}
+<a href="{% url prizes.views.setFinal owner_name=request.user event_name=event_name %}">Set this list as the final list of participants</a> - This option makes the event green in the event details page, to inform others that this is the finalised list.
+{% endif %}
 {% endblock %}

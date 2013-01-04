@@ -12,7 +12,7 @@
 {% endif %}
 {% if qms %}
 <li id="li_barcode">
-   <a href="{% url prizes.views.assign_barcode_new owner_name=user %}"><i class="icon-barcode" id="li_barcode_assign_icon"></i>Barcode</a>
+   <a href="{% url prizes.views.assign_barcode_new owner_name=user %}"><i class="icon-barcode" id="li_barcode_assign_icon"></i> Barcode</a>
 </li>
 {% endif %}
 {% if qms or hospi %}
@@ -62,19 +62,19 @@
 
 {% if qms_core %}
 	<li id="li_questions">
-    <a href="{% url feedback.views.question_for owner_name=user%}"><i class="icon-question-sign" id="li_questions_icon"></i>Feedback Questions </a>
+    <a href="{% url feedback.views.question_for owner_name=user%}"><i class="icon-question-sign" id="li_questions_icon"></i> Feedback Questions </a>
 </li>
 {% endif %}
 
 {% if qms_supercoord %}
 	<li id="li_questions">
-    <a href="{% url feedback.views.question_for owner_name=user%}"><i class="icon-question-sign" id="li_questions_icon"></i>Feedback Questions </a>
+    <a href="{% url feedback.views.question_for owner_name=user%}"><i class="icon-question-sign" id="li_questions_icon"></i> Feedback Questions </a>
 </li>
 {% endif %}
 
 {% if qms_coord %}
 	<li id="li_questions">
-    <a href="{% url feedback.views.question_for owner_name=user%}"><i class="icon-question-sign" id="li_questions_icon"></i>Feedback Questions </a>
+    <a href="{% url feedback.views.question_for owner_name=user%}"><i class="icon-question-sign" id="li_questions_icon"></i> Feedback Questions </a>
 </li>
 {% endif %}
 <!--

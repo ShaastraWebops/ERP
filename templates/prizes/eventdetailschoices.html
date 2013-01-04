@@ -1,0 +1,16 @@
+{% extends "base_portal.html" %}
+
+{% block tabs %}
+<center><h4>{{ page_name }} - Choose Event</h4></center><br/>
+<style type="text/css">
+      .complete {
+      color: #00FF00;
+      }      
+</style>
+<table class="table">
+{% for classvalue, event in eventList %}
+<tr><td>
+<a href="{{ request.path }}{{ event.id }}/" class="{{ classvalue }}">{{event.Dept_Name}}</a>
+</td></tr>
+{% endfor %}
+{% endblock %}

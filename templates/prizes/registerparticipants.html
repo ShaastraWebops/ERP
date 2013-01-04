@@ -27,6 +27,7 @@
         <table>
         {% for barcodemapform in barcodemapformset %}
             <tr><td>{{ forloop.counter }}.</td></tr>
+            {{ barcodemapform.non_field_errors }}
             {{ barcodemapform.as_table }}
         {% endfor %}
         </table>

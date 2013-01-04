@@ -16,7 +16,11 @@ class DetailForm (ModelForm):
     shaastra_id=forms.CharField(max_length = 250)            
     class Meta: 
         model=BarcodeMap
-        exclude=('shaastra_id')    
+        exclude=('shaastra_id')
+		
+    def __init__(self, *args, **kwargs):
+        super(DetailForm, self).__init__(*args, **kwargs)
+        self.fields['shaastra_id'].widget.attrs['class'] = "search"    
 		
 class ParticipantForm (ModelForm):
     barcode=forms.CharField(max_length = 250)
@@ -65,14 +69,50 @@ class BarcodeForm (ModelForm):
         #ids = pickle.load(f)    
         #self.fields['shaastra_id'].widget.attrs['data-source']=  str(ids)
 
+class EventRegnForm (ModelForm):
+    shaastra_id=forms.CharField(max_length = 250, required=False)
+   
+    def save(self,commit=True):
+        try:
+            shid=self.cleaned_data['shaastra_id']  
+            barcode=self.cleaned_data['barcode']
+            if shid:
+                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                self.instance.shaastra_id=instance        
+            return super(EventRegnForm, self).save(commit)
+        except KeyError:
+            return True
+        except:
+            msg='ShaastraID not found. Recheck this ID or remove it to save other entries.'
+            self._errors['shaastra_id'] = ErrorList([msg])
+            return False
+            
+    class Meta: 
+        model=BarcodeMap
+        exclude=('shaastra_id')    
+		
+    def __init__(self, *args, **kwargs):
+        super(EventRegnForm, self).__init__(*args, **kwargs)
+        self.fields['shaastra_id'].label = "Shaastra ID"
+        self.fields['shaastra_id'].widget.attrs['data-provide'] = "typeahead"
+        self.fields['shaastra_id'].widget.attrs['data-items'] = "10"
+        self.fields['shaastra_id'].widget.attrs['class'] = "search"
+        #test = str([str(elem.shaastra_id) for elem in Participant.objects.all()])
+        #print test
+        #self.fields['shaastra_id'].widget.attrs['data-source'] = test
+        #import pickle
+        #f = open('ids.txt','rb')
+        #ids = pickle.load(f)    
+        #self.fields['shaastra_id'].widget.attrs['data-source']=  str(ids)
 
+"""
 class EventRegnForm(BarcodeForm):
     def __init__(self, *args, **kwargs):
         super(EventRegnForm, self).__init__(*args, **kwargs)
         self.fields['team_id']=forms.ModelChoiceField(queryset=Team.objects.all())
         self.fields['team_id'].label = "Team ID"
         self.fields['team_id'].widget = chosenforms.widgets.ChosenSelect()
-
+"""
 
 class PrizeForm (ModelForm):
     participant_1=forms.CharField(max_length = 250, required=False)

@@ -37,8 +37,13 @@
 <input type="submit" class="btn btn-primary btn-large offset1" name="submit_continue" value="Submit and continue"/>
 </form>
 {% endif %}
-
-
+{% block javascript %}
+{{ block.super }}
+<script>  
+ var subjects = {{ idList|safe }}
+$('.search').typeahead({source: subjects})  
+</script>  
+{% endblock javascript%}
 {% endblock %}
 
 
