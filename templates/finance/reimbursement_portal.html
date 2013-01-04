@@ -200,7 +200,7 @@
 <h6> All the events in white have Pending Approval.</h6>
 {% for dept in submitted_depts %}
 
-{% if dept.Dept_Name in event_pending %}
+{% if dept in event_pending %}
 <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
 {% else %}
 <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>

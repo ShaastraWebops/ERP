@@ -19,14 +19,14 @@
 {% if not open_reimb_portal.opened %}
 <h6> All the events in white have Pending Approval.</h6>
     {% for dept in submitted_depts %}
-{% if dept.Dept_Name in event_pending %}
-{% ifequal dept event_department %}
+{% if dept in event_pending %}
+{% ifequal dept event_department.Dept_Name %}
     <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong>{{dept}}</strong></a>
     {% else %}
     <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
 {% endifequal %}
 {% else %}
-{% ifequal dept event_department %}
+{% ifequal dept event_department.Dept_Name %}
     <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong style="font-size:15px;">{{dept}}</strong></a>
     {% else %}
     <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
@@ -142,14 +142,14 @@
 
 <h6> All the events in white have Pending Approval.</h6>
     {% for dept in submitted_depts %}
-{% if dept.Dept_Name in event_pending %}
-{% ifequal dept event_department %}
+{% if dept in event_pending %}
+{% ifequal dept event_department.Dept_Name %}
     <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong>{{dept}}</strong></a>
     {% else %}
     <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
 {% endifequal %}
 {% else %}
-{% ifequal dept event_department %}
+{% ifequal dept event_department.Dept_Name %}
     <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong style="font-size:15px;">{{dept}}</strong></a>
     {% else %}
     <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
@@ -251,14 +251,14 @@
 
    <h6> All the events in white have Pending Approval.</h6>
     {% for dept in submitted_depts %}
-{% if dept.Dept_Name in event_pending %}
-{% ifequal dept event_department %}
+{% if dept in event_pending %}
+{% ifequal dept event_department.Dept_Name %}
     <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong>{{dept}}</strong></a>
     {% else %}
     <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
 {% endifequal %}
 {% else %}
-{% ifequal dept event_department %}
+{% ifequal dept event_department.Dept_Name %}
     <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong style="font-size:15px;">{{dept}}</strong></a>
     {% else %}
     <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
@@ -359,14 +359,14 @@
 {% if qms_dept %}
 <h6> All the events in white have Pending Approval.</h6>
     {% for dept in submitted_depts %}
-{% if dept.Dept_Name in event_pending %}
-{% ifequal dept event_department %}
+{% if dept in event_pending %}
+{% ifequal dept event_department.Dept_Name %}
     <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong>{{dept}}</strong></a>
     {% else %}
     <a class="btn" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
 {% endifequal %}
 {% else %}
-{% ifequal dept event_department %}
+{% ifequal dept event_department.Dept_Name %}
     <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}"><strong style="font-size:15px;">{{dept}}</strong></a>
     {% else %}
     <a class="btn btn-success" href="{% url finance.views.reimb_finance dept_id=dept.id %}">{{dept}}</a>
