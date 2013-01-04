@@ -9,6 +9,8 @@ from erp.department.models import *
 from django.forms.models import modelformset_factory
 import csv
 import itertools
+import datetime
+import re
 # Function to handle an uploaded file.
 from erp.prizes.file import handle_uploaded_file
 from erp.prizes.eventParticipationPDF import generateEventParticipationPDF
@@ -199,7 +201,9 @@ def fillEventDetails(request, owner_name=None, event_name=None):
         
         f = open("prizes/finalevents.txt", 'r')
         for line in f:
-            classvalue[int(line.strip('\n'))-1] = 'complete'
+            event_id = line.strip('\n').split(',')[0]
+            classvalue[int(event_id)-1] = 'complete'
+        f.close()
         
         eventList = itertools.izip(classvalue, events)
         return render_to_response('prizes/eventdetailschoices.html',locals(),context_instance=global_context(request))
@@ -253,16 +257,26 @@ def registerparticipants(request, owner_name=None, event_name=None):
                         return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
                         
                 try:
-                    print barcodemap.barcode, barcodemap.shaastra_id
                     participant = BarcodeMap.objects.get(barcode=barcodemap.barcode).shaastra_id
                 except:
                     #if a barcode isn't filled in, or a mapping doesn't exist.
                     try:
                         participant = Participant.objects.get(shaastra_id=barcodemap.shaastra_id)
                     except:
-                        #The shaastra ID wasn't filled => incorrect barcode.
-                        error = barcodemap.barcode
-                        return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
+                        if barcodemap.shaastra_id:
+                            # Shaastra ID was incorrect => Might be insti junta or incorrect
+                            result = re.match(r'^[^\W\d_]{2}\d{2}[^\W\d_]{1}\d{3}$', barcodemap.shaastra_id)
+                            if result:
+                                participant = Participant(name='InstiJunta', gender='F', age=18, college='IIT Madras', college_roll=barcodemap.shaastra_id, shaastra_id=barcodemap.shaastra_id)
+                                participant.save()
+                            else:
+                                error = barcodemap.shaastra_id
+                                return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
+                                
+                        else:
+                            #The shaastra ID wasn't filled => incorrect barcode.
+                            error = barcodemap.barcode
+                            return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
                 participant.events.add(eventname)
     participantList = Participant.objects.filter(events=eventname)      #updated list
     #teamList = Team.objects.filter(events=eventname)
@@ -273,12 +287,25 @@ def registerparticipants(request, owner_name=None, event_name=None):
 def setFinal(request, owner_name=None, event_name=None):
     try:
         eventname=Department.objects.get(id=event_name)
+        timestamp = str(datetime.datetime.now())
         f = open('prizes/finalevents.txt', 'a')
-        f.write(event_name +'\n')
+        f.write(event_name + ',' + eventname.Dept_Name + ',' + timestamp +'\n')
         f.close()
     except:
         pass
     return redirect('erp.prizes.views.fillEventDetails', owner_name = request.user)
+
+def viewFinal(request, owner_name=None):
+    try:
+        eventdata = []
+        f = open("prizes/finalevents.txt", 'r')
+        for line in f:
+            temp = line.strip('\n').split(',')
+            eventdata.append(temp)
+        f.close()       
+    except:
+        pass
+    return render_to_response('prizes/viewfinal.html', locals(), context_instance = global_context(request))
     
 """
 def cheque_assign(request,owner_name=None,event_name=None):
