@@ -3,6 +3,13 @@
 {% block tabs %}
 
 {% if not not_exists %}
+{% if detail_error %}
+<div class="row">
+<div class="well">
+<h4><u><center> This is participant has one or more fields empty. After mapping the barcode, please check and ask him/her to update their details on the mainsite. </center></u></h3>
+</div>
+</div>
+{% endif %}
 {% if participantform %}
 <h3>Please do <i><u><b>NOT</b></u></i> change anything in the below form. It is solely for confirmation purposes.<br></h4>
 <div class="well">
@@ -25,6 +32,7 @@
 {% if saved %}
 <span class="label label-success">Saved entry</span><br />
 <br />{% endif %}
+
 
 
 {% if not_exists %}
