@@ -996,7 +996,9 @@ def reimb(request):
     departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
     submitted_depts = []
     for dept in departments:
-       submitted_depts.append(dept.Dept_Name)    
+        for plan in submitted_plans:
+            if plan.department==dept: 
+                submitted_depts.append(dept.Dept_Name)    
     if (department.is_event):
         if user_coord:
             event_coord=True       
