@@ -18,6 +18,14 @@ from reportlab.lib import colors
 from reportlab.platypus import Table, TableStyle
 from reportlab.pdfbase.pdfmetrics import getFont, getAscentDescent
 
+def getbarcodestring(participant):
+    barcodes=participant.barcodemap_set.all()
+    try:
+        return barcodes[len(barcodes)-1].barcode
+    except:
+        var='Not Assigned'
+        return var
+
 def PDFSetFont(pdf, font_name, font_size):
     """
     Sets the font and returns the lineheight.
@@ -120,6 +128,7 @@ def generateEventParticipationPDF(department_id):
         'S.No.',
         'Name',
         'Shaastra ID',
+        'Barcode',
         'Age',
         'Mobile',
         'College',
@@ -131,6 +140,7 @@ def generateEventParticipationPDF(department_id):
             sNo,
             participant.name,
             participant.shaastra_id,
+            getbarcodestring(participant),
             participant.age,
             participant.mobile_number,
             participant.college,
