@@ -120,13 +120,24 @@ def upload_file(request,owner_name=None,event_name=None):
                     except:
                         barcodes_errors.append(row[0])
                 else:
-                    try:
-                        new=Participant.objects.filter(shaastra_id=row[1])[0]
-                        new.events.add(event)
-                        new.save()
-                        shaastra_ids.append(row[1])                                  
-                    except:
-                        shaastra_ids_errors.append(row[1])
+                    result = re.compile(r'^[^\W\d_]{2}\d{2}[^\W\d_]{1}\d{3}$')
+                    if row[1]:
+                        if result.match(row[1]):
+                            shid = row[1].lower()
+                            try:
+                                new = Participant.objects.filter(shaastra_id=shid)[0]
+                            except:
+                                new = Participant(name='InstiJunta', gender='F', age=18, college='IIT Madras', college_roll=shid, shaastra_id=shid)
+                                new.save()
+                            new.events.add(event)
+                            shaastra_ids.append(shid)
+                        else:
+                            try:
+                                new=Participant.objects.filter(shaastra_id=row[1])[0]
+                                new.events.add(event)
+                                shaastra_ids.append(row[1])
+                            except:
+                                shaastra_ids_errors.append(row[1])
     else:
         form = DocumentForm() 
     return render_to_response('prizes/uploads.html',locals(),context_instance=global_context(request))
