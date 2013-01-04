@@ -991,6 +991,12 @@ def reimb(request):
         reimb_deadline=ReimbDeadline(deadline=date.today())
         reimb_deadline.save()
     reimb_deadline=ReimbDeadline.objects.get(id=1)
+    
+    submitted_plans=Budget.objects.filter(name='F', submitted=True)
+    departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+    submitted_depts = []
+    for dept in departments:
+       submitted_depts.append(dept.Dept_Name)    
     if (department.is_event):
         if user_coord:
             event_coord=True       
@@ -1152,7 +1158,19 @@ def reimb_finance(request,dept_id):
             qms_dept=True 
     event_coord=False
     
+    open_reimb_portal=OpenReimbPortal.objects.all()
+    if not open_reimb_portal:
+        open_reimb_portal1=OpenReimbPortal(opened=False)
+        open_reimb_portal1.save()    
+    
     open_reimb_portal=OpenReimbPortal.objects.get(id=1)
+    
+    submitted_plans=Budget.objects.filter(name='F', submitted=True)
+    departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
+    submitted_depts = []
+    for dept in departments:
+       submitted_depts.append(dept.Dept_Name)  
+           
     if str(department) == "Finance":
         finance=True
         has_perms = False
@@ -1175,6 +1193,8 @@ def reimb_finance(request,dept_id):
         if has_perms:
             event_department=Department.objects.get(id=dept_id)
             plan_finance=Budget.objects.get(name='F',department=event_department)
+            if not plan_finance:
+                
             departments=Department.objects.filter(is_event=True).order_by('Dept_Name')
             requests=Request.objects.filter(department=event_department)
             balance_amount=0
