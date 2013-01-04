@@ -77,17 +77,17 @@ input{width:100px; height:25px;}
 <tr>
 <th>Item Type</th><th>Name</th><th>Quantity</th><th>Recovery Factor</th>
 {% if editable %}
-    <th>Modified Quantity</th><th>Modfied Recovery Factor</th><th></th>
+    <th>Modified Quantity</th><th></th>
 {% endif %}
 </tr>
 
 {% for item in items %}
     <tr>
-    <td>{{item.name.target}}</td><td>{{item.name}}</td><td>{{item.quantity}}</td><td>{{item.rec_fac}}</td>
+    <td>{{item.name.target}}</td><td>{{item.name}}</td><td>{{item.quantity}}</td><td>{{item.name.rec_fac}}</td>
     {% if editable %}
         <form action="{{site_url}}erp/facilities/submit_approval/{{item.id}}/" method="POST">
         {% csrf_token %}
-        <td>{{request_form.approved_number}}</td><td>{{request_form.approved_rec_fac}}</td>
+        <td>{{request_form.approved_number}}</td>
         <td><input type="submit" class="btn btn-info" name={{item.id}} value="Submit"/></td>
         </form>
     {% endif %}

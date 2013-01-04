@@ -1,0 +1,67 @@
+{% extends "base_portal.html" %}
+
+{% block tabs %}
+
+<div class="tabbable span8">
+    <div class="tab-content">
+    <div class="row">
+    <div class="well span5 offset1">
+      <center>  <h4>Assign barcodes to Shaastra Particpants.</h4> 
+       <br/>
+       Submitting a form will save all entries and a new form will load.<br> <u>Please submit as often as possible to save work.</u>
+       <br/>
+       </center>
+       </div>
+    <div class="span offset1">
+        <form action="" method="POST">
+        {% csrf_token %}
+        {{ barcodeformset.management_form }}
+        
+        <table class="table-condensed table-striped">
+            <tr><th>S.No</th><th> Barcode </th> <th> Paticipant Shaastra ID </th><th>Errors(If any)</th></tr>
+            <tr>
+            
+            {% for barcodeform in barcodeformset %}
+                <td>{{ forloop.counter }}.&emsp;</td>
+                {% for field in barcodeform.visible_fields %}
+                   <td>{{ field }}</td>
+                   {% if field.errors %}
+                   <td>{{field.errors}}</td>
+                   {% endif %}
+                {% endfor %}
+            </tr>
+            {%endfor%}
+
+        </table>
+
+        <table>    
+           <tr>
+                {% for field in barcodeform.hidden_fields %}
+                <td> {{ field }} </td>
+                {% endfor %}
+           </tr>
+        </table>
+        <br/>
+        <center><input type="submit" class="btn btn-primary btn-large offset1" name="submit_continue" value="Submit and continue"/>
+        </center>
+        </form>
+    </div>
+    
+    </div>
+    </div><!-- /.tab-content -->
+</div><!-- /.tabbable -->
+
+{% endblock tabs %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_barcode_assign");
+    var e = document.getElementById("li_barcode_assign_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+$('.chzn-select').chosen();
+</script>
+{% endblock javascript%}

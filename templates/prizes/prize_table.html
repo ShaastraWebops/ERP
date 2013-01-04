@@ -1,0 +1,63 @@
+{% extends "base_portal.html" %}
+
+{% block tabs %}
+
+<div class="tabbable span8">
+    <div class="tab-content">
+    <div class="row">
+   
+         <div class="well span5 offset1">
+      <center>  <h4>Details of Finalists at Position {{ position }} for the Event '{{ eventname }}'</h4> 
+       <br/>
+       Submitting the form will save all entries. The details will be updated in the <a href="../../">previous</a> page. <br> 
+       <br /> Please enter the participants' <b> ShaastraID only.</b> It is not necessary to fill all the 7 participants.
+       <u>Please submit as often as possible to save work.</u>
+       <br/>
+       </center>
+       </div>
+        <div class="span5 offset1">
+        {% if success %}
+            <span style="color:#FF0000">Saved!</span>
+        {% endif %}
+        <form action="" method="POST">
+        {% csrf_token %}
+        {{ winnerformset.management_form }}
+        
+        {% for winnerform in winnerformset %}
+        <table>
+            <tr><td>Member {{ forloop.counter }}:&emsp;</td>
+            <td>
+          {{winnerform.as_table}}
+            </td></tr>
+                {% for field in winnerform.hidden_fields %}
+                    {{ field }}
+                {% endfor %}
+        </table><br/>
+        {% endfor %}
+        {{ prizeform }}
+        <br/>
+       <center> <input type="submit" class="btn btn-primary" name="submit_continue" value="Submit"/></center>
+        </form>
+    </div>
+    </div>
+    </div><!-- /.tab-content -->
+</div><!-- /.tabbable -->
+
+{% endblock tabs %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_prize_assign");
+    var e = document.getElementById("li_prize_assign_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+$('.chzn-select').chosen();
+</script>
+<script>  
+ var subjects = {{ idList|safe }}
+$('.search').typeahead({source: subjects})  
+</script>  
+{% endblock javascript%}

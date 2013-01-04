@@ -123,17 +123,12 @@ class InviteForm (ModelForm):
     class Admin:
         pass
 
-
-
-
 class change_pic(forms.Form):
     file = forms.FileField()
 
 
     class Admin:
         pass
-
-
 
 class UploadFileForm(forms.Form):
     title = forms.CharField(max_length = 50,widget=forms.TextInput(attrs={'onfocus':'delete_data(this)'}))

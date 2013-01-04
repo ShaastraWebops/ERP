@@ -1,0 +1,66 @@
+{% extends "base_portal.html" %}
+
+{% block tabs %}
+
+<div class="tabbable span8">
+    <div class="tab-content">
+    <div class="row">
+    <div class="span5">
+         <div class="well span5 offset1">
+      <center>  <h4>Assign Cheques to event winners!</h4> 
+       <br/>
+       
+       Submitting a form will save all entries and a new form will load.<br> 
+       <br /> Select the Shaastra ID of the participant and assign him a cheque.
+       <u>Please submit as often as possible to save work.</u>
+       <br/>
+       </center>
+       </div>
+        <form action="" method="POST">
+        {% csrf_token %}
+        {{ winnerformset.management_form }}
+        <table class="table table-striped table-bordered span5 offset1">
+        <tr><th>S.No</th><th>Shaastra ID</th><th>Cheque No</th>
+        {% for winnerform in winnerformset %}
+            <tr><td>{{ forloop.counter }}.&emsp;</td>
+            
+          {% for field in winnerform.visible_fields %}
+                   <td>{{ field }}</td>
+                {% endfor %}
+            </tr>
+                {% for field in winnerform.hidden_fields %}
+                    {{ field }}
+                {% endfor %}
+        {% endfor %}
+        </table>
+        <br/>
+        <input type="submit" class="btn btn-primary" name="submit_continue" value="Submit and continue"/>
+        </form>
+    </div>
+    </div>
+    <div class="span3">
+    <h4>Winners:</h4><br/><br/>
+    <table class="table">
+    <tr><th>S.No.</th><th>Name</th><th>Position</th><th>Cheque No</th><th>ShaastraID</th></tr>
+    {% for winner in winnerList %}
+    <tr><td>{{ forloop.counter }}.</td><td>{{ winner.participant.name }}</td><td>{{ winner.position }}</td><td>{{ winner.cheque }}</td><td>{{ winner.participant.shaastra_id }}</td></tr>
+    {% endfor %}
+    </table>
+    </div> 
+    </div><!-- /.tab-content -->
+</div><!-- /.tabbable -->
+
+{% endblock tabs %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_cheque_assign");
+    var e = document.getElementById("li_cheque_assign_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+$('.chzn-select').chosen();
+</script>
+{% endblock javascript%}

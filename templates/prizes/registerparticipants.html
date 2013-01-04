@@ -1,0 +1,85 @@
+{% extends "base_portal.html" %}
+
+{% block tabs %}
+
+<div class="tabbable span8">
+    <div class="tab-content">
+    <div class="row">
+    <div class="span5">
+    <div class="well">
+        <center><h4>Event Registration</h4>
+        Scan the barcodes (or choose the Shaastra ID) of participants registering for the event <b>"{{ eventname }}"</b>. Entering both may cause conflicts.<br/>
+       <u>Please submit as often as possible to save work.</u></center>
+    </div>
+    </div>
+    </div>
+    <div class="row">
+    <div class="span5">
+        {% if error %}
+            <div class="alert alert-error fade in">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                Incorrect barcode entered - <b>{{ error }}</b><br/>Please enter the correct barcode, or enter the Shaastra ID instead.
+            </div>
+        {% endif %}
+        <form action="" method="POST">
+        {% csrf_token %}
+        {{ barcodemapformset.management_form }}
+        <table>
+        {% for barcodemapform in barcodemapformset %}
+            <tr><td>{{ forloop.counter }}.</td></tr>
+            {{ barcodemapform.non_field_errors }}
+            {{ barcodemapform.as_table }}
+        {% endfor %}
+        </table>
+        <br/>
+        <input id="formset_submit" type="submit" class="btn btn-primary" name="submit_continue" value="Submit and continue"/>
+        </form>
+    </div>
+    <div class="span3">
+    <form action="{% url prizes.views.upload_file owner_name=user event_name=event_name %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ uploadform.non_field_errors }}</p>
+            <p>{{ uploadform.docfile.label_tag }} {{ uploadform.docfile.help_text }}</p>
+            <p>
+                {{ uploadform.docfile.errors }}
+                {{ uploadform.docfile }}
+            </p>
+            <p><input type="submit" class="btn btn-primary" value="Upload" /></p>
+        </form>
+    </div>
+    <div class="span3">
+    <h4>Registered Participants:</h4><br/>
+    <table class="table">
+    {% if participantList %}
+    <br/>
+    <tr><th>S.No.</th><th>Name</th><th>Shaastra ID</th><th>Barcode</th></tr>
+    {% for participant in participantList %}
+    <tr><td>{{ forloop.counter }}.</td><td>{{ participant.name }}</td><td>{{ participant.shaastra_id }}</td><td>{{ participant.barcodemap_set.all.0.barcode }}</td></tr>
+    {% endfor %}
+    </table>
+    {% else %}
+    No participants registered.
+    {% endif %}
+    </div>    
+    </div>
+    </div><!-- /.tab-content -->
+</div><!-- /.tabbable -->
+
+{% endblock tabs %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+    var d = document.getElementById("li_eventregn");
+    var e = document.getElementById("li_eventregn_icon");
+    d.className = "active";
+    e.className = e.className + " icon-white";
+ });
+$('.chzn-select').chosen();
+</script>
+<script>  
+ var subjects = {{ idList|safe }}
+$('.search').typeahead({source: subjects})  
+</script>  
+{% endblock javascript%}

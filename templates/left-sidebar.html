@@ -5,11 +5,26 @@
 <li id="li_department">
     <a href="{% url tasks.views.display_department_portal owner_name=user %}"><i class="icon-bullhorn" id="li_department_icon"></i> Department </a>
 </li>
+{% if finance or hospi %}
+<li id="li_prize_assign">
+   <a href="{% url prizes.views.fillEventDetails owner_name=user %}"><i class="icon-gift" id="li_prize_assign_icon"></i> Prizes</a>
+</li>
+{% endif %}
+{% if qms %}
+<li id="li_barcode_assign">
+   <a href="{% url prizes.views.assign_barcode_new owner_name=user %}"><i class="icon-barcode" id="li_barcode_assign_icon"></i> Barcode</a>
+</li>
+{% endif %}
+{% if qms or hospi %}
+<li id="li_eventregn">
+    <a href="{% url prizes.views.registerparticipants owner_name=page_owner%}"><i class="icon-check" id="li_eventregn_icon"></i> Event Registration </a>
+{% endif %}
 <li id="li_contact">
     <a href="{% url dashboard.views.display_contacts owner_name=user%}"><i class="icon-th-list" id="li_contact_icon"></i> Contact Details </a>
 </li>
 <li id="li_files">
     <a href="{% url dashboard.views.upload_file owner_name=page_owner%}"><i class="icon-folder-close" id="li_files_icon"></i> Files </a>
+</li>
 </li>
 <li id="li_calendar">
     <a href="{% url dashboard.views.display_calendar owner_name=page_owner%}"><i class="icon-calendar" id="li_calendar_icon"></i> Calendar </a>
@@ -47,19 +62,19 @@
 
 {% if qms_core %}
 	<li id="li_questions">
-    <a href="{% url feedback.views.question_for owner_name=user%}"><i class="icon-question-sign" id="li_questions_icon"></i>Feedback Questions </a>
+    <a href="{% url feedback.views.question_for owner_name=user%}"><i class="icon-question-sign" id="li_questions_icon"></i> Feedback Questions </a>
 </li>
 {% endif %}
 
 {% if qms_supercoord %}
 	<li id="li_questions">
-    <a href="{% url feedback.views.question_for owner_name=user%}"><i class="icon-question-sign" id="li_questions_icon"></i>Feedback Questions </a>
+    <a href="{% url feedback.views.question_for owner_name=user%}"><i class="icon-question-sign" id="li_questions_icon"></i> Feedback Questions </a>
 </li>
 {% endif %}
 
 {% if qms_coord %}
 	<li id="li_questions">
-    <a href="{% url feedback.views.question_for owner_name=user%}"><i class="icon-question-sign" id="li_questions_icon"></i>Feedback Questions </a>
+    <a href="{% url feedback.views.question_for owner_name=user%}"><i class="icon-question-sign" id="li_questions_icon"></i> Feedback Questions </a>
 </li>
 {% endif %}
 <!--

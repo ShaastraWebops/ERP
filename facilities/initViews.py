@@ -23,6 +23,7 @@ def create_items(request):
     pa_items = ['Mikes-Normal','Mikes-Cordless','Mikes-Collar','Speaker-Normal','Speaker-Amplifier']
     water_items=['Water Bottles','Bubble Cans']
     dept = Department.objects.get(id=57)
+    j=1
     for i in ga_items:
         try :
             ItemList.objects.get(name=str(i))
@@ -34,7 +35,7 @@ def create_items(request):
             print a.name
             a.department=dept
             a.target="GA"
-            
+            j=j+1
             a.save()
     for i in pa_items:
         try :
@@ -47,6 +48,7 @@ def create_items(request):
             print a.name
             a.department=dept
             a.target="PA"
+            j=j+1
             a.save()
     for i in water_items:
         try :
@@ -59,6 +61,7 @@ def create_items(request):
             print a.name
             a.department=dept
             a.target="Water"
+            j=j+1
             a.save()
 
     for i in materials_items:
@@ -72,6 +75,7 @@ def create_items(request):
             print a.name
             a.department=dept
             a.target="Materials"
+            j=j+1
             a.save()
     equipment_items = ['Computers-Laptop','Computers-Desktop']
     dept = Department.objects.get(id=59)
@@ -86,6 +90,7 @@ def create_items(request):
             print a.name
             a.department=dept
             a.target="Equipment"
+            j=j+1
             a.save()
     other_items = ['Special-CD/DVD','Special-Weighing Machine','Special-Hacksaw Blade','Special-Chalkpowder (No. of Boxes)',
                    'Special-Rope,Nylon (Length m)','Special-Rope-Jute (Length m)',
@@ -103,9 +108,27 @@ def create_items(request):
             print a.name
             a.department=dept
             a.target="Special"
+            j=j+1
             a.save()
-    itemlist=ItemList.objects.all()
     return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))  
+
+def use_rr(request):   
+    string=[]
+    with open('facilities/recfac.csv', 'rb') as csvfile:
+        read = csv.reader(csvfile, delimiter=',')
+        print '\n\n'   
+        for row in read:
+            string.append(row)
+    itemlist=ItemList.objects.all()
+    j=1
+    for item in itemlist:
+        print item.name
+        print string[j][1]
+        a=float(string[j][1])
+        item.rec_fac=a
+        item.save()    
+        j=j+1         
+    return render_to_response('facilities/test.html',locals(),context_instance=global_context(request)) 
 
 def create_rounds(request):
     departments = Department.objects.filter(is_event=True)
@@ -153,7 +176,7 @@ def create_rounds(request):
 
 def use_data(request): 
     string =[]
-    with open('facilities/lrd.csv', 'rb') as csvfile:
+    with open('facilities/dryrun.csv', 'rb') as csvfile:
         read = csv.reader(csvfile, delimiter=',')
         print '\n\n'   
         for row in read:
@@ -168,43 +191,59 @@ def use_data(request):
             print "Does Not Exist"
             continue
         print row[0]
-        e=EventRound()
-        e.description = "Round - " + row[1] +" ; Venue - " + row[2]
-        try :
-            print "c"
-            exist = EventRound.objects.get(department=department,number=1)
-            print "x"
-            allround = EventRound.objects.filter(department=department).order_by('-number')
-            print allround[0].number
-            e.number = allround[0].number + 1
-            e.department=department
-            if row[1] is not '':
-                e.name = "Round " + str(e.number)
-            else:
-                e.name = row[1]
-            e.save()
-            print "f"
+        round_name="Round 1"
+        if row[1] is not '':
+            round_name=row[1]
+        gen=0   
+        print "\n\n"
+        try:
+            e=EventRound.objects.get(department=department,name=round_name)
+            print "Already Exists" + round_name
+            gen=1
         except:
-            print "b"
-            e.number=1
-            e.department=department 
-            if row[1] is not '':
-                e.name = "Round " + str(e.number)
-            else:
-                e.name = row[1]
-            e.save()
+            e=EventRound()
+            e.description = "Round - " + row[1] +" ; Venue - " + row[2]
+            print "New Round" + e.description
+            pass
+        if gen==0:
+            try :
+                print "c"
+                exist = EventRound.objects.get(department=department,number=1)
+                print "x"
+                allround = EventRound.objects.filter(department=department).order_by('-number')
+                print allround[0].number
+                e.number = allround[0].number + 1
+                e.department=department
+                if row[1] is '':
+                    e.name = "Round " + str(e.number)
+                else:
+                    e.name = row[1]
+                e.save()
+                print "f"
+            except:
+                print "b"
+                e.number=1
+                e.department=department 
+                if row[1] is '':
+                    e.name = "Round " + str(e.number)
+                else:
+                    e.name = row[1]
+                e.save()
         i=3
         for item in items:
             if row[i] is not '':
                 number = int(row[i])
             else:
                 number=0
-            a=FacilitiesObject(department=department,event_round=e,name=item,quantity=number)
+            if gen==0:
+                a=FacilitiesObject(department=department,event_round=e,name=item,quantity=number)
+
+            else:
+                a=FacilitiesObject.objects.get(department=department,event_round=e,name=item)
+                a.quantity=number
             a.save()
             i=i+1
-    
-    
-    
+   
     return render_to_response('facilities/test.html',locals(),context_instance=global_context(request))
 
 

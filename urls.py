@@ -17,12 +17,13 @@ from tasks.views import *
 from django.conf.urls.defaults import *
 
 #haystack.autodiscover()
-#dajaxice_autodiscover()
+dajaxice_autodiscover()
 #admin.autodiscover()
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
-# admin.autodiscover()
+admin.autodiscover()
+
 urlpatterns = patterns('',
     url(r'^admin/password_reset/$', 'django.contrib.auth.views.password_reset', name='password_reset'),
     (r'^password_reset/done/$', 'django.contrib.auth.views.password_reset_done'),
@@ -47,11 +48,12 @@ urlpatterns = patterns('',
 	(r'^erp/feedback/', include('erp.feedback.urls')),
 	(r'^erp/finance_portal/',include('erp.finance.urls')),
 	(r'^erp/facilities/',include('erp.facilities.urls')),
+	(r'^erp/prizes/(?P<owner_name>\w+)/', include('erp.prizes.urls')),
     (r'^erp/(?P<owner_name>\w+)/users/', include('erp.users.urls')),
     (r'^erp/(?P<owner_name>\w+)/dashboard/',include('erp.dashboard.urls')),	
     (r'^erp/(?P<owner_name>\w+)/', include('erp.tasks.urls')),
     (r'^erp/forgot_password/$', 'erp.home.views.forgot_password'),
-    #(r'^loaddata/$', 'erp.dashboard.views.load_data'), #used to load test data into db.
+    (r'^loaddata/$', 'erp.dashboard.views.load_data'), #used to load test data into db.
     
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.MEDIA_ROOT }),
     

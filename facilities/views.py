@@ -9,6 +9,7 @@ from erp.facilities.models import *
 from erp.facilities.forms import *
 from django.forms.models import modelformset_factory
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from erp.misc.helper import *
 from erp.misc.util import *
 from erp.facilities.forms import *
@@ -16,6 +17,7 @@ from settings import SITE_URL
 from pdfGeneratingViews import generateOverallPDF
 from pdfGeneratingViews import generateEventPDF
 from erp.facilities.models import DATE_CHOICES
+from erp.facilities.eventParticipationPDF import generateEventParticipationPDF
 
 def test(request):
     facilities_tab = True
@@ -42,6 +44,8 @@ def facilities_home(request):
         return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal/")'''
     # if department.Dept_Name=="QMS":
     #     return HttpResponseRedirect(SITE_URL + "erp/facilities/qms_visible_portal/")
+    if request.user.username=="ee11b075":
+        return HttpResponseRedirect(SITE_URL + "erp/facilities/approval_portal/")  
     if curr_userprofile.department.is_event:
         return HttpResponseRedirect(SITE_URL + "erp/facilities/round_home/"+str(curr_userprofile.department.id))         
 
@@ -358,7 +362,6 @@ def submit_approval(request,item_id):
         approval_form = ApprovalForm(request.POST)
         if approval_form.is_valid():    
             item.quantity = approval_form.cleaned_data['approved_number']
-            item.rec_fac = approval_form.cleaned_data['approved_rec_fac']
             try:
                 item.save()
                 form_saved=1
@@ -396,7 +399,8 @@ def submit_approval(request,item_id):
     return HttpResponseRedirect(SITE_URL + 'erp/facilities/approve_event/%d/%d/%d/'%(item.creator.department.id,form_saved,error))
 '''
 
-       
-        
-    
-    
+@login_required
+def event_participation_pdf(request, dept_id):
+    dept_id = int(dept_id)
+    return generateEventParticipationPDF(dept_id)
+
