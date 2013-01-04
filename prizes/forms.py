@@ -91,6 +91,7 @@ class EventRegnForm (ModelForm):
             barcode=self.cleaned_data['barcode']
             if shid:
                 if result.match(shid):
+                    shid = shid.lower()
                     try:
                         instance=Participant.objects.filter(shaastra_id=shid)[0]
                     except:
