@@ -37,6 +37,7 @@ class ParticipantForm (ModelForm):
         super(ParticipantForm, self).__init__(*args, **kwargs)
         self.fields['branch'].widget.attrs['readonly'] = 'readonly'
         self.fields['shaastra_id'].widget.attrs['readonly'] = 'readonly'
+        self.fields['age'].widget.attrs['readonly'] = 'readonly'
 
 class DocumentForm(forms.Form):
     docfile = forms.FileField(
