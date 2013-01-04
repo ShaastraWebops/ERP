@@ -148,7 +148,15 @@ class PrizeForm (ModelForm):
         try:
             shid = self.cleaned_data['participant_1']
             if shid:
-                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                if result.match(shid):
+                    shid = shid.lower()
+                    try:
+                        instance=Participant.objects.filter(shaastra_id=shid)[0]
+                    except:
+                        instance = Participant(name='InstiJunta', gender='F', age=18, college='IIT Madras', college_roll=shid, shaastra_id=shid)
+                        instance.save()
+                else:                    
+                    instance=Participant.objects.filter(shaastra_id=shid)[0]
                 self.instance.participant_1 = instance
         except KeyError:
             return True
@@ -160,7 +168,15 @@ class PrizeForm (ModelForm):
         try:    
             shid = self.cleaned_data['participant_2']
             if shid:
-                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                if result.match(shid):
+                    shid = shid.lower()
+                    try:
+                        instance=Participant.objects.filter(shaastra_id=shid)[0]
+                    except:
+                        instance = Participant(name='InstiJunta', gender='F', age=18, college='IIT Madras', college_roll=shid, shaastra_id=shid)
+                        instance.save()
+                else:                    
+                    instance=Participant.objects.filter(shaastra_id=shid)[0]
                 self.instance.participant_2 = instance
         except KeyError:
             return True
@@ -172,7 +188,15 @@ class PrizeForm (ModelForm):
         try:    
             shid = self.cleaned_data['participant_3']
             if shid:
-                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                if result.match(shid):
+                    shid = shid.lower()
+                    try:
+                        instance=Participant.objects.filter(shaastra_id=shid)[0]
+                    except:
+                        instance = Participant(name='InstiJunta', gender='F', age=18, college='IIT Madras', college_roll=shid, shaastra_id=shid)
+                        instance.save()
+                else:                    
+                    instance=Participant.objects.filter(shaastra_id=shid)[0]
                 self.instance.participant_3 = instance
         except KeyError:
             return True
@@ -184,7 +208,15 @@ class PrizeForm (ModelForm):
         try:    
             shid = self.cleaned_data['participant_4']
             if shid:
-                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                if result.match(shid):
+                    shid = shid.lower()
+                    try:
+                        instance=Participant.objects.filter(shaastra_id=shid)[0]
+                    except:
+                        instance = Participant(name='InstiJunta', gender='F', age=18, college='IIT Madras', college_roll=shid, shaastra_id=shid)
+                        instance.save()
+                else:                    
+                    instance=Participant.objects.filter(shaastra_id=shid)[0]
                 self.instance.participant_4 = instance
         except KeyError:
             return True
@@ -196,7 +228,15 @@ class PrizeForm (ModelForm):
         try:    
             shid = self.cleaned_data['participant_5']
             if shid:
-                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                if result.match(shid):
+                    shid = shid.lower()
+                    try:
+                        instance=Participant.objects.filter(shaastra_id=shid)[0]
+                    except:
+                        instance = Participant(name='InstiJunta', gender='F', age=18, college='IIT Madras', college_roll=shid, shaastra_id=shid)
+                        instance.save()
+                else:                    
+                    instance=Participant.objects.filter(shaastra_id=shid)[0]
                 self.instance.participant_5 = instance                                                
         except KeyError:
             return True
@@ -208,7 +248,15 @@ class PrizeForm (ModelForm):
         try:    
             shid = self.cleaned_data['participant_6']
             if shid:
-                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                if result.match(shid):
+                    shid = shid.lower()
+                    try:
+                        instance=Participant.objects.filter(shaastra_id=shid)[0]
+                    except:
+                        instance = Participant(name='InstiJunta', gender='F', age=18, college='IIT Madras', college_roll=shid, shaastra_id=shid)
+                        instance.save()
+                else:                    
+                    instance=Participant.objects.filter(shaastra_id=shid)[0]
                 self.instance.participant_6 = instance
         except KeyError:
             return True
@@ -220,10 +268,18 @@ class PrizeForm (ModelForm):
         try:    
             shid = self.cleaned_data['participant_7']
             if shid:
-                instance=Participant.objects.filter(shaastra_id=shid)[0]
+                if result.match(shid):
+                    shid = shid.lower()
+                    try:
+                        instance=Participant.objects.filter(shaastra_id=shid)[0]
+                    except:
+                        instance = Participant(name='InstiJunta', gender='F', age=18, college='IIT Madras', college_roll=shid, shaastra_id=shid)
+                        instance.save()
+                else:                    
+                    instance=Participant.objects.filter(shaastra_id=shid)[0]
                 self.instance.participant_7 = instance
          
-            return super(PrizeForm, self).save()
+            return super(PrizeForm, self).save(commit)
         except KeyError:
             return True
         except:
