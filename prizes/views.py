@@ -48,22 +48,23 @@ def assign_barcode_new(request,owner_name=None,shaastra_id=None):
                 participant=Participant.objects.filter(shaastra_id=form.cleaned_data['shaastra_id'])
                 print "participant", participant
                 try:
-                    college = str(participant.college)
+                    college = str(participant[0].college)
                 except:
                     college=''
                     detail_error = True
                 try:
-                    college_roll = str(participant.college_roll)
+                    college_roll = str(participant[0].college_roll)
                 except:
                     college_roll=''
                     detail_error = True
                 try:
-                    name = str(participant.name)
+                    name = str(participant[0].name)
+                    print name
                 except:
                     name=''
                     detail_error = True
                 try:
-                    mobile_number = str(participant.mobile_number)
+                    mobile_number = str(participant[0].mobile_number)
                 except:
                     mobile_number=''
                     detail_error = True
