@@ -23,10 +23,15 @@ class DetailForm (ModelForm):
         self.fields['shaastra_id'].widget.attrs['class'] = "search"    
 		
 class ParticipantForm (ModelForm):
-    barcode=forms.CharField(max_length = 250)
+    barcode=forms.CharField(max_length = 250,required=False)
+    college=forms.CharField(max_length = 250,required=False)
+    college_roll=forms.CharField(max_length = 250,required=False)
+    name=forms.CharField(max_length = 250,required=False)
+    mobile_number=forms.CharField(max_length = 250,required=False)
+    
     class Meta: 
         model=Participant  
-        exclude=('events')
+        exclude=('events','college','college_roll','name','mobile_number')
 
 class DocumentForm(forms.Form):
     docfile = forms.FileField(

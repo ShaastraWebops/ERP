@@ -3,6 +3,13 @@
 {% block tabs %}
 
 {% if not not_exists %}
+{% if detail_error %}
+<div class="row">
+<div class="well">
+<h4><u><center> This is participant has one or more fields empty. After mapping the barcode, please check and ask him/her to update their details on the mainsite. </center></u></h3>
+</div>
+</div>
+{% endif %}
 {% if participantform %}
 <h3>Please do <i><u><b>NOT</b></u></i> change anything in the below form. It is solely for confirmation purposes.<br></h4>
 <div class="well">
@@ -27,6 +34,7 @@
 <br />{% endif %}
 
 
+
 {% if not_exists %}
 <span class="label label-important">Invalid ShaastraID/Barcode</span><br />
 <br />{% endif %}
@@ -39,11 +47,18 @@
 {% endif %}
 {% block javascript %}
 {{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+        var d = document.getElementById("li_barcode_assign");
+            var e = document.getElementById("li_barcode_assign_icon");
+                d.className = "active";
+                    e.className = e.className + " icon-white";
+                     });
+ $('.chzn-select').chosen();
+</script>
 <script>  
  var subjects = {{ idList|safe }}
 $('.search').typeahead({source: subjects})  
 </script>  
 {% endblock javascript%}
 {% endblock %}
-
-

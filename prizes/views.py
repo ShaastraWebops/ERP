@@ -42,14 +42,35 @@ def assign_barcode_new(request,owner_name=None,shaastra_id=None):
             new.save()
             form=DetailForm()
             saved=True
+            print "saved", new.shaastra_id, new.barcode
         else:
             if form.is_valid():
                 participant=Participant.objects.filter(shaastra_id=form.cleaned_data['shaastra_id'])
+                try:
+                    college = str(participant.college)
+                except:
+                    college=''
+                    detail_error = True
+                try:
+                    college_roll = str(participant.college_roll)
+                except:
+                    college_roll=''
+                    detail_error = True
+                try:
+                    name = str(participant.name)
+                except:
+                    name=''
+                    detail_error = True
+                try:
+                    mobile_number = str(participant.mobile_number)
+                except:
+                    mobile_number=''
+                    detail_error = True
                 if len(participant)==0 or len(form.cleaned_data['barcode'])!=5:
                     not_exists=True
                     return render_to_response('prizes/display_profile.html',locals(),context_instance=global_context(request))
                 else:
-                    values={'barcode':form.cleaned_data['barcode']}
+                    values={'barcode':form.cleaned_data['barcode'],'college':college,'college_roll':college_roll,'name':name,'mobile_number':mobile_number}
                     participantform=ParticipantForm(instance=participant[0],initial=values)
     
     idList = [str(elem.shaastra_id) for elem in Participant.objects.all()]                

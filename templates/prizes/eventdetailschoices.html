@@ -13,4 +13,16 @@
 <a href="{{ request.path }}{{ event.id }}/" class="{{ classvalue }}">{{event.Dept_Name}}</a>
 </td></tr>
 {% endfor %}
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+        var d = document.getElementById("li_prize_assign");
+            var e = document.getElementById("li_prize_assign_icon");
+                d.className = "active";
+                    e.className = e.className + " icon-white";
+                     });
+ $('.chzn-select').chosen();
+</script>
+{% endblock javascript%}
 {% endblock %}

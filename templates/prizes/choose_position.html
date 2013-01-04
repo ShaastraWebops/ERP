@@ -74,4 +74,16 @@
 {% if PPM %}
 <a href="{% url prizes.views.setFinal owner_name=request.user event_name=event_name %}">Set this list as the final list of participants</a> - This option makes the event green in the event details page, to inform others that this is the finalised list.
 {% endif %}
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+        var d = document.getElementById("li_prize_assign");
+            var e = document.getElementById("li_prize_assign_icon");
+                d.className = "active";
+                    e.className = e.className + " icon-white";
+                     });
+ $('.chzn-select').chosen();
+</script>
+{% endblock javascript%}
 {% endblock %}
