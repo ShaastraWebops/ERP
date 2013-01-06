@@ -9,8 +9,8 @@
          <div class="well span5 offset1">
       <center>  <h4>Details of Finalists at Position {{ position }} for the Event '{{ eventname }}'</h4> 
        <br/>
-       Submitting the form will save all entries. The details will be updated in the <a href="../../">previous</a> page. <br> 
-       <br /> Please enter the participants' <b> ShaastraID only.</b> It is not necessary to fill all the 7 participants.
+       Submitting the form will save all entries. The details will be updated in this page as well as the <a href="../../">previous</a> page.
+       <br /> Please enter <b>either the participants' ShaastraID or the barcode.</b> It is not necessary to fill all the 7 participants.<br/>
        <u>Please submit as often as possible to save work.</u>
        <br/>
        </center>
@@ -21,20 +21,76 @@
         {% endif %}
         <form action="" method="POST">
         {% csrf_token %}
-        {{ winnerformset.management_form }}
-        
-        {% for winnerform in winnerformset %}
-        <table>
-            <tr><td>Member {{ forloop.counter }}:&emsp;</td>
-            <td>
-          {{winnerform.as_table}}
-            </td></tr>
-                {% for field in winnerform.hidden_fields %}
-                    {{ field }}
+        {{ prizeform.non_form_errors }}
+        {% for field in prizeform %}
+            {{ field.errors }}
+            {% if field.label == "Participant 1 barcode" %}
+                <table><tr><td>{{ field.label }}:<br/> {{ field }}&emsp;</td>
+                {% for field1 in prizeform %}
+                    {% if field1.label == "Participant 1 shaastraid" %}
+                    <td><b>(OR) </b>{{ field1.label }}:<br/> {{ field1 }}</td></tr></table>
+                    {% endif %}
                 {% endfor %}
-        </table><br/>
+            {% else %}
+                {% if field.label == "Participant 2 barcode" %}
+                    <table><tr><td>{{ field.label }}:<br/> {{ field }}&emsp;</td>
+                    {% for field1 in prizeform %}
+                        {% if field1.label == "Participant 2 shaastraid" %}
+                        <td><b>(OR) </b>{{ field1.label }}:<br/> {{ field1 }}</td></tr></table>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% if field.label == "Participant 3 barcode" %}
+                        <table><tr><td>{{ field.label }}:<br/> {{ field }}&emsp;</td>
+                        {% for field1 in prizeform %}
+                            {% if field1.label == "Participant 3 shaastraid" %}
+                            <td><b>(OR) </b>{{ field1.label }}:<br/> {{ field1 }}</td></tr></table>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% if field.label == "Participant 4 barcode" %}
+                            <table><tr><td>{{ field.label }}:<br/> {{ field }}&emsp;</td>
+                            {% for field1 in prizeform %}
+                                {% if field1.label == "Participant 4 shaastraid" %}
+                                <td><b>(OR) </b>{{ field1.label }}:<br/> {{ field1 }}</td></tr></table>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            {% if field.label == "Participant 5 barcode" %}
+                            <table><tr><td>{{ field.label }}:<br/> {{ field }}&emsp;</td>
+                            {% for field1 in prizeform %}
+                                {% if field1.label == "Participant 5 shaastraid" %}
+                                <td><b>(OR) </b>{{ field1.label }}:<br/> {{ field1 }}</td></tr></table>
+                                {% endif %}
+                            {% endfor %}
+                            {% else %}
+                                {% if field.label == "Participant 6 barcode" %}
+                                    <table><tr><td>{{ field.label }}:<br/> {{ field }}&emsp;</td>
+                                    {% for field1 in prizeform %}
+                                        {% if field1.label == "Participant 6 shaastraid" %}
+                                        <td><b>(OR) </b>{{ field1.label }}:<br/> {{ field1 }}</td></tr></table>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    {% if field.label == "Participant 7 barcode" %}
+                                        <table><tr><td>{{ field.label }}:<br/> {{ field }}&emsp;</td>
+                                        {% for field1 in prizeform %}
+                                            {% if field1.label == "Participant 7 shaastraid" %}
+                                            <td><b>(OR) </b>{{ field1.label }}:<br/> {{ field1 }}</td></tr></table>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        {% if field.label == "Details" or field.label == "Cheque" %}
+                                            {{ field.label }}:<br/> {{ field }}<br/>
+                                        {% endif %}
+                                    {% endif %}                
+                                {% endif %}                
+                            {% endif %}                
+                        {% endif %}                
+                    {% endif %}
+                {% endif %}
+            {% endif %}
         {% endfor %}
-        {{ prizeform }}
         <br/>
        <center> <input type="submit" class="btn btn-primary" name="submit_continue" value="Submit"/></center>
         </form>

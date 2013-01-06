@@ -136,18 +136,35 @@ class EventRegnForm(BarcodeForm):
 """
 
 class PrizeForm (ModelForm):
-    participant_1=forms.CharField(max_length = 250, required=False)
-    participant_2=forms.CharField(max_length = 250, required=False)
-    participant_3=forms.CharField(max_length = 250, required=False)
-    participant_4=forms.CharField(max_length = 250, required=False)
-    participant_5=forms.CharField(max_length = 250, required=False)
-    participant_6=forms.CharField(max_length = 250, required=False)
-    participant_7=forms.CharField(max_length = 250, required=False)
+    participant_1_shaastraid=forms.CharField(max_length = 250, required=False)
+    participant_2_shaastraid=forms.CharField(max_length = 250, required=False)
+    participant_3_shaastraid=forms.CharField(max_length = 250, required=False)
+    participant_4_shaastraid=forms.CharField(max_length = 250, required=False)
+    participant_5_shaastraid=forms.CharField(max_length = 250, required=False)
+    participant_6_shaastraid=forms.CharField(max_length = 250, required=False)
+    participant_7_shaastraid=forms.CharField(max_length = 250, required=False)
+    participant_1_barcode=forms.CharField(max_length = 250, required=False)
+    participant_2_barcode=forms.CharField(max_length = 250, required=False)
+    participant_3_barcode=forms.CharField(max_length = 250, required=False)
+    participant_4_barcode=forms.CharField(max_length = 250, required=False)
+    participant_5_barcode=forms.CharField(max_length = 250, required=False)
+    participant_6_barcode=forms.CharField(max_length = 250, required=False)
+    participant_7_barcode=forms.CharField(max_length = 250, required=False)
     
     def save(self,commit=True):
         try:
-            shid = self.cleaned_data['participant_1']
-            if shid:
+            shid = self.cleaned_data['participant_1_shaastraid']
+            barcode = self.cleaned_data['participant_1_barcode']
+            barcode_fail = True
+            if barcode:
+                try:
+                    instance = Participant.objects.filter(barcodemap__barcode=barcode)[0]
+                    barcode_fail = False
+                except:
+                    pass
+                self.instance.participant_1 = instance
+                        
+            if (shid and barcode_fail):
                 if result.match(shid):
                     shid = shid.lower()
                     try:
@@ -162,12 +179,22 @@ class PrizeForm (ModelForm):
             return True
         except:
             msg='ShaastraID not found.'
-            self._errors['participant_1'] = ErrorList([msg])
+            self._errors['participant_1_shaastraid'] = ErrorList([msg])
             return False
                     
         try:    
-            shid = self.cleaned_data['participant_2']
-            if shid:
+            shid = self.cleaned_data['participant_2_shaastraid']
+            barcode = self.cleaned_data['participant_2_barcode']
+            barcode_fail = True
+            if barcode:
+                try:
+                    instance = Participant.objects.filter(barcodemap__barcode=barcode)[0]
+                    barcode_fail = False
+                except:
+                    pass
+                self.instance.participant_2 = instance
+                        
+            if (shid and barcode_fail):
                 if result.match(shid):
                     shid = shid.lower()
                     try:
@@ -182,12 +209,22 @@ class PrizeForm (ModelForm):
             return True
         except:
             msg='ShaastraID not found.'
-            self._errors['participant_2'] = ErrorList([msg])
+            self._errors['participant_2_shaastraid'] = ErrorList([msg])
             return False
                         
         try:    
-            shid = self.cleaned_data['participant_3']
-            if shid:
+            shid = self.cleaned_data['participant_3_shaastraid']
+            barcode = self.cleaned_data['participant_3_barcode']
+            barcode_fail = True
+            if barcode:
+                try:
+                    instance = Participant.objects.filter(barcodemap__barcode=barcode)[0]
+                    barcode_fail = False
+                except:
+                    pass
+                self.instance.participant_3 = instance
+                        
+            if (shid and barcode_fail):
                 if result.match(shid):
                     shid = shid.lower()
                     try:
@@ -202,12 +239,22 @@ class PrizeForm (ModelForm):
             return True
         except:
             msg='ShaastraID not found.'
-            self._errors['participant_3'] = ErrorList([msg])
+            self._errors['participant_3_shaastraid'] = ErrorList([msg])
             return False
                         
         try:    
-            shid = self.cleaned_data['participant_4']
-            if shid:
+            shid = self.cleaned_data['participant_4_shaastraid']
+            barcode = self.cleaned_data['participant_4_barcode']
+            barcode_fail = True
+            if barcode:
+                try:
+                    instance = Participant.objects.filter(barcodemap__barcode=barcode)[0]
+                    barcode_fail = False
+                except:
+                    pass
+                self.instance.participant_4 = instance
+                        
+            if (shid and barcode_fail):
                 if result.match(shid):
                     shid = shid.lower()
                     try:
@@ -221,13 +268,23 @@ class PrizeForm (ModelForm):
         except KeyError:
             return True
         except:
-            msg='ShaastraID not found.'
-            self._errors['participant_4'] = ErrorList([msg])
+            msg='ShaastraID/barcode not found.'
+            self._errors['participant_4_shaastraid'] = ErrorList([msg])
             return False
                         
         try:    
-            shid = self.cleaned_data['participant_5']
-            if shid:
+            shid = self.cleaned_data['participant_5_shaastraid']
+            barcode = self.cleaned_data['participant_5_barcode']
+            barcode_fail = True
+            if barcode:
+                try:
+                    instance = Participant.objects.filter(barcodemap__barcode=barcode)[0]
+                    barcode_fail = False
+                except:
+                    pass
+                self.instance.participant_5 = instance
+                        
+            if (shid and barcode_fail):
                 if result.match(shid):
                     shid = shid.lower()
                     try:
@@ -242,12 +299,22 @@ class PrizeForm (ModelForm):
             return True
         except:
             msg='ShaastraID not found.'
-            self._errors['participant_5'] = ErrorList([msg])
+            self._errors['participant_5_shaastraid'] = ErrorList([msg])
             return False
                         
         try:    
-            shid = self.cleaned_data['participant_6']
-            if shid:
+            shid = self.cleaned_data['participant_6_shaastraid']
+            barcode = self.cleaned_data['participant_6_barcode']
+            barcode_fail = True
+            if barcode:
+                try:
+                    instance = Participant.objects.filter(barcodemap__barcode=barcode)[0]
+                    barcode_fail = False
+                except:
+                    pass
+                self.instance.participant_6 = instance
+                        
+            if (shid and barcode_fail):
                 if result.match(shid):
                     shid = shid.lower()
                     try:
@@ -262,12 +329,22 @@ class PrizeForm (ModelForm):
             return True
         except:
             msg='ShaastraID not found.'
-            self._errors['participant_6'] = ErrorList([msg])
+            self._errors['participant_6_shaastraid'] = ErrorList([msg])
             return False
                         
         try:    
-            shid = self.cleaned_data['participant_7']
-            if shid:
+            shid = self.cleaned_data['participant_7_shaastraid']
+            barcode = self.cleaned_data['participant_7_barcode']
+            barcode_fail = True
+            if barcode:
+                try:
+                    instance = Participant.objects.filter(barcodemap__barcode=barcode)[0]
+                    barcode_fail = False
+                except:
+                    pass
+                self.instance.participant_7 = instance
+                        
+            if (shid and barcode_fail):
                 if result.match(shid):
                     shid = shid.lower()
                     try:
@@ -284,7 +361,7 @@ class PrizeForm (ModelForm):
             return True
         except:
             msg='ShaastraID not found.'
-            self._errors['participant_7'] = ErrorList([msg])
+            self._errors['participant_7_shaastraid'] = ErrorList([msg])
             return False
 
     class Meta:
@@ -295,29 +372,44 @@ class PrizeForm (ModelForm):
         kwargs['instance'] = instance
         super(PrizeForm, self).__init__(*args, **kwargs)
         
-        self.fields['participant_1'].widget.attrs['class'] = "search"
-        self.fields['participant_2'].widget.attrs['class'] = "search"
-        self.fields['participant_3'].widget.attrs['class'] = "search"
-        self.fields['participant_4'].widget.attrs['class'] = "search"
-        self.fields['participant_5'].widget.attrs['class'] = "search"
-        self.fields['participant_6'].widget.attrs['class'] = "search"
-        self.fields['participant_7'].widget.attrs['class'] = "search"
+        self.fields['participant_1_shaastraid'].widget.attrs['class'] = "search"
+        self.fields['participant_2_shaastraid'].widget.attrs['class'] = "search"
+        self.fields['participant_3_shaastraid'].widget.attrs['class'] = "search"
+        self.fields['participant_4_shaastraid'].widget.attrs['class'] = "search"
+        self.fields['participant_5_shaastraid'].widget.attrs['class'] = "search"
+        self.fields['participant_6_shaastraid'].widget.attrs['class'] = "search"
+        self.fields['participant_7_shaastraid'].widget.attrs['class'] = "search"
         
         if isinstance(instance, Prize):
             if instance.participant_1:
-                self.fields['participant_1'].widget.attrs['value'] = str(instance.participant_1.shaastra_id)
+                self.fields['participant_1_shaastraid'].widget.attrs['value'] = str(instance.participant_1.shaastra_id)
+                if instance.participant_1.barcodemap_set.all():
+                    self.fields['participant_1_barcode'].widget.attrs['value'] = str(instance.participant_1.barcodemap_set.all()[0].barcode)
             if instance.participant_2:
-                self.fields['participant_2'].widget.attrs['value'] = str(instance.participant_2.shaastra_id)
+                self.fields['participant_2_shaastraid'].widget.attrs['value'] = str(instance.participant_2.shaastra_id)
+                if instance.participant_2.barcodemap_set.all():
+                    self.fields['participant_2_barcode'].widget.attrs['value'] = str(instance.participant_2.barcodemap_set.all()[0].barcode)
             if instance.participant_3:
-                self.fields['participant_3'].widget.attrs['value'] = str(instance.participant_3.shaastra_id)
+                self.fields['participant_3_shaastraid'].widget.attrs['value'] = str(instance.participant_3.shaastra_id)
+                if instance.participant_3.barcodemap_set.all():
+                    self.fields['participant_3_barcode'].widget.attrs['value'] = str(instance.participant_3.barcodemap_set.all()[0].barcode)
             if instance.participant_4:
-                self.fields['participant_4'].widget.attrs['value'] = str(instance.participant_4.shaastra_id)
+                self.fields['participant_4_shaastraid'].widget.attrs['value'] = str(instance.participant_4.shaastra_id)
+                if instance.participant_4.barcodemap_set.all():
+                    self.fields['participant_4_barcode'].widget.attrs['value'] = str(instance.participant_4.barcodemap_set.all()[0].barcode)
             if instance.participant_5:
-                self.fields['participant_5'].widget.attrs['value'] = str(instance.participant_5.shaastra_id)
+                self.fields['participant_5_shaastraid'].widget.attrs['value'] = str(instance.participant_5.shaastra_id)
+                if instance.participant_5.barcodemap_set.all():
+                    self.fields['participant_5_barcode'].widget.attrs['value'] = str(instance.participant_5.barcodemap_set.all()[0].barcode)
             if instance.participant_6:
-                self.fields['participant_6'].widget.attrs['value'] = str(instance.participant_6.shaastra_id)
+                self.fields['participant_6_shaastraid'].widget.attrs['value'] = str(instance.participant_6.shaastra_id)
+                if instance.participant_6.barcodemap_set.all():
+                    self.fields['participant_6_barcode'].widget.attrs['value'] = str(instance.participant_6.barcodemap_set.all()[0].barcode)
             if instance.participant_7:
-                self.fields['participant_7'].widget.attrs['value'] = str(instance.participant_7.shaastra_id)
+                self.fields['participant_7_shaastraid'].widget.attrs['value'] = str(instance.participant_7.shaastra_id)
+                if instance.participant_7.barcodemap_set.all():
+                    self.fields['participant_7_barcode'].widget.attrs['value'] = str(instance.participant_7.barcodemap_set.all()[0].barcode)
+
         if isinstance(eventdetails, EventDetails):
             if(int(position) > int(eventdetails.winner_nos)):
                 self.fields['cheque'].widget = self.fields['cheque'].hidden_widget()
@@ -326,8 +418,7 @@ class PrizeForm (ModelForm):
         
 class ChequeForm (ModelForm):
     class Meta:
-        model=Prize
-        widgets = {'participant':chosenforms.widgets.ChosenSelect()}  
+        model=Prize 
         exclude=('event','user','details','position')
         
         
