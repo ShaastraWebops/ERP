@@ -1,0 +1,34 @@
+{% extends "base_portal.html" %}
+
+{% block tabs %}
+<center><h4>Events with Finalised List of Finalists</h4>
+Click on the event name to view the list of finalists.</center><br/><br/>
+
+{% if eventdata %}
+<table class="table table-bordered">
+<tr>
+<th><center>Event</center></th><th><center>Timestamp (Time at which the Finalist List was finalized)</center></th>
+</tr>
+{% for id, eventname, timestamp in eventdata %}
+<tr>
+<td><a href="{% url prizes.views.choosePosition owner_name=user event_name=id %}"><center>{{ eventname }}</center></a></td><td><center>{{ timestamp }}</center></tr>
+</tr>
+{% endfor %}
+{% else %}
+<br/>
+<center>No events' finalists have been decided yet.</center>
+{% endif %}
+
+{% endblock %}
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+        var d = document.getElementById("li_prize_assign");
+            var e = document.getElementById("li_prize_assign_icon");
+                d.className = "active";
+                    e.className = e.className + " icon-white";
+                     });
+ $('.chzn-select').chosen();
+</script>
+{% endblock javascript%}

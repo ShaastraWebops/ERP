@@ -16,7 +16,10 @@
     <div class="row">
     <div class="span5">
         {% if error %}
-            <span style="color:#FF0000">Error: Incorrect barcode entered - {{ error }}<br/>Please enter the correct barcode, or enter the Shaastra ID instead.</span>
+            <div class="alert alert-error fade in">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                Incorrect data entered - <b>{{ error }}</b><br/>Please enter the correct barcode, or enter the correct Shaastra ID instead.
+            </div>
         {% endif %}
         <form action="" method="POST">
         {% csrf_token %}
@@ -24,6 +27,7 @@
         <table>
         {% for barcodemapform in barcodemapformset %}
             <tr><td>{{ forloop.counter }}.</td></tr>
+            {{ barcodemapform.non_field_errors }}
             {{ barcodemapform.as_table }}
         {% endfor %}
         </table>
@@ -32,13 +36,25 @@
         </form>
     </div>
     <div class="span3">
+    <form action="{% url prizes.views.upload_file owner_name=user event_name=event_name %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ uploadform.non_field_errors }}</p>
+            <p>{{ uploadform.docfile.label_tag }} {{ uploadform.docfile.help_text }}</p>
+            <p>
+                {{ uploadform.docfile.errors }}
+                {{ uploadform.docfile }}
+            </p>
+            <p><input type="submit" class="btn btn-primary" value="Upload" /></p>
+        </form>
+    </div>
+    <div class="span3">
     <h4>Registered Participants:</h4><br/>
     <table class="table">
-    {% if participarticipantList %}
+    {% if participantList %}
     <br/>
-    <tr><th>S.No.</th><th>Name</th><th>Barcode</th></tr>
+    <tr><th>S.No.</th><th>Name</th><th>Shaastra ID</th><th>Barcode</th></tr>
     {% for participant in participantList %}
-    <tr><td>{{ forloop.counter }}.</td><td>{{ participant.name }}</td><td>{{ participant.barcode }}</td></tr>
+    <tr><td>{{ forloop.counter }}.</td><td>{{ participant.name }}</td><td>{{ participant.shaastra_id }}</td><td>{{ participant.barcodemap_set.all.0.barcode }}</td></tr>
     {% endfor %}
     </table>
     {% else %}
@@ -62,4 +78,8 @@ $(document).ready(function() {
  });
 $('.chzn-select').chosen();
 </script>
+<script>  
+ var subjects = {{ idList|safe }}
+$('.search').typeahead({source: subjects})  
+</script>  
 {% endblock javascript%}

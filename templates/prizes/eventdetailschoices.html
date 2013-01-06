@@ -1,0 +1,30 @@
+{% extends "base_portal.html" %}
+
+{% block tabs %}
+<center><h4>{{ page_name }} - Choose Event</h4></center><br/>
+The list of finalists have been decided for the events in <span style="color:#00FF00;">green</span>.
+ You can also view the list of these events <a href="{% url prizes.views.viewFinal owner_name=user %}">here</a>.<br/><br/>
+<style type="text/css">
+      .complete {
+      color: #00FF00;
+      }      
+</style>
+<table class="table">
+{% for classvalue, event in eventList %}
+<tr><td>
+<a href="{{ request.path }}{{ event.id }}/" class="{{ classvalue }}">{{event.Dept_Name}}</a>
+</td></tr>
+{% endfor %}
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+        var d = document.getElementById("li_prize_assign");
+            var e = document.getElementById("li_prize_assign_icon");
+                d.className = "active";
+                    e.className = e.className + " icon-white";
+                     });
+ $('.chzn-select').chosen();
+</script>
+{% endblock javascript%}
+{% endblock %}

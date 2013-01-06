@@ -1,0 +1,90 @@
+{% extends "base_portal.html" %}
+
+{% block tabs %}
+{% if PPM %}
+<center><h4>Choose finalist (Position No.):</h4></center><br/>
+<table class="table">
+{% for position in positions %}
+<tr><td>
+<a href="{% url prizes.views.prize_assign owner_name=user event_name=event_name position=position %}">{{ position }}</a>
+</td></tr>
+{% endfor %}
+</table>
+{% endif %}
+<center><h4>Finalist Details:</h4>
+Number of Places with Cash Prize and Cerificate (1st, 2nd, 3rd etc.): {{ eventdetails.winner_nos }}</center><br/>
+<table class="table table-bordered">
+<tr>
+<th>Members</th>
+<th>Position</th>
+<th>Details</th>
+<th>Cheque</th>
+</tr>
+{% for finalist in finalist_details %}
+<tr>
+<td>
+<table class="table table-bordered">
+<tr>
+<th>Name</th>
+<th>Shaastra ID</th>
+<th>Barcode</th>
+</tr>
+{% if finalist.participant_1.shaastra_id %}
+<tr>
+<td>{{ finalist.participant_1.name }}</td><td>{{ finalist.participant_1.shaastra_id }}</td><td>{{ finalist.participant_1.barcodemap_set.all.0.barcode }}</td>
+</tr>
+{% endif %}
+{% if finalist.participant_2.shaastra_id %}
+<tr>
+<td>{{ finalist.participant_2.name }}</td><td>{{ finalist.participant_2.shaastra_id }}</td><td>{{ finalist.participant_2.barcodemap_set.all.0.barcode }}</td>
+</tr>
+{% endif %}
+{% if finalist.participant_3.shaastra_id %}
+<tr>
+<td>{{ finalist.participant_3.name }}</td><td>{{ finalist.participant_3.shaastra_id }}</td><td>{{ finalist.participant_3.barcodemap_set.all.0.barcode }}</td>
+</tr>
+{% endif %}
+{% if finalist.participant_4.shaastra_id %}
+<tr>
+<td>{{ finalist.participant_4.name }}</td><td>{{ finalist.participant_4.shaastra_id }}</td><td>{{ finalist.participant_4.barcodemap_set.all.0.barcode }}</td>
+</tr>
+{% endif %}
+{% if finalist.participant_5.shaastra_id %}
+<tr>
+<td>{{ finalist.participant_5.name }}</td><td>{{ finalist.participant_5.shaastra_id }}</td><td>{{ finalist.participant_5.barcodemap_set.all.0.barcode }}</td>
+</tr>
+{% endif %}
+{% if finalist.participant_6.shaastra_id %}
+<tr>
+<td>{{ finalist.participant_6.name }}</td><td>{{ finalist.participant_6.shaastra_id }}</td><td>{{ finalist.participant_6.barcodemap_set.all.0.barcode }}</td>
+</tr>
+{% endif %}
+{% if finalist.participant_7.shaastra_id %}
+<tr>
+<td>{{ finalist.participant_7.name }}</td><td>{{ finalist.participant_7.shaastra_id }}</td><td>{{ finalist.participant_7.barcodemap_set.all.0.barcode }}</td>
+</tr>
+{% endif %}
+</table>
+</td>
+<td>{{ finalist.position }}</td>
+<td>{{ finalist.details }}</td>
+<td>{{ finalist.cheque }}</td>
+</tr>
+{% endfor %}
+</table>
+{% if PPM %}
+<a href="{% url prizes.views.setFinal owner_name=request.user event_name=event_name %}">Set this list as the final list of participants</a> - This option makes the event green in the event details page, to inform others that this is the finalised list.
+{% endif %}
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function() {
+        var d = document.getElementById("li_prize_assign");
+            var e = document.getElementById("li_prize_assign_icon");
+                d.className = "active";
+                    e.className = e.className + " icon-white";
+                     });
+ $('.chzn-select').chosen();
+</script>
+{% endblock javascript%}
+{% endblock %}

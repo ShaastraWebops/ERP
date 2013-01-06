@@ -5,7 +5,7 @@
 <table class="table">
 {% for event in events %}
 <tr><td>
-<a href={% url prizes.views.cheque_assign owner_name=user event_name=event.id %}>{{event.Dept_Name}}</a><br />
+<a href={% url prizes.views.prize_assign owner_name=user event_name=event.id %}>{{event.Dept_Name}}</a><br />
 </tr></td>
 {% endfor %}
 {% endblock %}

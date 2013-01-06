@@ -80,6 +80,8 @@ def global_context(request):
     qms_coord = False
     finance_tab=False
     facilities_tab=False
+    hospi=False
+    finance=False
 
     if page_owner != request.user:
         is_visitor = True
@@ -97,6 +99,9 @@ def global_context(request):
                     facilities_tab=True
                 if str(curr_userprofile.department) == 'Finance':
                     finance_tab=True
+                    finance=True
+                if str(curr_userprofile.department) == 'Hospitality':
+                    hospi=True
                 if is_facilities_coord(curr_user):
                     facilities_tab=True
                 if department.is_event:
@@ -110,6 +115,9 @@ def global_context(request):
                     facilities_tab=True
                 if str(curr_userprofile.department) == 'Finance':
                     finance_tab=True
+                    finance=True
+                if str(curr_userprofile.department) == 'Hospitality':
+                    hospi=True
                 if is_facilities_coord(curr_user):
                     facilities_tab=True
                 if department.is_event:
@@ -120,6 +128,10 @@ def global_context(request):
                     qms_coord= True
                     finance_tab=True
                     facilities_tab=True
+                if str(curr_userprofile.department) == 'Finance':    
+                    finance=True
+                if str(curr_userprofile.department) == 'Hospitality':
+                    hospi=True
                 if is_facilities_coord(curr_user):
                     facilities_tab=True
                 if department.is_event:
@@ -136,7 +148,9 @@ def global_context(request):
                 qms_coord = False
                 finance_tab=False
                 facilities_tab=False
-
+        
+        qms=qms_coord or qms_core or qms_supercoord
+        
     context =  RequestContext (request,
             {'user':request.user,
             'SITE_URL':settings.SITE_URL,
@@ -161,6 +175,9 @@ def global_context(request):
              'qms_supercoord':qms_supercoord,
              'finance_tab':finance_tab,
              'facilities_tab':facilities_tab,
+             'hospi':hospi,
+             'finance':finance,
+             'qms':qms,
 
             })
     return context

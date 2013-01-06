@@ -39,7 +39,13 @@ class Prize(models.Model):
     """
     The winner's details and cheque nos
     """
-    participant = models.ForeignKey(Participant,blank=True, null=True)
+    participant_1 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_1')
+    participant_2 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_2')
+    participant_3 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_3')
+    participant_4 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_4')
+    participant_5 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_5')
+    participant_6 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_6')
+    participant_7 = models.ForeignKey(Participant,blank=True, null=True, related_name = 'member_7')
     position = models.CharField(max_length=10,blank=True)
     event = models.ForeignKey(Department)
     details = models.CharField(max_length=250,blank=True)
@@ -48,7 +54,18 @@ class Prize(models.Model):
     user = models.ForeignKey(User)  
     
     def __str__(self):
-        return self.participant.shaastra_id
+        return self.participant_1.shaastra_id
+        
+class EventDetails(models.Model):
+    event = models.ForeignKey(Department)
+    team_nos = models.IntegerField()
+    max_members = models.IntegerField()
+    winner_nos = models.IntegerField(blank=True, null=True)
+    finalist_nos = models.IntegerField(blank=True, null=True)
+    certificate_nos = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.event.Dept_Name      
 
 class College(models.Model):
 
@@ -97,4 +114,11 @@ class ParticipantUser(models.Model):
         
     class Meta:
         db_table='users_userprofile'
+        
+class Team(models.Model):
+    name = models.CharField(max_length = 250)
+    events = models.ManyToManyField(Department, null=True)
+                
+    def __unicode__(self):
+        return self.name
 
