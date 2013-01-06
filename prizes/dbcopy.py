@@ -57,3 +57,31 @@ def check_and_copy():
         f.close()
         time.sleep(2)
         print "Run check_and_copy delay-2"
+
+def copy_extra():
+    main=ParticipantUser.objects.using('main').all()
+    for user in main:
+        p=Participant.objects.filter(shaastra_id=user.shaastra_id)
+        if len(p)==0:
+            erp_user = Participant() 
+            try:
+                erp_user.name = user.user.first_name + user.user.last_name
+                u=True
+            except:
+                u=False
+            if u:
+                erp_user.gender = user.gender
+                erp_user.branch = user.branch
+                try:
+                    erp_user.college = user.college.name
+                except:
+                    pass
+                erp_user.mobile_number = user.mobile_number
+                erp_user.shaastra_id = user.shaastra_id
+                erp_user.college_roll = user.shaastra_id
+                erp_user.branch=user.branch
+                try:
+                    erp_user.save()
+                    print "saved", erp_user.shaastra_id
+                except:
+                    print "couldn't save", erp_user.shaastra_id
