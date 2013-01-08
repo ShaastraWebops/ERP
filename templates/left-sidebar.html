@@ -18,7 +18,11 @@
 {% if qms or hospi %}
 <li id="li_eventregn">
     <a href="{% url prizes.views.registerparticipants owner_name=page_owner%}"><i class="icon-check" id="li_eventregn_icon"></i> Event Registration </a>
+</li>
 {% endif %}
+<li id="li_gen_pdf">
+    <a href="{% url prizes.views.event_participation_pdf owner_name=user %}"><i class="icon-print" id="li_gen_pdf_icon"></i> PDF Report</a>
+</li>
 <li id="li_contact">
     <a href="{% url dashboard.views.display_contacts owner_name=user%}"><i class="icon-th-list" id="li_contact_icon"></i> Contact Details </a>
 </li>

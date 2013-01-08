@@ -9,30 +9,43 @@ Your file isn't valid! Please check if it's a CSV file in the proper format
 {% endif %}
 
 <div class="well">
+<h4>
+These Shaastra Ids were not added. </h4><br />
+<ul>
 {% for id in shaastra_ids_errors %}
-These Shaastra Ids were not added. <br />
-{{id}}
+<li><b>
+{{id}}</b></li>
 {%endfor%}
+</ul>
 </div>
 
 <div class="well">
+<h4>
+These Shaastra Ids were successfully added.</h4> <br />
+<ul>
 {% for id in shaastra_ids %}
-These Shaastra Ids were successfully added. <br />
-{{id}}
+<li><b>
+{{id}}</b></li>
 {%endfor%}
+</ul>
 </div>
 
-<div class="well">
+<div class="well"><h4>
+These Barcodes were successfully added.</h4> <br />
+<ul>
 {%for barcode in barcodes%}
-These Barcodes were successfully added. <br />
-{{barcode}}
+<li><b>{{barcode}}</li></b>
 {%endfor%}
+</ul>
 </div>
 
-<div class="well">
+<div class="well"><h4>
+These Barcodes were not added.</h4> <br />
+<ul>
 {% for id in barcodes_errors %}
-These Barcodes were not added. <br />
-{{id}}
+<li><b>
+{{id}}</li></b>
 {%endfor%}
+</ul>
 </div>
 {%endblock%}

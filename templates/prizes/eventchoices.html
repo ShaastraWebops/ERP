@@ -1,7 +1,8 @@
 {% extends "base_portal.html" %}
 
 {% block tabs %}
-<center><h4>{{ page_name }} - Choose Event</h4></center><br/>
+<center><h4>{{ page_name }} - Choose Event</h4>
+ You can view the events with the finalized list of <b>Finalists</b> <a href="{% url prizes.views.viewFinal owner_name=user %}">here</a>.</center><br/>
 <table class="table">
 {% for event in events %}
 <tr><td>

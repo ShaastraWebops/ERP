@@ -7,11 +7,26 @@ from erp.prizes.models import *
 from erp.prizes.forms import *
 from erp.department.models import *
 from django.forms.models import modelformset_factory
+from django.contrib.auth.decorators import login_required
 import csv
 import itertools
+import datetime
+import re
 # Function to handle an uploaded file.
 from erp.prizes.file import handle_uploaded_file
+from erp.prizes.eventParticipationPDF import generateEventParticipationPDF
+from django.contrib.auth.decorators import login_required
 
+@login_required
+def event_participation_pdf(request,owner_name=None, event_id=None):
+    if not event_id:
+        events=Department.objects.filter(is_event=True)
+        return render_to_response("prizes/generate_pdf.html", locals(), context_instance=global_context(request))
+    event_id = int(event_id)
+    return generateEventParticipationPDF(event_id)
+
+
+@login_required
 def display_portal(request,owner_name=None,shaastra_id=None):
     if shaastra_id:
         try:
@@ -28,7 +43,7 @@ def display_portal(request,owner_name=None,shaastra_id=None):
     else:
         HttpResponseRedirect('/')
 
-
+@login_required
 def assign_barcode_new(request,owner_name=None,shaastra_id=None):
     form=DetailForm()
     if request.method == 'POST':
@@ -78,6 +93,7 @@ def assign_barcode_new(request,owner_name=None,shaastra_id=None):
     idList = [str(elem.shaastra_id) for elem in Participant.objects.all()]                
     return render_to_response('prizes/display_profile.html',locals(),context_instance=global_context(request))
         
+@login_required
 def upload_file(request,owner_name=None,event_name=None):
     if not event_name:
         events=Department.objects.filter(is_event=True)
@@ -104,17 +120,29 @@ def upload_file(request,owner_name=None,event_name=None):
                     except:
                         barcodes_errors.append(row[0])
                 else:
-                    try:
-                        new=Participant.objects.filter(shaastra_id=row[1])[0]
-                        new.events.add(event)
-                        new.save()
-                        shaastra_ids.append(row[1])                                  
-                    except:
-                        shaastra_ids_errors.append(row[1])
+                    result = re.compile(r'^[^\W\d_]{2}\d{2}[^\W\d_]{1}\d{3}$')
+                    if row[1]:
+                        if result.match(row[1]):
+                            shid = row[1].lower()
+                            try:
+                                new = Participant.objects.filter(shaastra_id=shid)[0]
+                            except:
+                                new = Participant(name='InstiJunta', gender='F', age=18, college='IIT Madras', college_roll=shid, shaastra_id=shid)
+                                new.save()
+                            new.events.add(event)
+                            shaastra_ids.append(shid)
+                        else:
+                            try:
+                                new=Participant.objects.filter(shaastra_id=row[1])[0]
+                                new.events.add(event)
+                                shaastra_ids.append(row[1])
+                            except:
+                                shaastra_ids_errors.append(row[1])
     else:
         form = DocumentForm() 
     return render_to_response('prizes/uploads.html',locals(),context_instance=global_context(request))
 
+@login_required
 def assign_barcode(request,owner_name=None):
     BarcodeFormset = modelformset_factory(BarcodeMap, form=BarcodeForm, extra=10)
     if request.method == 'POST':
@@ -130,6 +158,7 @@ def assign_barcode(request,owner_name=None):
     barcodeformset =BarcodeFormset(queryset=BarcodeMap.objects.none())    
     return render_to_response('prizes/hospiregistration.html', locals(), context_instance = global_context(request))    
 
+@login_required
 def prize_assign(request, owner_name=None, event_name=None, position=None):
     try:
         eventname=Department.objects.get(id=event_name)
@@ -164,6 +193,7 @@ def prize_assign(request, owner_name=None, event_name=None, position=None):
     idList = [str(elem.shaastra_id) for elem in Participant.objects.filter(events=eventname)]    
     return render_to_response('prizes/prize_table.html',locals(),context_instance=global_context(request))
 
+@login_required
 def choosePosition(request,owner_name=None,event_name=None):
     try:
         eventname=Department.objects.get(id=event_name)
@@ -176,22 +206,15 @@ def choosePosition(request,owner_name=None,event_name=None):
         PPM = True
     return render_to_response('prizes/choose_position.html',locals(),context_instance=global_context(request))    
 
+@login_required
 def fillEventDetails(request, owner_name=None, event_name=None):
     try:
         eventname=Department.objects.get(id=event_name)
     except:
         events=list(Department.objects.filter(is_event=True))
         page_name = "Event Details"
-        classvalue = []
-        for i in range(int(events[-1].pk)):
-            classvalue.append('incomplete')
         
-        f = open("prizes/finalevents.txt", 'r')
-        for line in f:
-            classvalue[int(line.strip('\n'))-1] = 'complete'
-        
-        eventList = itertools.izip(classvalue, events)
-        return render_to_response('prizes/eventdetailschoices.html',locals(),context_instance=global_context(request))
+        return render_to_response('prizes/eventchoices.html',locals(),context_instance=global_context(request))
 
     if str(request.user.get_profile().department) == 'Hospitality':
         return redirect('erp.prizes.views.choosePosition', owner_name = request.user, event_name=event_name)
@@ -213,6 +236,7 @@ def fillEventDetails(request, owner_name=None, event_name=None):
         eventdetailsform = EventDetailsForm(event=eventname)
     return render_to_response('prizes/event_details.html', locals(), context_instance = global_context(request))    
 
+@login_required
 def registerparticipants(request, owner_name=None, event_name=None):
     try:
         eventname = Department.objects.get(id=event_name)
@@ -242,16 +266,26 @@ def registerparticipants(request, owner_name=None, event_name=None):
                         return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
                         
                 try:
-                    print barcodemap.barcode, barcodemap.shaastra_id
                     participant = BarcodeMap.objects.get(barcode=barcodemap.barcode).shaastra_id
                 except:
                     #if a barcode isn't filled in, or a mapping doesn't exist.
                     try:
                         participant = Participant.objects.get(shaastra_id=barcodemap.shaastra_id)
                     except:
-                        #The shaastra ID wasn't filled => incorrect barcode.
-                        error = barcodemap.barcode
-                        return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
+                        if barcodemap.shaastra_id:
+                            # Shaastra ID was incorrect => Might be insti junta or incorrect
+                            result = re.match(r'^[^\W\d_]{2}\d{2}[^\W\d_]{1}\d{3}$', barcodemap.shaastra_id)
+                            if result:
+                                participant = Participant(name='InstiJunta', gender='F', age=18, college='IIT Madras', college_roll=barcodemap.shaastra_id, shaastra_id=barcodemap.shaastra_id)
+                                participant.save()
+                            else:
+                                error = barcodemap.shaastra_id
+                                return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
+                                
+                        else:
+                            #The shaastra ID wasn't filled => incorrect barcode.
+                            error = barcodemap.barcode
+                            return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
                 participant.events.add(eventname)
     participantList = Participant.objects.filter(events=eventname)      #updated list
     #teamList = Team.objects.filter(events=eventname)
@@ -259,15 +293,34 @@ def registerparticipants(request, owner_name=None, event_name=None):
     idList = [str(elem.shaastra_id) for elem in Participant.objects.all()] 
     return render_to_response('prizes/registerparticipants.html', locals(), context_instance = global_context(request))
 
+@login_required
 def setFinal(request, owner_name=None, event_name=None):
     try:
         eventname=Department.objects.get(id=event_name)
-        f = open('prizes/finalevents.txt', 'a')
-        f.write(event_name +'\n')
+        timestamp = str(datetime.datetime.now())
+        f = open('prizes/finalevents.txt', 'a+')
+        for line in f:
+            if (event_name == line.strip('\n').split(',')[0]):
+                f.close()
+                return redirect('erp.prizes.views.fillEventDetails', owner_name = request.user)
+        f.write(event_name + ',' + eventname.Dept_Name + ',' + timestamp +'\n')
         f.close()
     except:
         pass
     return redirect('erp.prizes.views.fillEventDetails', owner_name = request.user)
+
+@login_required
+def viewFinal(request, owner_name=None):
+    try:
+        eventdata = []
+        f = open("prizes/finalevents.txt", 'r')
+        for line in f:
+            temp = line.strip('\n').split(',')
+            eventdata.append(temp)
+        f.close()       
+    except:
+        pass
+    return render_to_response('prizes/viewfinal.html', locals(), context_instance = global_context(request))
     
 """
 def cheque_assign(request,owner_name=None,event_name=None):
